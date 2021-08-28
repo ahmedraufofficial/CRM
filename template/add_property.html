@@ -1,0 +1,505 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+.column{
+       background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+padding-top: 10px;
+    margin: 5px;
+    margin-top: 20px;
+}
+h4{
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #f5f0e1;
+    font-size: 14pt;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+</style>
+
+<!--script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script-->
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container" >
+<form method="POST" enctype="multipart/form-data">
+  <dl>
+  
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+        
+            <div id="toolbar">
+
+            </div>
+              <table id="table"        
+              data-toggle="true"
+              data-toolbar="#toolbar"
+              data-search="true"
+              data-show-columns="true"
+              data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-radio="true" data-show-select-title="true">SELECT</th>
+                    <th data-field="refno">REF NO</th>
+                    <th data-field="name">NAME</th>
+                    <th data-field="contact">CONTACT</th>
+                    <th data-field="email">EMAIL</th>
+                </tr>
+                </thead>
+            </table>
+            <table>
+                <tr>
+                    <form method="POST">
+                    <td>
+                        <button type="button" class="btn btn-primary" onclick="quick_add()">+</button>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="number" placeholder="Contact" name="number">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="email" placeholder="Email" name="email">
+                    </td>
+                    </form>
+                </tr>
+            </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getcontact()">Select</button>
+              <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+{% if purpose == "rent" %}
+    <div class="row">
+        <div class="col column">
+        <h4>Property Address & Details</h4>
+        {{ wtf.form_field(form.city) }}
+ 
+        {{ wtf.form_field(form.subtype) }}
+
+        {{ wtf.form_field(form.locationtext) }}
+ 
+        {{ wtf.form_field(form.building) }}
+
+        <div class="form-group row">
+            <div class="col">
+            {{ wtf.form_field(form.bedrooms) }}
+            </div>
+            <div class="col">
+            {{ wtf.form_field(form.bathrooms) }}
+            </div>
+        </div>
+   
+        {{ wtf.form_field(form.permit_number) }}
+   
+
+
+        {{ wtf.form_field(form.size) }}
+            
+
+
+        {{ wtf.form_field(form.plot_size) }}
+
+
+
+
+       
+        <div class="form-group row">
+            <div class="col">
+            {{ wtf.form_field(form.unit) }}
+            </div>
+            <div class="col">
+            {{ wtf.form_field(form.plot) }}
+            </div>
+            <div class="col">
+            {{ wtf.form_field(form.street) }}
+            </div>
+        </div>
+
+
+        {{ wtf.form_field(form.parking) }}
+
+        {{ wtf.form_field(form.featured) }}
+
+        {{ form.furnished.label(class="control-label") }}
+        {{wtf.form_field(form.furnished)}}
+
+        </div>
+        <div class="col column">
+            <h4>Property Pricing & Marketing</h4>
+            {{ wtf.form_field(form.price) }}
+  
+            {{ wtf.form_field(form.rentpriceterm) }}
+
+            {{ wtf.form_field(form.price_per_area) }}
+
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.commission) }}
+                </div>    
+                <div class="col">
+                    <label class="control-label" id="com"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.deposit) }}
+                </div>    
+                <div class="col">
+                    <label class="control-label" id="dep"></label>
+                </div>
+            </div>
+                {{ wtf.form_field(form.title) }}
+
+                {{ wtf.form_field(form.description) }}
+      
+   
+           
+ 
+                {{ form.photos.label(class="control-label") }}
+                {{ form.photos(class="form-control-file", style="color:white;") }}
+
+
+                    {% if radio_enable == 'enabled' %}
+                    {{ form.new_files.label(class="control-label") }}
+                    {{ wtf.form_field(form.new_files) }}
+                    {% endif %}
+            
+              <br>
+                    <h4>Private Amenities</h4>
+              <div class="row">
+                  <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+                {{ form.privateamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
+        </div>
+    </div>
+    <br>
+    <h4>Property Amenities</h4>
+    <div class="row">
+        <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+      {{ form.commercialamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
+        </div>
+    </div>        
+
+        </div>
+        <div class="col column">
+            <h4>Contact & Extra Details</h4>
+            <a data-toggle="modal" href="#myModal" class="btn btn-primary" style="margin-bottom: 5px; background-color: #7be0ff; border: hidden;">Add Owner</a>
+
+                {{ wtf.form_field(form.owner) }}
+
+                {{ wtf.form_field(form.owner_name) }}
+                {{ wtf.form_field(form.owner_contact) }}
+                {{ wtf.form_field(form.owner_email) }}
+                
+
+                {{ wtf.form_field(form.tenant) }}
+                
+                {{ wtf.form_field(form.source) }}
+
+                {{ wtf.form_field(form.view360) }}
+
+                {{ wtf.form_field(form.video_url) }}
+
+                {{ wtf.form_field(form.expiry_date) }}
+
+                {{ wtf.form_field(form.status) }}
+
+                {{ wtf.form_field(form.assign_to) }}
+ 
+        </div>
+</div>
+{% endif %}    
+
+{% if purpose == "sale" %}
+<div class="row">
+    <div class="col column">
+        <h4>Property Address & Details</h4>
+    {{ wtf.form_field(form.city) }}
+
+    {{ wtf.form_field(form.completion_status) }}
+
+    {{ wtf.form_field(form.offplan_status) }}
+
+    {{ wtf.form_field(form.completion_date) }}
+
+    {{ wtf.form_field(form.subtype) }}
+
+    {{ wtf.form_field(form.locationtext) }}
+
+    {{ wtf.form_field(form.building) }}
+
+    <div class="form-group row">
+        <div class="col">
+        {{ wtf.form_field(form.bedrooms) }}
+        </div>
+        <div class="col">
+        {{ wtf.form_field(form.bathrooms) }}
+        </div>
+    </div>
+    {{ wtf.form_field(form.permit_number) }}
+        {{ wtf.form_field(form.size) }}
+
+        {{ wtf.form_field(form.plot_size) }}
+
+    {{ wtf.form_field(form.tenure) }}
+
+
+    <div class="form-group row">
+        <div class="col">
+        {{ wtf.form_field(form.unit) }}
+        </div>
+        <div class="col">
+        {{ wtf.form_field(form.plot) }}
+        </div>
+        <div class="col">
+        {{ wtf.form_field(form.street) }}
+        </div>
+    </div>
+    {{ wtf.form_field(form.parking) }}
+
+    {{ wtf.form_field(form.featured) }}
+
+    </div>
+    <div class="col column">
+        <h4>Property Pricing & Marketing</h4>
+
+        {{ wtf.form_field(form.price) }}
+            {{ wtf.form_field(form.price_per_area) }}
+
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.commission) }}
+                </div>    
+                <div class="col">
+                    <label class="control-label" id="com"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.deposit) }}
+                </div>    
+                <div class="col">
+                    <label class="control-label" id="dep"></label>
+                </div>
+            </div>
+
+            {{ wtf.form_field(form.title) }}
+
+            {{ wtf.form_field(form.description) }}
+  
+            {{ form.furnished.label(class="control-label") }}
+            {{wtf.form_field(form.furnished)}}
+       
+
+            {{ form.photos.label(class="control-label") }}
+            {{ form.photos(class="form-control-file", style="color:white;") }}
+
+
+                {% if radio_enable == 'enabled' %}
+                {{ form.new_files.label(class="control-label") }}
+                {{ wtf.form_field(form.new_files) }}
+                {% endif %}
+        
+          <br>
+                <h4>Private Amenities</h4>
+          <div class="row">
+              <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+            {{ form.privateamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
+    </div>
+</div>
+<br>
+<h4>Property Amenities</h4>
+<div class="row">
+    <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+  {{ form.commercialamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
+    </div>
+</div>        
+
+    </div>
+    <div class="col column">
+        <h4>Contact & Extra Details</h4>
+        <a data-toggle="modal" href="#myModal" class="btn btn-primary" style="margin-bottom: 5px; background-color: #7be0ff; border: hidden;">Add Owner</a>
+
+            {{ wtf.form_field(form.owner) }}
+
+            {{ wtf.form_field(form.owner_name) }}
+            {{ wtf.form_field(form.owner_contact) }}
+            {{ wtf.form_field(form.owner_email) }}
+                        
+            {{ wtf.form_field(form.source) }}
+
+            {{ wtf.form_field(form.view360) }}
+
+            {{ wtf.form_field(form.video_url) }}
+
+            {{ wtf.form_field(form.expiry_date) }}
+
+            {{ wtf.form_field(form.status) }}
+
+            {{ wtf.form_field(form.assign_to) }}
+    </div>
+</div>
+{% endif %}   
+
+
+  </dl>
+  <p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;" type="submit" value="Submit">
+</form>
+</div>
+<br>
+</div>
+</section>
+<script>
+const commission = document.getElementById('commission');
+const deposit = document.getElementById('deposit');
+const price_form = document.getElementById('price');
+const inputHandler = function(e) {
+var price = document.getElementById('price').value
+let total_price = parseFloat(price)
+  if (e.target.id == 'commission')
+  { 
+    let percent = e.target.value
+    let float_percent = parseFloat(percent)
+  document.getElementById('com').innerHTML = (total_price *  (float_percent / 100)).toFixed(2) +' AED'
+  }
+  else if (e.target.id == 'deposit')
+  {
+    let percent = e.target.value
+    let float_percent = parseFloat(percent)
+    document.getElementById('dep').innerHTML = (total_price * (float_percent / 100)).toFixed(2) +' AED'
+  }
+  else if (e.target.id == 'price')
+  {
+    let percent = document.getElementById('size').value
+    let float_percent = parseFloat(percent)
+    document.getElementById('price_per_area').value = (total_price / float_percent).toFixed(2)
+}
+}
+ commission.addEventListener('input', inputHandler);
+ deposit.addEventListener('input', inputHandler);
+ price_form.addEventListener('input', inputHandler);
+
+    let location_select = document.getElementById('building');
+    $("#locationtext").change(function(){
+    get_location();
+    });
+    var building = '{{ building }}'
+    function get_location(){
+        var location = $("#locationtext").val();
+        fetch('/community/' + location).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let location of data.locations){
+                    if (location[0] == building)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_select.innerHTML = optionHTML;
+            })
+        })
+        
+    }
+    let assign_to = document.getElementById('assign_to');
+    var assign = '{{ assign }}'
+    function get_user(){
+        fetch('/all_users').then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let users of data.all_users){
+                    if ( users.name == assign ){
+                        optionHTML += '<option value="'+users.name+'|'+users.number+'|'+users.email+'" selected>'+users.name+'</option>';
+                    }
+                    else{
+                    optionHTML += '<option value="'+users.name+'|'+users.number+'|'+users.email+'">'+users.name+'</option>';
+                    }
+                }
+                assign_to.innerHTML = optionHTML;
+            })
+        })
+    };
+
+
+    window.onload = get_location();
+    window.onload = get_user();
+
+    function get_contacts(){
+        fetch('/all_contacts').then(function(response){
+            response.json().then(function(data){
+                var jsonData = data.all_contacts
+                $(function () {
+                var $table = $('#table').bootstrapTable({data: jsonData});
+                });
+            })
+        })
+    }
+    window.onload = get_contacts();
+
+    function getcontact(){
+    var data = $('#table').bootstrapTable('getSelections');
+    $('#owner').val(data[0].refno)
+    $('#owner_name').val(data[0].name)
+    $('#owner_contact').val(data[0].contact)
+    $('#owner_email').val(data[0].email)
+    document.getElementById("close").click();
+    }
+
+    function quick_add(){
+    
+    $.ajax({
+    type : 'POST',
+    url : "{{url_for('handlecontacts.quick_add')}}",
+    data : {'first_name':$('#first_name').val(),
+    'last_name':$('#last_name').val(),
+    'number':$('#number').val(),
+    'email':$('#email').val()},
+    success: function(){
+        alert('Added!');
+        location.reload(); 
+    }
+        })
+    }
+
+
+
+</script>
+<style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}
+ 
+</style> 
+
+
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<section style="background-image: url(/static/images/worldmap.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100vh;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container" style="padding-top: 50px;">
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-primary" href="/cloudstorage/files">Files Storage</a>
+           </div>
+           <div class="col">
+               <a class="btn btn-primary" href="/cloudstorage/forms">Forms</a>
+           </div>
+    </div>
+    <div class="row" style="margin-top: 50px;">
+        <div class="col">
+            <a class="btn btn-primary" href="/cloudstorage/hr">Human Resources</a>
+           </div>
+    </div>
+    </div>
+    </div>
+    </section>
+
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}
+
+  </style>
+{% endblock %}

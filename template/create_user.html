@@ -1,0 +1,61 @@
+{% extends 'admin/model/create.html' %}
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block body %}
+
+  
+<ul class="nav nav-tabs">
+    <li>
+        <a href="/admin/user/">List</a>
+    </li><li class="active">
+        <a href="/admin/user/new/?url=%2Fadmin%2Fuser%2F">Create</a>
+    </li><li>
+        <a href="javascript:void(0)">Edit</a>
+    </li></ul>
+
+<form action="/add_user" method="POST" style="width: 350px; margin-top: 20px;" enctype="multipart/form-data">
+<div class="form-group form-inline"> 
+    {{ form.username.label(class_ = "field-align") }}
+    {{ form.username }}
+</div>
+<br>
+<div class="form-group form-inline"> 
+    {{ form.password.label(class_ = "field-align") }}
+    {{ form.password }}
+</div>
+<br>
+<div class="form-group form-inline"> 
+    {{ form.number.label(class_ = "field-align") }}
+    {{ form.number }}
+</div>
+<br>
+<div class="form-group form-inline"> 
+    {{ form.email.label(class_ = "field-align") }}
+    {{ form.email }}
+</div>
+<br>
+<div class="form-group form-inline"> 
+    {{ form.job_title.label(class_ = "field-align") }}
+    {{ form.job_title }}
+</div>
+<br>
+<div class="form-group form-inline"> 
+    {{ form.department.label(class_ = "field-align") }}
+    {{ form.department }}
+</div>
+<br>
+<div class="form-group form-inline"> 
+    {{ form.profile_picture.label(class_ = "field-align") }}
+ <input type="file" name="file" id="file" accept="image/*">
+</div>
+<br>
+<input class="btn btn-primary" type="submit" value="Add">
+
+
+</form>
+<style type='text/css'>
+   .field-align{
+       width: 80px;
+   }
+ </style>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<section style="background-image: url(/static/images/worldmap.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100vh;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container" style="padding-top: 50px;">
+    <div class="row">
+        <div class="col storage">
+            <h5>Upload Files</h5>
+            <form id="myForm" method="POST" enctype="multipart/form-data">
+                {{ form.files.label(class="control-label") }}
+                {{ form.files(class="form-control-file", style="color:white; border:none !important;") }}
+                {{ wtf.form_field(form.password) }}
+                {{ wtf.form_field(form.send) }}
+                <button class="btn btn-primary" >Upload</button>
+            </form>
+        </div>
+    <div class="col-2"></div>
+    <div class="col storage" >
+    <div class="row">
+        <div class="col">
+            <h5>{{header}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="control-label" style="width: 100%;">Decrypt Password</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <input id="key" class="form-control" type="text">
+            <p style="color: white; font-size: 8pt; margin-top: 10px;">1. Type passowrd to decrypt</p>
+            <p style="color: white; font-size: 8pt;">2. Click on the 'CONFIRM TO ENABLE' button</p>
+            <p style="color: white; font-size: 8pt;">3. Click on available files below to download</p>
+            <p style="color: white; font-size: 8pt;">4. Empty directory to avoid leaks or excess storage</p>
+            <button onclick="confirm()" style="margin-top: 10px;" class="btn btn-primary">Confirm to Enable</button>
+            <button onclick="emptydir()" style="margin-top: 10px;" class="btn btn-danger">Empty Directory</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 50px;">
+        <div class="col">
+            {% for f in all_files %}
+            <a class="download unclick" href="{{f}}" ><i class="bi bi-cloud-arrow-down-fill"></i>{{f}}</a>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</section>
+
+
+
+
+<script>
+        
+        function confirm (){
+        if ($("#key").val() == ""){
+            alert("Enter Password")
+        }
+        else {
+        $('.download').removeClass("unclick")
+        var querystring = '/upload/'+$("#key").val()+'/';
+        $('.download').each(function() {
+            var href = $(this).attr('href');
+            if (href) {
+            var baseurl = href.split("/")[href.split("/").length - 1]
+            $(this).attr('href', querystring + baseurl);
+            }
+        });
+        }
+    }
+
+
+    function emptydir(){
+        fetch('/emptydirectory').then(function(response){
+        alert('Cleared Directory!');
+        location.reload(); 
+        })
+    };
+
+
+        function get_user(){
+        fetch('/all_users').then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">none</option>';
+                for (let users of data.all_users){
+                    optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                }
+                send.innerHTML = optionHTML;
+            })
+        })
+    };
+    window.onload(get_user())
+</script>
+
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}
+
+  </style>
+{% endblock %}

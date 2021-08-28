@@ -1,0 +1,692 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+    .column{
+           background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+padding-top: 10px;
+        margin: 5px;
+        margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #f5f0e1;
+        font-size: 14pt;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+      </style>
+    
+
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+
+
+<div class="container" >
+<form method="POST" enctype="multipart/form-data">
+  <dl>
+
+    <div class="row">
+        <div class="col column">
+            <h4>UPLOAD DOCUMENTS</h4>
+            {{ wtf.form_field(form.emi_id) }}   
+            <h4>DEAL DETAILS</h4> 
+
+        <a data-toggle="modal" href="#listing" class="btn btn-primary" style="margin-bottom: 5px;">Add Listing</a>
+        {{ wtf.form_field(form.listing_ref) }}
+        <a data-toggle="modal" href="#lead" class="btn btn-primary" style="margin-bottom: 5px;">Add Lead</a>
+        {{ wtf.form_field(form.lead_ref) }}
+        {{ wtf.form_field(form.transaction_type) }}
+        {{ wtf.form_field(form.status) }}
+        {{ wtf.form_field(form.sub_status) }}
+        {{ wtf.form_field(form.source) }}
+
+        <h4>BUYER CONTACT DETAILS</h4>
+        <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
+        {{ wtf.form_field(form.contact_buyer) }}
+        {{ wtf.form_field(form.contact_buyer_name) }}
+        {{ wtf.form_field(form.contact_buyer_number) }}
+        {{ wtf.form_field(form.contact_buyer_email) }}
+        <h4>SELLER CONTACT DETAILS</h4>
+        <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
+        {{ wtf.form_field(form.contact_seller) }}
+        {{ wtf.form_field(form.contact_seller_name) }}
+        {{ wtf.form_field(form.contact_seller_number) }}
+        {{ wtf.form_field(form.contact_seller_email) }}
+
+        
+   </div>
+    <div class="col column">
+        <h4>PRICING</h4>
+        {{ wtf.form_field(form.deal_price) }}
+        {{ wtf.form_field(form.deposit) }}
+        {{ wtf.form_field(form.agency_fee_seller) }}
+        {{ wtf.form_field(form.agency_fee_buyer) }}
+        {{ wtf.form_field(form.gross_commission) }}
+        {{ wtf.form_field(form.include_vat) }}
+        {{ wtf.form_field(form.total_commission) }}
+        {{ wtf.form_field(form.split_with_external_referral) }}
+        {{ wtf.form_field(form.agent_1) }}
+        <div class="row">
+            <div class="col">
+                {{ wtf.form_field(form.commission_agent_1) }}
+            </div>
+            <div class="col">
+                <label class="control-label" id="com"></label>
+            </div>
+        </div>
+        {{ wtf.form_field(form.agent_2) }}
+        <div class="row">
+            <div class="col">
+                {{ wtf.form_field(form.commission_agent_2) }}
+            </div>
+            <div class="col">
+                <label class="control-label" id="com2"></label>
+            </div>
+        </div>
+        {% if purpose == "rent" %}
+        {{ wtf.form_field(form.cheques) }}
+        {% endif %}
+        {{ wtf.form_field(form.estimated_deal_date) }}
+        {{ wtf.form_field(form.actual_deal_date) }}
+    </div>
+    <div class="col column">
+        <h4>LOCATION</h4>
+        {{ wtf.form_field(form.unit_no)}}
+        {{ wtf.form_field(form.unit_category) }}
+        {{ wtf.form_field(form.unit_beds) }}
+        {{ wtf.form_field(form.unit_location) }}
+        {{ wtf.form_field(form.unit_sub_location) }}
+        {{ wtf.form_field(form.unit_floor) }}
+        {{ wtf.form_field(form.unit_type) }}
+        {% if type == "developer" %}
+        <div class="row">
+            <div class="col">
+                {{ wtf.form_field(form.plot_size) }}
+            </div>
+            <div class="col">
+                {{ wtf.form_field(form.floor_no) }}
+            </div>
+            <div class="col">
+                {{ wtf.form_field(form.project) }}
+            </div>
+        </div>
+        {% endif %}
+        {% if purpose == "sale" or type == "developer" %}
+        {{ wtf.form_field(form.buyer_type) }}
+        {{ wtf.form_field(form.finance_type) }}
+        {{ wtf.form_field(form.down_payment_available) }}
+        {{ wtf.form_field(form.down_payment) }}
+        {% endif %}
+        {% if purpose == "rent" %}
+        {{ wtf.form_field(form.tenancy_start_date) }}
+        {{ wtf.form_field(form.tenancy_renewal_date) }}
+        {{ wtf.form_field(form.number_cheque_payment) }}
+        {{ wtf.form_field(form.cheque_payment_type) }}
+        {{ wtf.form_field(form.move_in_date) }}
+        {% endif %} 
+        {% if type == "developer" %}
+        {{ wtf.form_field(form.unit_price) }}
+        {{ wtf.form_field(form.percentage) }}
+        {{ wtf.form_field(form.amount) }}
+        {% endif %}
+
+    </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h4>FOR UHP USE ONLY</h4>
+            {% if type == "developer" %}
+            {{ wtf.form_field(form.pre_approval_loan) }}
+            {{ wtf.form_field(form.loan_amount) }}
+            {% endif %}
+            {{ wtf.form_field(form.client_referred_bank) }}
+            {{ wtf.form_field(form.bank_representative_name) }}
+            {{ wtf.form_field(form.referral_date) }}
+            {{ wtf.form_field(form.bank_representative_mobile) }}
+        </div>
+    </div>
+
+
+  </dl>
+  <label onclick="update()" class="btn btn-primary" >Submit</label>>
+  <input id="sub" class="btn btn-primary" value="Confirm Submission" type="submit">
+
+</form>
+</div>
+
+<!--CONTACTS MODAL-->
+<div class="modal fade" id="myContactModal1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+    
+        <div id="toolbarC">
+
+        </div>
+          <table id="contacttable"        
+          data-toggle="true"
+          data-toolbar="#toolbarC"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-radio="true" data-show-select-title="true">SELECT</th>
+                <th data-field="refno">REF NO</th>
+                <th data-field="name">NAME</th>
+                <th data-field="contact">CONTACT</th>
+                <th data-field="email">EMAIL</th>
+            </tr>
+            </thead>
+        </table>
+        <table>
+            <tr>
+                <form method="POST">
+                <td>
+                    <button type="button" class="btn btn-primary" onclick="quick_add()">+</button>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="number" placeholder="Contact" name="number">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="email" placeholder="Email" name="email">
+                </td>
+                </form>
+            </tr>
+        </table>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getcontact()">Select</button>
+          <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- /.modal -->
+<!--CONTACTS MODAL 2-->
+<div class="modal fade" id="myContactModal2">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+    
+        <div id="toolbarC2">
+
+        </div>
+          <table id="contacttable2"        
+          data-toggle="true"
+          data-toolbar="#toolbarC2"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-radio="true" data-show-select-title="true">SELECT</th>
+                <th data-field="refno">REF NO</th>
+                <th data-field="name">NAME</th>
+                <th data-field="contact">CONTACT</th>
+                <th data-field="email">EMAIL</th>
+            </tr>
+            </thead>
+        </table>
+        <table>
+            <tr>
+                <form method="POST">
+                <td>
+                    <button type="button" class="btn btn-primary" onclick="quick_add2()">+</button>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="first_name2" placeholder="First Name" name="first_name">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="last_name2" placeholder="Last Name" name="last_name">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="number2" placeholder="Contact" name="number">
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="email2" placeholder="Email" name="email">
+                </td>
+                </form>
+            </tr>
+        </table>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getcontact2()">Select</button>
+          <button id="close2" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- /.modal -->
+<!-- LISTING MODAL -->
+<div class="modal fade" id="listing">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+        <div id="toolbar">
+            <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
+            <button id="price" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Search</button>
+            <input class="form-control" style="float: left; width: 100px;margin-right: 5px;" type="text" id="minprice" placeholder="Min Price">
+            <input class="form-control" style="float: left; width: 100px; margin-right: 5px;" type="text" id="maxprice" placeholder="Max Price" >
+            <select name="type" id="type" style="float: left;width: 100px;" class="form-control"><option selected="selected" value="">Type</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option><option value="Residential Floor">Residential Floor</option><option value="Residential Plot">Residential Plot</option><option value="Townhouse">Townhouse</option><option value="Residential Building">Residential Building</option><option value="Penthouse">Penthouse</option><option value="Villa Compound">Villa Compound</option><option value="Hotel Apartment">Hotel Apartment</option><option value="Office">Office</option><option value="Other">Other</option></select>
+        </div>
+          <table id="table"        
+          data-toggle="true"
+          data-toolbar="#toolbar"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-radio="true" data-show-select-title="true">SELECT</th>
+                <th data-field="refno">REF NO</th>
+                <th data-field="building">LOCATION</th>
+                <th data-field="locationtext">COMMUNITY</th>
+                <th data-field="type">PURPOSE</th>
+                <th data-field="subtype">TYPE</th>
+                <th data-field="price">PRICE</th>
+            </tr>
+            </thead>
+        </table>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getproperty()">Select</button>
+          <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- /.modal -->
+<!-- LEAD MODAL -->
+<div class="modal fade" id="lead">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+        <div id="lead_toolbar">
+            <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
+        </div>
+          <table id="lead_table"        
+          data-toggle="true"
+          data-toolbar="#lead_toolbar"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-radio="true" data-show-select-title="true">SELECT</th>
+                <th data-field="refno">REF NO</th>
+                <th data-field="contact">CONTACT</th>
+                <th data-field="contact_name">CONTACT NAME</th>
+                <th data-field="lead_type">LEAD TYPE</th>
+                <th data-field="property_requirements">PROPERTY</th>
+                <th data-field="subtype">TYPE</th>
+                <th data-field="locationtext">COMMUNITY</th>
+                <th data-field="building">LOCATION</th>
+                <th data-field="price">PRICE</th>
+            </tr>
+            </thead>
+        </table>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getlead()">Select</button>
+          <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- /.modal -->
+
+
+<br></div>
+</section>
+
+<script>
+
+    $('#sub').hide()
+
+    function update(){
+        var list_id = document.getElementById('list_id').value;
+        var com = '-'
+        var status = document.getElementById('status').value;
+        var substatus = document.getElementById('sub_status').value;
+          fetch('/post_lead_note/'+list_id+'/'+com+'/'+status+'/'+substatus).then(function(response){
+            response.json().then(function(){
+                $('#sub').click()
+            })
+        })
+    }
+
+    let location_select = document.getElementById('unit_sub_location');
+    $("#unit_location").change(function(){
+    get_location();
+    });
+    var loc = '{{ loc }}'
+    var building = '{{ building }}'
+
+    if (loc != "") {
+    var x = $('#unit_location option:contains("'+loc+'")');
+    $('#unit_location').val(x[0].value)
+        setTimeout(function(){ get_location(); }, 100);
+    }
+
+
+
+    function get_location(){
+        var location = $("#unit_location").val();
+        fetch('/community/' + location).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let location of data.locations){
+                    if (location[0] == building)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_select.innerHTML = optionHTML;
+            })
+        })   
+    }
+
+
+    window.onload = get_location()
+
+
+
+    let sub_status = document.getElementById('sub_status');
+    $("#status").change(function(){
+        var status = $("#status").val();
+        fetch('/status/' + status).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let status of data.status){
+                    optionHTML += '<option value="'+status[0]+'">'+status[1]+'</option>';
+                }
+                sub_status.innerHTML = optionHTML;
+            })
+        })
+    });   
+
+
+    function get_contacts(){
+        fetch('/all_contacts').then(function(response){
+            response.json().then(function(data){
+                var jsonData = data.all_contacts
+                $(function () {
+                var $table = $('#contacttable').bootstrapTable({data: jsonData});
+                var $table = $('#contacttable2').bootstrapTable({data: jsonData});
+                });
+            })
+        })
+    }
+    window.onload = get_contacts();
+
+    function getcontact(){
+    var data = $('#contacttable').bootstrapTable('getSelections');
+    $('#contact_buyer').val(data[0].refno)
+    $('#contact_buyer_name').val(data[0].name)
+    $('#contact_buyer_number').val(data[0].contact)
+    $('#contact_buyer_email').val(data[0].email)
+    document.getElementById("close").click();
+    }
+
+    function getcontact2(){
+    var data = $('#contacttable2').bootstrapTable('getSelections');
+    $('#contact_seller').val(data[0].refno)
+    $('#contact_seller_name').val(data[0].name)
+    $('#contact_seller_number').val(data[0].contact)
+    $('#contact_seller_email').val(data[0].email)
+    document.getElementById("close2").click();
+    }
+
+    function quick_add(){
+    
+    $.ajax({
+    type : 'POST',
+    url : "{{url_for('handlecontacts.quick_add')}}",
+    data : {'first_name':$('#first_name').val(),
+    'last_name':$('#last_name').val(),
+    'number':$('#number').val(),
+    'email':$('#email').val()},
+    success: function(){
+        alert('Added!');
+        location.reload(); 
+    }
+        })
+    }
+
+    function quick_add2(){
+    
+    $.ajax({
+    type : 'POST',
+    url : "{{url_for('handlecontacts.quick_add')}}",
+    data : {'first_name':$('#first_name2').val(),
+    'last_name':$('#last_name2').val(),
+    'number':$('#number2').val(),
+    'email':$('#email2').val()},
+    success: function(){
+        alert('Added!');
+        location.reload(); 
+    }
+        })
+    }
+
+    function get_properties(){
+        fetch('/all_properties').then(function(response){
+            response.json().then(function(data){
+                let newtable = '';
+                var jsonData = data.all_properties
+                $(function () {
+                var $table = $('#table').bootstrapTable({data: jsonData});
+   
+                $('#price').click(function () {
+                    var grepFunc;
+                    category = $("#type").val();
+                    min = $("#minprice").val();
+                    if (min == "")
+                    {min = 0}
+                    max = $("#maxprice").val();
+                    if (max == "")
+                    {max = 9999999}
+                            grepFunc = function (item) {
+                                if (category == "")
+                                { return item.price >= min && item.price <= max }
+                                else
+                                {return item.price >= min && item.price <= max && item.subtype == category;}
+                            };
+                    $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+
+                $('#reset').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+ 
+
+                });
+            })
+        })
+    }
+
+    
+    function getproperty(){
+    var data = $('#table').bootstrapTable('getSelections');
+    $('#listing_ref').val(data[0].refno)
+    var x = $('#unit_location option:contains("'+data[0].locationtext+'")');
+    $('#unit_location').val(x[0].value)
+    get_location()
+    $('#unit_type').val(data[0].subtype)
+    $('#contact_seller').val(data[0].owner)
+    $('#contact_seller_name').val(data[0].owner_name)
+    $('#contact_seller_contact').val(data[0].owner_contact)
+    $('#contact_seller_email').val(data[0].owner_email)
+    $('#unit_beds').val(data[0].bedrooms)
+    $('#deal_price').val(data[0].price)
+    $('#unit_no').val(data[0].unit)
+    $('#unit_floor').val(data[0].plot)
+    setTimeout(function(){ $('#unit_sub_location').val(data[0].building); }, 100);
+    }
+
+
+    function get_leads(){
+        fetch('/all_leads').then(function(response){
+            response.json().then(function(data){
+                let newtable = '';
+                var jsonData = data.all_leads
+                $(function () {
+                var $table = $('#lead_table').bootstrapTable({data: jsonData});
+
+
+                $('#reset').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $lead_table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+ 
+
+                });
+            })
+        })
+    }
+
+    function getlead(){
+    var data = $('#lead_table').bootstrapTable('getSelections');
+    $('#lead_ref').val(data[0].refno)
+    var x = $('#unit_location option:contains("'+data[0].locationtext+'")');
+    $('#unit_location').val(x[0].value)
+    get_location()
+    $('#unit_type').val(data[0].subtype)
+    $('#unit_beds').val(data[0].bedrooms)
+    $('#deal_price').val(data[0].price)
+    $('#listing_ref').val(data[0].property_requirements)
+    $('#contact_buyer').val(data[0].contact)
+    $('#contact_buyer_name') .val(data[0].contact_name)
+    $('#contact_buyer_number').val(data[0].contact_number)
+    $('#contact_buyer_email').val(data[0].contact_email)
+    $('#unit_no').val(data[0].unit)
+    $('#unit_floor').val(data[0].plot)
+    setTimeout(function(){ $('#unit_sub_location').val(data[0].building); }, 100);
+    }
+
+
+    let agent1 = document.getElementById('agent_1');
+    let agent2 = document.getElementById('agent_2');
+    var assign = '{{ assign }}'
+    function get_user(){
+        fetch('/all_users').then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">none</option>';
+                for (let users of data.all_users){
+                    
+                    if ( users.name == assign ){
+                        optionHTML += '<option value="'+users.name+'" selected>'+users.name+'</option>';
+                    }
+                    else{
+                    optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                    }
+                }
+                agent1.innerHTML = optionHTML;
+                agent2.innerHTML = optionHTML;
+            })
+        })
+    };
+
+
+    window.onload = get_properties();
+    window.onload = get_leads();
+    window.onload = get_user();
+
+    
+
+    function stat(x,agent){
+        try {
+        fetch('/all_users_commission/'+x+'/'+$("#deal_type").val()).then(function(response){
+            response.json().then(function(data){
+               if (agent == 1){
+                $("#commission_agent_1").val(data.commission)
+                let deal_price = document.getElementById('deal_price').value
+                let total_price = parseFloat(deal_price)
+                let percent = data.commission
+                let float_percent = parseFloat(percent)
+                document.getElementById('com').innerHTML = (total_price *  (float_percent / 100)).toFixed(2) +' AED'
+            }
+               else if (agent == 2){
+                $("#commission_agent_2").val(data.commission)
+                let deal_price = document.getElementById('deal_price').value
+                let total_price = parseFloat(deal_price)
+                let percent = data.commission
+                let float_percent = parseFloat(percent)
+                document.getElementById('com2').innerHTML = (total_price *  (float_percent / 100)).toFixed(2) +' AED'
+               } 
+            })
+        })
+    }
+    catch(error){
+        console.error(error);
+    }
+    }
+
+    $("#agent_1").on('change', function() {
+        stat(this.value,"1")
+    });
+    $("#agent_1").on('click', function() {
+        stat(this.value,"1")
+    });
+    $("#agent_2").on('change', function() {
+        stat(this.value,"2")
+    });
+    $("#agent_2").on('click', function() {
+        stat(this.value,"2")
+    });
+
+
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+

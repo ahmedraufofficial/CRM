@@ -1,0 +1,417 @@
+
+{% extends "base.html" %} 
+
+{% block content %}
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;min-height: 100vh; height: 100%;">
+  <div style="min-height: 100vh;height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<br>
+
+<div class="container unselectable" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+  <br>
+
+<div class="shade">
+
+  <div class="row">
+    <div class="col text-left">
+      <h4 style="color: white;padding-left: 5px;padding-top: 8px;" id="refno"></h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div id="images" style="height: 210px; background-color: white;"></div>
+    </div>
+  </div>
+  <table class="table" style="background-color: white;">
+    <tbody>
+<tr>
+  <td>
+    <label class="label_head">Status: </label>
+    <label class="label_entry" id="status"></label>
+  </td>
+  <td>
+    <label class="label_head">Emirates: </label>
+    <label class="label_entry" id="city"></label>
+  </td>
+  <td>
+    <label class="label_head">Type: </label>
+    <label class="label_entry" id="type"></label>
+  </td>
+  <td>
+    <label class="label_head">Subtype: </label>
+    <label class="label_entry" id="subtype"></label>
+  </td>
+</tr>
+  <tr>
+  <td>
+    <label class="label_head">Price: </label>
+    <label class="label_entry" id="price"></label>
+  </td>
+  <td>
+    <label class="label_head">Build Area: </label>
+    <label class="label_entry" id="size"></label>
+  </td>
+  <td>
+    <label class="label_head">Commission: </label>
+    <label class="label_entry" id="commission"></label>
+  </td>
+  <td>
+    <label class="label_head">Deposit: </label>
+    <label class="label_entry" id="deposit"></label>
+  </td>
+</tr>
+<tr>
+  <td>
+    <label class="label_head">Plot Size: </label>
+      <label class="label_entry" id="plot_size"></label>
+    </td>
+  <td>
+    <label class="label_head">Baths: </label>
+    <label class="label_entry" id="bathrooms"></label>
+  </td>
+  <td>
+    <label class="label_head">Beds: </label>
+    <label class="label_entry" id="bedrooms"></label>
+  </td>
+  <td>
+    <label class="label_head">Permit No: </label>
+    <label class="label_entry" id="permit_number"></label>
+  </td>
+  </tr>
+<tr>
+  <td>
+    <label class="label_head">Title: </label>
+    <label class="label_entry" id="title"></label>
+  </td>
+  <td>
+    <label class="label_head">Location: </label>
+    <label class="label_entry" id="building"></label>
+  </td>
+  <td>
+    <label class="label_head">Unit: </label>
+    <label class="label_entry" id="unit"></label>
+  </td>
+  <td>
+    <label class="label_head">Community: </label>
+    <label class="label_entry" id="locationtext"></label>
+  </td>
+  </tr>
+<tr>
+    <td class="label_head" colspan="4">
+      <label>Description: </label>
+      <label class="label_entry" id="description"></label>
+    </td>
+
+  </tr>
+<tr>
+  <td>
+    <label class="label_head">Owner ID: </label>
+    <label class="label_entry" id="owner"></label>
+  </td>
+  <td>
+    <label class="label_head">Owner Name: </label>
+    <label class="label_entry" id="owner_name"></label>
+  </td>
+  <td>
+    <label class="label_head">Owner Email: </label>
+    <label class="label_entry" id="owner_email"></label>
+  </td>
+  <td>
+    <label class="label_head">Owner Contact: </label>
+    <label class="label_entry" id="owner_contact"></label>
+  </td>
+</tr>
+<tr>
+  <td>
+    <label class="label_head">Assign To: </label>
+    <label class="label_entry" id="assign_to"></label>
+  </td>
+  <td>
+    <label class="label_head">Source: </label>
+    <label class="label_entry" id="source"></label>
+  </td>
+  <td>
+    <label class="label_head">Expiry: </label>
+    <label class="label_entry" id="expiry_date"></label>
+  </td>
+  <td>
+    <label class="label_head">Featured: </label>
+    <label class="label_entry" id="featured"></label>
+  </td>
+</tr>
+<tr>
+  <td>
+    <label class="label_head">Completion Status: </label>
+    <label class="label_entry" id="completion_status"></label>
+  </td>
+  <td>
+    <label class="label_head">Tenure: </label>
+    <label class="label_entry" id="tenure"></label>
+  </td>
+  <td>
+    <label class="label_head">Tenant: </label>
+    <label class="label_entry" id="tenant"></label>
+  </td>
+  <td>
+    <label class="label_head">Rent Price Term: </label>
+    <label class="label_entry" id="rentpriceterm"></label>
+  </td>
+</tr>
+<tr>
+  <td class="label_head" colspan="2">
+    <label>Parking: </label>
+    <label class="label_entry" id="parking"></label>
+  </td>
+  <td class="label_head" colspan="2">
+    <label>Furnished: </label>
+    <label class="label_entry" id="furnished"></label>
+  </td>
+  </tr>
+<tr>
+  
+</tr>
+</tbody>
+</table>
+
+</div>
+<br>
+</div>
+
+
+
+<div class="container unselectable" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+<div class="row justify-content-center">
+  <div class="col-11">
+    <div id="notetoolbar">
+      <span>NOTES</span>
+    </div>
+      <table id="notetable"        
+      data-toggle="true"
+      data-toolbar="#notetoolbar"
+      data-search="true"
+      data-show-columns="true"
+      data-pagination="true"
+      data-height="350"
+      style="font-size: 10pt;">
+        <thead>
+            <tr>
+                <th data-field="date">DATE</th>
+                <th data-field="time">TIME</th>
+                <th data-field="user">USER</th>
+                <th data-field="comment">COMMENT</th>
+            </tr>
+        </thead>
+    </table>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-11">
+    <input type="hidden" id="list_id">
+    <input class="form-control" type="text" id="comment">
+    <button onclick="post_note()" class="btn" style="margin-top: 20px;background-color: #7be0ff; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
+  </div>
+</div>
+</div>
+
+
+
+    <div class="container" style="padding: 10px; ">
+      <br/>
+      <div id="toolbar">
+{% if current_user.export == True %}
+ <button onclick="get_check('properties')" class="btn btn-primary">Export</button>
+{% endif %}
+ <a id="download" href="">Download</a>
+ {% if current_user.viewall == True %}
+ <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+ {% endif %}
+ <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Listings</button>
+      </div>
+      <table
+        id="table"
+        class="unselectable "
+        data-toggle="true"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="500">
+      </table>
+    </div>
+    <div class="container">
+      <a href="/add_property/rent" class="btn btn-primary">Add Rental</a>
+      <a href="/add_property/sale" class="btn btn-warning" style="margin-left: 10px; color: white;;">Add Sale</a>
+      </div>
+<br>
+</div>
+</section>
+{% endblock %}
+
+
+{% block scripts %}
+
+<script type='text/javascript'>
+var refno = document.getElementById("refno");
+var status = document.getElementById("status");
+var type = document.getElementById("type");
+var subtype = document.getElementById("subtype");
+var price = document.getElementById("price");
+var size = document.getElementById("size");
+var commission = document.getElementById("commission");
+var deposit = document.getElementById("deposit");
+var assign_to = document.getElementById("assign_to");
+var tenure = document.getElementById("tenure");
+var title = document.getElementById("title");
+var description = document.getElementById("description");
+var unit = document.getElementById("unit");
+var owner = document.getElementById("owner");
+var owner_name = document.getElementById("owner_name");
+var owner_email = document.getElementById("owner_email");
+var owner_contact = document.getElementById("owner_contact");
+var source = document.getElementById("source");
+var completion_status = document.getElementById("completion_status");
+var bathrooms = document.getElementById("bathrooms");
+var bedrooms = document.getElementById("bedrooms");
+var locationtext = document.getElementById("locationtext");
+var building = document.getElementById("building");
+var furnished = document.getElementById('furnished')
+var expiry_date = document.getElementById('expiry_date')
+var tenant = document.getElementById('tenant')
+var parking = document.getElementById('parking')
+var featured = document.getElementById('featured')
+var permit_number = document.getElementById('permit_number')
+var plot_size = document.getElementById('plot_size')
+var rentpriceterm = document.getElementById('rentpriceterm')
+var completion_status = document.getElementById('completion_status')
+$('#display').hide();
+$('#notes').hide();
+
+function view_note(x){
+  fetch('/all_notes/'+x).then(function(response){
+    response.json().then(function(data){
+      $('#display').hide();
+      $('#list_id').val(x)
+      $('#notes').show()
+      var jsonData = data.notes
+      $(function () {
+                $('#notetable').bootstrapTable('destroy')
+                $('#notetable').bootstrapTable({data: jsonData});
+                });
+    })
+  })
+}
+
+function post_note(){
+      var list_id = document.getElementById('list_id').value;
+      var com = document.getElementById('comment').value;
+      fetch('/post_note/'+list_id+'/'+com).then(function(response){
+            response.json().then(function(){
+              view_note(list_id)
+            })
+        })
+      };
+
+
+function view_property(x){
+        fetch('/all_properties/'+x).then(function(response){
+          response.json().then(function(data){
+            var p = data.property  
+            var x = p[0].photos
+            $('#images').empty();
+            $('#notes').hide();
+            var imagedata = '';
+            imagedata += '<div class="owl-carousel" id="owl-demo">'
+   for (i = 0; i < x.length; i++) {
+      if (x[i] != ''){
+      imagedata += '<div class="item"><img style="height:200px;" src="' + x[i] + '"></div>'
+      }
+    }
+    imagedata += '</div>'
+            $('#images').append(imagedata);
+            refno.innerHTML = p[0].refno;
+            status.innerHTML = p[0].status;
+            type.innerHTML = p[0].type;
+            subtype.innerHTML = p[0].subtype;
+            price.innerHTML = p[0].price;
+            size.innerHTML = p[0].size;
+            commission.innerHTML = p[0].commission;
+            deposit.innerHTML = p[0].deposit;
+            assign_to.innerHTML = p[0].assign_to;
+            tenure.innerHTML = p[0].tenure;
+            title.innerHTML = p[0].title;
+            description.innerHTML = p[0].description;
+            unit.innerHTML = p[0].unit;
+            owner.innerHTML = p[0].owner;
+            owner_name.innerHTML = p[0].owner_name;
+            owner_email.innerHTML = p[0].owner_email;
+            source.innerHTML = p[0].source;
+            completion_status.innerHTML = p[0].completion_status;
+            bathrooms.innerHTML = p[0].bathrooms;
+            bedrooms.innerHTML = p[0].bedrooms;
+            building.innerHTML = p[0].building;
+            locationtext.innerHTML = p[0].locationtext;
+            furnished.innerHTML = p[0].furnished;
+            expiry_date.innerHTML = p[0].expiry_date;
+            tenant.innerHTML = p[0].tenant;
+            parking.innerHTML = p[0].parking;
+            featured.innerHTML = p[0].featured;
+            permit_number.innerHTML = p[0].permit_number;
+            plot_size.innerHTML = p[0].plot_size;
+            rentpriceterm.innerHTML = p[0].rentpriceterm;
+            completion_status.innerHTML = p[0].completion_status;
+            $('#display').show();
+            $("#owl-demo").owlCarousel();
+            })
+        })
+    };
+
+    $(window).on('load',(function(){
+
+    var columns = {{columns|tojson}};
+    var data = {{data|tojson}};
+
+
+      $(function() {
+        $('#table').bootstrapTable({ 
+          data: data,
+          columns: columns,
+        });
+        
+        $('#user_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.assign_to == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#all_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+      });
+    }));
+
+
+
+  </script>
+
+
+
+
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    #owl-demo .item{
+      margin: 3px;
+    }
+    #owl-demo .item img{
+      display: block;
+    }
+ </style>
+{% endblock %}

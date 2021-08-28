@@ -1,0 +1,35 @@
+{"headers":
+  [
+    {
+      "field": "refno",  
+      "title": "REF NO", 
+      "sortable": "True"
+    },
+    {
+      "field": "first_name",
+      "title": "First Name",
+      "sortable": "True"
+    },
+    {
+      "field": "last_name",
+      "title": "Last Name",
+      "sortable": "True"
+    },
+    {
+      "field": "role",
+      "title": "Role",
+      "sortable": "True"
+    },
+    {
+      "field": "email",
+      "title": "Email",
+      "sortable": "True"
+    },
+     {
+      "field": "edit",
+      "title": "Options",
+      "sortable": "False"
+    }
+  ]
+}
+

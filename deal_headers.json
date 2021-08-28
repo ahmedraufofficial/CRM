@@ -1,0 +1,63 @@
+{"headers":
+  [ 
+    {
+    "field": "state",
+    "checkbox": "true"
+    },
+    {
+      "field": "refno",  
+      "title": "REF NO", 
+      "sortable": "True"
+    },
+    {
+      "field": "type",
+      "title": "TYPE",
+      "sortable": "True"
+    },
+    {
+      "field": "deal_type",
+      "title": "DEAL TYPE",
+      "sortable": "True"
+    },
+    {
+      "field": "status",
+      "title": "STATUS",
+      "sortable": "True"
+    },
+    {
+      "field": "sub_status",
+      "title": "SUB STATUS",
+      "sortable": "True"
+    },
+    {
+      "field": "contact_buyer",
+      "title": "BUYER/TENANT",
+      "sortable": "True"
+    },
+    {
+      "field": "contact_seller",
+      "title": "SELLER/LANDLORD",
+      "sortable": "True"
+    },
+    {
+      "field": "deal_price",
+      "title": "DEAL PRICE",
+      "sortable": "True"
+    },
+    {
+      "field": "unit_location",
+      "title": "COMMUNITY",
+      "sortable": "True"
+    },
+    {
+      "field": "unit_sub_location",
+      "title": "LOCATION",
+      "sortable": "True"
+    },
+    {
+      "field": "edit",
+      "title": "OPTIONS",
+      "sortable": "False"
+    }
+  ]
+}

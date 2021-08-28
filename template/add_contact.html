@@ -1,0 +1,89 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+
+.column{
+           background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+padding-top: 10px;
+        margin: 5px;
+        margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #f5f0e1;
+        font-size: 14pt;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+   </style>
+
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8); padding-bottom: 12%;">
+<div class="container">
+
+<form method="POST">
+  <dl>
+    <div class="row">
+      <div class="col column">
+        <h4>Contact Details</h4>
+        {{ wtf.form_field(form.title) }}
+        {{ wtf.form_field(form.first_name) }}
+        {{ wtf.form_field(form.last_name) }}
+        {{ wtf.form_field(form.number) }}
+        {{ wtf.form_field(form.email) }}
+        {{ wtf.form_field(form.assign_to) }}
+        {{ wtf.form_field(form.gender) }}
+        {{ wtf.form_field(form.date_of_birth) }}
+        {{ wtf.form_field(form.religion) }}
+        {{ wtf.form_field(form.language) }}
+      </div>
+
+        <div class="col column">
+          <h4>Extras</h4>
+          {{ wtf.form_field(form.alternate_number) }}
+          {{ wtf.form_field(form.contact_type) }}
+          {{ wtf.form_field(form.role) }}
+          {{ wtf.form_field(form.nationality) }}
+          {{ wtf.form_field(form.source) }}
+          {{ wtf.form_field(form.comment) }}
+        </div>
+      </div>
+  </dl>
+  <p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;"  value="Submit" type="submit">
+</form>
+</div>
+</div>
+</section>
+
+<script>
+      let assign_to = document.getElementById('assign_to');
+    var assign = '{{ assign }}'
+    function get_user(){
+        fetch('/all_users').then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let users of data.all_users){
+                    if ( users.name == assign ){
+                        optionHTML += '<option value="'+users.name+'" selected>'+users.name+'</option>';
+                    }
+                    else{
+                    optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                    }
+                }
+                assign_to.innerHTML = optionHTML;
+            })
+        })
+    };
+window.onload = get_user();
+
+</script>
+{% endblock %}
+
+
+
+
+
+

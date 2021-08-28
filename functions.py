@@ -1,0 +1,368 @@
+from models import Leads
+import os 
+import json
+from datetime import datetime, timedelta
+import random
+import easyimap
+
+
+USERS_FOLDER = os.getcwd() + '/static/userdata'
+NOTES = os.getcwd() + '/static/notes'
+SCHEDULER = os.getcwd() + '/static/scheduler'
+
+def create_json(username):
+    with open(os.path.join(USERS_FOLDER,username+'.json'), 'w') as f:
+        data = {}
+        data['logs'] = []
+        data['reminders'] = []
+        data['lead'] = {}
+        data['list'] = {}
+        json.dump(data, f)
+
+
+def logs(username,ref,task):
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        columns = json.load(file)
+        now = datetime.now()
+        date = now.strftime("%d/%m/%Y")
+        time = now.strftime("%H:%M:%S")
+        task = task
+        columns["logs"].append({
+            'date':date,
+            'time':time,
+            'ref':ref,
+            'task':task
+        })
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+
+def post_reminders(username,from_date,to_date,from_time,to_time,title):
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        columns = json.load(file)
+        start = str(from_date+'T'+from_time+':00')
+        end = str(to_date+'T'+to_time+':00')
+        id = random.sample(range(1, 10000),1)[0]
+        a = columns['reminders']
+        for i in a:
+            if i['id'] == id:
+                id = random.sample(range(1, 10000),1)[0]
+        columns["reminders"].append({
+          'id' :id,
+          'title':title,
+          'start':start,
+          'end' :end
+        })
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        
+def reminders(username):
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        columns = json.load(file)
+        return(columns['reminders'])
+      
+
+def get_log(username):
+    f = open(os.path.join(USERS_FOLDER, username+'.json'))
+    columns = json.load(f)
+    con = columns["logs"]
+    return con
+        
+def notes(listid):
+    with open(os.path.join(NOTES,listid+'.json'), 'w') as f:
+        data = {}
+        data['notes'] = []
+        json.dump(data, f)
+
+def get_notes(listid):
+    f = open(os.path.join(NOTES,listid+'.json'))
+    columns = json.load(f)
+    con = columns["notes"]
+    return con
+
+def update_note(username, listid, com):
+    with open(os.path.join(NOTES, listid+'.json'),'r+') as file:
+        columns = json.load(file)
+        a = columns['notes']
+        now = datetime.now()
+        date = now.strftime("%d/%m/%Y")
+        time = now.strftime("%H:%M:%S")
+        columns["notes"].append({
+            'date':date,
+            'time':time,
+            'user':username,
+            'comment': com
+        })
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def update_lead_note(username, listid, com, status, substatus):
+    with open(os.path.join(NOTES, listid+'.json'),'r+') as file:
+        columns = json.load(file)
+        now = datetime.now()
+        date = now.strftime("%d/%m/%Y")
+        time = now.strftime("%H:%M:%S")
+        columns["notes"].append({
+            'date':date,
+            'time':time,
+            'user':username,
+            'comment': com,
+            'status': status,
+            'substatus': substatus
+        })
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def get_lead():
+    password = "ahmedrauf1"
+    username = "a.rauf@uhpae.com"
+    server = easyimap.connect("uhp.uhpae.com", username, password)
+    [mail] = server.listup(1)
+    a = mail.uid
+    sender,title,body = (lambda data: [data.from_addr, data.title, data.body])(server.mail(str(a)))
+    if sender in ['noreply@bayut.com', 'bayut@uhpae.com']:
+        for i in ['rent', '-r-']:
+            if i in title.lower():
+                category = "rent"
+        for i in ['sale','-s-']:
+            if i in title.lower():
+                category = "sale"
+        message, prop_details = (lambda data: [data.split('\r\nINQUIRY MESSAGE\r\n')[1].split('\r\n')[1],data.split('\r\nINQUIRER DETAILS\r\n')[1].split('\r\n')[1:4] + data.split('\r\nPROPERTY DETAILS\r\n')[1].split('\r\n')[1:6]])(body)
+        d = {}
+        for i in prop_details:
+            p = (lambda x: d.update({x[0]:x[1]}))(i.replace(': ',':').split(':'))
+        d['Phone'] = d['Phone'].replace('-','').split(' ')[0] 
+        leadObj = {}
+        leadObj['refno'] = d['Reference']
+        leadObj['contact_name'] = d['Name']
+        leadObj['contact_number'] = d['Phone']
+        leadObj['contact_email'] = d['Email']
+        leadObj['message'] = message
+        return leadObj
+
+    if sender in ['noreply23@email.dubizzle.com']:
+        for i in ['rent', '-r-']:
+            if i in title.lower():
+                category = "rent"
+        for i in ['sale','-s-']:
+            if i in title.lower():
+                category = "sale"
+        message, prop_details = (lambda data: [data.split('Message:')[1].split('\r\n\r\n')[0].replace('\n','').replace('\r','')[1:], data.split('Ref ')[1].split('\r\n')[0:4]])(body)
+        d = {}
+        for i in prop_details:
+            p = (lambda x: d.update({x[0]:x[1]}))(i.replace(': ',':').split(':'))
+        d['Telephone'] = d['Telephone'].split(' ')[0] 
+        leadObj = {}
+        leadObj['refno'] = d['No']
+        leadObj['contact_name'] = d['Name']
+        leadObj['contact_number'] = d['Telephone']
+        leadObj['contact_email'] = d['Email']
+        leadObj['message'] = message
+        return leadObj
+
+def getAvailableAgents(usernames,leads):
+    now = datetime.now()
+    from_date = now.strftime("%Y-%m-%d")
+    from_time = now.strftime("%H:%M")
+    expiry_now = datetime.now() + timedelta(hours=2)
+    to_date = expiry_now.strftime("%Y-%m-%d")
+    to_time = expiry_now.strftime("%H:%M")
+    available_agents = []
+    assigned = []
+    no_follow_up = []
+    for username in usernames:
+        f = open(os.path.join(USERS_FOLDER, username+'.json'))
+        columns = json.load(f)
+        con = list(columns["lead"].keys())
+        if not con:
+            available_agents.append(username)
+        else:
+            check = True
+            for i in con:
+                if columns["lead"][i]["status"] == 'Lost' or columns["lead"][i]["status"] == 'Closed':
+                    pass
+                else:
+                    check = False
+                print(i)
+                if columns["lead"][i]["sub_status"] == "In progress" and columns["lead"][i]["status"] != "Lost":
+                    d = columns["lead"][i]["expiry date"] +'T'+ columns["lead"][i]["expiry time"]+":00"
+                    b = datetime.strptime(d, '%Y-%m-%dT%H:%M:%S')
+                    if b < datetime.now():
+                        no_follow_up.append((i,username))
+            if check == True:
+                available_agents.append(username)    
+    print(available_agents)
+    for lead in leads:
+        for username in available_agents:
+            with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+                columns = json.load(file)
+                if lead in list(columns["lead"].keys()):
+                    continue
+                columns["lead"].update({lead:{
+                'date':from_date,
+                'time':from_time,
+                'expiry date':to_date,
+                'expiry time':to_time,
+                'status':'Open',
+                'sub_status':'In progress'
+                }})
+                file.seek(0)
+                json.dump(columns, file,indent=4)
+                file.truncate()
+            title = lead+' Assigned' 
+            print('added to note')
+            post_reminders(username,from_date,to_date,from_time,to_time,title)
+            assigned.append((lead,username))
+            break
+    print(assigned)
+    return assigned, no_follow_up
+        
+def assign_lead(username,lead,substatus):
+    f = open(os.path.join(SCHEDULER,'scheduler.json'))
+    c = json.load(f)
+    c = c['time']
+
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        columns = json.load(file)
+        now = datetime.now()
+        from_date = now.strftime("%Y-%m-%d")
+        from_time = now.strftime("%H:%M")
+        expiry_now = datetime.now() + timedelta(hours=int(c))
+        to_date = expiry_now.strftime("%Y-%m-%d")
+        to_time = expiry_now.strftime("%H:%M")
+        columns["lead"].update({lead:{
+        'date':from_date,
+        'time':from_time,
+        'expiry date':to_date,
+        'expiry time':to_time,
+        'status': 'Open',
+        'sub_status': substatus
+        }})
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate
+
+def lost_lead(username,lead):
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        columns = json.load(file)
+        columns["lead"][lead]["status"] = "Lost"
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def update_user_note(username,lead,status,sub_status):
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        columns = json.load(file)
+        columns["lead"][lead]["sub_status"] = sub_status
+        columns["lead"][lead]["status"] = status
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def add_user_list(username,list_id):
+    with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
+        now = datetime.now()
+        from_date = now.strftime("%Y-%m-%d")
+        from_time = now.strftime("%H:%M")
+        columns = json.load(file)
+        columns["list"].update({list_id:{
+                'date':from_date,
+                'time':from_time,
+                }})
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def chart_data(chart, username):
+    colors = ['rgba(255, 99, 132, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 205, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(54, 162, 235, 0.2)','rgba(153, 102, 255, 0.2)','rgba(201, 203, 207, 0.2)']
+    borderColor = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)']
+    f = open(os.path.join(USERS_FOLDER, username+'.json'))
+    columns = json.load(f)
+    if chart == '1':
+        labels = []
+        data = []
+        bg = []
+        bd = []
+        for i in columns["lead"]:
+            if columns["lead"][i]["status"] == 'Lost':
+                exp = columns["lead"][i]["expiry date"] +'T'+ columns["lead"][i]["expiry time"]+":00"
+                exp = datetime.strptime(exp, '%Y-%m-%dT%H:%M:%S')
+            else:
+                exp = datetime.now()
+            start = columns["lead"][i]["date"] +'T'+ columns["lead"][i]["time"]+":00"
+            start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S')
+            labels.append(i)
+            data.append(((exp - start).seconds//3600))
+            bg.append(random.choice(colors))
+            bd.append(random.choice(borderColor))
+        return labels,data,bg,bd,"bar"
+    
+    if chart == '2':
+        labels = ['January','February','March','April','May','June','July','August','September','October','November','December']
+        all = [0,0,0,0,0,0,0,0,0,0,0,0]
+        lost = [0,0,0,0,0,0,0,0,0,0,0,0]
+        bg = []
+        bd = []
+        for i in columns["lead"]:
+            m = columns["lead"][i]["date"]
+            m = datetime.strptime(m, '%Y-%m-%d')
+            z = int(m.month)
+            all[z-1] = all[z-1] + 1
+            if columns["lead"][i]["status"] == "Lost":
+                lost[z-1] = lost[z-1] + 1
+        current_m = int(datetime.today().month)
+        labels = labels[:current_m]
+        data = [all[:current_m],lost[:current_m]]
+        return labels,data,"","","lead"
+    
+    if chart == '3':
+        labels = ['January','February','March','April','May','June','July','August','September','October','November','December']
+        all = [0,0,0,0,0,0,0,0,0,0,0,0]
+        bg = []
+        bd = []
+        for i in columns["list"]:
+            m = columns["list"][i]["date"]
+            m = datetime.strptime(m, '%Y-%m-%d')
+            z = int(m.month)
+            all[z-1] = all[z-1] + 1
+        current_m = int(datetime.today().month)
+        labels = labels[:current_m]
+        data = all[:current_m]
+        return labels,data,"","","list"
+
+def update_sch(x):
+    with open(os.path.join(SCHEDULER,'scheduler.json'),'r+') as file:
+        columns = json.load(file)
+        columns.clear()
+        columns.update({"time":str(x)})
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def get_commission(role, cost, type):
+    commission = 0
+    if role == "list":
+        if cost >= 0 and cost <= 30000:
+            commission = 2
+        elif cost > 30000 and cost <= 75000:
+            commission = 3
+        elif cost > 75000 and cost <= 135000:
+            commission = 4
+        elif cost > 135000:
+            commission = 5
+    if role == "sale" and type == "Primary":
+        if cost > 30000 and cost <= 75000:
+            commission = 15
+        elif cost > 75000 and cost <= 135000:
+            commission = 25
+        elif cost > 135000:
+            commission = 35
+    if role == "sale" and type == "Secondary":
+        if cost > 30000 and cost <= 75000:
+            commission = 13
+        elif cost > 75000 and cost <= 135000:
+            commission = 22
+        elif cost > 135000:
+            commission = 30
+    return commission

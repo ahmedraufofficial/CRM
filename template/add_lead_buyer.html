@@ -1,0 +1,426 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+
+    .column{
+           background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+padding-top: 10px;
+        margin: 5px;
+        margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #f5f0e1;
+        font-size: 14pt;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+</style>
+    
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container">
+    
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+              <table>
+                  <thead>
+                  </thead>
+                  <tbody class="table" id="property_table">
+                    
+                  </tbody>
+                  
+              </table>
+            <div id="toolbar">
+                <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
+                <button id="price" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Search</button>
+                <input class="form-control" style="float: left; width: 100px;margin-right: 5px;" type="text" id="minprice" placeholder="Min Price">
+                <input class="form-control" style="float: left; width: 100px; margin-right: 5px;" type="text" id="maxprice" placeholder="Max Price" >
+                <select name="type" id="type" style="float: left;width: 100px;" class="form-control"><option selected="selected" value="">Type</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option><option value="Residential Floor">Residential Floor</option><option value="Residential Plot">Residential Plot</option><option value="Townhouse">Townhouse</option><option value="Residential Building">Residential Building</option><option value="Penthouse">Penthouse</option><option value="Villa Compound">Villa Compound</option><option value="Hotel Apartment">Hotel Apartment</option><option value="Office">Office</option><option value="Other">Other</option></select>
+            </div>
+              <table id="table"        
+              data-toggle="true"
+              data-toolbar="#toolbar"
+              data-search="true"
+              data-show-columns="true"
+              data-pagination="true">
+                <thead>
+                <tr>
+                    <th data-radio="true" data-show-select-title="true">SELECT</th>
+                    <th data-field="refno">REF NO</th>
+                    <th data-field="building">LOCATION</th>
+                    <th data-field="locationtext">COMMUNITY</th>
+                    <th data-field="type">PURPOSE</th>
+                    <th data-field="subtype">TYPE</th>
+                    <th data-field="price">PRICE</th>
+                </tr>
+                </thead>
+            </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getproperty()">Select</button>
+              <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <div class="modal fade" id="myContactModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+            
+                <div id="toolbarC">
+    
+                </div>
+                  <table id="contacttable"        
+                  data-toggle="true"
+                  data-toolbar="#toolbarC"
+                  data-search="true"
+                  data-show-columns="true"
+                  data-pagination="true">
+                    <thead>
+                    <tr>
+                        <th data-radio="true" data-show-select-title="true">SELECT</th>
+                        <th data-field="refno">REF NO</th>
+                        <th data-field="name">NAME</th>
+                        <th data-field="contact">CONTACT</th>
+                        <th data-field="email">EMAIL</th>
+                    </tr>
+                    </thead>
+                </table>
+                <table>
+                    <tr>
+                        <form method="POST">
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="quick_add()">+</button>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="number" placeholder="Contact" name="number">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="email" placeholder="Email" name="email">
+                        </td>
+                        </form>
+                    </tr>
+                </table>
+    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getcontact()">Select</button>
+                  <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+<form method="POST" enctype="multipart/form-data">
+  <dl>
+
+
+    <div class="row">
+        <div class="col-lg-4 col-md-4 column">
+            <h4>Client Details</h4>
+            <a data-toggle="modal" href="#myContactModal" class="btn btn-primary" style="margin-bottom: 5px; background-color: #7be0ff; border: hidden;">Add Contact</a>
+        {{ wtf.form_field(form.contact) }}
+        {{ wtf.form_field(form.contact_name) }}
+        {{ wtf.form_field(form.contact_number) }}
+        {{ wtf.form_field(form.contact_email) }}
+        {{ wtf.form_field(form.nationality) }}
+        {{ wtf.form_field(form.role) }}
+        {{ wtf.form_field(form.agent) }}
+        {{ wtf.form_field(form.enquiry_date) }}
+        
+
+   </div>
+
+    <div class="col column">
+        <h4>Property Requirements</h4>
+        {{ wtf.form_field(form.lead_type) }}
+        <a data-toggle="modal" href="#myModal" class="btn btn-primary" style="margin-bottom: 5px;border: hidden;">Add Property</a>
+        {{ wtf.form_field(form.property_requirements) }}
+    <div class="row">
+        <div class="col">
+            {{ wtf.form_field(form.locationtext) }}
+        </div>    
+        <div class="col">
+            {{ wtf.form_field(form.building) }}
+        </div>
+        <div class="col">
+            {{ wtf.form_field(form.subtype) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ wtf.form_field(form.min_beds) }}
+        </div>
+        <div class="col">
+            {{ wtf.form_field(form.max_beds) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h4>Financial Status</h4>
+            <div class="row">
+            <div class="col">
+               {{ wtf.form_field(form.min_price) }}
+            </div>
+            <div class="col">
+               {{ wtf.form_field(form.max_price) }}
+           </div>
+           </div>
+
+        </div>
+
+    </div>
+
+    <br>
+    <h4>Private Amenities</h4>
+    <div class="row">
+    <div class="col" style="margin-left: 15px;background-color: rgba(0, 0, 0, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+      {{ form.privateamenities(class="control-label" , style="list-style: none;margin-left:-40px;") }}
+    </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {{ wtf.form_field(form.purpose) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ wtf.form_field(form.unit) }}
+        </div>
+        <div class="col">
+            {{ wtf.form_field(form.plot) }}
+        </div>
+        <div class="col">
+            {{ wtf.form_field(form.street) }}
+        </div>
+        <div class="col">
+            {{ wtf.form_field(form.size) }}
+        </div>
+    </div>
+
+        <div class="row">
+            <div class="col">
+             <h4>Lead Status</h4>
+             {{ wtf.form_field(form.status) }}
+             {{ wtf.form_field(form.sub_status) }}
+             {{ wtf.form_field(form.source) }}
+         </div>
+         </div>
+
+    </div>
+    </div>
+
+
+  </dl>
+  <p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;" type="submit" value="Submit">
+</form>
+</div>
+<br></div>
+</section>
+
+<script>
+    let location_select = document.getElementById('building');
+    $("#locationtext").change(function(){
+    get_location();
+    });
+    var building = '{{ building }}'
+    function get_location(){
+        var location = $("#locationtext").val();
+        fetch('/community/' + location).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let location of data.locations){
+                    if (location[0] == building)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_select.innerHTML = optionHTML;
+            })
+        })   
+    }
+
+    let sub_status = document.getElementById('sub_status');
+    $("#status").change(stat)
+    var ss = '{{sub_status}}'
+    function stat(){
+        var status = $("#status").val();
+        fetch('/status/' + status).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let status of data.status){
+                    if ( status[0] == ss ){
+                        optionHTML += '<option value="'+status[0]+'" selected>'+status[1]+'</option>';
+                    }
+                    else{
+                    optionHTML += '<option value="'+status[0]+'">'+status[1]+'</option>';
+                }
+            }
+                sub_status.innerHTML = optionHTML;
+            })
+        })
+    }
+    window.onload = stat() 
+
+    let assign_to = document.getElementById('agent');
+    var assign = '{{ assign }}'
+    function get_user(){
+        fetch('/all_users').then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let users of data.all_users){
+                    if ( users.name == assign ){
+                        optionHTML += '<option value="'+users.name+'" selected>'+users.name+'</option>';
+                    }
+                    else{
+                    optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                    }
+                }
+                assign_to.innerHTML = optionHTML;
+            })
+        })
+    };
+
+    window.onload = get_user();
+
+    function get_contacts(){
+        fetch('/all_contacts').then(function(response){
+            response.json().then(function(data){
+                var jsonData = data.all_contacts
+                $(function () {
+                var $table = $('#contacttable').bootstrapTable({data: jsonData});
+                });
+            })
+        })
+    }
+    window.onload = get_contacts();
+
+    function getcontact(){
+    var data = $('#contacttable').bootstrapTable('getSelections');
+    $('#contact').val(data[0].refno)
+    $('#contact_name').val(data[0].name)
+    $('#contact_number').val(data[0].contact)
+    $('#contact_email').val(data[0].email)
+    $('#nationality').val(data[0].nationality)
+    document.getElementById("close").click();
+    }
+
+    function quick_add(){
+    
+    $.ajax({
+    type : 'POST',
+    url : "{{url_for('handlecontacts.quick_add')}}",
+    data : {'first_name':$('#first_name').val(),
+    'last_name':$('#last_name').val(),
+    'number':$('#number').val(),
+    'email':$('#email').val()},
+    success: function(){
+        alert('Added!');
+        location.reload(); 
+    }
+        })
+    }
+
+
+
+    function get_properties(){
+        fetch('/all_properties').then(function(response){
+            response.json().then(function(data){
+                let newtable = '';
+                var jsonData = data.all_properties
+                $(function () {
+                var $table = $('#table').bootstrapTable({data: jsonData});
+   
+                $('#price').click(function () {
+                    var grepFunc;
+                    category = $("#type").val();
+                    min = $("#minprice").val();
+                    if (min == "")
+                    {min = 0}
+                    max = $("#maxprice").val();
+                    if (max == "")
+                    {max = 9999999}
+                            grepFunc = function (item) {
+                                if (category == "")
+                                { return item.price >= min && item.price <= max }
+                                else
+                                {return item.price >= min && item.price <= max && item.subtype == category;}
+                            };
+                    $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+
+                $('#reset').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+ 
+
+                });
+            })
+        })
+    }
+
+    function getproperty(){
+    var data = $('#table').bootstrapTable('getSelections');
+    $('#property_requirements').val(data[0].refno)
+    var x = $('#locationtext option:contains("'+data[0].locationtext+'")');
+    $('#locationtext').val(x[0].value)
+    get_location()
+    $('#subtype').val(data[0].subtype)
+    $('#min_beds').val(data[0].bedrooms)
+    $('#min_price').val(data[0].price)
+    $('#unit').val(data[0].unit)
+    $('#size').val(data[0].size)
+    $('#plot').val(data[0].plot)
+    setTimeout(function(){ $('#building').val(data[0].building); }, 100);
+    var ame = data[0].privateamenities.replace("['","").replace("']","").split("', '")
+    for(let i = 0; i < ame.length; i++){
+        $('input[value="'+ame[i]+'"]').attr('checked', true);
+    }
+    }
+
+    window.onload = get_properties();
+    window.onload = get_location();
+
+
+
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+

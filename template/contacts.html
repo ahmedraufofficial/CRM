@@ -1,0 +1,55 @@
+
+{% extends "base.html" %} 
+
+{% block content %}
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+    <div class="container" style="padding: 10px; ">
+      <br/>
+      <div id="toolbar"></div>
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="500">
+      </table>
+    </div>
+
+    <div class="container">
+      <a href="/add_contact" class="btn btn-primary">Add</a>
+      </div>
+      <br>
+      </div>
+</section>
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+    $(window).on('load',(function(){
+      
+    var columns = {{columns|tojson}};
+    var data = {{data|tojson}};
+      
+
+      $(function() {
+        $('#table').bootstrapTable({ 
+          data: data,
+          columns: columns,
+        });
+
+      });
+
+    }));
+  </script>
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+ </style>
+{% endblock %}

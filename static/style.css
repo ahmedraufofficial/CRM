@@ -1,0 +1,178 @@
+.control-label{
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f5f0e1;
+  font-size: 8pt;
+  margin-bottom: .2rem !important;
+}
+
+.ok {
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+    background: transparent;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 15px;
+    border: 1px solid #dfdfdf;
+    border-radius: 2px;
+    margin-right: 2rem;
+    padding: 1rem;
+    padding-right: 2rem;
+    color: black;
+    background-color: rgb(240, 241, 219);
+  }
+
+.radio {
+    color: rgb(240, 241, 219) !important;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+.label_entry{
+color: black;
+}
+
+.label_head {
+  color: black;
+}
+
+.si{
+margin-right: 3px;
+margin-bottom: 3px;
+display: inline;
+width: 25px !important;
+height: 25px !important;
+}
+
+.btn-primary {
+  background-color:#001524 !important;
+}
+
+.btn-primary:hover {
+  background-color:#010813 !important;
+}
+.shade{
+  box-shadow: 0px 0px 33px 3px rgba(0,0,0,0.75);
+-webkit-box-shadow: 0px 0px 33px 3px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 33px 3px rgba(0,0,0,0.75);
+z-index: 50;
+}
+.table-bordered th{
+  border: 1px solid #4b4b4b !important;
+  border-bottom: 1px solid #4b4b4b !important;
+  color: white;
+ }
+ .table-bordered td{
+  border: 1px solid #4b4b4b !important;
+ }
+.bootstrap-table .fixed-table-container.fixed-height:not(.has-footer) {
+border-bottom: 1px solid #4b4b4b;
+  }
+span{
+  color: white;
+}
+.th-inner {
+  color: white;
+  font-size: 11pt !important;
+}
+.table{
+  background-color: rgba(0, 0, 0, 0.8);
+}
+td{
+  color: white;
+  font-size: 10pt;
+}
+.btn {
+  border: 1px solid white !important;
+  border-radius: 0px !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 8pt !important;
+  padding: 3px !important;
+
+}
+input{
+  border: 1px solid black !important;
+  border-radius: 0px !important;
+  font-size: 10pt !important;
+}
+
+select{
+  border: 1px solid black !important;
+  border-radius: 0px !important;
+  font-size: 10pt !important;
+}
+.dropdown-menu{
+  background-color: rgba(0, 0, 0, 1) !important;
+  border-radius: 0px !important;
+}
+
+.page-list {
+  color: white !important;
+  font-size: 10pt !important;
+}
+.pagination-info {
+  font-size: 10pt !important;
+}
+
+.form-control{
+  height: 25px !important;
+  line-height: 0 !important;
+  padding: 0 !important;
+  padding-left: 4px !important;
+}
+
+.modal-content{
+  background-color: rgba(0, 0, 0) !important;
+  border: 1px solid white !important; 
+}
+
+.btn-default {
+  color: black !important;
+  background-color: white !important;
+}
+
+.close {
+  filter: invert(0.5);
+}
+
+.upload {
+  border: none !important;
+  color: #4b4b4b !important;
+}
+
+.download {
+ text-decoration: none; border: 1px solid white;color: white;padding: 10px;
+
+}
+.download:hover {
+  background-color: white;
+  color: #4b4b4b;
+}
+
+.unclick {
+  pointer-events: none;
+}
+
+h8{
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+h5 {
+color: white;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size: 20pt;
+}
+
+.storage {
+  border: 3px dashed white;padding-top: 10px; padding-bottom: 20px;
+}
+
+.storage:hover {
+  border: 3px dashed rgb(0, 161, 224);
+}

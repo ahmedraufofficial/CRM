@@ -1,0 +1,424 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style type='text/css'>
+  .column{
+      background-color: #1e3d59;
+  
+      margin: 5px;
+      border-radius: 5px;
+  }
+  h4{
+      color: #7be0ff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  h8{
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  h5 {
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size: 20pt;
+  }
+  .fc-toolbar-title {
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  .fc-daygrid-day-number{
+      color: #f5f0e1;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  .fc-col-header-cell-cushion{
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+ tbody{
+  background-color: #4b4b4b;
+ }
+ input{
+   border: 2px solid #1e3d59;
+   padding: 8px;
+ }
+ .fc-h-event .fc-event-main {
+    color: black;
+    color: var(--fc-event-text-color,white);
+    
+}
+.fc-h-event {
+    border: 1px solid white;
+    border: 1px solid var(--fc-event-border-color,white);
+    background-color: #737373 ;
+    background-color: var(--fc-event-bg-color,#001524 );
+    border-radius: 0px;
+}
+.fc-day-today {
+  background-color: #001524 !important;
+}
+.fc-event-past{
+  color: white !important;
+}
+.fc-daygrid-event-dot{
+  border: calc(var(--fc-daygrid-event-dot-width,8px)/ 2) solid var(--fc-event-border-color,white) !important;
+}
+span{
+  color:white;
+}
+
+label{
+  color: #007bff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  display: block;
+}
+p{
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+  display: inline;
+}
+
+.progress-bar{
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    -webkit-box-shadow: none !important;
+  	-moz-box-shadow: none !important;
+	  box-shadow: none !important;
+}
+
+.progress{
+    border-radius: 0px !important;
+    background-color: white !important;
+    
+    /* Changes below */
+    -webkit-box-shadow: inset 0 0 0 2px #337AB7 !important;
+	  -moz-box-shadow: inset 0 0 0 2px #337AB7 !important;
+	  box-shadow: inset 0 0 0 2px #337AB7 !important;
+    border: none;
+    height: 20px !important;
+}
+#profile{
+  opacity: 0;
+  transition: opacity 1.5s;
+}
+
+.fc-button-primary{
+  background-color:#001524 !important;
+  border-radius: 0px !important;
+  border: 1px white solid !important;
+  text-transform: uppercase !important;
+}
+.fc-button-active{
+  background-color: #010813 !important;
+}
+
+
+#upload_pic {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+#upload_pic:hover{
+  background-color: rgba(0, 0, 0, 1);
+}
+
+
+</style>
+
+<section style="background-image: url(/static/images/bg_edited.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.4); padding-bottom: 12%;">
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+    <h5 style="text-transform: uppercase;"> WELCOME, {{ user.username }}</h5>
+    </div>
+  </div>
+<div class="row" style="margin-top: 50px;">
+  <div class="col">
+    <h5>
+      CALENDAR
+    </h5>
+  </div>
+  </div>
+  <div class="row">
+<div class="col-8">
+  
+  <div id='calendar' class="shade" style="font-size: 10.5pt;"></div>
+</div>
+
+<div class="col ">
+ 
+<div class="div" style="background-color: white;height: 100%;width: 1px; margin-left: 50%;">
+
+</div>
+
+</div>  
+
+<div id="waypoint1"></div>
+
+  <div class="col-3">
+    <div class="shade">
+    <div class="row">
+      <div class="col text-center">
+        <div style="font-size: 1.75em;font-weight: 500;
+        line-height: 1.2;color: white;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+        Reminder</div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div style="background-color: rgba(0, 0, 0, 0.8); text-align: center; padding-bottom: 12px; padding-top: 10px;margin-top: 9%;">
+          <div class="row">
+            <div class="col">
+              <input type="text" placeholder="Title" id="title" style="width: 90%;margin-bottom: 10px; font-size: 10pt; ">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col">
+              <input type="date" id="from_date" style="width: 90%; margin-bottom: 10px;font-size: 10pt;text-transform: uppercase;">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col">
+              <input type="time" id="from_time" style="width: 90%; margin-bottom: 10px;font-size: 10pt;">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col">
+              <input type="date" id="to_date" style="width: 90%; margin-bottom: 10px;font-size: 10pt;text-transform: uppercase;">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col">
+              <input type="time" id="to_time" style="width: 90%; margin-bottom: 10px;font-size: 10pt;">
+            </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <button onclick="post_reminder()" class="btn btn-primary" style="width: 50%;font-size: 10pt; color: white;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+        </svg>
+                  ADD
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="shade" style="background-color: rgba(0, 0, 0, 0.8); text-align: center; padding-bottom: 5%; padding-top: 5%; margin-top: 2%;">
+            <div id="count" class="col">
+          
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+<div class="container" style="margin-top: 50px;">
+  <hr style="background-color: white;">
+</div>
+
+<div class="container" id="profile" >
+  <div class="row" style="margin-top: 50px;">
+    <div class="col">
+    <h5>
+      USER PROFILE
+    </h5>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px;">
+
+
+ 
+
+    <div class="col-3">
+      <button class="shade" id="upload_pic" style="text-align: center; width: 100%;height: 0;padding-bottom: 85%;border: none;">
+      {% if user.profile_picture == None %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" fill="white" style="margin-top:25%;" class="bi bi-person-plus" viewBox="0 0 16 16">
+        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"></path>
+        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"></path>
+      </svg>
+      {% else %}
+      <img src="{{ user.profile_picture }}" alt="" style="width: 180px;" alt="">
+      {% endif %}
+    </button>
+
+    </div>
+    <div class="col">
+      <div class="div" style="background-color: white;height: 100%;width: 1px; margin-left: 50%;">
+
+      </div>
+    </div>
+    <div class="col-8">
+
+          <table class="table shade">
+            <tbody style="background-color: rgba(0, 0, 0, 0.8); color:white;border: 1px solid white; font-size: 9pt;">
+          <tr>
+            <th scope="row">Name</th>
+            <td colspan="6" style="color: white; text-align: left;">{{ user.username }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Email</th>
+            <td colspan="6" style="color: white; text-align: left;">{{ user.email }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Number</th>
+            <td colspan="6" style="color: white; text-align: left;">{{ user.number }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Job Title</th>
+            <td colspan="6" style="color: white; text-align: left;">{{ user.job_title }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Department</th>
+            <td colspan="6" style="color: white; text-align: left;">{{ user.department }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="table shade">
+        <thead style="background-color: rgba(0, 0, 0, 0.8); color:white;border-left: 1px solid white;border-right: 1px solid white;color:white;border: 1px solid white; font-size: 9pt;">
+          <tr>
+            <th scope="col">Role</th>
+            <th scope="col">Admin</th>
+            <th scope="col">Listings</th>
+            <th scope="col">Sales</th>
+            <th scope="col">Deals</th>
+            <th scope="col">Contacts</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <tbody style="background-color: rgba(0, 0, 0, 0.8); color:white;border: 1px solid white; color:white;border: 1px solid white; font-size: 9pt;">
+          <tr>
+            <th scope="row">Permission</th>
+            <td style="color: #007bff;">{{ user.is_admin }}</td>
+            <td style="color: #007bff;">{{ user.listing }}</td>
+            <td style="color: #007bff;">{{ user.sale }}</td>
+            <td style="color: #007bff;">{{ user.deal }}</td>
+            <td style="color: #007bff;">{{ user.contact }}</td>
+            <td style="color: #007bff;">{{ user.edit }}</td>
+          </tr>
+          </tbody>
+</table>
+    </div>
+
+  </div>
+
+  </div>
+  <br>
+  
+  
+
+
+
+
+</div>
+</section>
+<a href="{{url_for('logout')}}" style="width: 100%; text-decoration: none;" class="btn btn-danger">LOG OUT</a>
+
+  <script>
+   
+e = document.getElementById('profile')
+var waypoint = new Waypoint({
+  element: document.getElementById('waypoint1'),
+  handler: function(direction) {
+    e.style.opacity = "1"
+  }
+})
+
+
+    function get_count(){
+        fetch('/all_count').then(function(response){
+            response.json().then(function(data){
+              count = '';
+              let all_count = data.all_count[0];
+              lead = (all_count.ulead / all_count.alead)*100;
+              list = (all_count.ulist / all_count.alist)*100;
+              count += '<h8 style="margin-top: 100px;">USER LISTING: '+all_count.ulist+'/'+all_count.alist+'</h8>'
+              count += '<div class="progress" style="width:90%; margin-left: auto; margin-right:auto;">'
+              count += '<div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" style="width:'+list+'%;"></div>'
+              count += '</div>'
+              count += '<h8 style="margin-top: 50px;">USER LEADS: '+all_count.ulead+'/'+all_count.alead+'</h9>'
+              count += '<div class="progress" style="width:90%; margin-left: auto; margin-right:auto;">'
+              count += ' <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width:'+lead+'%;"></div>'
+              count += '</div>'
+              document.getElementById('count').innerHTML += count
+            })
+        })
+      }
+
+    window.onload = get_count()
+
+    var reminders = '';
+    get_reminder()
+
+    function get_calender() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        eventClick: function(info) {
+    alert('Event: ' + info.event.id + 
+          ' ,Title: ' + info.event.title);
+    info.el.style.borderColor = 'red';
+  },
+        initialView: 'dayGridMonth',
+        headerToolbar:{
+            left:'prev,next today',
+            center: 'title',
+            right:'dayGridMonth timeGridWeek timeGridDay'
+        },
+        events: reminders,
+      });
+      calendar.render();
+    };
+
+    function post_reminder(){
+      var fd = document.getElementById('from_date').value;
+      var td = document.getElementById('to_date').value;
+      var ft = document.getElementById('from_time').value;
+      var tt = document.getElementById('to_time').value;
+      var title = document.getElementById('title').value;
+      console.log(fd)
+      console.log(tt)
+      console.log(title)
+      if (fd == '' || td == '' || ft == '' || tt == '' || title == '')
+      {
+        alert('Enter All Values')
+      }
+      else
+      {
+      fetch('/post_reminder/'+fd+'/'+td+'/'+ft+'/'+tt+'/'+title).then(function(response){
+            response.json().then(function(){
+              get_reminder()
+            })
+        })
+      }
+    };
+
+    function get_reminder(){
+    
+    $.ajax({
+    type : 'POST',
+    url : "{{url_for('dashboard')}}",
+    data : {},
+    success: function(data){
+      useReturnData(data.data);
+    }
+        })
+    }
+    
+    function useReturnData(data){
+    reminders = data;
+    get_calender()
+    };
+
+
+  </script>
+
+
+
+{% endblock %}

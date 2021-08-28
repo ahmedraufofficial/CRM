@@ -1,0 +1,58 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<section style="background-image: url(/static/images/worldmap.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100vh;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container" style="padding-top: 50px;">
+    <div class="row">
+        <div class="col storage">
+            <div class="row">
+                
+            <div class="col">
+            <h5 style="margin-bottom: 40px;">All Forms</h5>
+            <div class="col">
+                {% for f in all_forms %}
+                <a class="download" href="/cloudstorage/forms/{{f}}"><i class="bi bi-cloud-arrow-down-fill"></i>{{f}}</a>
+                {% endfor %}
+            </div>
+                
+        </div>
+        </div>
+
+</div>
+</div>
+</div>
+
+<div class="container" style="margin-top: 40px;">
+    <div class="row">
+        <div class="col storage">
+            <h5 style="margin-bottom: 30px;">Submit Forms to HR</h5>
+            <form method=post enctype=multipart/form-data>
+                <input class="upload" type=file name=file>
+                <input class="btn btn-primary" type=submit value=Upload>
+              </form> 
+        </div>
+    </div>
+
+</div>
+
+
+</div>
+</section>
+
+
+
+
+
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}
+
+  </style>
+{% endblock %}

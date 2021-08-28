@@ -1,0 +1,450 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<br>
+<div class="container unselectable" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+  <br>
+  <div class="shade">
+  <div class="row">
+    <div class="col text-left">
+      <h4 style="color: white;padding-left: 5px;padding-top: 8px;" id="refno"></h4>
+    </div>
+  </div>
+  <table class="table" style="background-color: white;">
+    <tbody>
+  <tr>
+     <td>
+    <label class="label_head">Contact:</label>
+    <label class="label_entry" id="contact"></label>
+    </td>
+     <td>
+    <label class="label_head">Contact Name:</label>
+    <label class="label_entry" id="contact_name"></label>
+    </td>
+     <td>
+    <label class="label_head">Contact Number:</label>
+    <label class="label_entry" id="contact_number"></label>
+    </td>
+     <td>
+    <label class="label_head">Contact Email:</label>
+    <label class="label_entry" id="contact_email"></label>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label class="label_head">Nationality :</label>
+      <label class="label_entry" id="nationality"></label>
+    </td>
+    <td>
+      <label class="label_head">Subtype:</label>
+      <label class="label_entry" id="subtype"></label>
+    </td>
+    <td>
+      <label class="label_head">Agent:</label>
+      <label class="label_entry" id="agent"></label>
+    </td>
+    <td>
+      <label class="label_head">Purpose:</label>
+      <label class="label_entry" id="purpose"></label>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label class="label_head">Status:</label>
+      <label class="label_entry" id="status"></label>
+    </td>
+    <td>
+      <label class="label_head">Sub Status:</label>
+      <label class="label_entry" id="sub_status"></label>
+    </td>
+    <td>
+      <label class="label_head">Lead Type:</label>
+      <label class="label_entry" id="lead_type"></label>
+    </td>
+    <td>
+      <label class="label_head">Property Requirements:</label>
+      <label class="label_entry" id="property_requirements"></label>
+    </td>
+  </tr>
+  <tr>
+    <td class="label_head">
+      <label>Community:</label>
+      <label class="label_entry" id="locationtext"></label>
+    </td>
+    <td class="label_head">
+      <label>Location:</label>
+      <label class="label_entry" id="building"></label>
+    </td>
+    <td>
+      <label class="label_head">Size:</label>
+      <label class="label_entry" id="size"></label>
+    </td>
+    <td>
+      <label class="label_head">Type :</label>
+      <label class="label_entry" id="type"></label>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label class="label_head">Beds:</label>
+      <label class="label_entry" id="min_beds"></label>
+    </td>
+    <td>
+      <label class="label_head">Max Beds:</label>
+      <label class="label_entry" id="max_beds"></label>
+    </td>
+    <td>
+      <label class="label_head">Price | Budget:</label>
+      <label class="label_entry" id="min_price"></label>
+    </td>
+    <td>
+      <label class="label_head">Max Price:</label>
+      <label class="label_entry" id="max_price"></label>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label class="label_head">Unit:</label>
+      <label class="label_entry" id="unit"></label>
+      </td>
+    <td>
+      <label class="label_head">Plot:</label>
+      <label class="label_entry" id="plot"></label>
+    </td>
+    <td>
+      <label class="label_head">Street:</label>
+      <label class="label_entry" id="street"></label>
+    </td>
+    <td>
+      <label class="label_head">Amenities :</label>
+      <label class="label_entry" id="privateamenities"></label>
+    </td> 
+  </tr>
+  <tr>
+    <td class="label_head" colspan="2">
+      <label>Time to contact:</label>
+      <label class="label_entry" id="time_to_contact"></label>
+    </td>
+    <td class="label_head" colspan="2">
+      <label>Enquiry Date:</label>
+      <label class="label_entry" id="enquiry_date"></label>
+    </td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+</div>
+
+
+<div class="container unselectable" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+  <div class="row justify-content-center">
+    <div class="col-11">
+      <div id="notetoolbar">
+        <span>NOTES</span>
+      </div>
+        <table id="notetable"        
+        data-toggle="true"
+        data-toolbar="#notetoolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="350"
+        style="font-size: 10pt;">
+          <thead>
+              <tr>
+                  <th data-field="date">DATE</th>
+                  <th data-field="time">TIME</th>
+                  <th data-field="user">USER</th>
+                  <th data-field="comment">COMMENT</th>
+                  <th data-field="status">STATUS</th>
+                  <th data-field="substatus">SUB STATUS</th>
+              </tr>
+          </thead>
+      </table>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-11">
+      <input type="hidden" id="list_id">
+      <input type="hidden" id="status_note" value="Open">
+      <div class="row">
+        <div class="col">
+      <input class="form-control" type="text" id="comment">
+      </div>
+      <div class="col">
+      <select class="form-control" id="sub_status_note" name="sub_status_note">
+        <option value="Follow up">Follow up</option>
+        <option value="Offer made">Offer made</option>
+        <option value="Interested">Interested</option>
+        <option value="Interested to meet">Interested to meet</option>
+      </select>
+      </div>    
+    </div>
+      
+      <button onclick="post_lead_note()" class="btn btn-primary" style="margin-top: 20px; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
+      <button id="close_lead" onclick="close_lead('close')" class="btn" style="margin-top: 20px;background-color: #dc3545; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Close Lead</button>
+      <button id="open_lead" onclick="close_lead('open')" class="btn" style="margin-top: 20px;background-color: #56b300; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Open Lead</button>
+      <div id="closelead">
+
+      </div>
+
+    </div>
+  </div>
+  </div>
+  
+
+    <div class="container" style="padding: 10px;">
+      <br/>
+      <div id="toolbar">
+        {% if current_user.export == True %}
+        <button onclick="get_check('leads')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+        {% if current_user.viewall == True %}
+        <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+        {% endif %}
+        <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
+        <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
+        <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
+      </div>
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="500">
+      </table>
+    </div>
+
+    <div class="container">
+    <a href="/add_lead_buyer" class="btn btn-primary">Add Buyer Lead</a>
+    <a href="/add_lead_developer" class="btn btn-warning" style="color: white;">Add Developer Lead</a>
+    </div>
+    <br>
+    </div>
+    </section>
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+var type = document.getElementById('type')
+var contact = document.getElementById('contact')
+var contact_name = document.getElementById('contact_name')
+var contact_number = document.getElementById('contact_number')
+var contact_email = document.getElementById('contact_email')
+var nationality = document.getElementById('nationality')
+var purpose = document.getElementById('purpose')
+var time_to_contact = document.getElementById('time_to_contact')
+var agent = document.getElementById('agent')
+var refno = document.getElementById('refno')
+var enquiry_date = document.getElementById('enquiry_date')
+var lead_type = document.getElementById('lead_type')
+var privateamenities = document.getElementById('privateamenities')
+/*var created_by = document.getElementById('created_by')*/
+var status = document.getElementById('status')
+var sub_status = document.getElementById('sub_status')
+var property_requirements = document.getElementById('property_requirements')
+var locationtext = document.getElementById('locationtext')
+var building = document.getElementById('building')
+var subtype = document.getElementById('subtype')
+var min_beds = document.getElementById('min_beds')
+var max_beds = document.getElementById('max_beds')
+var min_price = document.getElementById('min_price')
+var max_price = document.getElementById('max_price')
+var unit = document.getElementById('unit')
+var plot = document.getElementById('plot')
+var street = document.getElementById('street')
+var size = document.getElementById('size')
+
+$('#display').hide();
+$('#notes').hide();
+
+
+function view_note(x){
+  fetch('/all_notes/'+x).then(function(response){
+    response.json().then(function(data){
+      $('#display').hide();
+      $('#list_id').val(x)
+      $('#notes').show()
+      $('#open_lead').hide();
+      var jsonData = data.notes
+      $(function () {
+                $('#notetable').bootstrapTable('destroy')
+                $('#notetable').bootstrapTable({data: jsonData});
+                });
+    })
+  })
+}
+
+function post_lead_note(){
+      var list_id = document.getElementById('list_id').value;
+      var com = document.getElementById('comment').value;
+      if (com == ""){
+        com = "-"
+      }
+      var status = document.getElementById('status_note').value;
+      var substatus = document.getElementById('sub_status_note').value;
+      if (substatus == "successful"){
+        $('#closelead').append("<a class='btn btn-warning' href='/add_deal/sale/"+list_id+"'>Move to Deal Sale Page</a> <a class='btn btn-warning' href='/add_deal/rent/"+list_id+"'>Move to Deal Rent Page</a> <a class='btn btn-warning' href='/add_deal/developer/"+list_id+"'>Move to Deal Developer Sale Page</a>")
+      
+      }
+      else{
+      fetch('/post_lead_note/'+list_id+'/'+com+'/'+status+'/'+substatus).then(function(response){
+            response.json().then(function(){
+              view_note(list_id)
+              
+            })
+        })
+      }
+      };
+
+function close_lead(x){
+  if (x=='close'){
+  document.getElementById('status_note').value = 'Closed'
+  var sel = document.getElementById('sub_status_note')
+  sel.innerHTML = '';
+  let optionHTML = '';
+    optionHTML += '<option value="successful">successful</option>';
+    optionHTML += '<option value="unsuccessful">unsuccessful</option>';
+    sel.innerHTML = optionHTML;
+    $('#close_lead').hide();
+    $('#open_lead').show();
+  }
+  else {
+    document.getElementById('status_note').value = 'Closed'
+    var sel = document.getElementById('sub_status_note')
+    sel.innerHTML = '';
+    let optionHTML = '';
+    optionHTML += '<option value="Follow up">Follow up</option>';
+    optionHTML += '<option value="Offer made">Offer made</option>';
+    optionHTML += '<option value="Interested">Interested</option>';
+    optionHTML += '<option value="Interested to meet">Interested to meet</option>';
+    sel.innerHTML = optionHTML;
+    $('#close_lead').show();
+    $('#open_lead').hide();
+  }
+  }
+
+
+
+
+
+function follow_up(list_id){
+      var com = "Assigned";
+      fetch('/follow_up/'+list_id+'/'+com).then(function(response){
+            response.json().then(function(){
+              view_note(list_id)
+              location.reload();
+            })
+        })
+      };
+
+
+
+
+
+
+function view_leads(x){
+        fetch('/all_leads/'+x).then(function(response){
+          response.json().then(function(data){
+            var p = data.lead 
+            type.innerHTML = p[0].type;
+            contact.innerHTML = p[0].contact;
+            contact_name.innerHTML = p[0].contact_name;
+            contact_number.innerHTML = p[0].contact_number;
+            contact_email.innerHTML = p[0].contact_email;
+            nationality.innerHTML = p[0].nationality;
+            purpose.innerHTML = p[0].purpose;
+            time_to_contact.innerHTML = p[0].time_to_contact;
+            agent.innerHTML = p[0].agent;
+            refno.innerHTML = p[0].refno;
+            enquiry_date.innerHTML = p[0].enquiry_date;
+            lead_type.innerHTML = p[0].lead_type;
+            privateamenities.innerHTML = p[0].privateamenities;
+            /*created_by.innerHTML = p[0].created_by;*/
+            status.innerHTML = p[0].status;
+            sub_status.innerHTML = p[0].sub_status;
+            property_requirements.innerHTML = p[0].property_requirements;
+            locationtext.innerHTML = p[0].locationtext;
+            building.innerHTML = p[0].building;
+            subtype.innerHTML = p[0].subtype;
+            min_beds.innerHTML = p[0].min_beds;
+            max_beds.innerHTML = p[0].max_beds;
+            min_price.innerHTML = p[0].min_price;
+            max_price.innerHTML = p[0].max_price;
+            unit.innerHTML = p[0].unit;
+            plot.innerHTML = p[0].plot;
+            street.innerHTML = p[0].street;
+            size.innerHTML = p[0].size;
+
+            $('#display').show();
+          })
+        })
+      }
+
+
+$(window).on('load',(function(){      
+    var columns = {{columns|tojson}};
+    var data = {{data|tojson}};
+
+      $(function() {
+        $('#table').bootstrapTable({ 
+          data: data,
+          columns: columns,
+        });
+
+        $('#user_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.agent == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#all_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#lead_pool').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              console.log(item.status)
+                              return item.status == 'Closed'
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });  
+        $('#active').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              console.log(item.status)
+                              return item.status == 'Open'
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });         
+      });
+
+    }));
+  </script>
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}
+
+  </style>
+{% endblock %}

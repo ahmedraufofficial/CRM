@@ -1,0 +1,82 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;min-height: 100vh; height: 100%;">
+  <div style="min-height: 100vh;height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<br>
+
+    <div class="container" style="padding: 10px; ">
+      <br/>
+      <div id="toolbar">
+        {% if current_user.export == True %}
+        <button onclick="get_check('deals')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+ <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+ <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Deals</button>
+      </div>
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable "
+        data-toggle="true"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="500">
+      </table>
+    </div>
+      <div class="container">
+        <a href="/add_deal/rent" class="btn btn-primary">Add Rental Deal</a>
+        <a href="/add_deal/sale" class="btn btn-warning" style="margin-left: 10px; color: white;">Add Sale Deal</a>
+        <a href="/add_deal/developer" class="btn btn-warning" style="margin-left: 10px; color: white;">Add Developer Sale Deal</a>
+        </div>
+    </br>
+</div>
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+    $(window).on('load',(function(){
+      
+    var columns = {{columns|tojson}};
+    var data = {{data|tojson}};
+      
+
+    $(function() {
+        $('#table').bootstrapTable({ 
+          data: data,
+          columns: columns,
+        });
+        $('#user_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.agent_1 == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#all_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+      });
+    }));
+  </script>
+    <style type='text/css'>
+      .row-index {
+        width: 50px;
+        display: inline-block;
+      }
+      body {
+    overflow-x: hidden;
+  }
+    </style>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<section style="background-image: url(/static/images/worldmap.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100vh;">
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container" style="padding-top: 50px;">
+    <div class="row">
+        <div class="col storage">
+            <div class="row">
+                
+            <div class="col">
+            <h5 style="margin-bottom: 40px;">All Received Forms</h5>
+            <div class="col">
+                {% for f in all_files %}
+                <a class="download" href="/cloudstorage/hr/{{f}}"><i class="bi bi-cloud-arrow-down-fill"></i>{{f}}</a>
+                {% endfor %}
+                
+            </div>
+                
+        </div>
+        </div>
+
+</div>
+</div>
+<div class="row">
+    <div class="col">
+        <button onclick="emptydir()" style="margin-top: 10px;" class="btn btn-danger">Empty Directory</button>
+    </div>
+</div>
+</div>
+
+
+</div>
+</section>
+
+
+
+
+<script>
+        
+
+    function emptydir(){
+        fetch('/cloudstorage/hr/emptydirectory').then(function(response){
+        alert('Cleared Directory!');
+        location.reload(); 
+        })
+    };
+
+
+</script>
+
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}
+
+  </style>
+{% endblock %}

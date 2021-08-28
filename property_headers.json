@@ -1,0 +1,53 @@
+{"headers":
+  [
+    {
+      "field": "state",
+      "checkbox": "true"
+    },
+    {
+      "field": "refno",  
+      "title": "REF NO", 
+      "sortable": "True"
+    },
+    {
+      "field": "status",
+      "title": "STATUS",
+      "sortable": "True"
+    },
+    {
+      "field": "type",
+      "title": "PURPOSE",
+      "sortable": "True"
+    },
+    {
+      "field": "subtype",
+      "title": "TYPE",
+      "sortable": "True"
+    },
+    {
+      "field": "building",
+      "title": "LOCATION",
+      "sortable": "True"
+    },
+    {
+      "field": "bedrooms",
+      "title": "BEDS",
+      "sortable": "True"
+    },
+    {
+      "field": "price",
+      "title": "PRICE",
+      "sortable": "True"
+    },
+    {
+      "field": "locationtext",
+      "title": "COMMUNITY",
+      "sortable": "True"
+    },
+     {
+      "field": "edit",
+      "title": "OPTIONS",
+      "sortable": "False"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{"headers":
+  [
+    {
+      "field": "state",
+      "checkbox": "true"
+    },
+    {
+      "field": "refno",  
+      "title": "REF NO", 
+      "sortable": "True"
+    },
+    {
+      "field": "contact",
+      "title": "CONTACT",
+      "sortable": "True"
+    },
+    {
+      "field": "agent",
+      "title": "AGENT",
+      "sortable": "True"
+    },
+    {
+      "field": "enquiry_date",
+      "title": "ENQUIRY DATE",
+      "sortable": "True"
+    },
+    {
+      "field": "lead_type",
+      "title": "LEAD TYPE",
+      "sortable": "True"
+    },
+    {
+      "field": "finance",
+      "title": "FINANCE",
+      "sortable": "True"
+    },
+    {
+      "field": "created_by",
+      "title": "CREATED BY",
+      "sortable": "True"
+    },
+    {
+      "field": "status",
+      "title": "STATUS",
+      "sortable": "True"
+    },
+    {
+      "field": "sub_status",
+      "title": "SUB STATUS",
+      "sortable": "True"
+    },
+    {
+      "field": "priority",
+      "title": "PRIORITY",
+      "sortable": "True"
+    },
+    {
+      "field": "hot_lead",
+      "title": "HOT LEAD",
+      "sortable": "True"
+    },
+    {
+      "field": "source",
+      "title": "SOURCE",
+      "sortable": "True"
+    },
+    {
+      "field": "property_requirements",
+      "title": "PROPERTY",
+      "sortable": "True"
+    },
+     {
+      "field": "edit",
+      "title": "OPTIONS",
+      "sortable": "False"
+    }
+  ]
+}
