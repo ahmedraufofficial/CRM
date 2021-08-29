@@ -1,4 +1,3 @@
-import builtins
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
