@@ -186,7 +186,7 @@ def load_user(user_id):
 
 
 
-@app.route('/login', methods = ['GET','POST'])
+@app.route('/', methods = ['GET','POST'])
 def login():
     form = LoginForm()
     
