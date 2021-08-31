@@ -114,7 +114,7 @@ app.register_blueprint(handledeals)
 app.register_blueprint(handlestorage)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ubuntu/Desktop/revamped_crm/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////'+os.getcwd()+'/test.db'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 db = SQLAlchemy(app)
 admin = Admin(app,template_mode='bootstrap3')
