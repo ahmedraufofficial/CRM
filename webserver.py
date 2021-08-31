@@ -194,6 +194,7 @@ def login():
         username_ = form.username.data
         password_ = form.password.data
         user = User.query.filter_by(username=username_).first()
+        print('sign in')
         if user:
             if check_password_hash(user.password, password_):
                 login_user(user)
