@@ -28,6 +28,7 @@ from functions import *
 from sqlalchemy import or_
 import io 
 import csv
+from logging import FileHandler, WARNING
 
 def assign_lead(lead,contact_refno):
     print('lead for ' + lead['refno'])
@@ -107,6 +108,9 @@ sched.add_job(assign,'cron', second='*/20',  minute='*',hour='*',id='assignLead'
 
 
 app = Flask(__name__, template_folder = 'template')
+file_handler = FileHandler('errorlog.txt')
+file_handler.setLevel(WARNING)
+app.logger.addHandler(file_handler)
 app.register_blueprint(handlecontacts)
 app.register_blueprint(handleproperties)
 app.register_blueprint(handleleads)
@@ -128,7 +132,7 @@ email_lead = ''
 
 class AddUserForm(FlaskForm):
     username = StringField('Username', [validators.Length(min=4, max=25), validators.DataRequired()])
-    password = StringField('Password', [validators.Length(min=4, max=25), validators.DataRequired()])
+    password = StringField('Password', [validators.DataRequired()])
     number = IntegerField('Contact Number', [validators.DataRequired()])
     email = StringField('Email', [validators.Length(min=4, max=80),validators.DataRequired()])
     job_title = StringField('Job Title', [validators.Length(min=4, max=25), validators.DataRequired()])
