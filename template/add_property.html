@@ -367,6 +367,7 @@ h4{
 </div>
 </section>
 <script>
+    /*
 const commission = document.getElementById('commission');
 const deposit = document.getElementById('deposit');
 const price_form = document.getElementById('price');
@@ -385,7 +386,7 @@ let total_price = parseFloat(price)
     let float_percent = parseFloat(percent)
     document.getElementById('dep').innerHTML = (total_price * (float_percent / 100)).toFixed(2) +' AED'
   }
-  else if (e.target.id == 'price')
+  if (e.target.id == 'price')
   {
     let percent = document.getElementById('size').value
     let float_percent = parseFloat(percent)
@@ -395,6 +396,23 @@ let total_price = parseFloat(price)
  commission.addEventListener('input', inputHandler);
  deposit.addEventListener('input', inputHandler);
  price_form.addEventListener('input', inputHandler);
+*/
+
+const price_form = document.getElementById('price');
+const inputHandler = function(e) {
+var price = document.getElementById('price').value
+let total_price = parseFloat(price)
+
+if (e.target.id == 'price')
+  {
+    let percent = document.getElementById('size').value
+    let float_percent = parseFloat(percent)
+    document.getElementById('price_per_area').value = (total_price / float_percent).toFixed(2)
+}
+
+
+}
+price_form.addEventListener('input', inputHandler);
 
     let location_select = document.getElementById('building');
     $("#locationtext").change(function(){
