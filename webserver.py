@@ -142,7 +142,7 @@ class AddUserForm(FlaskForm):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(80))
+    password = db.Column(db.String(200))
     email = db.Column(db.String(50))
     number = db.Column(db.Integer)
     job_title = db.Column(db.String(50))
@@ -508,6 +508,7 @@ def export(type,data):
         writer.writerow(x.split(','))
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=report.csv"})
+
 
 if __name__ == '__main__':
     app.run(debug = True)

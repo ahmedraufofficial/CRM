@@ -11,6 +11,8 @@ import re
 import glob
 from functions import logs, notes, add_user_list
 from sqlalchemy import or_
+import xml.etree.cElementTree as e
+from datetime import datetime
 
 a = os.getcwd()
 UPLOAD_FOLDER = os.path.join(a+'/static', 'uploads')
@@ -23,6 +25,84 @@ if not os.path.isdir(UPLOAD_FOLDER):
 db = SQLAlchemy()
 
 handleproperties = Blueprint('handleproperties', __name__, template_folder='templates')
+
+def dubbizlexml():
+    data = []
+    for r in db.session.query(Properties).all():
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        data.append(new)
+
+    mapdir = os.getcwd() + '/'   
+    f = open(os.path.join(mapdir+'dubizzle_mapping.json'))
+    c = json.load(f)
+    def ame(x):
+        map_ame = []
+        t = x.split(',')
+        for i in t:
+            x = c[i]
+            map_ame.append(x)
+        return "|".join(map_ame)
+
+    r = e.Element("dubizzlepropertyfeed")
+    for i in data:
+        z = 1
+
+        listing = e.SubElement(r,"property")
+        e.SubElement(listing,"status").text = c[i['status']]
+        if c[i['subtype']] == "OF":
+            e.SubElement(listing,"commercialtype").text = c[i['subtype']]
+            e.SubElement(listing,"subtype").text = "CO"
+        else:
+            e.SubElement(listing,"commercialtype").text =""
+            e.SubElement(listing,"subtype").text = c[i['subtype']]
+        e.SubElement(listing,"type").text = c[i['type']]
+        e.SubElement(listing,"city").text = c[i['city']]
+        e.SubElement(listing,"locationtext").text = i['locationtext']
+        e.SubElement(listing,"building").text = i['building']
+        e.SubElement(listing,"refno").text = i['refno']
+        e.SubElement(listing,"price").text = i['price']
+        if i['type'] == "Sale":
+            e.SubElement(listing,"totalclosingfee").text = ""
+            e.SubElement(listing,"annualcommunityfee").text = ""
+            e.SubElement(listing,"readyby").text = i['completion_date']
+            if i['subtype'] == "Land":
+                e.SubElement(listing,"freehold").text = i['tenure']
+        if i['type'] == "Rent":
+            e.SubElement(listing,"rentpriceterm").text = c[i['rentpriceterm']]
+            e.SubElement(listing,"rentispaid").text = ""
+            e.SubElement(listing,"agencyfee").text = ""
+        e.SubElement(listing,"size").text = i['size']
+        e.SubElement(listing,"sizeunits").text = "SqFt"
+        if i['bedrooms'] == "ST":
+            e.SubElement(listing,"bedrooms").text = "0"
+        else:
+            e.SubElement(listing,"bedrooms").text = i['bedrooms']
+        e.SubElement(listing,"bathrooms").text = i['bathrooms']
+        e.SubElement(listing,"title").text = i['title']
+        e.SubElement(listing,"description").text = i['description']
+        e.SubElement(listing,"privateamenities").text = ame(i['privateamenities'])
+        e.SubElement(listing,"commercialamenities").text = ame(i['commercialamenities'])
+        e.SubElement(listing,"contactnumber").text = '+971-54-9981998'
+        e.SubElement(listing,"contactemail").text = 'bayut3@uhpae.com'
+        e.SubElement(listing,"ImageUrl").text = i['photos']
+        e.SubElement(listing,"developer").text = ""
+        e.SubElement(listing,"furnished").text = i['furnished']
+        e.SubElement(listing,"permit_number").text = i['permit_number']
+        e.SubElement(listing,"view360").text = i['view360']
+        e.SubElement(listing,"video_url").text = i['video_url']
+        e.SubElement(listing,"lastupdated").text = str(datetime.now())
+        z = z + 1
+
+    a = e.ElementTree(r)
+    
+    a.write("template/dubizzle.xml")
+    print("added")
+    
+
+
+
+
 
 @handleproperties.route('/properties',methods = ['GET','POST'])
 @login_required
@@ -91,7 +171,7 @@ def add_property_rent():
         building = form.building.data
         privateamenities = ",".join(form.privateamenities.data)
         commercialamenities = ",".join(form.commercialamenities.data)
-        #geopoint = form.geopoint.data
+        geopoint = form.geopoint.data
         bathrooms = form.bathrooms.data
         permit_number = form.permit_number.data
         view360 = form.view360.data
@@ -110,7 +190,7 @@ def add_property_rent():
         assign_to = assigned[0]
         contactemail = assigned[2]
         contactnumber = assigned[1]
-        newproperty = Properties(commission = commission,deposit=deposit,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
+        newproperty = Properties(geopoint=geopoint,commission = commission,deposit=deposit,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
         db.session.add(newproperty)
         db.session.commit()
         db.session.refresh(newproperty)
@@ -131,6 +211,7 @@ def add_property_rent():
         logs(current_user.username,'UNI-R-'+str(newproperty.id),'Added')
         notes('UNI-R-' + str(newproperty.id))
         add_user_list(current_user.username, 'UNI-R-'+str(newproperty.id))
+        dubbizlexml()
         return redirect(url_for('handleproperties.display_properties'))
     return render_template('add_property.html', form=form, radio_enable = 'disabled', purpose = "rent",user = current_user.username)
 

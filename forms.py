@@ -7,6 +7,7 @@ import re
 from wtforms.fields.html5 import DateTimeLocalField, DateField,TimeField
 from datetime import datetime
 from flask_wtf.file import FileField
+from wtforms.widgets import TextArea
 
 f = open('contacts.json')
 columns = json.load(f)
@@ -43,13 +44,14 @@ class LoginForm(FlaskForm):
     username = StringField('USERNAME', [validators.Length(min=4, max=50)])
     password = PasswordField('PASSWORD', [validators.DataRequired()])
 
+
 class AddPropertyForm(FlaskForm):
-    status = SelectField(u'Status',choices = [('Available', 'Available'), ('Archive', 'Archive'), ('Expired', 'Expired'),('Blocked', 'Blocked'), ('Pending', 'Pending'), ('Moved In', 'Moved In'), ('Pending', 'Pending'), ('Reserved', 'Reserved'), ('Sold', 'Sold'), ('Upcoming', 'Upcoming')])
+    status = SelectField(u'Status',choices = [('Available', 'Available'), ('Archive', 'Archive'), ('Expired', 'Expired'),('Blocked', 'Blocked'), ('Pending', 'Pending'), ('Moved In', 'Moved In'), ('Reserved', 'Reserved'), ('Sold', 'Sold'), ('Upcoming', 'Upcoming')])
     city = SelectField(u'Emirate *',[validators.DataRequired()],choices = [('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai'), ('Al Ain', 'Al Ain'), ('Sharjah', 'Sharjah'), ('Fujairah', 'Fujairah'), ('Ras Al Khaimah', 'Ras Al Khaimah'), ('Umm Al Quwain', 'Umm Al Quwain')])
     type = RadioField('Purpose',[validators.DataRequired()], choices=[('Rent','Rent'),('Sale','Sale')], default=0)
-    subtype = SelectField(u'Type *',[validators.DataRequired()],choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
+    subtype = SelectField(u'Type *',[validators.DataRequired()],choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'),('Land','Land'), ('Other', 'Other')])
     title = StringField('Title *',[validators.DataRequired()])
-    description = TextAreaField('Description *',[validators.DataRequired()], render_kw={"style":"height:200px !important;font-size: 10pt !important;padding-top:10px !important;border-radius:0px !important;"})
+    description = TextAreaField('Description *',[validators.DataRequired()], widget=TextArea())
     unit = StringField('Unit *', [validators.DataRequired(),validators.Length(min=4, max=50)])
     plot = StringField('Unit Floor/Plot', [validators.Length(min=4, max=50)])
     street = StringField('Street', [validators.Length(min=4, max=50)])
@@ -57,7 +59,7 @@ class AddPropertyForm(FlaskForm):
     plot_size = FloatField('Plot Size')
     price = IntegerField('Price *', [validators.DataRequired()])
     price_per_area = FloatField('Price Per Area')
-    rentpriceterm = SelectField(u'Frequency',choices = [('Yearly', 'Yearly'), ('Monthly', 'Monthly'), ('Weekly', 'Weekly'), ('Daily', 'Daily')])
+    rentpriceterm = SelectField(u'Frequency',choices = [('Yearly', 'Yearly'), ('Monthly', 'Monthly'), ('Quaterly','Quaterly'),('Weekly', 'Weekly'), ('Daily', 'Daily')])
     #pricecurrency = StringField('Currency', [validators.Length(min=4, max=50)])
     commission = IntegerField('Commission (%)')
     deposit = IntegerField('Deposit (%)')
@@ -69,7 +71,7 @@ class AddPropertyForm(FlaskForm):
     commercialamenities = MultiCheckboxField('Commercial Amenities',choices=amenities)
     photos = MultipleFileField('File(s) Upload')
     new_files = RadioField('Delete Uploaded Images',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
-    #geopoint = StringField('GeoPoint', [validators.Length(min=4, max=50)])
+    geopoint = StringField('GeoPoint (LAT,LON) *')
     bathrooms = SelectField(u'Baths',choices = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'), (10, '10'),(0,'Other')])
     permit_number = StringField('Permit Number', [validators.Length(min=4, max=50)])
     view360 = StringField('View 360', [validators.Length(min=4, max=50)])
@@ -85,7 +87,7 @@ class AddPropertyForm(FlaskForm):
     owner_email = StringField('Email *', [validators.DataRequired(),validators.Length(min=4, max=100)],render_kw={"style":"pointer-events: none;"})
     expiry_date = DateField('Expiry Date', format='%Y-%m-%d')
     assign_to = SelectField(u'Assign To',choices = [])
-    tenure = SelectField(u'Tenure',choices = [('Leasehold', 'Leasehold'), ('Freehold', 'Freehold')])
+    tenure = SelectField(u'Tenure',choices = [(0, 'Leasehold'), (1, 'Freehold')])
     featured = SelectField(u'Featured',choices = [(0, 'No'), (1, 'Yes')])
     parking = SelectField(u'Parking',choices = [(None,'-'),(1, '1'), (2, '2'), (3, '3')])
 
