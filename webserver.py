@@ -372,7 +372,10 @@ def all_users_commission(variable, type):
     count = 0
     for deal in all_deals:
         count = count+1
-        total_deal = int(deal.deal_price) + total_deal
+        try:
+            total_deal = int(deal.deal_price) + total_deal
+        except:
+            total_deal = 0 + total_deal
     if get_user.listing == True and count >= 3:
         commission = get_commission("list", total_deal, type)
     elif get_user.sale == True:

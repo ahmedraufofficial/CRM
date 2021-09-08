@@ -296,7 +296,7 @@ def add_closed_deal_rent(variable):
     form.listing_ref.data = lead.property_requirements
     form.unit_no.data = lead.unit
     form.unit_floor.data = lead.plot
-    if lead.property_requirements != None:
+    if lead.property_requirements != "":
         property = db.session.query(Properties).filter_by(refno=lead.property_requirements).first()
         form.contact_seller.data = property.owner
         form.contact_seller_name.data = property.owner_name
@@ -389,7 +389,7 @@ def add_closed_deal_sale(variable):
     form.unit_beds.data = lead.min_beds
     form.deal_price.data = lead.min_price
     form.listing_ref.data = lead.property_requirements
-    if lead.property_requirements != None:
+    if lead.property_requirements != "":
         property = db.session.query(Properties).filter_by(refno=lead.property_requirements).first()
         form.contact_seller.data = property.owner
         form.contact_seller_name.data = property.owner_name
@@ -478,7 +478,7 @@ def add_closed_deal_developer(variable):
     form.unit_beds.data = lead.min_beds
     form.deal_price.data = lead.min_price
     form.listing_ref.data = lead.property_requirements
-    if lead.property_requirements != None:
+    if lead.property_requirements != "":
         property = db.session.query(Properties).filter_by(refno=lead.property_requirements).first()
         form.contact_seller.data = property.owner
         form.contact_seller_name.data = property.owner_name
@@ -572,6 +572,12 @@ def edit_deal(variable):
     form = AddDealForm(obj = edit)
     if request.method == 'POST':
         form.populate_obj(edit)
+        contact_buyer = form.contact_buyer.data
+        file_filename = secure_filename(form.emi_id.data.filename)
+        directory = UPLOAD_FOLDER+'/'+contact_buyer
+        if not os.path.isdir(directory):
+            os.mkdir(directory)
+            form.emi_id.data.save(os.path.join(directory, file_filename))
         db.session.commit()
         logs(current_user.username,'deal no','Edited Deal')
         return redirect(url_for('handledeals.display_deals'))

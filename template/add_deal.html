@@ -153,7 +153,7 @@ padding-top: 10px;
 
   </dl>
   <label onclick="update()" class="btn btn-primary" >Submit</label>>
-  <input id="sub" class="btn btn-primary" value="Confirm Submission" type="submit">
+  <input id="sub" class="btn btn-primary" value="Confirm Submission" type="submit" value="Submit">
 
 </form>
 </div>
@@ -375,7 +375,7 @@ padding-top: 10px;
     $('#sub').hide()
 
     function update(){
-        var list_id = document.getElementById('list_id').value;
+        var list_id = document.getElementById('lead_ref').value;
         var com = '-'
         var status = document.getElementById('status').value;
         var substatus = document.getElementById('sub_status').value;
@@ -641,6 +641,7 @@ padding-top: 10px;
 
     function stat(x,agent){
         try {
+            if (x!=""){
         fetch('/all_users_commission/'+x+'/'+$("#deal_type").val()).then(function(response){
             response.json().then(function(data){
                if (agent == 1){
@@ -661,6 +662,7 @@ padding-top: 10px;
                } 
             })
         })
+    }
     }
     catch(error){
         console.error(error);
