@@ -161,7 +161,7 @@ def add_property_rent():
         rentpriceterm = form.rentpriceterm.data
         price_per_area = form.price_per_area.data
         bedrooms = form.bedrooms.data
-        #lastupdated = form.lastupdated.data
+        lastupdated = datetime.now()
         w = open('abudhabi.json')
         file_data = json.load(w)
         locationtext = file_data[form.locationtext.data]
@@ -176,8 +176,6 @@ def add_property_rent():
         permit_number = form.permit_number.data
         view360 = form.view360.data
         video_url = form.video_url.data 
-        commission = form.commission.data
-        deposit = form.deposit.data 
         source = form.source.data
         owner = form.owner.data
         owner_name = form.owner_name.data
@@ -190,7 +188,8 @@ def add_property_rent():
         assign_to = assigned[0]
         contactemail = assigned[2]
         contactnumber = assigned[1]
-        newproperty = Properties(geopoint=geopoint,commission = commission,deposit=deposit,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
+        portal = form.portal.data
+        newproperty = Properties(lastupdated=lastupdated,portal=portal,geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
         db.session.add(newproperty)
         db.session.commit()
         db.session.refresh(newproperty)
@@ -211,7 +210,7 @@ def add_property_rent():
         logs(current_user.username,'UNI-R-'+str(newproperty.id),'Added')
         notes('UNI-R-' + str(newproperty.id))
         add_user_list(current_user.username, 'UNI-R-'+str(newproperty.id))
-        dubbizlexml()
+        #dubbizlexml()
         return redirect(url_for('handleproperties.display_properties'))
     return render_template('add_property.html', form=form, radio_enable = 'disabled', purpose = "rent",user = current_user.username)
 
@@ -237,7 +236,7 @@ def add_property_sale():
         price = form.price.data
         price_per_area = form.price_per_area.data
         bedrooms = form.bedrooms.data
-        #lastupdated = form.lastupdated.data
+        lastupdated = datetime.now()
         w = open('abudhabi.json')
         file_data = json.load(w)
         locationtext = file_data[form.locationtext.data]
@@ -247,7 +246,7 @@ def add_property_sale():
         building = form.building.data
         privateamenities = ",".join(form.privateamenities.data)
         commercialamenities = ",".join(form.commercialamenities.data)
-        #geopoint = form.geopoint.data
+        geopoint = form.geopoint.data
         bathrooms = form.bathrooms.data
         permit_number = form.permit_number.data
         view360 = form.view360.data
@@ -262,14 +261,13 @@ def add_property_sale():
         tenure = form.tenure.data
         offplan_status = form.offplan_status.data 
         completion_date = form.completion_date.data 
-        commission = form.commission.data
-        deposit = form.deposit.data 
         assigned = form.assign_to.data
         assigned = assigned.split('|')
         assign_to = assigned[0]
         contactemail = assigned[2]
         contactnumber = assigned[1]
-        newproperty = Properties(commission = commission,deposit=deposit,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,offplan_status = offplan_status, completion_date = completion_date,tenure=tenure,featured=featured,parking=parking,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360, video_url = video_url, completion_status = completion_status,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
+        portal = form.portal.data
+        newproperty = Properties(lastupdated=lastupdated,portal=portal, geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,offplan_status = offplan_status, completion_date = completion_date,tenure=tenure,featured=featured,parking=parking,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360, video_url = video_url, completion_status = completion_status,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
         db.session.add(newproperty)
         db.session.commit()
         db.session.refresh(newproperty)

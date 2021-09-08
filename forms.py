@@ -90,6 +90,7 @@ class AddPropertyForm(FlaskForm):
     tenure = SelectField(u'Tenure',choices = [(0, 'Leasehold'), (1, 'Freehold')])
     featured = SelectField(u'Featured',choices = [(0, 'No'), (1, 'Yes')])
     parking = SelectField(u'Parking',choices = [(None,'-'),(1, '1'), (2, '2'), (3, '3')])
+    portal = SelectField(u'Add to Portals',choices = [(0, "Yes"), (1, "No")])
 
 class AddContactForm(FlaskForm):
     title = SelectField(u'Title',choices = [('','Select'),('Mr', 'Mr'),('Mrs','Mrs'),('Ms','Ms'),('Miss','Miss'),('Sir','Sir')])

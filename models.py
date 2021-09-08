@@ -73,6 +73,7 @@ class Properties(db.Model):
     featured = db.Column(db.String(50))
     parking = db.Column(db.Integer)
     offplan_status = db.Column(db.String(100))
+    portal = db.Column(db.String(100))
 
 
 class Leads(db.Model):

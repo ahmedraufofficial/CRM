@@ -219,6 +219,7 @@ h4{
                 {{ wtf.form_field(form.expiry_date) }}
 
                 {{ wtf.form_field(form.status) }}
+                {{ wtf.form_field(form.portal) }}
 
                 {{ wtf.form_field(form.assign_to) }}
  
@@ -353,6 +354,8 @@ h4{
 
             {{ wtf.form_field(form.status) }}
 
+            {{ wtf.form_field(form.portal) }}
+
             {{ wtf.form_field(form.assign_to) }}
     </div>
 </div>
@@ -409,8 +412,6 @@ if (e.target.id == 'price')
     let float_percent = parseFloat(percent)
     document.getElementById('price_per_area').value = (total_price / float_percent).toFixed(2)
 }
-
-
 }
 price_form.addEventListener('input', inputHandler);
 
