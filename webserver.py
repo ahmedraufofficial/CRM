@@ -19,6 +19,7 @@ from handleproperties import handleproperties
 from handleleads import handleleads
 from handledeals import handledeals
 from handlestorage import handlestorage
+from handleemployees import handleemployees
 from portals import portals
 from models import *
 import json
@@ -115,6 +116,7 @@ app.register_blueprint(handlecontacts)
 app.register_blueprint(handleproperties)
 app.register_blueprint(handleleads)
 app.register_blueprint(handledeals)
+app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
@@ -138,7 +140,6 @@ class AddUserForm(FlaskForm):
     department = StringField('Department', [validators.Length(min=4, max=25), validators.DataRequired()])
     
 
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
@@ -159,6 +160,31 @@ class User(UserMixin, db.Model):
     export = db.Column(db.Boolean, default=False)
     schedule = db.Column(db.Boolean, default=False)
 
+class Employees(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    Status = db.Column(db.String(100))
+    Employee_Status = db.Column(db.String(100))
+    Employee_ID = db.Column(db.String(100))
+    Name = db.Column(db.String(100))
+    Position = db.Column(db.String(100))
+    Nationality = db.Column(db.String(100))
+    UID = db.Column(db.String(100))
+    Date_of_Birth = db.Column(db.DateTime)
+    Date_of_Joining = db.Column(db.DateTime)
+    Emirates_ID = db.Column(db.String(100))
+    Card_No = db.Column(db.String(100))
+    Emirates_Card_Expiry = db.Column(db.DateTime)
+    Mobile_No = db.Column(db.String(100))
+    MOL_Personal_No = db.Column(db.String(100))
+    Labor_Card_No = db.Column(db.String(100))
+    Labor_Card_Expiry = db.Column(db.DateTime)
+    Insurance_No = db.Column(db.String(100))
+    Insurance_Effective_Date = db.Column(db.DateTime)
+    Insurance_Expiry_Date = db.Column(db.DateTime)
+    Date_of_Submission = db.Column(db.DateTime)
+    Residence_Expiry = db.Column(db.DateTime)
+    Remarks = db.Column(db.String(100))
+    created_by = db.Column(db.String(100))
 
 class Controller(ModelView):
     def is_accessible(self):

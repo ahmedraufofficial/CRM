@@ -403,7 +403,7 @@ padding-top: 10px;
     $('#unit').val(data[0].unit)
     $('#size').val(data[0].size)
     $('#plot').val(data[0].plot)
-    setTimeout(function(){ $('#building').val(data[0].building); }, 100);
+    setTimeout(function(){ $('#building').val(data[0].building); }, 500);
     var ame = data[0].privateamenities.split(",")
     for(let i = 0; i < ame.length; i++){
         $('input[value="'+ame[i]+'"]').attr('checked', true);

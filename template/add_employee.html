@@ -1,0 +1,88 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+
+    .column{
+           background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+padding-top: 10px;
+        margin: 5px;
+        margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #f5f0e1;
+        font-size: 14pt;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+</style>
+    
+<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<div class="container">
+  
+<form method="POST" enctype="multipart/form-data">
+  <dl>
+
+    <div class="row">
+        <div class="col">
+            {{ wtf.form_field(form.Status) }}
+            {{ wtf.form_field(form.Employee_Status) }}
+            {{ wtf.form_field(form.Employee_ID) }}
+            {{ wtf.form_field(form.Name) }}
+            {{ wtf.form_field(form.Position) }}
+            {{ wtf.form_field(form.Nationality) }}
+            {{ wtf.form_field(form.UID) }}
+            {{ form.Date_of_Birth.label(class="control-label") }}            
+            {{ form.Date_of_Birth }}
+            <div style="margin-top: 10px;"></div>
+            {{ form.Date_of_Joining.label(class="control-label") }}    
+            {{ form.Date_of_Joining }}
+            <div style="margin-top: 10px;"></div>
+            {{ wtf.form_field(form.Emirates_ID) }}
+            {{ wtf.form_field(form.Card_No) }}
+            {{ form.Emirates_Card_Expiry.label(class="control-label") }}    
+            {{ form.Emirates_Card_Expiry }}
+            <div style="margin-top: 10px;"></div>
+            {{ wtf.form_field(form.Mobile_No) }}
+            {{ wtf.form_field(form.MOL_Personal_No) }}
+            {{ wtf.form_field(form.Labor_Card_No) }}
+            {{ form.Labor_Card_Expiry.label(class="control-label") }}  
+            {{ form.Labor_Card_Expiry }}
+            <div style="margin-top: 10px;"></div>
+            {{ wtf.form_field(form.Insurance_No) }}
+            {{ form.Insurance_Effective_Date.label(class="control-label") }}  
+            {{ form.Insurance_Effective_Date }}
+            <div style="margin-top: 10px;"></div>
+            {{ form.Insurance_Expiry_Date.label(class="control-label") }}  
+            {{ form.Insurance_Expiry_Date }}
+            <div style="margin-top: 10px;"></div>
+            {{ form.Date_of_Submission.label(class="control-label") }}  
+            {{ form.Date_of_Submission }}
+            <div style="margin-top: 10px;"></div>
+            {{ form.Residence_Expiry.label(class="control-label") }}  
+            {{ form.Residence_Expiry }}
+            <div style="margin-top: 10px;"></div>
+            {{ wtf.form_field(form.Remarks) }}
+        </div>
+    </div>
+
+
+  </dl>
+  <p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;" type="submit" value="Submit">
+</form>
+</div>
+<br></div>
+</section>
+
+ 
+{% endblock %}
+
+
+
+
+
+

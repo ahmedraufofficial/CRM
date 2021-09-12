@@ -1,0 +1,35 @@
+{"headers":
+  [ 
+    {
+    "field": "state",
+    "checkbox": "true"
+    },
+    {"field":"Status","title":"Status","sortable":"True"},
+    {"field":"Employee_Status","title":"Employee Status","sortable":"True"},
+    {"field":"Employee_ID","title":"Employee ID","sortable":"True"},
+    {"field":"Name","title":"Name","sortable":"True"},
+    {"field":"Position","title":"Position","sortable":"True"},
+    {"field":"Nationality","title":"Nationality","sortable":"True"},
+    {"field":"UID","title":"UID","sortable":"True"},
+    {"field":"Date_of_Birth","title":"Date of Birth","sortable":"True"},
+    {"field":"Date_of_Joining","title":"Date of Joining","sortable":"True"},
+    {"field":"Emirates_ID","title":"Emirates ID","sortable":"True"},
+    {"field":"Card_No","title":"Card No","sortable":"True"},
+    {"field":"Emirates_Card_Expiry","title":"Emirates Card Expiry","sortable":"True"},
+    {"field":"Mobile_No","title":"Mobile No","sortable":"True"},
+    {"field":"MOL_Personal_No","title":"MOL Personal No","sortable":"True"},
+    {"field":"Labor_Card_No","title":"Labor Card No","sortable":"True"},
+    {"field":"Labor_Card_Expiry","title":"Labor Card Expiry","sortable":"True"},
+    {"field":"Insurance_No","title":"Insurance No","sortable":"True"},
+    {"field":"Insurance_Effective_Date","title":"Insurance Effective Date","sortable":"True"},
+    {"field":"Insurance_Expiry_Date","title":"Insurance Expiry Date","sortable":"True"},
+    {"field":"Date_of_Submission","title":"Date of Submission","sortable":"True"},
+    {"field":"Residence_Expiry","title":"Residence Expiry","sortable":"True"},
+    {"field":"Remarks","title":"Remarks","sortable":"True"},
+    {
+      "field": "edit",
+      "title": "OPTIONS",
+      "sortable": "False"
+    }
+  ]
+}

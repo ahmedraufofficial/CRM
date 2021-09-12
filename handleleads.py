@@ -176,8 +176,6 @@ def edit_lead(markettype,var):
     if current_user.sale == False or current_user.edit == False:
         return abort(404) 
     edit = db.session.query(Leads).filter_by(refno = var).first()
-    if edit.propertyamenities  != "":
-        edit.propertyamenities = edit.propertyamenities.split(',')
     if markettype == "secondary":
         template = "add_lead_buyer.html" 
         form = BuyerLead(obj = edit)
@@ -195,6 +193,8 @@ def edit_lead(markettype,var):
         db.session.commit()
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handleleads.display_leads'))
+    if edit.propertyamenities  != None:
+        form.propertyamenities.data = edit.propertyamenities.split(',')
     return render_template(template, form=form,building = edit.building,assign=edit.agent, user = current_user.username, sub_status = edit.sub_status)
 
 

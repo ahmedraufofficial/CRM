@@ -9,5 +9,14 @@ text = "sd,sa,dsa"
 
 ame = lambda T:"|".join(T.split(","))
 
-print(ame(text))
+#print(ame(text))
+
+
+
+a = "Status,Employee Status,Employee ID,Name,Position,Nationality,UID,Date of Birth,Date of Joining,Emirates ID,Card No,Emirates Card Expiry,Mobile No,MOL Personal No,Labor Card No,Labor Card Expiry,Insurance No,Insurance Effective Date,Insurance Expiry Date,Date of Submission,Residence Expiry,Remarks"
+
+all = a.split(",")
+
+for i in all:
+    print('{'+'"field":"'+i.replace(" ","_")+'","title":"' +i+'","sortable":"True"},')
 

@@ -213,7 +213,7 @@ class AddDealForm(FlaskForm):
     number_cheque_payment = SelectField(u'Number of cheque payment',choices = [('1', '1'), ('2', '2'), ('3', '3'), ('4', '4')])
     cheque_payment_type = SelectField(u'Cheque payment type',choices = [('Self','Self'),('Company','Company')])
     move_in_date = DateField('Move in Date', format='%Y-%m-%d')
-    #
+    
 
 
     #developer
@@ -231,3 +231,27 @@ class AddFile(FlaskForm):
     files = MultipleFileField('File(s) Upload', [validators.DataRequired()])
     password = StringField('Encrypt Password', [validators.DataRequired(),validators.Length(min=4, max=50)])
     send = SelectField(u'Send To', [validators.DataRequired()],choices = [])
+
+class AddEmployeeForm(FlaskForm):
+    Status = StringField('Status')
+    Employee_Status = StringField('Employee Status')
+    Employee_ID = StringField('Employee ID')
+    Name = StringField('Name')
+    Position = StringField('Position')
+    Nationality = StringField('Nationality')
+    UID = StringField('UID')
+    Date_of_Birth = DateField('Date of Birth', format='%Y-%m-%d')
+    Date_of_Joining = DateField('Date of Joining', format='%Y-%m-%d')
+    Emirates_ID = StringField('Emirates ID')
+    Card_No = StringField('Card No')
+    Emirates_Card_Expiry = DateField('Emirates Card Expiry', format='%Y-%m-%d')
+    Mobile_No = StringField('Mobile No')
+    MOL_Personal_No = StringField('MOL Personal No')
+    Labor_Card_No = StringField('Labor Card No')
+    Labor_Card_Expiry = DateField('Labor Card Expiry', format='%Y-%m-%d')
+    Insurance_No = StringField('Insurance No')
+    Insurance_Effective_Date = DateField('Insurance Effective Date', format='%Y-%m-%d')
+    Insurance_Expiry_Date = DateField('Insurance Expiry Date', format='%Y-%m-%d')
+    Date_of_Submission = DateField('Date of Submission', format='%Y-%m-%d')
+    Residence_Expiry = DateField('Residence Expiry', format='%Y-%m-%d')
+    Remarks = StringField('Remarks')
