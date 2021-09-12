@@ -11,6 +11,7 @@ NOTES = os.getcwd() + '/static/notes'
 SCHEDULER = os.getcwd() + '/static/scheduler'
 
 def create_json(username):
+    username = username.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER,username+'.json'), 'w') as f:
         data = {}
         data['logs'] = []
@@ -21,6 +22,8 @@ def create_json(username):
 
 
 def logs(username,ref,task):
+    username = username.replace("%20"," ")
+    task = task.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
         now = datetime.now()
@@ -37,6 +40,12 @@ def logs(username,ref,task):
         json.dump(columns, file,indent=4)
 
 def post_reminders(username,from_date,to_date,from_time,to_time,title):
+    username = username.replace("%20"," ")
+    title = title.replace("%20"," ")
+    from_date = from_date.replace("%20"," ")
+    to_date = to_date.replace("%20"," ")
+    from_time = from_time.replace("%20"," ")
+    to_time = to_time.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
         start = str(from_date+'T'+from_time+':00')
@@ -56,12 +65,14 @@ def post_reminders(username,from_date,to_date,from_time,to_time,title):
         json.dump(columns, file,indent=4)
         
 def reminders(username):
+    username = username.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
         return(columns['reminders'])
       
 
 def get_log(username):
+    username = username.replace("%20"," ")
     f = open(os.path.join(USERS_FOLDER, username+'.json'))
     columns = json.load(f)
     con = columns["logs"]
@@ -80,6 +91,8 @@ def get_notes(listid):
     return con
 
 def update_note(username, listid, com):
+    username = username.replace("%20"," ")
+    com = com.replace("%20"," ")
     with open(os.path.join(NOTES, listid+'.json'),'r+') as file:
         columns = json.load(file)
         a = columns['notes']
@@ -97,6 +110,9 @@ def update_note(username, listid, com):
         file.truncate()
 
 def update_lead_note(username, listid, com, status, substatus):
+    username = username.replace("%20"," ")
+    com = com.replace("%20"," ")
+    substatus = substatus.replace("%20"," ")
     with open(os.path.join(NOTES, listid+'.json'),'r+') as file:
         columns = json.load(file)
         now = datetime.now()
@@ -219,6 +235,7 @@ def getAvailableAgents(usernames,leads):
     return assigned, no_follow_up
         
 def assign_lead(username,lead,substatus):
+    substatus = substatus.replace("%20"," ")
     f = open(os.path.join(SCHEDULER,'scheduler.json'))
     c = json.load(f)
     c = c['time']
@@ -244,6 +261,8 @@ def assign_lead(username,lead,substatus):
         file.truncate
 
 def lost_lead(username,lead):
+    username = username.replace("%20"," ")
+    lead = lead.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
         columns["lead"][lead]["status"] = "Lost"
@@ -252,6 +271,10 @@ def lost_lead(username,lead):
         file.truncate()
 
 def update_user_note(username,lead,status,sub_status):
+    username = username.replace("%20"," ")
+    lead = lead.replace("%20"," ")
+    status = status.replace("%20"," ")
+    sub_status = sub_status.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
         columns["lead"][lead]["sub_status"] = sub_status
@@ -261,6 +284,8 @@ def update_user_note(username,lead,status,sub_status):
         file.truncate()
 
 def add_user_list(username,list_id):
+    username = username.replace("%20"," ")
+    list_id = list_id.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         now = datetime.now()
         from_date = now.strftime("%Y-%m-%d")
@@ -275,6 +300,7 @@ def add_user_list(username,list_id):
         file.truncate()
 
 def chart_data(chart, username):
+    username = username.replace("%20"," ")
     colors = ['rgba(255, 99, 132, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 205, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(54, 162, 235, 0.2)','rgba(153, 102, 255, 0.2)','rgba(201, 203, 207, 0.2)']
     borderColor = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)']
     f = open(os.path.join(USERS_FOLDER, username+'.json'))

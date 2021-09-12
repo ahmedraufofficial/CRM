@@ -119,7 +119,7 @@
     </td>
     <td>
       <label class="label_head">Amenities :</label>
-      <label class="label_entry" id="privateamenities"></label>
+      <label class="label_entry" id="propertyamenities"></label>
     </td> 
   </tr>
   <tr>
@@ -245,7 +245,7 @@ var agent = document.getElementById('agent')
 var refno = document.getElementById('refno')
 var enquiry_date = document.getElementById('enquiry_date')
 var lead_type = document.getElementById('lead_type')
-var privateamenities = document.getElementById('privateamenities')
+var propertyamenities = document.getElementById('propertyamenities')
 /*var created_by = document.getElementById('created_by')*/
 var status = document.getElementById('status')
 var sub_status = document.getElementById('sub_status')
@@ -366,7 +366,7 @@ function view_leads(x){
             refno.innerHTML = p[0].refno;
             enquiry_date.innerHTML = p[0].enquiry_date;
             lead_type.innerHTML = p[0].lead_type;
-            privateamenities.innerHTML = p[0].privateamenities;
+            propertyamenities.innerHTML = p[0].propertyamenities;
             /*created_by.innerHTML = p[0].created_by;*/
             status.innerHTML = p[0].status;
             sub_status.innerHTML = p[0].sub_status;

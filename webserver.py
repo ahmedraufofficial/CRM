@@ -120,66 +120,13 @@ app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////'+os.getcwd()+'/test.db'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-db = SQLAlchemy(app)
+db = SQLAlchemy(app,session_options={"autoflush": False})
 admin = Admin(app,template_mode='bootstrap3')
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 Bootstrap(app) 
 email_lead = ''
-
-class Properties(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(50))
-    city = db.Column(db.Integer)
-    type = db.Column(db.String(50))
-    subtype = db.Column(db.String(50))
-    created_by = db.Column(db.String(50))
-    commercialtype = db.Column(db.String(50))
-    refno = db.Column(db.String(50))
-    title = db.Column(db.String(200))
-    description = db.Column(db.String(10000))
-    unit = db.Column(db.String(50))
-    plot = db.Column(db.String(50))
-    street = db.Column(db.String(50))
-    size = db.Column(db.Float)
-    plot_size = db.Column(db.Float)
-    price = db.Column(db.Integer)
-    rentpriceterm = db.Column(db.String(50))
-    price_per_area = db.Column(db.Float)
-    commission = db.Column(db.String(50))
-    deposit = db.Column(db.String(50))
-    bedrooms = db.Column(db.String(20))
-    lastupdated = db.Column(db.DateTime)
-    contactemail = db.Column(db.String(100))
-    contactnumber = db.Column(db.Integer)
-    locationtext = db.Column(db.String(50))
-    furnished = db.Column(db.Integer)
-    building = db.Column(db.String(80))
-    privateamenities = db.Column(db.String(500))
-    commercialamenities = db.Column(db.String(500))
-    photos = db.Column(db.String(10000))
-    geopoint = db.Column(db.String(50))
-    bathrooms = db.Column(db.Integer)
-    permit_number = db.Column(db.String(50))
-    view360 = db.Column(db.String(50))
-    video_url = db.Column(db.String(100))
-    completion_status = db.Column(db.String(100))
-    source = db.Column(db.String(100))
-    owner = db.Column(db.String(50))
-    owner_name = db.Column(db.String(80))
-    owner_contact = db.Column(db.String(50))
-    owner_email = db.Column(db.String(100))
-    tenant = db.Column(db.String(50))
-    expiry_date = db.Column(db.DateTime)
-    completion_date = db.Column(db.DateTime)
-    assign_to = db.Column(db.String(50))
-    tenure = db.Column(db.String(50))
-    featured = db.Column(db.String(50))
-    parking = db.Column(db.Integer)
-    offplan_status = db.Column(db.String(100))
-    portal = db.Column(db.String(100))
-
 
 
 class AddUserForm(FlaskForm):
@@ -190,6 +137,7 @@ class AddUserForm(FlaskForm):
     job_title = StringField('Job Title', [validators.Length(min=4, max=25), validators.DataRequired()])
     department = StringField('Department', [validators.Length(min=4, max=25), validators.DataRequired()])
     
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -484,7 +432,7 @@ def post_note(list_id,com):
 @login_required
 def post_lead_note(list_id,com,status,substatus):
     a = db.session.query(Leads).filter_by(refno = list_id).first()
-    a.sub_status = substatus
+    a.sub_status = substatus.replace("%20"," ")
     a.status = status
     db.session.commit()
     update_lead_note(current_user.username,list_id,com,status,substatus)

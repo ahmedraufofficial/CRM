@@ -92,7 +92,7 @@ class Leads(db.Model):
     enquiry_date = db.Column(db.DateTime)
     lead_type = db.Column(db.String(50))
     finance_type = db.Column(db.String(50))
-    privateamenities = db.Column(db.String(500))
+    propertyamenities = db.Column(db.String(800))
     created_by = db.Column(db.String(50))
     status = db.Column(db.String(50))
     sub_status = db.Column(db.String(50))

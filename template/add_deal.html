@@ -152,7 +152,7 @@ padding-top: 10px;
 
 
   </dl>
-  <label onclick="update()" class="btn btn-primary" >Submit</label>>
+  <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
   <input id="sub" class="btn btn-primary" value="Confirm Submission" type="submit" value="Submit">
 
 </form>
@@ -371,7 +371,7 @@ padding-top: 10px;
 </section>
 
 <script>
-
+    /*
     $('#sub').hide()
 
     function update(){
@@ -385,6 +385,9 @@ padding-top: 10px;
             })
         })
     }
+
+    */
+
 
     let location_select = document.getElementById('unit_sub_location');
     $("#unit_location").change(function(){
@@ -427,6 +430,19 @@ padding-top: 10px;
 
 
     let sub_status = document.getElementById('sub_status');
+
+    var status = $("#status").val();
+        fetch('/status/' + status).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let status of data.status){
+                    optionHTML += '<option value="'+status[0]+'">'+status[1]+'</option>';
+                }
+                sub_status.innerHTML = optionHTML;
+            })
+        })
+
+
     $("#status").change(function(){
         var status = $("#status").val();
         fetch('/status/' + status).then(function(response){
@@ -595,9 +611,10 @@ padding-top: 10px;
     var x = $('#unit_location option:contains("'+data[0].locationtext+'")');
     $('#unit_location').val(x[0].value)
     get_location()
+    console.log(data[0])
     $('#unit_type').val(data[0].subtype)
-    $('#unit_beds').val(data[0].bedrooms)
-    $('#deal_price').val(data[0].price)
+    $('#unit_beds').val(data[0].min_beds)
+    $('#deal_price').val(data[0].min_price)
     $('#listing_ref').val(data[0].property_requirements)
     $('#contact_buyer').val(data[0].contact)
     $('#contact_buyer_name') .val(data[0].contact_name)

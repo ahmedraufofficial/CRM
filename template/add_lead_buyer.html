@@ -197,7 +197,7 @@ padding-top: 10px;
     <h4>Private Amenities</h4>
     <div class="row">
     <div class="col" style="margin-left: 15px;background-color: rgba(0, 0, 0, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
-      {{ form.privateamenities(class="control-label" , style="list-style: none;margin-left:-40px;") }}
+      {{ form.propertyamenities(class="control-label" , style="list-style: none;margin-left:-40px;") }}
     </div>
     </div>
 
@@ -404,7 +404,7 @@ padding-top: 10px;
     $('#size').val(data[0].size)
     $('#plot').val(data[0].plot)
     setTimeout(function(){ $('#building').val(data[0].building); }, 100);
-    var ame = data[0].privateamenities.replace("['","").replace("']","").split("', '")
+    var ame = data[0].privateamenities.split(",")
     for(let i = 0; i < ame.length; i++){
         $('input[value="'+ame[i]+'"]').attr('checked', true);
     }

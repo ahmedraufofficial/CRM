@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import datetime,time
-from functions import assign_lead, logs, notes
+from functions import assign_lead, logs, notes, update_note
 from sqlalchemy import or_
 
 path = os.getcwd()
@@ -38,7 +38,7 @@ def display_leads():
         for r in db.session.query(Leads).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','privateamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
+            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
                 edit_btn =  '<a class="btn btn-primary si" href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><i class="bi bi-pencil"></i></a>'
             else:
@@ -53,7 +53,7 @@ def display_leads():
         for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','privateamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
+            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
                 edit_btn =  '<a class="btn btn-primary si" href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><i class="bi bi-pencil"></i></a>'
             else:
@@ -90,7 +90,7 @@ def add_lead_buyer():
         agent = form.agent.data
         enquiry_date = form.enquiry_date.data
         purpose = form.purpose.data
-        privateamenities =  ",".join(form.privateamenities.data)
+        propertyamenities =  ",".join(form.propertyamenities.data)
         status = form.status.data
         sub_status = form.sub_status.data
         property_requirements = form.property_requirements.data
@@ -108,7 +108,7 @@ def add_lead_buyer():
         street = form.street.data
         size = form.size.data
         lead_type = form.lead_type.data
-        newlead = Leads(type="secondary",role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,privateamenities = privateamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
+        newlead = Leads(type="secondary",role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
         db.session.add(newlead)
         db.session.commit()
         db.session.refresh(newlead)
@@ -138,7 +138,7 @@ def add_lead_developer():
         agent = form.agent.data
         enquiry_date = form.enquiry_date.data
         purpose = form.purpose.data
-        privateamenities =  ",".join(form.privateamenities.data)
+        propertyamenities =  ",".join(form.propertyamenities.data)
         status = form.status.data
         sub_status = form.sub_status.data
         property_requirements = form.property_requirements.data
@@ -156,7 +156,7 @@ def add_lead_developer():
         street = form.street.data
         size = form.size.data
         lead_type = form.lead_type.data
-        newlead = Leads(type="developer",role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,privateamenities = privateamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
+        newlead = Leads(type="developer",role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
         db.session.add(newlead)
         db.session.commit()
         db.session.refresh(newlead)
@@ -165,22 +165,23 @@ def add_lead_developer():
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
         notes('UNI-L-' + str(newlead.id))
         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
+        update_note(current_user.username,property_requirements, "Added"+"UNI-L-"+str(newlead.id)+"lead For viewing")
         return redirect(url_for('handleleads.display_leads'))
     return render_template('add_lead_developer.html', form=form, user = current_user.username)
 
 
-@handleleads.route('/edit_lead/<type>/<var>', methods = ['GET','POST'])
+@handleleads.route('/edit_lead/<markettype>/<var>', methods = ['GET','POST'])
 @login_required
-def edit_lead(type,var):
+def edit_lead(markettype,var):
     if current_user.sale == False or current_user.edit == False:
         return abort(404) 
     edit = db.session.query(Leads).filter_by(refno = var).first()
-    if edit.privateamenities != None:
-        edit.privateamenities = edit.privateamenities.split(',')
-    if type == "secondary":
+    if edit.propertyamenities  != "":
+        edit.propertyamenities = edit.propertyamenities.split(',')
+    if markettype == "secondary":
         template = "add_lead_buyer.html" 
         form = BuyerLead(obj = edit)
-    elif type == "developer":
+    elif markettype == "developer":
         template = "add_lead_developer.html" 
         form = DeveloperLead(obj = edit)
     w = open('abudhabi.json')
@@ -188,9 +189,8 @@ def edit_lead(type,var):
     new = form.locationtext.data
     form.locationtext.data = list(mydict.keys())[list(mydict.values()).index(edit.locationtext)]
     if request.method == 'POST':
-        edit.privateamenities = ",".join(form.privateamenities.data)
         form.populate_obj(edit)
-        edit.privateamenities = ",".join(form.privateamenities.data)
+        edit.propertyamenities = ",".join(form.propertyamenities.data)
         edit.locationtext = mydict[new]
         db.session.commit()
         logs(current_user.username,edit.refno,'Edited')
