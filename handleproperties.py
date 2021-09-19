@@ -135,7 +135,10 @@ def display_properties():
     f = open('property_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    return render_template('properties.html', data = data , columns = columns, user = current_user.username)
+    e = open('viewing.json')
+    viewings = json.load(e)
+    viewings = viewings["viewings"]
+    return render_template('properties.html', viewings=viewings,data = data , columns = columns, user = current_user.username)
 
     
 @handleproperties.route('/add_property/rent', methods = ['GET','POST'])
@@ -304,10 +307,7 @@ def edit_property(variable):
     else:
         category = "sale"
     edit = db.session.query(Properties).filter_by(refno = variable).first()
-    if edit.privateamenities != None:
-        edit.privateamenities = edit.privateamenities.split(',')
-    if edit.commercialamenities != None:
-        edit.commercialamenities = edit.commercialamenities.split(',')
+
     form = AddPropertyForm(obj = edit)
     w = open('abudhabi.json')
     mydict = json.load(w)
@@ -346,6 +346,10 @@ def edit_property(variable):
         db.session.commit()
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handleproperties.display_properties'))
+    if edit.privateamenities != None:
+        form.privateamenities.data = edit.privateamenities.split(',')
+    if edit.commercialamenities != None:
+        form.commercialamenities.data = edit.commercialamenities.split(',')
     return render_template('add_property.html', form=form, radio_enable = 'enabled',community=edit.locationtext, building = edit.building, purpose=category, assign=edit.assign_to,user=current_user.username)
 
 

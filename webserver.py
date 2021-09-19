@@ -122,7 +122,7 @@ app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////'+os.getcwd()+'/test.db'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-db = SQLAlchemy(app,session_options={"autoflush": False})
+db = SQLAlchemy(app)
 admin = Admin(app,template_mode='bootstrap3')
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -160,31 +160,44 @@ class User(UserMixin, db.Model):
     export = db.Column(db.Boolean, default=False)
     schedule = db.Column(db.Boolean, default=False)
 
-class Employees(db.Model):
+class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    Status = db.Column(db.String(100))
-    Employee_Status = db.Column(db.String(100))
-    Employee_ID = db.Column(db.String(100))
-    Name = db.Column(db.String(100))
-    Position = db.Column(db.String(100))
-    Nationality = db.Column(db.String(100))
-    UID = db.Column(db.String(100))
-    Date_of_Birth = db.Column(db.DateTime)
-    Date_of_Joining = db.Column(db.DateTime)
-    Emirates_ID = db.Column(db.String(100))
-    Card_No = db.Column(db.String(100))
-    Emirates_Card_Expiry = db.Column(db.DateTime)
-    Mobile_No = db.Column(db.String(100))
-    MOL_Personal_No = db.Column(db.String(100))
-    Labor_Card_No = db.Column(db.String(100))
-    Labor_Card_Expiry = db.Column(db.DateTime)
-    Insurance_No = db.Column(db.String(100))
-    Insurance_Effective_Date = db.Column(db.DateTime)
-    Insurance_Expiry_Date = db.Column(db.DateTime)
-    Date_of_Submission = db.Column(db.DateTime)
-    Residence_Expiry = db.Column(db.DateTime)
-    Remarks = db.Column(db.String(100))
-    created_by = db.Column(db.String(100))
+    type = db.Column(db.String(50))
+    contact = db.Column(db.String(50))
+    contact_name = db.Column(db.String(80))
+    contact_number = db.Column(db.String(50))
+    contact_email = db.Column(db.String(100))
+    nationality = db.Column(db.String(100))
+    role = db.Column(db.String(100))
+    purpose = db.Column(db.String(50))
+    time_to_contact = db.Column(db.DateTime)
+    agent = db.Column(db.String(100))
+    refno = db.Column(db.String(100))
+    enquiry_date = db.Column(db.DateTime)
+    created_date = db.Column(db.DateTime)
+    lead_type = db.Column(db.String(50))
+    finance_type = db.Column(db.String(50))
+    propertyamenities = db.Column(db.String(800))
+    created_by = db.Column(db.String(50))
+    status = db.Column(db.String(50))
+    sub_status = db.Column(db.String(50))
+    property_requirements = db.Column(db.String(50))
+    locationtext = db.Column(db.String(50))
+    building = db.Column(db.String(80))
+    subtype = db.Column(db.String(50))
+    min_beds = db.Column(db.String(50))
+    max_beds = db.Column(db.String(50))
+    min_price = db.Column(db.Integer)
+    max_price = db.Column(db.Integer)
+    finance_type = db.Column(db.String(50))
+    unit = db.Column(db.String(50))
+    plot = db.Column(db.String(50))
+    street = db.Column(db.String(50))
+    size = db.Column(db.Float)
+    source = db.Column(db.String(50))
+
+ 
+
 
 class Controller(ModelView):
     def is_accessible(self):
@@ -345,12 +358,16 @@ def all_users_commission(variable, type):
     total_deal = 0
     count = 0
     for deal in all_deals:
-        count = count+1
-        try:
-            total_deal = int(deal.deal_price) + total_deal
-        except:
-            total_deal = 0 + total_deal
-    if get_user.listing == True and count >= 3:
+        tm = deal.actual_deal_date.month
+        dt = datetime.now()
+        cm = dt.month
+        if int(tm) == int(cm):
+            count = count+1
+            try:
+                total_deal = int(deal.deal_price) + total_deal
+            except:
+                total_deal = 0 + total_deal
+    if get_user.listing == True and count >= 3 and get_user.sale == False:
         commission = get_commission("list", total_deal, type)
     elif get_user.sale == True:
         commission = get_commission("sale", total_deal, type)
@@ -407,6 +424,9 @@ def view_leads(variable):
     all_lead.append(leadObj)
     return jsonify({'lead':all_lead})
 
+
+
+
 @app.route('/all_count',methods = ['GET','POST'])
 @login_required
 def all_count():
@@ -420,8 +440,39 @@ def all_count():
     countObj['alist'] = all_listing
     countObj['ulead'] = user_leads
     countObj['alead'] = all_leads
+    progress = 0
+    for i in db.session.query(Leads).filter(and_(Leads.agent == current_user.username,Leads.sub_status == "In progress")):
+        progress += 1
+    countObj['progress'] = progress
+    deals = 0
+    deals_this_month = 0
+    deals_amount = 0
+    for i in db.session.query(Deals).filter(and_(Deals.agent_1 == current_user.username,Deals.sub_status == "successful")):
+        tm = i.actual_deal_date.month
+        ty = i.actual_deal_date.year
+        dt = datetime.now()
+        cm = dt.month
+        ye = dt.year
+        deals += 1
+        if int(tm) == int(cm) and int(ty) == int(ye):
+            deals_this_month += 1
+            deals_amount += int(i.deal_price)
+    if deals_this_month >= 3:
+        commission = get_commission("list", deals_amount, "")
+    else:
+        commission = 0
+    commission1 = get_commission("sale", deals_amount, "Secondary")
+    commission2 = get_commission("sale", deals_amount, "Primary")
+    countObj['deals'] = deals
+    countObj['deals_this_month'] = deals_this_month
+    countObj['deals_amount'] = deals_amount
+    countObj['commission'] = commission
+    countObj['commission1'] = commission1
+    countObj['commission2'] = commission2
     all_count.append(countObj)
     return jsonify({'all_count':all_count})
+
+
 
 @app.route('/all_notes/<variable>',methods = ['GET','POST'])
 @login_required
@@ -501,6 +552,91 @@ def gen_chart(chart,user):
         chartObj['bd'] = bd
     return jsonify({'chart': chartObj})
 
+@app.route('/sales_progress',methods = ['GET','POST'])
+@login_required
+def sales_progress():
+    user_label = []
+    user_progress = []
+    for i in db.session.query(User).filter_by(sale = True).all():
+        user_label.append(i.username)
+    for i in user_label:
+        deal_amount = 0
+        for j in db.session.query(Deals).filter(and_(Deals.agent_1 == i,Deals.sub_status == "successful")):
+            tm = j.actual_deal_date.month
+            ty = j.actual_deal_date.year
+            dt = datetime.now()
+            cm = dt.month
+            ye = dt.year
+            if int(tm) == int(cm) and int(ty) == int(ye):
+                deal_amount += int(j.deal_price)
+        user_progress.append(deal_amount)
+    progressObj = {}
+    progressObj['ul'] = user_label
+    progressObj['up'] = user_progress
+    colors = ['rgba(255, 99, 132, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 205, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(54, 162, 235, 0.2)','rgba(153, 102, 255, 0.2)','rgba(201, 203, 207, 0.2)']
+    borderColor = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)']
+    progressObj['bg'] = random.sample(colors, len(user_label))
+    progressObj['bd'] = random.sample(borderColor, len(user_label))
+    return jsonify({'progress':progressObj})
+
+@app.route('/listing_progress',methods = ['GET','POST'])
+@login_required
+def listing_progress():
+    user_label = []
+    datasets = []
+    for i in db.session.query(User).filter_by(listing = True).all():
+        user_label.append(i.username)
+    for i in user_label:
+        dataset = {}
+        de = 0
+        for j in db.session.query(Deals).filter(and_(Deals.agent_1 == i,Deals.sub_status == "successful")):
+            tm = j.actual_deal_date.month
+            ty = j.actual_deal_date.year
+            dt = datetime.now()
+            cm = dt.month
+            ye = dt.year
+            if int(tm) == int(cm) and int(ty) == int(ye):
+                de += 1
+        le = 0
+        for j in db.session.query(Leads).filter(Leads.property_requirements != "").all():
+            tm = j.created_date.month
+            ty = j.created_date.year
+            dt = datetime.now()
+            cm = dt.month
+            ye = dt.year
+            if int(tm) == int(cm) and int(ty) == int(ye):
+                le += 1
+
+        avl = 0
+        for j in db.session.query(Properties).filter_by(created_by = i).all():
+            tm = j.lastupdated.month
+            ty = j.lastupdated.year
+            dt = datetime.now()
+            cm = dt.month
+            ye = dt.year
+            if int(tm) == int(cm) and int(ty) == int(ye):
+                avl += 1
+        dataset['label'] = [i]
+        colors = ['rgba(255, 99, 132, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 205, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(54, 162, 235, 0.2)','rgba(153, 102, 255, 0.2)','rgba(201, 203, 207, 0.2)']
+        borderColor = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)']
+        dataset['borderColor'] = random.choice(colors)
+        dataset['backgroundColor'] = random.choice(borderColor)
+        values = {}
+        values['x'] = de
+        values['y'] = le
+        values['r'] = avl
+        data = [values]
+        dataset['data'] = data
+        datasets.append(dataset)
+    return jsonify({'datasets':datasets})
+
+
+
+
+
+
+
+
 @app.route('/export/<type>/<data>',methods = ['GET','POST'])
 @login_required
 def export(type,data):
@@ -537,6 +673,20 @@ def export(type,data):
         writer.writerow(x.split(','))
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=report.csv"})
+
+@app.route('/viewing/<list_id>',methods = ['GET','POST'])
+@login_required
+def viewing(list_id):
+    a = db.session.query(Leads).filter_by(refno = list_id).first()
+    viewings(current_user.username,a.refno,"Not Assigned",a.min_price,a.max_price,a.min_beds,a.max_beds,a.locationtext,a.building)
+    return jsonify(success=True)
+
+@app.route('/assign_viewing/<lead_id>/<lead>/<lists>',methods = ['GET','POST'])
+@login_required
+def post_viewing(lead_id,lead,lists):
+    assign_viewing(current_user.username,lead_id,lead,lists)
+    return jsonify(success=True)
+
 
 
 if __name__ == '__main__':

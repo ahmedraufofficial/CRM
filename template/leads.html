@@ -3,9 +3,9 @@
 {% block content %}
 <title>Lighthouse - Leads</title>
 <section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; min-height: 100vh; max-height: 100%;">
-  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0.8);">
+  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0.5);">
 <br>
-<div class="container unselectable" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+<div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
   <br>
   <div class="shade">
   <div class="row">
@@ -139,15 +139,16 @@
 </div>
 
 
-<div class="container unselectable" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+<div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
   <div class="row justify-content-center">
-    <div class="col-11">
+    <div class="col-12">
       <div id="notetoolbar">
-        <span>NOTES</span>
+        <h5>NOTES</h5>
       </div>
         <table id="notetable"        
         data-toggle="true"
         data-toolbar="#notetoolbar"
+        class="oswald"
         data-search="true"
         data-show-columns="true"
         data-pagination="true"
@@ -213,7 +214,7 @@
       <table
         id="table"
         data-toggle="true"
-        class="unselectable"
+        class="unselectable oswald"
         data-toolbar="#toolbar"
         data-search="true"
         data-show-columns="true"
@@ -345,6 +346,16 @@ function follow_up(list_id){
             })
         })
       };
+
+function request_viewing(list_id){
+      fetch('/viewing/'+list_id).then(function(response){
+            response.json().then(function(){
+              location.reload();
+            })
+        })
+      };
+
+
 
 
 

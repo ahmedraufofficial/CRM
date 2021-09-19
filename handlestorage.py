@@ -117,7 +117,7 @@ def allforms():
 @handlestorage.route('/cloudstorage/forms/<path:filename>', methods=['GET', 'POST'])
 def getform(filename): 
     try:
-        return send_from_directory(UPLOAD_FORM, filename=filename, as_attachment=True)
+        return send_from_directory(UPLOAD_FORM, path = filename, as_attachment=True)
     except FileNotFoundError:
         abort(404)
 
@@ -142,7 +142,7 @@ def gethrforms(filename):
         return abort(404)
     else:
         try:
-            return send_from_directory(UPLOAD_FOLDER + '/hr', filename=filename, as_attachment=True)
+            return send_from_directory(UPLOAD_FOLDER + '/hr', path=filename, as_attachment=True)
         except FileNotFoundError:
             abort(404)
 

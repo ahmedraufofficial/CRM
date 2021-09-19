@@ -7,10 +7,16 @@
             "end": "2021-08-10T11:50:00"
         },
         {
-            "id": 7703,
-            "title": "UNI-L-1 Assigned",
-            "start": "2021-08-08T12:55:00",
-            "end": "2021-08-08T14:55:00"
+            "id": "4",
+            "title": "Viewing assigned for UNI-L-2",
+            "start": "2021-09-18T15:00:52",
+            "end": "2021-09-19T15:00:00"
+        },
+        {
+            "id": "3",
+            "title": "Viewing assigned for UNI-L-1",
+            "start": "2021-09-19T17:29:00",
+            "end": "2021-09-20T17:29:00"
         }
     ],
     "logs": [
@@ -241,22 +247,118 @@
             "time": "11:11:05",
             "ref": "UNI-L-2",
             "task": "Edited"
+        },
+        {
+            "date": "12/09/2021",
+            "time": "16:51:42",
+            "ref": "UNI-O-4",
+            "task": "Added"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "12:24:24",
+            "ref": "UNI-R-2",
+            "task": "Edited"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "12:24:30",
+            "ref": "UNI-R-1",
+            "task": "Edited"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "12:25:48",
+            "ref": "UNI-R-1",
+            "task": "Edited"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "15:42:42",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "15:48:43",
+            "ref": "UNI-D-1",
+            "task": "Added Deal"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "15:53:52",
+            "ref": "UNI-D-1",
+            "task": "Added Deal"
+        },
+        {
+            "date": "13/09/2021",
+            "time": "16:01:12",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "18/09/2021",
+            "time": "11:01:33",
+            "ref": "UNI-R-2",
+            "task": "Edited"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "12:06:27",
+            "ref": "UNI-L-1",
+            "task": "Added"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "15:04:01",
+            "ref": "UNI-D-2",
+            "task": "Added Deal"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "17:34:07",
+            "ref": "UNI-R-3",
+            "task": "Added"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "17:34:23",
+            "ref": "UNI-R-3",
+            "task": "Edited"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "17:35:07",
+            "ref": "UNI-L-2",
+            "task": "Added"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "17:35:23",
+            "ref": "UNI-L-2",
+            "task": "Edited"
+        },
+        {
+            "date": "19/09/2021",
+            "time": "17:37:27",
+            "ref": "UNI-D-3",
+            "task": "Added Deal"
         }
     ],
     "lead": {
         "UNI-L-1": {
-            "date": "2021-09-12",
-            "time": "10:09",
-            "expiry date": "2021-09-12",
-            "expiry time": "12:09",
+            "date": "2021-09-19",
+            "time": "12:06",
+            "expiry date": "2021-09-19",
+            "expiry time": "14:06",
             "status": "Open",
             "sub_status": "In progress"
         },
         "UNI-L-2": {
-            "date": "2021-09-12",
-            "time": "10:52",
-            "expiry date": "2021-09-12",
-            "expiry time": "12:52",
+            "date": "2021-09-19",
+            "time": "17:35",
+            "expiry date": "2021-09-19",
+            "expiry time": "19:35",
             "status": "Open",
             "sub_status": "In progress"
         }
@@ -269,6 +371,10 @@
         "UNI-R-2": {
             "date": "2021-09-12",
             "time": "10:43"
+        },
+        "UNI-R-3": {
+            "date": "2021-09-19",
+            "time": "17:34"
         }
     }
 }

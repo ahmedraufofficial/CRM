@@ -1,12 +1,13 @@
-from forms import AddEmployeeForm
+from forms import AddEmployeeForm, AddUserForm
 from operator import methodcaller
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
-from models import Employees
+from models import Employees, User
 import json
 import os 
+from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
@@ -115,6 +116,24 @@ def edit_employee(var):
         db.session.commit()
         return redirect(url_for('handleemployees.display_employees'))
     return render_template('add_employee.html',form=form)
+
+
+@handleemployees.route('/add_employee_account/<var>', methods = ['GET','POST'])
+@login_required
+def add_employee_account(var):
+    if current_user.hr == False:
+        return abort(404) 
+    edit = db.session.query(Employees).filter_by(id = var).first()
+    account = User(username=edit.Name.replace(" ","_") ,password="", number=edit.Mobile_No, email = "", job_title = edit.Position)
+    form = AddUserForm(obj = account)
+    if request.method == 'POST':
+        form.populate_obj(edit)
+        passer = generate_password_hash(form.password.data,method='sha256')
+        newuser = User(username=form.username.data, password=passer, number=form.number.data, email = form.email.data, job_title = form.job_title.data, department = form.department.data)
+        db.session.add(newuser)
+        db.session.commit()
+        return redirect(url_for('handleemployees.display_employees'))
+    return render_template('create_user_hr.html',form=form)
 
 
 @handleemployees.route('/delete_employee/<var>', methods = ['GET','POST'])

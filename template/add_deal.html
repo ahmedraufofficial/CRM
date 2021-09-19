@@ -15,7 +15,7 @@ padding-top: 10px;
         text-transform: uppercase;
         color: #f5f0e1;
         font-size: 14pt;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-family: 'Oswald';
     }
 
       </style>
@@ -568,10 +568,11 @@ padding-top: 10px;
     var x = $('#unit_location option:contains("'+data[0].locationtext+'")');
     $('#unit_location').val(x[0].value)
     get_location()
+    console.log(data[0])
     $('#unit_type').val(data[0].subtype)
     $('#contact_seller').val(data[0].owner)
     $('#contact_seller_name').val(data[0].owner_name)
-    $('#contact_seller_contact').val(data[0].owner_contact)
+    $('#contact_seller_number').val(data[0].owner_contact)
     $('#contact_seller_email').val(data[0].owner_email)
     $('#unit_beds').val(data[0].bedrooms)
     $('#deal_price').val(data[0].price)

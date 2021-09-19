@@ -4,10 +4,95 @@
 {% block content %}
 <title>Lighthouse - Listing</title>
 <section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;min-height: 100vh; max-height: 100%;">
-  <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+  <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.5);">
 <br>
 
-<div class="container unselectable" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+
+
+
+
+
+<div class="container" style="margin-bottom: 20px;">
+  <div class="row">
+    <div class="col">
+      <h4 style="color: white;padding-left: 5px;padding-top: 8px; font-family: 'Oswald';">Viewing Requests</h4>
+    </div>
+ </div>
+        <table id="viewing" class="oswald" data-height="460" data-id-field="id">
+          <thead>
+              <tr>
+                  <th data-field="id">ID</th>
+                  <th data-field="username">Agent</th>
+                  <th data-field="status">Status</th>
+                  <th data-field="lead">lead</th>
+                  <th data-field="datetime">Date & Time</th>
+                  <th data-field="min_price">Min Price</th>
+                  <th data-field="max_price">Max Price</th>
+                  <th data-field="min_room">Min Rooms</th>
+                  <th data-field="max_room">Max Rooms</th>
+                  <th data-field="area">Area</th>
+                  <th data-field="specific_area">Specific Area</th>
+                  <th data-field="assigned">Assign Viewing</th>
+              </tr>
+          </thead>
+          </table>
+  </div>
+
+
+
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Assign Viewing</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          
+        </div>
+        <div class="modal-body">
+          <input type="text" name="assign_id" id="assign_id" disabled value="" style="color: white;background-color: transparent;">
+          <input type="text" name="assign_id" id="assign_lead" disabled value="" style="color: white;background-color: transparent;">
+      <div id="property_toolbar">
+          <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
+          <button id="pr" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Search</button>
+          <input class="form-control" style="float: left; width: 100px;margin-right: 5px;" type="text" id="mil" placeholder="Min Price">
+          <input class="form-control" style="float: left; width: 100px; margin-right: 5px;" type="text" id="mal" placeholder="Max Price" >
+          <select name="type" id="ty" style="float: left;width: 100px;" class="form-control"><option selected="selected" value="">Type</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option><option value="Residential Floor">Residential Floor</option><option value="Residential Plot">Residential Plot</option><option value="Townhouse">Townhouse</option><option value="Residential Building">Residential Building</option><option value="Penthouse">Penthouse</option><option value="Villa Compound">Villa Compound</option><option value="Hotel Apartment">Hotel Apartment</option><option value="Office">Office</option><option value="Other">Other</option></select>
+      </div>
+        <table id="property_table"        
+        data-toggle="true"
+        data-toolbar="#property_toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true">
+          <thead>
+          <tr>
+              <th data-checkbox="true" data-checkbox-enabled="true">SELECT</th>
+              <th data-field="refno">REF NO</th>
+              <th data-field="building">LOCATION</th>
+              <th data-field="locationtext">COMMUNITY</th>
+              <th data-field="type">PURPOSE</th>
+              <th data-field="subtype">TYPE</th>
+              <th data-field="price">PRICE</th>
+          </tr>
+          </thead>
+      </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getproperty()">Assign</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+
+
+
+
+<div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
   <br>
 
 <div class="shade">
@@ -179,16 +264,17 @@
 
 
 
-<div class="container unselectable" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+<div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
 <div class="row justify-content-center">
-  <div class="col-11">
+  <div class="col-12">
     <div id="notetoolbar">
-      <span>NOTES</span>
+      <h5>NOTES</h5>
     </div>
       <table id="notetable"        
       data-toggle="true"
       data-toolbar="#notetoolbar"
       data-search="true"
+      class="oswald"
       data-show-columns="true"
       data-pagination="true"
       data-height="350"
@@ -215,33 +301,51 @@
 
 
 
+
+
+
+
     <div class="container" style="padding: 10px; ">
       <br/>
-      <div id="toolbar">
-{% if current_user.export == True %}
- <button onclick="get_check('properties')" class="btn btn-primary">Export</button>
-{% endif %}
- <a id="download" href="">Download</a>
- {% if current_user.viewall == True %}
- <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
- {% endif %}
- <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Listings</button>
+      <div class="row">
+        <div class="col">
+          <div id="toolbar">
+            {% if current_user.export == True %}
+            <button onclick="get_check('properties')" class="btn btn-primary">Export</button>
+            {% endif %}
+            <a id="download" href="">Download</a>
+            {% if current_user.viewall == True %}
+            <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+            {% endif %}
+            <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Listings</button>
+          </div>
+        </div>
       </div>
-      <table
-        id="table"
-        class="unselectable "
-        data-toggle="true"
-        data-toolbar="#toolbar"
-        data-search="true"
-        data-show-columns="true"
-        data-pagination="true"
-        data-height="500">
-      </table>
+
+      <div class="row">
+        <div class="col">
+          <table
+          id="table"
+          class="unselectable oswald"
+          data-toggle="true"
+          data-toolbar="#toolbar"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true"
+          data-height="500">
+          </table>
+        </div>
+      </div>
+
     </div>
     <div class="container">
-      <a href="/add_property/rent" class="btn btn-primary">Add Rental</a>
-      <a href="/add_property/sale" class="btn btn-warning" style="margin-left: 10px; color: white;;">Add Sale</a>
+      <div class="row">
+        <div class="col">
+          <a href="/add_property/rent" class="btn btn-primary">Add Rental</a>
+          <a href="/add_property/sale" class="btn btn-warning" style="margin-left: 10px; color: white;;">Add Sale</a>
+        </div>
       </div>
+    </div>
 <br>
 </div>
 </section>
@@ -311,6 +415,13 @@ function post_note(){
         })
       };
 
+$(function () {
+  var view = {{viewings|tojson}};
+    $('#viewing').bootstrapTable({
+        data: view.reverse()
+    });
+});
+
 
 function view_property(x){
         fetch('/all_properties/'+x).then(function(response){
@@ -374,7 +485,7 @@ function view_property(x){
 
       $(function() {
         $('#table').bootstrapTable({ 
-          data: data,
+          data: data.reverse(),
           columns: columns,
         });
         
@@ -398,6 +509,75 @@ function view_property(x){
 
 
 
+    function get_properties(){
+        fetch('/all_properties').then(function(response){
+            response.json().then(function(data){
+                let newtable = '';
+                var jsonData = data.all_properties
+                $(function () {
+                var $table = $('#property_table').bootstrapTable({data: jsonData});
+   
+                $('#pr').click(function () {
+                    var grepFunc;
+                    category = $("#ty").val();
+                    min = $("#mil").val();
+                    if (min == "")
+                    {min = 0}
+                    max = $("#mal").val();
+                    if (max == "")
+                    {max = 9999999}
+                            grepFunc = function (item) {
+                                if (category == "")
+                                { return item.price >= min && item.price <= max }
+                                else
+                                {return item.price >= min && item.price <= max && item.subtype == category;}
+                            };
+                    $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+
+                $('#reset').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+ 
+
+                });
+            })
+        })
+    }
+
+    function getproperty(){
+    var data = $('#property_table').bootstrapTable('getSelections');
+    var lists = ""
+    for (var i = 0; i < data.length; i++) {
+      lists += data[i].refno+","
+      }
+    var lead_id = $("#assign_id").val()
+    var lead_no = $("#assign_lead").val()
+    fetch('/assign_viewing/'+lead_id+"/"+lead_no+"/"+lists.slice(0, -1)).then(function(response){
+    response.json().then(function(data){
+      location.reload();
+    })
+  })
+}
+
+
+    window.onload = get_properties();
+
+
+
+
+
+function assign(x,y){
+  $("#assign_id").val(x)
+  $("#assign_lead").val(y)
+}
+    
+
   </script>
 
 
@@ -405,6 +585,8 @@ function view_property(x){
 
 
   <style type='text/css'>
+
+
     .row-index {
       width: 50px;
       display: inline-block;

@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+
+  
+<section style="background-image:url(/static/images/worldmap.jpg) ;background-size: cover;height: 100vh;">
+<div style="background-color:rgb(0, 0, 0,0.5); height: 100%;">
+    <div class="container" >
+    <div class="row" style="padding-top: 20px;">
+        <div class="col">
+            <h5 style="color: white;">Add Account</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-4 col-md-4">
+            <form method="POST" style=" margin-top: 20px;" enctype="multipart/form-data">
+                <div class="form-group"> 
+               
+                    {{ wtf.form_field(form.username) }}
+                </div>
+                <br>
+                <div class="form-group"> 
+                  
+                    {{ wtf.form_field(form.password) }}
+                </div>
+                <br>
+                <div class="form-group"> 
+                 
+                    {{ wtf.form_field(form.number) }}
+                </div>
+                <br>
+                <div class="form-group"> 
+                 
+                    {{ wtf.form_field(form.email) }}
+                </div>
+                <br>
+                <div class="form-group"> 
+                 
+                    {{ wtf.form_field(form.job_title) }}
+                </div>
+                <br>
+                <div class="form-group"> 
+               
+                    {{ wtf.form_field(form.department) }}
+                </div>
+                
+                <br>
+                <input class="btn btn-primary" type="submit" value="Add">
+                
+                
+                </form>
+                <style type='text/css'>
+                   .field-align{
+                       width: 80px;
+                   }
+                 </style>
+        </div>
+    </div>
+</div>
+</div>
+</section>
+
+{% endblock %}

@@ -2,6 +2,26 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 db = SQLAlchemy()
 
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(200))
+    email = db.Column(db.String(50))
+    number = db.Column(db.Integer)
+    job_title = db.Column(db.String(50))
+    department = db.Column(db.String(50))
+    profile_picture = db.Column(db.String())
+    is_admin = db.Column(db.Boolean, default=False)
+    listing = db.Column(db.Boolean, default=False)
+    sale = db.Column(db.Boolean, default=False)
+    deal = db.Column(db.Boolean, default=False)
+    hr = db.Column(db.Boolean, default=False)
+    contact = db.Column(db.Boolean, default=False)
+    edit = db.Column(db.Boolean, default=False)
+    viewall = db.Column(db.Boolean, default=False)
+    export = db.Column(db.Boolean, default=False)
+    schedule = db.Column(db.Boolean, default=False)
+
 class Contacts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     refno = db.Column(db.String(50))
@@ -90,6 +110,7 @@ class Leads(db.Model):
     agent = db.Column(db.String(100))
     refno = db.Column(db.String(100))
     enquiry_date = db.Column(db.DateTime)
+    created_date = db.Column(db.DateTime)
     lead_type = db.Column(db.String(50))
     finance_type = db.Column(db.String(50))
     propertyamenities = db.Column(db.String(800))
@@ -148,8 +169,8 @@ class Deals(db.Model):
     agent_2 = db.Column(db.String(50))
     commission_agent_2 = db.Column(db.String(50))
     cheques = db.Column(db.String(50))
-    estimated_deal_date = db.Column(db.String(50))
-    actual_deal_date = db.Column(db.String(50))
+    estimated_deal_date = db.Column(db.DateTime)
+    actual_deal_date = db.Column(db.DateTime)
     unit_no = db.Column(db.String(50))
     unit_category = db.Column(db.String(50))
     unit_beds = db.Column(db.String(50))
@@ -178,6 +199,8 @@ class Deals(db.Model):
     unit_price = db.Column(db.String(50))
     percentage = db.Column(db.String(50))
     amount = db.Column(db.String(50))
+
+
 
 
 class Employees(db.Model):

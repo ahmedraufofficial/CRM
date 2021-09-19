@@ -38,6 +38,7 @@ def logs(username,ref,task):
         })
         file.seek(0)
         json.dump(columns, file,indent=4)
+        file.truncate()
 
 def post_reminders(username,from_date,to_date,from_time,to_time,title):
     username = username.replace("%20"," ")
@@ -50,11 +51,7 @@ def post_reminders(username,from_date,to_date,from_time,to_time,title):
         columns = json.load(file)
         start = str(from_date+'T'+from_time+':00')
         end = str(to_date+'T'+to_time+':00')
-        id = random.sample(range(1, 10000),1)[0]
-        a = columns['reminders']
-        for i in a:
-            if i['id'] == id:
-                id = random.sample(range(1, 10000),1)[0]
+        id = str(len(columns['reminders'])+1)
         columns["reminders"].append({
           'id' :id,
           'title':title,
@@ -63,7 +60,8 @@ def post_reminders(username,from_date,to_date,from_time,to_time,title):
         })
         file.seek(0)
         json.dump(columns, file,indent=4)
-        
+        file.truncate()
+
 def reminders(username):
     username = username.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
@@ -311,7 +309,7 @@ def chart_data(chart, username):
         bg = []
         bd = []
         for i in columns["lead"]:
-            if columns["lead"][i]["status"] == 'Lost':
+            if columns["lead"][i]["status"] == 'Lost' or columns["lead"][i]["status"] == 'Closed':
                 exp = columns["lead"][i]["expiry date"] +'T'+ columns["lead"][i]["expiry time"]+":00"
                 exp = datetime.strptime(exp, '%Y-%m-%dT%H:%M:%S')
             else:
@@ -392,3 +390,45 @@ def get_commission(role, cost, type):
         elif cost > 135000:
             commission = 30
     return commission
+
+def viewings(username,lead,status,min_price,max_price,min_room,max_room,area,specific_area):
+    with open(os.path.join(os.getcwd(),'viewing.json'),'r+') as file:
+        columns = json.load(file)
+        columns["viewings"].append({
+            'id':len(columns["viewings"])+1,
+            'username':username,
+            'status':status,
+            'lead':lead,
+            'datetime':str(datetime.now()),
+            'min_price':min_price,
+            'max_price':max_price,
+            'min_room':min_room,
+            'max_room':max_room,
+            'area':area,
+            'specific_area':specific_area,
+            'assigned':"<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign("+'"'+str(len(columns["viewings"])+1)+'","'+lead+'"'+")'>Assign</button>"
+        })
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate() 
+       
+def assign_viewing(current,lead_id,lead,lists):
+    with open(os.path.join(os.getcwd(),'viewing.json'),'r+') as file:
+        columns = json.load(file)
+        for i in columns["viewings"]:
+            if i["id"] == int(lead_id):
+                i["status"] = "Assigned"
+                username = i["username"]
+                listid = i["lead"]
+
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+        for i in lists.split(","):
+            update_note(username, i, "Assigned a viewing by "+current+" : Awaiting Feedback")
+            update_lead_note(current, listid, "Assigned Viewing for "+i, "Awating Feedback", "-")
+        date = datetime.now().strftime("%Y-%m-%d")
+        end_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+        time = datetime.now().strftime("%H:%M")
+        post_reminders(username,date,end_date,time,time,"Viewing assigned for "+lead)
+        

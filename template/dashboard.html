@@ -3,6 +3,9 @@
 {% block content %}
 <title>Lighthouse - CRM</title>
 <style type='text/css'>
+  .details {
+    background-color: #1e3d59; width: 100%; padding-top: 20px; padding-bottom: 20px;padding-left: 10px;
+  }
   .column{
       background-color: #1e3d59;
   
@@ -11,32 +14,34 @@
   }
   h4{
       color: #7be0ff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Oswald';
   }
   h8{
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: white;
+      font-family: 'Oswald';
   }
   h5 {
     color: white;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size: 20pt;
+    font-family: 'Oswald';font-size: 20pt;
   }
   .fc-toolbar-title {
       color: white;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Oswald';
   }
   
   .fc-daygrid-day-number{
       color: #f5f0e1;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Oswald';
   }
   .fc-col-header-cell-cushion{
-      color: white;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: rgb(75, 75, 75);
+      font-family: 'Oswald';
   }
-
+  .fc-daygrid-day-number{
+    color: rgb(75, 75, 75); 
+  }
  tbody{
-  background-color: #4b4b4b;
+  background-color: rgba(255, 255, 255,0.7);
  }
  input{
    border: 2px solid #1e3d59;
@@ -55,7 +60,7 @@
     border-radius: 0px;
 }
 .fc-day-today {
-  background-color: #001524 !important;
+  background-color: #9fafbb !important;
 }
 .fc-event-past{
   color: white !important;
@@ -69,12 +74,12 @@ span{
 
 label{
   color: #007bff;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Oswald';
   display: block;
 }
 p{
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+  font-family: 'Oswald'; 
   display: inline;
 }
 
@@ -111,10 +116,12 @@ p{
 .fc-button-active{
   background-color: #010813 !important;
 }
-
+.fc-scrollgrid-shrink-cushion{
+  color: rgb(75, 75, 75);
+}
 
 #upload_pic {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #1e3d59;
 }
 #upload_pic:hover{
   background-color: rgba(0, 0, 0, 1);
@@ -157,20 +164,20 @@ p{
 <div id="waypoint1"></div>
 
   <div class="col-3">
-    <div class="shade">
+    <div class="shade" style="background-color: #1e3d59;">
     <div class="row">
       <div class="col text-center">
         <div style="font-size: 1.75em;font-weight: 500;
-        line-height: 1.2;color: white;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+        line-height: 1.2;color: white;font-family: 'Oswald';">
         Reminder</div>
         </div>
     </div>
     <div class="row">
       <div class="col">
-        <div style="background-color: rgba(0, 0, 0, 0.8); text-align: center; padding-bottom: 12px; padding-top: 10px;margin-top: 9%;">
+        <div style="background-color: transparent; text-align: center; padding-bottom: 12px; padding-top: 10px;margin-top: 9%;">
           <div class="row">
             <div class="col">
-              <input type="text" placeholder="Title" id="title" style="width: 90%;margin-bottom: 10px; font-size: 10pt; ">
+              <input type="text" placeholder="Title" id="title" style="width: 90%;margin-bottom: 10px; font-size: 10pt;">
             </div>
             </div>
             <div class="row">
@@ -210,7 +217,7 @@ p{
       </div>
       <div class="row">
         <div class="col">
-          <div class="shade" style="background-color: rgba(0, 0, 0, 0.8); text-align: center; padding-bottom: 5%; padding-top: 5%; margin-top: 2%;">
+          <div class="shade" style="background-color: #1e3d59; text-align: center; padding-bottom: 5%; padding-top: 5%; margin-top: 2%;">
             <div id="count" class="col">
           
             </div>
@@ -220,6 +227,83 @@ p{
     </div>
   </div>
   </div>
+
+  <div class="container" style="margin-top: 50px;">
+    <hr style="background-color: white;">
+  </div>
+  <div class="container">
+  <div class="row" style="margin-top: 50px;">
+    <div class="col">
+    <h5>
+      USER DETAILS
+    </h5>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 50px;">
+  <div class="col-3">
+    <div class="details">
+      <h8>Follow Up Leads <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-exclamation-lg" viewBox="0 0 16 16">
+        <path d="M6.002 14a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm.195-12.01a1.81 1.81 0 1 1 3.602 0l-.701 7.015a1.105 1.105 0 0 1-2.2 0l-.7-7.015z"/>
+      </svg> -> </h8>
+      <h8 id="progress"  style="display: inline; margin-top: 15px;">
+
+      </h8>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="details">
+      <h8>Total Deals this Month -> </h8>
+      <h8 id="deals_this_month"  style="display: inline; margin-top: 15px;">
+
+      </h8>
+    </div>
+  </div>  
+  <div class="col-3">
+    <div id="deals_price" style="width: 100%; padding-top: 20px; padding-bottom: 20px;padding-left: 10px;">
+      <h8>Deals Amount/Month -> </h8>
+      <h8 id="deals_amount"  style="display: inline; margin-top: 15px;">
+
+      </h8>
+    </div>
+  </div>  
+  <div class="col-3">
+    <div class="details">
+      <h8>All Successful Deals -> </h8>
+      <h8 id="deals"  style="display: inline; margin-top: 15px;">
+
+      </h8>
+    </div>
+  </div>  
+  </div>
+  <div class="row" style="margin-top: 50px;">
+    <div class="col-4">
+      <div class="details">
+        <h8>Eligible Listing Commission % -> </h8>
+        <h8 id="lc"  style="display: inline; margin-top: 15px;">
+  
+        </h8>
+      </div>
+    </div>  
+    <div class="col-4">
+      <div class="details">
+        <h8>Eligible Secondary Sales Commission % -> </h8>
+        <h8 id="ps"  style="display: inline; margin-top: 15px;">
+  
+        </h8>
+      </div>
+    </div>  
+    <div class="col-4">
+      <div class="details">
+        <h8>Eligible Primary Sales Commission % -> </h8>
+        <h8 id="ss"  style="display: inline; margin-top: 15px;">
+  
+        </h8>
+      </div>
+    </div>  
+  </div>
+  </div>
+
+
 <div class="container" style="margin-top: 50px;">
   <hr style="background-color: white;">
 </div>
@@ -232,7 +316,7 @@ p{
     </h5>
     </div>
   </div>
-  <div class="row" style="margin-top: 20px;">
+  <div class="row" style="margin-top: 50px;">
 
 
  
@@ -257,10 +341,10 @@ p{
     </div>
     <div class="col-8">
 
-          <table class="table shade">
-            <tbody style="background-color: rgba(0, 0, 0, 0.8); color:white;border: 1px solid white; font-size: 9pt;">
+          <table class="table">
+            <tbody class="oswald" style="background-color: #1e3d59; color: white;border: 1px solid white; font-size: 12pt;">
           <tr>
-            <th scope="row">Name</th>
+            <th scope="row" >Name</th>
             <td colspan="6" style="color: white; text-align: left;">{{ user.username }}</td>
           </tr>
           <tr>
@@ -282,8 +366,8 @@ p{
         </tbody>
       </table>
 
-      <table class="table shade">
-        <thead style="background-color: rgba(0, 0, 0, 0.8); color:white;border-left: 1px solid white;border-right: 1px solid white;color:white;border: 1px solid white; font-size: 9pt;">
+      <table class="table oswald">
+        <thead style="background-color: #1e3d59; color: white;border: 1px solid white; font-size: 12pt;">
           <tr>
             <th scope="col">Role</th>
             <th scope="col">Admin</th>
@@ -294,15 +378,15 @@ p{
             <th scope="col">Edit</th>
           </tr>
         </thead>
-        <tbody style="background-color: rgba(0, 0, 0, 0.8); color:white;border: 1px solid white; color:white;border: 1px solid white; font-size: 9pt;">
+        <tbody style="background-color: #1e3d59; color: white;border: 1px solid white; font-size: 12pt; font-size: 9pt;">
           <tr>
-            <th scope="row">Permission</th>
-            <td style="color: #007bff;">{{ user.is_admin }}</td>
-            <td style="color: #007bff;">{{ user.listing }}</td>
-            <td style="color: #007bff;">{{ user.sale }}</td>
-            <td style="color: #007bff;">{{ user.deal }}</td>
-            <td style="color: #007bff;">{{ user.contact }}</td>
-            <td style="color: #007bff;">{{ user.edit }}</td>
+            <th scope="row" style="font-size: 12pt;">Permission</th>
+            <td style="color: #e9e50d;">{{ user.is_admin }}</td>
+            <td style="color: #e9e50d;">{{ user.listing }}</td>
+            <td style="color: #e9e50d;">{{ user.sale }}</td>
+            <td style="color: #e9e50d;">{{ user.deal }}</td>
+            <td style="color: #e9e50d;">{{ user.contact }}</td>
+            <td style="color: #e9e50d;">{{ user.edit }}</td>
           </tr>
           </tbody>
 </table>
@@ -314,8 +398,6 @@ p{
   <br>
   
   
-
-
 
 
 </div>
@@ -349,6 +431,23 @@ var waypoint = new Waypoint({
               count += ' <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width:'+lead+'%;"></div>'
               count += '</div>'
               document.getElementById('count').innerHTML += count
+              document.getElementById('progress').innerHTML = all_count.progress
+              document.getElementById('deals').innerHTML = all_count.deals
+              document.getElementById('lc').innerHTML = all_count.commission
+              document.getElementById('ps').innerHTML = all_count.commission1
+              document.getElementById('ss').innerHTML = all_count.commission2
+              document.getElementById('deals_this_month').innerHTML = all_count.deals_this_month
+              var all_deals = all_count.deals_amount
+              if (all_deals == 0 || all_deals < 40000){
+                document.getElementById("deals_price").style.background = "rgb(231, 97, 97)";
+              }
+              else if (all_deals < 150000 && all_deals > 40000) {
+                document.getElementById("deals_price").style.background = "rgb(247, 150, 40)";
+              }
+              else if (all_deals > 150000) {
+                document.getElementById("deals_price").style.background = "rgb(151, 255, 32)";
+              }
+              document.getElementById('deals_amount').innerHTML = all_count.deals_amount
             })
         })
       }
@@ -408,6 +507,7 @@ var waypoint = new Waypoint({
     data : {},
     success: function(data){
       useReturnData(data.data);
+      console.log(data.data)
     }
         })
     }

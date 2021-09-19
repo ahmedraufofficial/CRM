@@ -45,6 +45,15 @@ class LoginForm(FlaskForm):
     password = PasswordField('PASSWORD', [validators.DataRequired()])
 
 
+class AddUserForm(FlaskForm):
+    username = StringField('Username', [validators.Length(min=4, max=25), validators.DataRequired()])
+    password = StringField('Password', [validators.DataRequired()])
+    number = IntegerField('Contact Number', [validators.DataRequired()])
+    email = StringField('Email', [validators.Length(min=4, max=80),validators.DataRequired()])
+    job_title = StringField('Job Title', [validators.Length(min=4, max=25), validators.DataRequired()])
+    department = StringField('Department', [validators.Length(min=4, max=25), validators.DataRequired()])
+    
+
 class AddPropertyForm(FlaskForm):
     status = SelectField(u'Status',choices = [('Available', 'Available'), ('Archive', 'Archive'), ('Expired', 'Expired'),('Blocked', 'Blocked'), ('Pending', 'Pending'), ('Moved In', 'Moved In'), ('Reserved', 'Reserved'), ('Sold', 'Sold'), ('Upcoming', 'Upcoming')])
     city = SelectField(u'Emirate *',[validators.DataRequired()],choices = [('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai'), ('Al Ain', 'Al Ain'), ('Sharjah', 'Sharjah'), ('Fujairah', 'Fujairah'), ('Ras Al Khaimah', 'Ras Al Khaimah'), ('Umm Al Quwain', 'Umm Al Quwain')])
@@ -152,7 +161,7 @@ class AddDealForm(FlaskForm):
     created_by = StringField('Created By')
     listing_ref = StringField('Listing Ref',render_kw={"style":"pointer-events: none;"})
     lead_ref = StringField('Lead Ref',render_kw={"style":"pointer-events: none;"})
-    emi_id = FileField("Emirates ID *",[validators.DataRequired()],render_kw={'class':'upload'})
+    emi_id = FileField("Emirates ID *",render_kw={'class':'upload'})
     contact_buyer = StringField('Contact Buyer *', [validators.DataRequired(),validators.Length(min=4, max=100)],render_kw={"style":"pointer-events: none;"})
     contact_buyer_name = StringField('Name Buyer *', [validators.DataRequired(),validators.Length(min=4, max=100)],render_kw={"style":"pointer-events: none;"})
     contact_buyer_number =IntegerField('Number Buyer *',[validators.DataRequired()],render_kw={"style":"pointer-events: none;"})
@@ -178,8 +187,8 @@ class AddDealForm(FlaskForm):
     agent_2 = SelectField(u'Agent',choices = [])
     commission_agent_2 = StringField('Commission')
     
-    estimated_deal_date = StringField('Estimated Deal Date')
-    actual_deal_date = StringField('Actual Deal Date')
+    estimated_deal_date = DateField('Estimated Deal Date')
+    actual_deal_date = DateField('Actual Deal Date *',[validators.DataRequired()])
     unit_no = StringField('Unit No *',[validators.DataRequired()])
     unit_category = SelectField(u'Type *',[validators.DataRequired()],choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
     unit_beds = StringField('Unit Beds *',[validators.DataRequired()])
@@ -233,7 +242,7 @@ class AddFile(FlaskForm):
     send = SelectField(u'Send To', [validators.DataRequired()],choices = [])
 
 class AddEmployeeForm(FlaskForm):
-    Status = StringField('Status')
+    Status = SelectField(u'Status',choices = [('Active', 'Active'), ('Cancel', 'Cancel')])
     Employee_Status = StringField('Employee Status')
     Employee_ID = StringField('Employee ID')
     Name = StringField('Name')
