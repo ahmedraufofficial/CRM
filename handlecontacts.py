@@ -45,7 +45,7 @@ def display_contacts():
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in []: new.pop(k)
-        new["edit"] = "<div style='display:flex;'>"+'<a class="btn btn-primary" href="/edit_contact/'+str(new['id'])+'"><i class="bi bi-pencil"></a>'+"</div>"
+        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a>'+"</div>"
         data.append(new)
     #with open('contacts.json', 'w') as fout:
     #    json.dump(data , fout)

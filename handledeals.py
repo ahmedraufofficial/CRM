@@ -54,7 +54,7 @@ def display_deals():
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in ['transaction_type','created_by','listing_ref','lead_ref','source','priority','deposit','agency_fee_seller','agency_fee_buyer','gross_commission','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_no','unit_category','unit_beds','unit_location','unit_sub_location','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
-        new["edit"] = "<div style='display:flex;'>"+'<a class="btn btn-primary" href="/edit_deal/'+str(new['id'])+'">Edit</a>'+"</div>"
+        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_deal/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a>'+"</div>"
         data.append(new)
     f = open('deal_headers.json')
     columns = json.load(f)

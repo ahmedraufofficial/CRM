@@ -35,17 +35,25 @@ def display_employees():
     if current_user.sale == False:
         return abort(404)
     data = []
+    existing_users = []
+    for a in db.session.query(User).all():
+        existing_users.append(a.username)
     if current_user.viewall == True:
         for r in db.session.query(Employees).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
-                edit_btn =  '<a class="btn btn-primary si" href="/edit_employee/'+str(new['id'])+'"><i class="bi bi-pencil"></i></a><a class="btn btn-danger si" href="/delete_employee/'+str(new['id'])+'"><i class="bi bi-trash"></i></a>'
+                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'
             else:
                 edit_btn = ''
+            
+            if r.Name in existing_users:
+                account = ""
+            else:
+                account = '<a href="/add_employee_account/'+str(new['id'])+'"><button  class="btn btn-info si">Sign Up</button></a>'
 
-            new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+account+"</div>"
             data.append(new)
     else:
         for r in db.session.query(Employees).filter(Employees.created_by == current_user.username):
@@ -53,11 +61,15 @@ def display_employees():
             new = row2dict(r)
             #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
-                edit_btn =  '<a class="btn btn-primary si" href="/edit_employee/'+str(new['id'])+'"><i class="bi bi-pencil"></i></a><a class="btn btn-danger si" href="/delete_employee/'+str(new['id'])+'"><i class="bi bi-trash"></i></a>'
+                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a  href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'
             else:
                 edit_btn = ''
+            if r.Name in existing_users:
+                account = ""
+            else:
+                account = '<a href="/add_employee_account/'+str(new['id'])+'"><button  class="btn btn-info si">Sign Up</button></a>'
 
-            new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+account+"</div>"
             data.append(new)
 
     f = open('employee_headers.json')

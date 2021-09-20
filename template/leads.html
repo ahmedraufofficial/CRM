@@ -185,7 +185,7 @@
       </div>    
     </div>
       
-      <button onclick="post_lead_note()" class="btn btn-primary" style="margin-top: 20px; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
+      <button onclick="post_lead_note()" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Post</button>
       <button id="close_lead" onclick="close_lead('close')" class="btn" style="margin-top: 20px;background-color: #dc3545; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Close Lead</button>
       <button id="open_lead" onclick="close_lead('open')" class="btn" style="margin-top: 20px;background-color: #56b300; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Open Lead</button>
       <div id="closelead">
@@ -279,6 +279,7 @@ function view_note(x){
       $(function () {
                 $('#notetable').bootstrapTable('destroy')
                 $('#notetable').bootstrapTable({data: jsonData});
+                document.getElementById('comment').value = ''
                 });
     })
   })

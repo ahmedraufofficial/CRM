@@ -67,8 +67,8 @@ color: black;
 margin-right: 3px;
 margin-bottom: 3px;
 display: inline;
-width: 25px !important;
-height: 25px !important;
+width: 50px !important;
+height: 40px !important;
 }
 
 .btn-primary {
@@ -76,8 +76,28 @@ height: 25px !important;
 }
 
 .btn-primary:hover {
-  background-color:#010813 !important;
+  background-color:transparent !important;
 }
+
+.btn-danger:hover {
+  background-color:transparent !important;
+}
+
+.btn-info:hover {
+  background-color:transparent !important;
+}
+
+.btn-warning {
+  background-color:#ffae00 !important;
+}
+
+.btn-warning:hover {
+  background-color:transparent !important;
+}
+.btn-success:hover {
+  background-color:transparent !important;
+}
+
 .shade{
   box-shadow: 0px 3px 17px 0px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: 0px 3px 17px 0px rgba(0, 0, 0, 0.4);

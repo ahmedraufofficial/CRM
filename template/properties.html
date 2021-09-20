@@ -294,7 +294,7 @@
   <div class="col-11">
     <input type="hidden" id="list_id">
     <input class="form-control" type="text" id="comment">
-    <button onclick="post_note()" class="btn" style="margin-top: 20px;background-color: #7be0ff; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
+    <button onclick="post_note()" class="btn btn-primary" style="margin-top: 20px; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
   </div>
 </div>
 </div>
@@ -400,6 +400,7 @@ function view_note(x){
       $(function () {
                 $('#notetable').bootstrapTable('destroy')
                 $('#notetable').bootstrapTable({data: jsonData});
+                document.getElementById('comment').value = ''
                 });
     })
   })
@@ -410,7 +411,9 @@ function post_note(){
       var com = document.getElementById('comment').value;
       fetch('/post_note/'+list_id+'/'+com).then(function(response){
             response.json().then(function(){
+              
               view_note(list_id)
+              
             })
         })
       };
