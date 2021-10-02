@@ -1,32 +1,5 @@
 {
     "viewings": [
-        {
-            "id": 1,
-            "username": "ahmed",
-            "status": "Assigned",
-            "lead": "UNI-L-2",
-            "datetime": "2021-09-18 14:59:54.596525",
-            "min_price": 1234131,
-            "max_price": null,
-            "min_room": "2",
-            "max_room": "",
-            "area": "Hydra Village",
-            "specific_area": "Zone 2",
-            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"1\",\"UNI-L-2\")'>Assign</button>"
-        },
-        {
-            "id": 2,
-            "username": "ahmed",
-            "status": "Assigned",
-            "lead": "UNI-L-1",
-            "datetime": "2021-09-19 17:29:44.505087",
-            "min_price": 123444,
-            "max_price": null,
-            "min_room": "5",
-            "max_room": "",
-            "area": "Al Muntazah",
-            "specific_area": "Al Bustan Compound",
-            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"2\",\"UNI-L-1\")'>Assign</button>"
-        }
+    
     ]
 }

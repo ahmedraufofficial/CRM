@@ -21,6 +21,16 @@
       "sortable": "True"
     },
     {
+      "field": "assign_to",
+      "title": "Assigned To",
+      "sortable": "True"
+    },
+    {
+      "field": "number",
+      "title": "Contact",
+      "sortable": "True"
+    },
+    {
       "field": "email",
       "title": "Email",
       "sortable": "True"

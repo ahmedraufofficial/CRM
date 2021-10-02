@@ -218,3 +218,8 @@ font-family: 'Oswald';font-size: 20pt;
 .storage:hover {
   border: 3px dashed rgb(0, 161, 224);
 }
+
+.page-link{
+  background-color:rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+}

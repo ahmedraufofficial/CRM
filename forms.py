@@ -55,7 +55,7 @@ class AddUserForm(FlaskForm):
     
 
 class AddPropertyForm(FlaskForm):
-    status = SelectField(u'Status',choices = [('Available', 'Available'), ('Archive', 'Archive'), ('Expired', 'Expired'),('Blocked', 'Blocked'), ('Pending', 'Pending'), ('Moved In', 'Moved In'), ('Reserved', 'Reserved'), ('Sold', 'Sold'), ('Upcoming', 'Upcoming')])
+    status = SelectField(u'Status',choices = [('Available', 'Available'), ('Archive', 'Archive'), ('Expired', 'Expired'),('Blocked', 'Blocked'), ('Pending', 'Pending'), ('Moved In', 'Moved In'), ('Rented', 'Rented'), ('Reserved', 'Reserved'), ('Owner Occupied','Owner Occupied'), ('Sold', 'Sold'), ('Upcoming', 'Upcoming')])
     city = SelectField(u'Emirate *',[validators.DataRequired()],choices = [('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai'), ('Al Ain', 'Al Ain'), ('Sharjah', 'Sharjah'), ('Fujairah', 'Fujairah'), ('Ras Al Khaimah', 'Ras Al Khaimah'), ('Umm Al Quwain', 'Umm Al Quwain')])
     type = RadioField('Purpose',[validators.DataRequired()], choices=[('Rent','Rent'),('Sale','Sale')], default=0)
     subtype = SelectField(u'Type *',[validators.DataRequired()],choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'),('Land','Land'), ('Other', 'Other')])

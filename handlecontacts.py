@@ -7,6 +7,10 @@ from forms import AddContactForm
 import json
 from functions import logs
 import os 
+import csv
+import arabic_reshaper
+from bidi.algorithm import get_display
+
 
 a = os.getcwd()
 UPLOAD_FOLDER = os.path.join(a+'/static', 'uploads')
@@ -127,3 +131,42 @@ def edit_contact(variable):
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handlecontacts.display_contacts'))
     return render_template('add_contact.html', form=form, assign = current_user.username,user = current_user.username)
+
+@handlecontacts.route('/import_contacts', methods = ['GET','POST'])
+@login_required
+def import_contact():
+    with open("contacts.csv", "r") as f:
+        reader = csv.reader(f, delimiter="\t")
+        user = []
+        for row in reader:
+            a = (row[0].split(','))
+            user.append(a[1:])
+
+        user = user[1:]
+        user.reverse()
+ 
+        for i in user:
+            fs = arabic_reshaper.reshape(i[1])
+            fs = get_display(fs)   
+            ls = arabic_reshaper.reshape(i[2])
+            ls = get_display(ls)   
+            try:
+                newcontact = Contacts(first_name=fs, last_name=ls ,number=int(float(i[3].replace('- -','0').replace('+','00').replace(' ',''))),alternate_number=int(float(i[6].replace('- -','0').replace('+','00').replace(' ',''))),role=i[12],nationality=i[9],source=i[13],assign_to=i[7].replace(" ","_"),email=i[4],title=i[5],gender=i[0],religion=i[8],language=i[11])
+                db.session.add(newcontact)
+                db.session.commit()
+                db.session.refresh(newcontact)
+                newcontact.refno = 'UNI-O-'+str(newcontact.id)
+                db.session.commit()
+                directory = UPLOAD_FOLDER+'/UNI-O-'+str(newcontact.id)
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                with open('map_contact.json','r+') as file:
+                    columns = json.load(file)
+                    columns["map_contact"].update({i[14]:newcontact.refno})
+                    file.seek(0)
+                    json.dump(columns, file,indent=4)
+                    file.truncate()
+            except:
+                pass
+
+        return jsonify(fs)

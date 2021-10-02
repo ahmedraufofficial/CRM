@@ -35,11 +35,11 @@
       
     var columns = {{columns|tojson}};
     var data = {{data|tojson}};
-      
+
 
       $(function() {
         $('#table').bootstrapTable({ 
-          data: data,
+          data: data.reverse() ,
           columns: columns,
         });
 
