@@ -382,7 +382,7 @@ def logout():
 @app.route('/all_contacts',methods = ['GET','POST'])
 @login_required
 def all_contacts():
-    get_contacts = db.session.query(Contacts).all()
+    get_contacts = db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username))
     all_contacts = []
     for contact in get_contacts:
         contactObj = {}
