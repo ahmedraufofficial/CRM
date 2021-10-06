@@ -469,7 +469,7 @@ def all_users_commission(variable, type):
 @app.route('/all_properties',methods = ['GET','POST'])
 @login_required
 def all_properties():
-    get_properties = db.session.query(Properties).all()
+    get_properties = db.session.query(Properties).filter(or_(Properties.status == 'Available',Properties.status == 'Rented',Properties.status == 'Upcoming',Properties.status == 'Owner Occupied',Properties.status == 'Moved In',Properties.status == 'Reserved'))
     all_properties = []
     for property in get_properties:
         a = property
@@ -486,11 +486,14 @@ def view_properties(variable):
     propertyObj = {}
     propertyObj = vars(property)
     propertyObj.pop('_sa_instance_state')
-    a=property.photos.split('|')
-    if a[1:] == '':
-        propertyObj['photos'] = a[1:]
-    else:
-        propertyObj['photos'] = a
+    try:
+        a=property.photos.split('|')
+        if a[1:] == '':
+            propertyObj['photos'] = a[1:]
+        else:
+            propertyObj['photos'] = a
+    except:
+        a=[]
     all_property.append(propertyObj)
     return jsonify({'property':all_property})
 

@@ -405,7 +405,7 @@ function view_leads(x){
 $(window).on('load',(function(){      
     var columns = {{columns|tojson}};
     var data = {{data|tojson}};
-
+  data.reverse()
       $(function() {
         $('#table').bootstrapTable({ 
           data: data,

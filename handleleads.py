@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
-from models import Leads, Properties
+from models import Leads, Properties,Contacts
 from forms import AddLeadForm, BuyerLead, DeveloperLead
 import json
 import os 
@@ -13,6 +13,8 @@ import re
 from datetime import date, datetime,time
 from functions import assign_lead, logs, notes, update_note
 from sqlalchemy import or_
+import csv
+
 
 path = os.getcwd()
 UPLOAD_FOLDER = os.path.join(path, 'uploads')
@@ -40,7 +42,10 @@ def display_leads():
             new = row2dict(r)
             #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
-                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                if r.created_by == current_user.username or r.agent == current_user.username:
+                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                else:
+                    edit_btn = ''
             else:
                 edit_btn = ''
             if new['agent'] == current_user.username and new['sub_status'] == "In progress":
@@ -56,7 +61,10 @@ def display_leads():
             new = row2dict(r)
             #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
-                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                if r.created_by == current_user.username or r.agent == current_user.username:
+                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                else:
+                    edit_btn = ''
             else:
                 edit_btn = ''
             if new['agent'] == current_user.username and new['sub_status'] == "In progress":
@@ -192,7 +200,10 @@ def edit_lead(markettype,var):
     w = open('abudhabi.json')
     mydict = json.load(w)
     new = form.locationtext.data
-    form.locationtext.data = list(mydict.keys())[list(mydict.values()).index(edit.locationtext)]
+    try:
+        form.locationtext.data = list(mydict.keys())[list(mydict.values()).index(edit.locationtext)]
+    except:
+        form.locationtext.data = ""
     if request.method == 'POST':
         form.populate_obj(edit)
         edit.propertyamenities = ",".join(form.propertyamenities.data)
@@ -220,4 +231,114 @@ def community(substatus):
             status.append((i,i))
     return jsonify({'status':status})
 
+'''
+@handleleads.route('/import_leads', methods = ['GET','POST'])
+@login_required
+def import_leads():
+        with open("all_lead.csv", "r") as f:
+            reader = csv.reader(f, delimiter=",")
+            leads = []
+            for row in reader:
+                a = row
+                leads.append(a)
+            leads = leads[1:]
+            leads.reverse()
+            for i in leads:
+                with open('map_contact.json','r+') as file:
+                    columns = json.load(file)
+                    y = columns["map_contact"]
+                try:
+                    ref = y[i[4]]
+                except:
+                    continue
+                o = db.session.query(Contacts).filter_by(refno=ref).first()
+                contact = o.refno
+                contact_name = i[5]+" "+i[6]
+                try:
+                    number = int(i[7].replace('+','').replace(' ','')) 
+                except:
+                    number = 00000000000000000000000000000
+                contact_number = number
+                contact_email = i[9]
+                nationality = o.nationality
+                role = i[1]
+                source = i[26]
+                time_to_contact = datetime.strptime(i[33][0:6]+i[33][8:], '%d/%m/%y %H:%M:%S')
+                agent = i[27].replace(' ','_')
+                enquiry_date = datetime.strptime(i[31][0:6]+i[31][8:], '%d/%m/%y %H:%M:%S')
+                if i[1] == "Investor":
+                    purpose = "Investment"
+                elif i[1] == "Tenant" or i[1] == "Buyer":
+                    purpose = "Live in"
+                else:
+                    purpose = ""
+                propertyamenities =  ""
+                status = i[2]
+                sub_status = i[3]
+                try:
+                    with open('map_listing.json','r+') as file:
+                        columns = json.load(file)
+                        x = columns["map_listing"]
+                    property_requirements = x[i[20]]
+                except:
+                    property_requirements = ''
+                locationtext = i[12]
+                building = i[13]
+                subtype = i[10]
+                if str(i[16]) == "0.5":
+                    min_beds = "ST"
+                else:
+                    min_beds = i[16]
+                if str(i[17]) == "0.5":
+                    max_beds = "ST"
+                else:
+                    max_beds = i[17]
+                try:
+                    min_price = int(i[18])
+                except:
+                    min_price = 0
+                try:
+                    max_price = int(i[19])
+                except:
+                    min_price = 0
+                unit = i[14]
+                try:
+                    size = int(float(i[20]))
+                except:
+                    size = 0 
+                created_by = i[29].replace(' ','_')
+                if i[1] == "Investor" or i[1] == "Seller" or i[1] == "Landlord" or i[1] == "Buyer":
+                    lead_type = 'Buy'
+                elif i[1] == "Tenant":
+                    lead_type = 'Rent'
+                if i[1] == "Investor" or i[1] == "Seller" or i[1] == "Buyer":
+                    type = 'developer'
+                elif i[1] == "Seller" or i[1] == "Tenant" or i[1] == "Landlord":
+                    type = 'secondary'   
+                try:
+                    created_date = datetime.strptime(i[32][0:6]+i[32][8:], '%d/%m/%y %H:%M:%S')
+                except:
+                    created_date = datetime.now()
+                newlead = Leads(type=type,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=created_by,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,size = size,lead_type=lead_type)
+                db.session.add(newlead)
+                db.session.commit()
+                db.session.refresh(newlead)
+                newlead.refno = 'UNI-L-'+str(newlead.id)
+                db.session.commit()
+                #logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
+                notes('UNI-L-' + str(newlead.id))
+                #assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
+                #if property_requirements != "":
+                    #update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
+                
+                #return render_template('add_lead_developer.html', form=form, user = current_user.username)
+                with open('map_lead.json','r+') as file:
+                    columns = json.load(file)
+                    columns["map_lead"].update({i[0]:newlead.refno})
+                    file.seek(0)
+                    json.dump(columns, file,indent=4)
+                    file.truncate()
+                print('Added '+str(newlead.id))
 
+            return redirect(url_for('handleleads.display_leads'))
+            '''

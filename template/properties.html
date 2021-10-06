@@ -318,6 +318,22 @@
             <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
             {% endif %}
             <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Listings</button>
+            <select name="status_category" id="status_category" style="width: 100px; display: inline;margin-left: 10px;" class="form-control">
+              <option selected="selected" value="">Status</option>
+              <option value="Available">Available</option>
+              <option value="Archived">Archived</option>
+              <option value="Rented">Rented</option>
+              <option value="Blocked">Blocked</option>
+              <option value="Moved In">Moved In</option>
+              <option value="Expired">Expired</option>
+              <option value="Owner Occupied">Owner Occupied</option>
+              <option value="Pending">Pending</option>
+              <option value="Sold">Sold</option>
+              <option value="Upcoming">Upcoming</option>
+              <option value="Reserved">Reserved</option>
+              <option value="In process">Available ,Rented, Sold, Upcoming, Reserved, Moved In</option>
+          </select>
+          
           </div>
         </div>
       </div>
@@ -429,7 +445,12 @@ $(function () {
 function view_property(x){
         fetch('/all_properties/'+x).then(function(response){
           response.json().then(function(data){
-            var p = data.property  
+            var p = data.property
+            Object.keys(p[0]).map(function (key, index) {
+                if (p[0][key] == null) {
+                    p[0][key] = "";
+                }
+            });
             var x = p[0].photos
             $('#images').empty();
             $('#notes').hide();
@@ -491,7 +512,19 @@ function view_property(x){
           data: data.reverse(),
           columns: columns,
         });
-        
+        $('#status_category').change(function () {
+                    var grepFunc;
+                    category = $("#status_category").val();
+
+                            grepFunc = function (item) {
+                                if (category == "In process")
+                                {return item.status == "Available" || item.status == "Moved In" || item.status == "Rented" || item.status == "Sold" || item.status == "Upcoming"}
+                                else
+                                {console.log(category);
+                                  return item.status == category;}
+                            };
+                            $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
         $('#user_data').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {

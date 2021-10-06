@@ -32,7 +32,11 @@ padding-top: 10px;
     <div class="row">
         <div class="col column">
             <h4>UPLOAD DOCUMENTS</h4>
-            {{ wtf.form_field(form.emi_id) }}   
+            {{ wtf.form_field(form.emi_id) }} 
+            {{ wtf.form_field(form.passport) }} 
+            {% if type == "developer" %}
+            {{ wtf.form_field(form.developer) }} 
+            {% endif %}
             <h4>DEAL DETAILS</h4> 
 
         <a data-toggle="modal" href="#listing" class="btn btn-primary" style="margin-bottom: 5px;">Add Listing</a>

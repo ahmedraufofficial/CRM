@@ -41,11 +41,20 @@ padding-top: 10px;
                   
               </table>
             <div id="toolbar">
+              
                 <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
                 <button id="price" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Search</button>
                 <input class="form-control" style="float: left; width: 100px;margin-right: 5px;" type="text" id="minprice" placeholder="Min Price">
                 <input class="form-control" style="float: left; width: 100px; margin-right: 5px;" type="text" id="maxprice" placeholder="Max Price" >
                 <select name="type" id="type" style="float: left;width: 100px;" class="form-control"><option selected="selected" value="">Type</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option><option value="Residential Floor">Residential Floor</option><option value="Residential Plot">Residential Plot</option><option value="Townhouse">Townhouse</option><option value="Residential Building">Residential Building</option><option value="Penthouse">Penthouse</option><option value="Villa Compound">Villa Compound</option><option value="Hotel Apartment">Hotel Apartment</option><option value="Office">Office</option><option value="Other">Other</option></select>
+                <select name="status_category" id="status_category" style="float: left;width: 100px;margin-left: 5px;" class="form-control"><option selected="selected" value="">Status</option><option value="Available">Available</option>
+                    <option value="Rented">Rented</option>
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Owner Occupied">Owner Occupied</option>
+                    <option value="Moved In">Moved In</option>
+                    <option value="Reserved">Reserved</option>
+                </select>
+                
             </div>
               <table id="table"        
               data-toggle="true"
@@ -57,11 +66,15 @@ padding-top: 10px;
                 <tr>
                     <th data-radio="true" data-show-select-title="true">SELECT</th>
                     <th data-field="refno">REF NO</th>
-                    <th data-field="building">LOCATION</th>
-                    <th data-field="locationtext">COMMUNITY</th>
+                    <th data-field="status">STATUS</th>
                     <th data-field="type">PURPOSE</th>
                     <th data-field="subtype">TYPE</th>
+                    <th data-field="building">LOCATION</th>
+                    <th data-field="locationtext">COMMUNITY</th>
+                    <th data-field="bedrooms">BEDROOMS</th>
+                    <th data-field="bathrooms">BATHROOMS</th>
                     <th data-field="price">PRICE</th>
+                    <th data-field="size">SIZE</th>
                 </tr>
                 </thead>
             </table>
@@ -252,6 +265,7 @@ padding-top: 10px;
         fetch('/community/' + location).then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';
+                optionHTML += '<option value=""></option>'
                 for (let location of data.locations){
                     if (location[0] == building)
                     {
@@ -295,6 +309,7 @@ padding-top: 10px;
         fetch('/all_users').then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';
+                
                 for (let users of data.all_users){
                     if ( users.name == assign ){
                         optionHTML += '<option value="'+users.name+'" selected>'+users.name+'</option>';
@@ -355,12 +370,14 @@ padding-top: 10px;
             response.json().then(function(data){
                 let newtable = '';
                 var jsonData = data.all_properties
+                jsonData.reverse()
                 $(function () {
                 var $table = $('#table').bootstrapTable({data: jsonData});
    
                 $('#price').click(function () {
                     var grepFunc;
                     category = $("#type").val();
+                    sc = $("#status_category").val(); 
                     min = $("#minprice").val();
                     if (min == "")
                     {min = 0}
@@ -368,10 +385,14 @@ padding-top: 10px;
                     if (max == "")
                     {max = 9999999}
                             grepFunc = function (item) {
-                                if (category == "")
+                                if (category == "" && sc == "")
                                 { return item.price >= min && item.price <= max }
-                                else
+                                else if (category != "" && sc == "")
                                 {return item.price >= min && item.price <= max && item.subtype == category;}
+                                else if (category == "" && sc != "")
+                                {return item.price >= min && item.price <= max && item.status == sc;}
+                                else
+                                {return item.price >= min && item.price <= max && item.subtype == category && item.status == sc;}
                             };
                     $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
                 });

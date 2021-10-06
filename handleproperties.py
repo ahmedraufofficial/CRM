@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.elements import Null
 from models import Properties, Contacts
 from forms import AddPropertyForm
 import json
@@ -118,30 +119,42 @@ def dubbizlexml():
 @handleproperties.route('/properties',methods = ['GET','POST'])
 @login_required
 def display_properties():
-    if current_user.listing == False:
+    if current_user.listing == False and current_user.sale == False:
         return abort(404)
     data = []
-    if current_user.viewall == True:
+    if current_user.viewall == True and current_user.listing == True:
         for r in db.session.query(Properties).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            for k in ['photos','title','description','unit','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','bathrooms','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            for k in ['photos','title','description','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
-                edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                if r.created_by == current_user.username or r.assign_to == current_user.username:
+                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                else:
+                    edit_btn = ''
             else:
                 edit_btn = ''
             new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si"  onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
             data.append(new)
-    else:
+    elif current_user.viewall == False and current_user.listing == True:
         for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            for k in ['photos','title','description','unit','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','bathrooms','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            for k in ['photos','title','description','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
-                edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                if r.created_by == current_user.username or r.assign_to == current_user.username:
+                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                else:
+                    edit_btn = ''
             else:
                 edit_btn = ''
             new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si"  onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
+            data.append(new)
+    elif current_user.sale == True and current_user.listing == False:
+        for r in db.session.query(Properties).all():
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['photos','title','description','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             data.append(new)
     f = open('property_headers.json')
     columns = json.load(f)
@@ -370,6 +383,7 @@ def community(location):
     a = location
     f = open('sublocation.json')
     file_data = json.load(f)
+    print(a)
     try:
         locs = file_data[a[1:]]
     except:
@@ -380,7 +394,7 @@ def community(location):
         locations.append((i,i))
     return jsonify({'locations':locations})
 
-
+'''
 @handleproperties.route('/import_listing',methods = ['GET','POST'])
 @login_required
 def import_listing():
@@ -555,3 +569,21 @@ def move_img():
                 except:
                     pass
     return "done"
+
+
+@handleproperties.route('/edit_img',methods = ['GET','POST'])
+@login_required
+def edit_img():
+    get_lead = db.session.query(Properties).all()
+    for lead in get_lead:
+        try:
+            new_photos=[]
+            photos = lead.photos.split('|')
+            for i in photos:
+                a = i.replace('/home/ubuntu/Desktop/revamped_crm','')
+                new_photos.append(a)
+            lead.photos = '|'.join(new_photos)
+            db.session.commit()
+        except:
+            pass
+'''

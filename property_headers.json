@@ -25,6 +25,11 @@
       "sortable": "True"
     },
     {
+      "field": "locationtext",
+      "title": "COMMUNITY",
+      "sortable": "True"
+    },
+    {
       "field": "building",
       "title": "LOCATION",
       "sortable": "True"
@@ -35,13 +40,38 @@
       "sortable": "True"
     },
     {
+      "field": "bathrooms",
+      "title": "BATHS",
+      "sortable": "True"
+    },
+    {
+      "field": "unit",
+      "title": "UNIT",
+      "sortable": "True"
+    },
+    {
       "field": "price",
       "title": "PRICE",
       "sortable": "True"
     },
     {
-      "field": "locationtext",
-      "title": "COMMUNITY",
+      "field": "size",
+      "title": "SIZE (SqFt)",
+      "sortable": "True"
+    },
+    {
+      "field": "owner_name",
+      "title": "OWNER NAME",
+      "sortable": "True"
+    },
+    {
+      "field": "owner_contact",
+      "title": "OWNER CONTACT",
+      "sortable": "True"
+    },
+    {
+      "field": "owner_email",
+      "title": "OWNER EMAIL",
       "sortable": "True"
     },
      {

@@ -10,6 +10,7 @@ import os
 import csv
 import arabic_reshaper
 from bidi.algorithm import get_display
+from sqlalchemy import or_
 
 
 a = os.getcwd()
@@ -45,7 +46,7 @@ def display_contacts():
     if current_user.contact == False:
         return abort(404)
     data = []
-    for r in db.session.query(Contacts).all():
+    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username)):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in []: new.pop(k)
@@ -132,6 +133,7 @@ def edit_contact(variable):
         return redirect(url_for('handlecontacts.display_contacts'))
     return render_template('add_contact.html', form=form, assign = current_user.username,user = current_user.username)
 
+'''
 @handlecontacts.route('/import_contacts', methods = ['GET','POST'])
 @login_required
 def import_contact():
@@ -170,3 +172,4 @@ def import_contact():
                 pass
 
         return jsonify(fs)
+'''
