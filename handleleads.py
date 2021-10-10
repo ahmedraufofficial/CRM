@@ -36,7 +36,7 @@ def display_leads():
     if current_user.sale == False:
         return abort(404)
     data = []
-    if current_user.viewall == True:
+    if current_user.viewall == True and current_user.is_admin == True:
         for r in db.session.query(Leads).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
@@ -221,7 +221,7 @@ def edit_lead(markettype,var):
 def community(substatus):
     a = substatus
     status = []
-    stats_open = ['In progress','Not yet contacted','Called no reply','Follow up','Offer made','Interested','Interested to meet','Not interested']
+    stats_open = ['In progress','Not yet contacted','Called no reply','Follow up','Offer made','Viewing arranged','Viewing Done','Interested','Interested to meet','Not interested','Needs time','Client not reachable']
     stats_closed = ['successful', 'unsuccessful']
     if a == 'Open':
         for i in stats_open:

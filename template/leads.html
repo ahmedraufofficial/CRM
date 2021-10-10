@@ -177,10 +177,17 @@
       </div>
       <div class="col">
       <select class="form-control" id="sub_status_note" name="sub_status_note">
-        <option value="Follow up">Follow up</option>
-        <option value="Offer made">Offer made</option>
-        <option value="Interested">Interested</option>
-        <option value="Interested to meet">Interested to meet</option>
+        <option value='Follow up'>Follow up</option>
+        <option value='Not yet contacted'>Not yet contacted</option>
+        <option value='Called no reply'>Called no reply</option>
+        <option value='Offer made'>Offer made</option>
+        <option value='Viewing arranged'>Viewing arranged</option>
+        <option value='Viewing Done'>Viewing Done</option>
+        <option value='Interested'>Interested</option>
+        <option value='Interested to meet'>Interested to meet</option>
+        <option value='Not interested'>Not interested</option>
+        <option value='Needs time'>Needs time</option>
+        <option value='Client not reachable'>Client not reachable</option>
       </select>
       </div>    
     </div>
@@ -324,10 +331,17 @@ function close_lead(x){
     var sel = document.getElementById('sub_status_note')
     sel.innerHTML = '';
     let optionHTML = '';
-    optionHTML += '<option value="Follow up">Follow up</option>';
-    optionHTML += '<option value="Offer made">Offer made</option>';
-    optionHTML += '<option value="Interested">Interested</option>';
-    optionHTML += '<option value="Interested to meet">Interested to meet</option>';
+    optionHTML += "<option value='Follow up'>Follow up</option>"
+    optionHTML += "<option value='Not yet contacted'>Not yet contacted</option>"
+    optionHTML += "<option value='Called no reply'>Called no reply</option>"
+    optionHTML += "<option value='Offer made'>Offer made</option>"
+    optionHTML += "<option value='Viewing arranged'>Viewing arranged</option>"
+    optionHTML += "<option value='Viewing Done'>Viewing Done</option>"
+    optionHTML += "<option value='Interested'>Interested</option>"
+    optionHTML += "<option value='Interested to meet'>Interested to meet</option>"
+    optionHTML += "<option value='Not interested'>Not interested</option>"
+    optionHTML += "<option value='Needs time'>Needs time</option>"
+    optionHTML += "<option value='Client not reachable'>Client not reachable</option>"
     sel.innerHTML = optionHTML;
     $('#close_lead').show();
     $('#open_lead').hide();

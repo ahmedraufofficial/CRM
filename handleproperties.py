@@ -126,7 +126,7 @@ def display_properties():
         for r in db.session.query(Properties).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            for k in ['photos','title','description','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
                 if r.created_by == current_user.username or r.assign_to == current_user.username:
                     edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
@@ -140,7 +140,7 @@ def display_properties():
         for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            for k in ['photos','title','description','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
                 if r.created_by == current_user.username or r.assign_to == current_user.username:
                     edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
@@ -154,7 +154,7 @@ def display_properties():
         for r in db.session.query(Properties).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            for k in ['photos','title','description','plot','street','rentpriceterm','lastupdated','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             data.append(new)
     f = open('property_headers.json')
     columns = json.load(f)
@@ -393,6 +393,31 @@ def community(location):
     for i in locs:
         locations.append((i,i))
     return jsonify({'locations':locations})
+
+
+@handleproperties.route('/date',methods = ['GET','POST'])
+@login_required
+def date():
+    with open('map_listing.json','r+') as file:
+        ls = json.load(file)
+        ls = ls["map_listing"]
+    with open("all_listing2.csv", "r") as f:
+        reader = csv.reader(f, delimiter=",")
+        listings = []
+        for row in reader:
+            a = row
+            listings.append(a[1:])
+        for i in listings[1:]:
+            try:    
+                ls_value = ls[i[0]]
+                o = db.session.query(Properties).filter_by(refno=ls_value).first()
+                d = datetime.strptime(i[2][0:6]+i[2][8:]+" 00:00:00", '%d/%m/%y %H:%M:%S')
+                o.lastupdated = d
+                db.session.commit()
+                print(o.refno)
+            except:
+                pass
+    return "ok"
 
 '''
 @handleproperties.route('/import_listing',methods = ['GET','POST'])

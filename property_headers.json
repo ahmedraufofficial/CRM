@@ -5,7 +5,7 @@
       "checkbox": "true"
     },
     {
-      "field": "refno",  
+      "field": "refno",
       "title": "REF NO", 
       "sortable": "True"
     },
@@ -74,6 +74,12 @@
       "title": "OWNER EMAIL",
       "sortable": "True"
     },
+    {
+      "field": "lastupdated",
+      "title": "LAST UPDATED",
+      "sortable": "True"
+    }
+    ,
      {
       "field": "edit",
       "title": "OPTIONS",

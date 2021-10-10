@@ -106,7 +106,7 @@ def quick_add():
         last_name = request.form['last_name']
         number = request.form['number']
         email = request.form['email']
-        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email)
+        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to=current_user.username)
         db.session.add(newcontact)
         db.session.commit()
         db.session.refresh(newcontact)
