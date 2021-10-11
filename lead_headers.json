@@ -10,7 +10,7 @@
       "sortable": "True"
     },
     {
-      "field": "contact",
+      "field": "contact_name",
       "title": "CONTACT",
       "sortable": "True"
     },
@@ -30,11 +30,6 @@
       "sortable": "True"
     },
     {
-      "field": "finance",
-      "title": "FINANCE",
-      "sortable": "True"
-    },
-    {
       "field": "created_by",
       "title": "CREATED BY",
       "sortable": "True"
@@ -50,23 +45,8 @@
       "sortable": "True"
     },
     {
-      "field": "priority",
-      "title": "PRIORITY",
-      "sortable": "True"
-    },
-    {
-      "field": "hot_lead",
-      "title": "HOT LEAD",
-      "sortable": "True"
-    },
-    {
       "field": "source",
       "title": "SOURCE",
-      "sortable": "True"
-    },
-    {
-      "field": "property_requirements",
-      "title": "PROPERTY",
       "sortable": "True"
     },
      {

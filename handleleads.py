@@ -231,6 +231,15 @@ def community(substatus):
             status.append((i,i))
     return jsonify({'status':status})
 
+
+@handleleads.route('/null_leads',methods = ['GET','POST'])
+@login_required
+def null_leads():
+    for i in db.session.query(Leads).all():
+        i.unit = "-"
+        db.session.commit()
+
+
 '''
 @handleleads.route('/import_leads', methods = ['GET','POST'])
 @login_required

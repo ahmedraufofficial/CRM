@@ -1,5 +1,18 @@
 {
     "viewings": [
-    
+        {
+            "id": 1,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-2818",
+            "datetime": "2021-10-11 11:36:14.828603",
+            "min_price": 50000,
+            "max_price": null,
+            "min_room": "1",
+            "max_room": "",
+            "area": "Al Reem Island",
+            "specific_area": "The Bridges",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"1\",\"UNI-L-2818\")'>Assign</button>"
+        }
     ]
 }
