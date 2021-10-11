@@ -585,8 +585,6 @@ var permit_number = document.getElementById('permit_number')
 var plot_size = document.getElementById('plot_size')
 var rentpriceterm = document.getElementById('rentpriceterm')
 var completion_status = document.getElementById('completion_status')
-$('#display').hide();
-$('#notes').hide();
 
 function view_note(x){
   fetch('/all_notes/'+x).then(function(response){
@@ -684,6 +682,8 @@ function view_property(x){
     };
 
     $(window).on('load',(function(){
+      $('#display').hide();
+      $('#notes').hide();
 
     var columns = {{columns|tojson}};
     var data = {{data|tojson}};

@@ -273,8 +273,7 @@ var plot = document.getElementById('plot')
 var street = document.getElementById('street')
 var size = document.getElementById('size')
 
-$('#display').hide();
-$('#notes').hide();
+
 
 
 function view_note(x){
@@ -418,9 +417,11 @@ function view_leads(x){
       }
 
 
-$(window).on('load',(function(){      
-    var columns = {{columns|tojson}};
-    var data = {{data|tojson}};
+$(window).on('load',(function(){
+  $('#display').hide();
+  $('#notes').hide();      
+  var columns = {{columns|tojson}};
+  var data = {{data|tojson}};
   data.reverse()
       $(function() {
         $('#table').bootstrapTable({ 
