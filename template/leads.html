@@ -5,204 +5,243 @@
 <section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; min-height: 100vh; max-height: 100%;">
   <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0.5);">
 <br>
-<div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
-  <br>
-  <div class="shade">
-  <div class="row">
-    <div class="col text-left">
-      <h4 style="color: white;padding-left: 5px;padding-top: 8px;" id="refno"></h4>
+
+
+
+<!--View Modal-->
+
+<div class="modal" id="viewModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald" style="color: white;padding-left: 5px;padding-top: 8px;" id="refno"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
+          <br>
+          <div class="shade">
+        
+          <table class="table" style="background-color: white;">
+            <tbody>
+          <tr>
+             <td>
+            <label class="label_head">Contact:</label>
+            <label class="label_entry" id="contact"></label>
+            </td>
+             <td>
+            <label class="label_head">Contact Name:</label>
+            <label class="label_entry" id="contact_name"></label>
+            </td>
+             <td>
+            <label class="label_head">Contact Number:</label>
+            <label class="label_entry" id="contact_number"></label>
+            </td>
+             <td>
+            <label class="label_head">Contact Email:</label>
+            <label class="label_entry" id="contact_email"></label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="label_head">Nationality :</label>
+              <label class="label_entry" id="nationality"></label>
+            </td>
+            <td>
+              <label class="label_head">Subtype:</label>
+              <label class="label_entry" id="subtype"></label>
+            </td>
+            <td>
+              <label class="label_head">Agent:</label>
+              <label class="label_entry" id="agent"></label>
+            </td>
+            <td>
+              <label class="label_head">Purpose:</label>
+              <label class="label_entry" id="purpose"></label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="label_head">Status:</label>
+              <label class="label_entry" id="status"></label>
+            </td>
+            <td>
+              <label class="label_head">Sub Status:</label>
+              <label class="label_entry" id="sub_status"></label>
+            </td>
+            <td>
+              <label class="label_head">Lead Type:</label>
+              <label class="label_entry" id="lead_type"></label>
+            </td>
+            <td>
+              <label class="label_head">Property Requirements:</label>
+              <label class="label_entry" id="property_requirements"></label>
+            </td>
+          </tr>
+          <tr>
+            <td class="label_head">
+              <label>Community:</label>
+              <label class="label_entry" id="locationtext"></label>
+            </td>
+            <td class="label_head">
+              <label>Location:</label>
+              <label class="label_entry" id="building"></label>
+            </td>
+            <td>
+              <label class="label_head">Size:</label>
+              <label class="label_entry" id="size"></label>
+            </td>
+            <td>
+              <label class="label_head">Type :</label>
+              <label class="label_entry" id="type"></label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="label_head">Beds:</label>
+              <label class="label_entry" id="min_beds"></label>
+            </td>
+            <td>
+              <label class="label_head">Max Beds:</label>
+              <label class="label_entry" id="max_beds"></label>
+            </td>
+            <td>
+              <label class="label_head">Price | Budget:</label>
+              <label class="label_entry" id="min_price"></label>
+            </td>
+            <td>
+              <label class="label_head">Max Price:</label>
+              <label class="label_entry" id="max_price"></label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="label_head">Unit:</label>
+              <label class="label_entry" id="unit"></label>
+              </td>
+            <td>
+              <label class="label_head">Plot:</label>
+              <label class="label_entry" id="plot"></label>
+            </td>
+            <td>
+              <label class="label_head">Street:</label>
+              <label class="label_entry" id="street"></label>
+            </td>
+            <td>
+              <label class="label_head">Amenities :</label>
+              <label class="label_entry" id="propertyamenities"></label>
+            </td> 
+          </tr>
+          <tr>
+            <td class="label_head" colspan="2">
+              <label>Time to contact:</label>
+              <label class="label_entry" id="time_to_contact"></label>
+            </td>
+            <td class="label_head" colspan="2">
+              <label>Enquiry Date:</label>
+              <label class="label_entry" id="enquiry_date"></label>
+            </td>
+          </tr>
+          </tbody>
+          </table>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
-  </div>
-  <table class="table" style="background-color: white;">
-    <tbody>
-  <tr>
-     <td>
-    <label class="label_head">Contact:</label>
-    <label class="label_entry" id="contact"></label>
-    </td>
-     <td>
-    <label class="label_head">Contact Name:</label>
-    <label class="label_entry" id="contact_name"></label>
-    </td>
-     <td>
-    <label class="label_head">Contact Number:</label>
-    <label class="label_entry" id="contact_number"></label>
-    </td>
-     <td>
-    <label class="label_head">Contact Email:</label>
-    <label class="label_entry" id="contact_email"></label>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <label class="label_head">Nationality :</label>
-      <label class="label_entry" id="nationality"></label>
-    </td>
-    <td>
-      <label class="label_head">Subtype:</label>
-      <label class="label_entry" id="subtype"></label>
-    </td>
-    <td>
-      <label class="label_head">Agent:</label>
-      <label class="label_entry" id="agent"></label>
-    </td>
-    <td>
-      <label class="label_head">Purpose:</label>
-      <label class="label_entry" id="purpose"></label>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <label class="label_head">Status:</label>
-      <label class="label_entry" id="status"></label>
-    </td>
-    <td>
-      <label class="label_head">Sub Status:</label>
-      <label class="label_entry" id="sub_status"></label>
-    </td>
-    <td>
-      <label class="label_head">Lead Type:</label>
-      <label class="label_entry" id="lead_type"></label>
-    </td>
-    <td>
-      <label class="label_head">Property Requirements:</label>
-      <label class="label_entry" id="property_requirements"></label>
-    </td>
-  </tr>
-  <tr>
-    <td class="label_head">
-      <label>Community:</label>
-      <label class="label_entry" id="locationtext"></label>
-    </td>
-    <td class="label_head">
-      <label>Location:</label>
-      <label class="label_entry" id="building"></label>
-    </td>
-    <td>
-      <label class="label_head">Size:</label>
-      <label class="label_entry" id="size"></label>
-    </td>
-    <td>
-      <label class="label_head">Type :</label>
-      <label class="label_entry" id="type"></label>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <label class="label_head">Beds:</label>
-      <label class="label_entry" id="min_beds"></label>
-    </td>
-    <td>
-      <label class="label_head">Max Beds:</label>
-      <label class="label_entry" id="max_beds"></label>
-    </td>
-    <td>
-      <label class="label_head">Price | Budget:</label>
-      <label class="label_entry" id="min_price"></label>
-    </td>
-    <td>
-      <label class="label_head">Max Price:</label>
-      <label class="label_entry" id="max_price"></label>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <label class="label_head">Unit:</label>
-      <label class="label_entry" id="unit"></label>
-      </td>
-    <td>
-      <label class="label_head">Plot:</label>
-      <label class="label_entry" id="plot"></label>
-    </td>
-    <td>
-      <label class="label_head">Street:</label>
-      <label class="label_entry" id="street"></label>
-    </td>
-    <td>
-      <label class="label_head">Amenities :</label>
-      <label class="label_entry" id="propertyamenities"></label>
-    </td> 
-  </tr>
-  <tr>
-    <td class="label_head" colspan="2">
-      <label>Time to contact:</label>
-      <label class="label_entry" id="time_to_contact"></label>
-    </td>
-    <td class="label_head" colspan="2">
-      <label>Enquiry Date:</label>
-      <label class="label_entry" id="enquiry_date"></label>
-    </td>
-  </tr>
-  </tbody>
-  </table>
   </div>
 </div>
 
 
-<div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
-  <div class="row justify-content-center">
-    <div class="col-12">
-      <div id="notetoolbar">
-        <h5>NOTES</h5>
+<!--note Modal-->
+<div class="modal" id="notesModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Notes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-        <table id="notetable"        
-        data-toggle="true"
-        data-toolbar="#notetoolbar"
-        class="oswald"
-        data-search="true"
-        data-show-columns="true"
-        data-pagination="true"
-        data-height="350"
-        style="font-size: 10pt;">
-          <thead>
-              <tr>
-                  <th data-field="date">DATE</th>
-                  <th data-field="time">TIME</th>
-                  <th data-field="user">USER</th>
-                  <th data-field="comment">COMMENT</th>
-                  <th data-field="status">STATUS</th>
-                  <th data-field="substatus">SUB STATUS</th>
-              </tr>
-          </thead>
-      </table>
+      <div class="modal-body">
+        <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div id="notetoolbar">
+                <h5>NOTES</h5>
+              </div>
+                <table id="notetable"        
+                data-toggle="true"
+                data-toolbar="#notetoolbar"
+                class="oswald"
+                data-search="true"
+                data-show-columns="true"
+                data-pagination="true"
+                data-height="350"
+                style="font-size: 10pt;">
+                  <thead>
+                      <tr>
+                          <th data-field="date">DATE</th>
+                          <th data-field="time">TIME</th>
+                          <th data-field="user">USER</th>
+                          <th data-field="comment">COMMENT</th>
+                          <th data-field="status">STATUS</th>
+                          <th data-field="substatus">SUB STATUS</th>
+                      </tr>
+                  </thead>
+              </table>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <input type="hidden" id="list_id">
+              <input type="hidden" id="status_note" value="Open">
+              <div class="row">
+                <div class="col">
+              <input class="form-control" type="text" id="comment">
+              </div>
+              <div class="col">
+              <select class="form-control" id="sub_status_note" name="sub_status_note">
+                <option value='Follow up'>Follow up</option>
+                <option value='Not yet contacted'>Not yet contacted</option>
+                <option value='Called no reply'>Called no reply</option>
+                <option value='Offer made'>Offer made</option>
+                <option value='Viewing arranged'>Viewing arranged</option>
+                <option value='Viewing Done'>Viewing Done</option>
+                <option value='Interested'>Interested</option>
+                <option value='Interested to meet'>Interested to meet</option>
+                <option value='Not interested'>Not interested</option>
+                <option value='Needs time'>Needs time</option>
+                <option value='Client not reachable'>Client not reachable</option>
+              </select>
+              </div>    
+            </div>
+              
+              <button onclick="post_lead_note()" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Post</button>
+              <button id="close_lead" onclick="close_lead('close')" class="btn" style="margin-top: 20px;background-color: #dc3545; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Close Lead</button>
+              <button id="open_lead" onclick="close_lead('open')" class="btn" style="margin-top: 20px;background-color: #56b300; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Open Lead</button>
+              <div id="closelead">
+        
+              </div>
+        
+            </div>
+          </div>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
-  <div class="row justify-content-center">
-    <div class="col-11">
-      <input type="hidden" id="list_id">
-      <input type="hidden" id="status_note" value="Open">
-      <div class="row">
-        <div class="col">
-      <input class="form-control" type="text" id="comment">
-      </div>
-      <div class="col">
-      <select class="form-control" id="sub_status_note" name="sub_status_note">
-        <option value='Follow up'>Follow up</option>
-        <option value='Not yet contacted'>Not yet contacted</option>
-        <option value='Called no reply'>Called no reply</option>
-        <option value='Offer made'>Offer made</option>
-        <option value='Viewing arranged'>Viewing arranged</option>
-        <option value='Viewing Done'>Viewing Done</option>
-        <option value='Interested'>Interested</option>
-        <option value='Interested to meet'>Interested to meet</option>
-        <option value='Not interested'>Not interested</option>
-        <option value='Needs time'>Needs time</option>
-        <option value='Client not reachable'>Client not reachable</option>
-      </select>
-      </div>    
-    </div>
-      
-      <button onclick="post_lead_note()" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Post</button>
-      <button id="close_lead" onclick="close_lead('close')" class="btn" style="margin-top: 20px;background-color: #dc3545; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Close Lead</button>
-      <button id="open_lead" onclick="close_lead('open')" class="btn" style="margin-top: 20px;background-color: #56b300; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Open Lead</button>
-      <div id="closelead">
+</div>
 
-      </div>
 
-    </div>
-  </div>
-  </div>
-  
 
     <div class="container-fluid" style="padding: 10px;">
       <br/>
@@ -226,7 +265,7 @@
         data-search="true"
         data-show-columns="true"
         data-pagination="true"
-        data-height="800"
+        data-height="750"
         data-page-size="25"
         data-page-list="[25, 50, 100, 200, All]">
       </table>

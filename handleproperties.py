@@ -134,7 +134,7 @@ def display_properties():
                     edit_btn = ''
             else:
                 edit_btn = ''
-            new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si"  onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
+            new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
             data.append(new)
     elif current_user.viewall == False and current_user.listing == True:
         for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
@@ -148,7 +148,7 @@ def display_properties():
                     edit_btn = ''
             else:
                 edit_btn = ''
-            new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si"  onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
+            new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
             data.append(new)
     elif current_user.sale == True and current_user.listing == False:
         for r in db.session.query(Properties).all():
@@ -393,6 +393,29 @@ def community(location):
     for i in locs:
         locations.append((i,i))
     return jsonify({'locations':locations})
+
+@handleproperties.route('/property/<location>',methods = ['GET','POST'])
+@login_required
+def propertyloc(location):
+    a = location
+    f = open('sublocation.json')
+    file_data = json.load(f)
+    w = open('contacts.json')
+    x = json.load(w)
+    x = x["ABD"]
+    for key, value in x[0].items():
+        if a == value:
+            a = key
+    try:
+        locs = file_data[a[1:]]
+    except:
+        locs = file_data[a]
+    locs = list(locs.values())
+    locations = []
+    for i in locs:
+        locations.append((i,i))
+    return jsonify({'locations':locations})
+
 
 
 @handleproperties.route('/date',methods = ['GET','POST'])

@@ -8,10 +8,260 @@
 <br>
 
 
+<!--View Modal-->
+<div class="modal" id="viewModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title oswald" style="color: white;padding-left: 5px;padding-top: 8px;" id="refno"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+        <div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
+          <br>
+        
+       
 
+          <div class="row">
+            <div class="col">
+              <div id="images" style="height: 210px; background-color: white;"></div>
+            </div>
+          </div>
+          <table class="table" style="background-color: white;">
+            <tbody>
+        <tr>
+          <td>
+            <label class="label_head">Status: </label>
+            <label class="label_entry" id="status"></label>
+          </td>
+          <td>
+            <label class="label_head">Emirates: </label>
+            <label class="label_entry" id="city"></label>
+          </td>
+          <td>
+            <label class="label_head">Type: </label>
+            <label class="label_entry" id="type"></label>
+          </td>
+          <td>
+            <label class="label_head">Subtype: </label>
+            <label class="label_entry" id="subtype"></label>
+          </td>
+        </tr>
+          <tr>
+          <td>
+            <label class="label_head">Price: </label>
+            <label class="label_entry" id="price"></label>
+          </td>
+          <td>
+            <label class="label_head">Build Area: </label>
+            <label class="label_entry" id="size"></label>
+          </td>
+          <td>
+            <label class="label_head">Commission: </label>
+            <label class="label_entry" id="commission"></label>
+          </td>
+          <td>
+            <label class="label_head">Deposit: </label>
+            <label class="label_entry" id="deposit"></label>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label_head">Plot Size: </label>
+              <label class="label_entry" id="plot_size"></label>
+            </td>
+          <td>
+            <label class="label_head">Baths: </label>
+            <label class="label_entry" id="bathrooms"></label>
+          </td>
+          <td>
+            <label class="label_head">Beds: </label>
+            <label class="label_entry" id="bedrooms"></label>
+          </td>
+          <td>
+            <label class="label_head">Permit No: </label>
+            <label class="label_entry" id="permit_number"></label>
+          </td>
+          </tr>
+        <tr>
+          <td>
+            <label class="label_head">Title: </label>
+            <label class="label_entry" id="title"></label>
+          </td>
+          <td>
+            <label class="label_head">Location: </label>
+            <label class="label_entry" id="building"></label>
+          </td>
+          <td>
+            <label class="label_head">Unit: </label>
+            <label class="label_entry" id="unit"></label>
+          </td>
+          <td>
+            <label class="label_head">Community: </label>
+            <label class="label_entry" id="locationtext"></label>
+          </td>
+          </tr>
+        <tr>
+            <td class="label_head" colspan="4">
+              <label>Description: </label>
+              <label class="label_entry" id="description"></label>
+            </td>
+        
+          </tr>
+        <tr>
+          <td>
+            <label class="label_head">Owner ID: </label>
+            <label class="label_entry" id="owner"></label>
+          </td>
+          <td>
+            <label class="label_head">Owner Name: </label>
+            <label class="label_entry" id="owner_name"></label>
+          </td>
+          <td>
+            <label class="label_head">Owner Email: </label>
+            <label class="label_entry" id="owner_email"></label>
+          </td>
+          <td>
+            <label class="label_head">Owner Contact: </label>
+            <label class="label_entry" id="owner_contact"></label>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label_head">Assign To: </label>
+            <label class="label_entry" id="assign_to"></label>
+          </td>
+          <td>
+            <label class="label_head">Source: </label>
+            <label class="label_entry" id="source"></label>
+          </td>
+          <td>
+            <label class="label_head">Expiry: </label>
+            <label class="label_entry" id="expiry_date"></label>
+          </td>
+          <td>
+            <label class="label_head">Featured: </label>
+            <label class="label_entry" id="featured"></label>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label class="label_head">Completion Status: </label>
+            <label class="label_entry" id="completion_status"></label>
+          </td>
+          <td>
+            <label class="label_head">Tenure: </label>
+            <label class="label_entry" id="tenure"></label>
+          </td>
+          <td>
+            <label class="label_head">Tenant: </label>
+            <label class="label_entry" id="tenant"></label>
+          </td>
+          <td>
+            <label class="label_head">Rent Price Term: </label>
+            <label class="label_entry" id="rentpriceterm"></label>
+          </td>
+        </tr>
+        <tr>
+          <td class="label_head" colspan="2">
+            <label>Parking: </label>
+            <label class="label_entry" id="parking"></label>
+          </td>
+          <td class="label_head" colspan="2">
+            <label>Furnished: </label>
+            <label class="label_entry" id="furnished"></label>
+          </td>
+          </tr>
+        <tr>
+          
+        </tr>
+        </tbody>
+        </table>
+        
+        </div>
+        <br>
+  
+        
+        
 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!--Notes Modal-->
+<div class="modal" id="notesModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">NOTES</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div id="notetoolbar">
+                
+              </div>
+                <table id="notetable"        
+                data-toggle="true"
+                data-toolbar="#notetoolbar"
+                data-search="true"
+                class="oswald"
+                data-show-columns="true"
+                data-pagination="true"
+                data-height="350"
+                style="font-size: 10pt;">
+                  <thead>
+                      <tr>
+                          <th data-field="date">DATE</th>
+                          <th data-field="time">TIME</th>
+                          <th data-field="user">USER</th>
+                          <th data-field="comment">COMMENT</th>
+                      </tr>
+                  </thead>
+              </table>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <input type="hidden" id="list_id">
+              <input class="form-control" type="text" id="comment">
+              <button onclick="post_note()" class="btn btn-primary" style="margin-top: 20px; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
+            </div>
+          </div>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
 
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Viewing Modal-->
+<div class="modal" id="viewingModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Viewings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
 <div class="container" style="margin-bottom: 20px;">
   <div class="row">
     <div class="col">
@@ -37,6 +287,20 @@
           </thead>
           </table>
   </div>
+
+      </div>
+      <div class="modal-footer">
+        
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 
 
 
@@ -92,212 +356,13 @@
 
 
 
-<div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
-  <br>
-
-<div class="shade">
-
-  <div class="row">
-    <div class="col text-left">
-      <h4 style="color: white;padding-left: 5px;padding-top: 8px;" id="refno"></h4>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-info" data-toggle="modal" data-target="#viewingModal">VIEWINGS</button>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <div id="images" style="height: 210px; background-color: white;"></div>
-    </div>
-  </div>
-  <table class="table" style="background-color: white;">
-    <tbody>
-<tr>
-  <td>
-    <label class="label_head">Status: </label>
-    <label class="label_entry" id="status"></label>
-  </td>
-  <td>
-    <label class="label_head">Emirates: </label>
-    <label class="label_entry" id="city"></label>
-  </td>
-  <td>
-    <label class="label_head">Type: </label>
-    <label class="label_entry" id="type"></label>
-  </td>
-  <td>
-    <label class="label_head">Subtype: </label>
-    <label class="label_entry" id="subtype"></label>
-  </td>
-</tr>
-  <tr>
-  <td>
-    <label class="label_head">Price: </label>
-    <label class="label_entry" id="price"></label>
-  </td>
-  <td>
-    <label class="label_head">Build Area: </label>
-    <label class="label_entry" id="size"></label>
-  </td>
-  <td>
-    <label class="label_head">Commission: </label>
-    <label class="label_entry" id="commission"></label>
-  </td>
-  <td>
-    <label class="label_head">Deposit: </label>
-    <label class="label_entry" id="deposit"></label>
-  </td>
-</tr>
-<tr>
-  <td>
-    <label class="label_head">Plot Size: </label>
-      <label class="label_entry" id="plot_size"></label>
-    </td>
-  <td>
-    <label class="label_head">Baths: </label>
-    <label class="label_entry" id="bathrooms"></label>
-  </td>
-  <td>
-    <label class="label_head">Beds: </label>
-    <label class="label_entry" id="bedrooms"></label>
-  </td>
-  <td>
-    <label class="label_head">Permit No: </label>
-    <label class="label_entry" id="permit_number"></label>
-  </td>
-  </tr>
-<tr>
-  <td>
-    <label class="label_head">Title: </label>
-    <label class="label_entry" id="title"></label>
-  </td>
-  <td>
-    <label class="label_head">Location: </label>
-    <label class="label_entry" id="building"></label>
-  </td>
-  <td>
-    <label class="label_head">Unit: </label>
-    <label class="label_entry" id="unit"></label>
-  </td>
-  <td>
-    <label class="label_head">Community: </label>
-    <label class="label_entry" id="locationtext"></label>
-  </td>
-  </tr>
-<tr>
-    <td class="label_head" colspan="4">
-      <label>Description: </label>
-      <label class="label_entry" id="description"></label>
-    </td>
-
-  </tr>
-<tr>
-  <td>
-    <label class="label_head">Owner ID: </label>
-    <label class="label_entry" id="owner"></label>
-  </td>
-  <td>
-    <label class="label_head">Owner Name: </label>
-    <label class="label_entry" id="owner_name"></label>
-  </td>
-  <td>
-    <label class="label_head">Owner Email: </label>
-    <label class="label_entry" id="owner_email"></label>
-  </td>
-  <td>
-    <label class="label_head">Owner Contact: </label>
-    <label class="label_entry" id="owner_contact"></label>
-  </td>
-</tr>
-<tr>
-  <td>
-    <label class="label_head">Assign To: </label>
-    <label class="label_entry" id="assign_to"></label>
-  </td>
-  <td>
-    <label class="label_head">Source: </label>
-    <label class="label_entry" id="source"></label>
-  </td>
-  <td>
-    <label class="label_head">Expiry: </label>
-    <label class="label_entry" id="expiry_date"></label>
-  </td>
-  <td>
-    <label class="label_head">Featured: </label>
-    <label class="label_entry" id="featured"></label>
-  </td>
-</tr>
-<tr>
-  <td>
-    <label class="label_head">Completion Status: </label>
-    <label class="label_entry" id="completion_status"></label>
-  </td>
-  <td>
-    <label class="label_head">Tenure: </label>
-    <label class="label_entry" id="tenure"></label>
-  </td>
-  <td>
-    <label class="label_head">Tenant: </label>
-    <label class="label_entry" id="tenant"></label>
-  </td>
-  <td>
-    <label class="label_head">Rent Price Term: </label>
-    <label class="label_entry" id="rentpriceterm"></label>
-  </td>
-</tr>
-<tr>
-  <td class="label_head" colspan="2">
-    <label>Parking: </label>
-    <label class="label_entry" id="parking"></label>
-  </td>
-  <td class="label_head" colspan="2">
-    <label>Furnished: </label>
-    <label class="label_entry" id="furnished"></label>
-  </td>
-  </tr>
-<tr>
-  
-</tr>
-</tbody>
-</table>
-
-</div>
-<br>
-</div>
-
-
-
-<div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
-<div class="row justify-content-center">
-  <div class="col-12">
-    <div id="notetoolbar">
-      <h5>NOTES</h5>
-    </div>
-      <table id="notetable"        
-      data-toggle="true"
-      data-toolbar="#notetoolbar"
-      data-search="true"
-      class="oswald"
-      data-show-columns="true"
-      data-pagination="true"
-      data-height="350"
-      style="font-size: 10pt;">
-        <thead>
-            <tr>
-                <th data-field="date">DATE</th>
-                <th data-field="time">TIME</th>
-                <th data-field="user">USER</th>
-                <th data-field="comment">COMMENT</th>
-            </tr>
-        </thead>
-    </table>
-  </div>
-</div>
-<div class="row justify-content-center">
-  <div class="col-11">
-    <input type="hidden" id="list_id">
-    <input class="form-control" type="text" id="comment">
-    <button onclick="post_note()" class="btn btn-primary" style="margin-top: 20px; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Post</button>
-  </div>
-</div>
-</div>
 
 
 
@@ -305,7 +370,7 @@
 
 
 
-    <div class="container" style="padding: 10px; ">
+    <div class="container-fluid" style="padding: 10px; ">
       <br/>
       <div class="row">
         <div class="col">
@@ -505,6 +570,15 @@
               <option value='Zayed Military City'>Zayed Military City</option>
               <option value='Zayed Sports City'>Zayed Sports City</option>
             </select>
+            <select name="community_category" id="community_category" class="filter_add">
+              <option selected="selected" value="">Community</option>
+            </select>
+            <select name="purpose_category" id="purpose_category" class="filter_add">
+              <option selected="selected" value="">Purpose</option>
+              <option value="Sale">Sale</option>
+              <option value="Rent">Rent</option>
+            </select>
+
 
             <button id="filter_search" class="filter_add"> Search</button>
             <button id="filter_reset" class="filter_add"> Reset</button>
@@ -525,7 +599,7 @@
           data-search="true"
           data-show-columns="true"
           data-pagination="true"
-          data-height="1000"
+          data-height="750"
           data-page-size="25"
           data-page-list="[25, 50, 100, 200, All]">
           </table>
@@ -550,6 +624,30 @@
 {% block scripts %}
 
 <script type='text/javascript'>
+
+
+    $("#location_category").change(function(){
+    get_location();
+    });
+
+    function get_location(){
+        var comm = $("#location_category").val();
+        fetch('/property/' + comm).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">Community</option>';
+                for (let location of data.locations){
+
+               
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    
+                }
+                document.getElementById('community_category').innerHTML = optionHTML;
+            })
+        })
+        
+    }
+
 
 
 
@@ -705,11 +803,16 @@ function view_property(x){
         var b = $("#beds_category").val();
         var t = $("#subtype_category").val();
         var l = $("#location_category").val();
-        
+        var c = $("#community_category").val();
+        var p = $("#purpose_category").val()
+
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
         var grepFunc4;
+        var grepFunc5;
+        var grepFunc6;
+
 
         grepFunc = function(item){
               return item.status == s;
@@ -726,6 +829,14 @@ function view_property(x){
         grepFunc4 = function(item){
               return item.locationtext == l;
           }
+        
+        grepFunc5 = function(item){
+              return item.building == c;
+          }
+        
+        grepFunc6 = function(item){
+              return item.type == p;
+          }
 
         if (s != "")
         {test = $.grep(test, grepFunc)}
@@ -738,7 +849,12 @@ function view_property(x){
 
         if (l != "")
         {test = $.grep(test, grepFunc4)}
-          
+
+        if (c != "")
+        {test = $.grep(test, grepFunc5)}
+        
+        if (p != "")
+        {test = $.grep(test, grepFunc6)}
 
           $('#table').bootstrapTable('load', test);
         })
@@ -749,6 +865,8 @@ function view_property(x){
         $("#beds_category").val("");
         $("#subtype_category").val("");
         $("#location_category").val("");
+        $("#community_category").val("");
+        $("#purpose_category").val("");
         })
 
  

@@ -3,7 +3,12 @@
     {
       "field": "state",
       "checkbox": "true"
-    },
+    }  ,
+    {
+     "field": "edit",
+     "title": "OPTIONS",
+     "sortable": "False"
+   },
     {
       "field": "refno",
       "title": "REF NO", 
@@ -79,11 +84,6 @@
       "title": "LAST UPDATED",
       "sortable": "True"
     }
-    ,
-     {
-      "field": "edit",
-      "title": "OPTIONS",
-      "sortable": "False"
-    }
+
   ]
 }

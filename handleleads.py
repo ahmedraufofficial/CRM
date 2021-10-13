@@ -53,7 +53,7 @@ def display_leads():
             else:
                 followup = ""
             viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn btn-success si" style="color:white;">Request Viewing</button>'
-            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn btn-danger si"  onclick="view_leads('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+followup+viewing+"</div>"
+            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+followup+viewing+"</div>"
             data.append(new)
     else:
         for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
@@ -72,7 +72,7 @@ def display_leads():
             else:
                 followup = ""
             viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn btn-success si" style="color:white;">Request Viewing</button>'
-            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn btn-danger si"  onclick="view_leads('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+followup+viewing+"</div>"
+            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_leads('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+followup+viewing+"</div>"
             data.append(new)
 
     f = open('lead_headers.json')

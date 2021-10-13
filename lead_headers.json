@@ -5,6 +5,11 @@
       "checkbox": "true"
     },
     {
+     "field": "edit",
+     "title": "OPTIONS",
+     "sortable": "False"
+   },
+    {
       "field": "refno",  
       "title": "REF NO", 
       "sortable": "True"
@@ -48,11 +53,6 @@
       "field": "source",
       "title": "SOURCE",
       "sortable": "True"
-    },
-     {
-      "field": "edit",
-      "title": "OPTIONS",
-      "sortable": "False"
     }
   ]
 }
