@@ -397,7 +397,7 @@ def community(location):
 @handleproperties.route('/property/<location>',methods = ['GET','POST'])
 @login_required
 def propertyloc(location):
-    a = location
+    a = location.replace('%20', " ")
     f = open('sublocation.json')
     file_data = json.load(f)
     w = open('contacts.json')
