@@ -452,7 +452,7 @@ def all_users_commission(variable, type):
     count = 0
     for deal in all_deals:
         tm = deal.actual_deal_date.month
-        dt = datetime.now()
+        dt = datetime.now()+timedelta(hours=4)
         cm = dt.month
         if int(tm) == int(cm):
             count = count+1
@@ -543,10 +543,10 @@ def all_count():
     deals = 0
     deals_this_month = 0
     deals_amount = 0
-    for i in db.session.query(Deals).filter(and_(Deals.agent_1 == current_user.username,Deals.sub_status == "successful")):
+    for i in db.session.query(Deals).filter(and_(Deals.agent_1 == current_user.username,Deals.sub_status == "Successful")):
         tm = i.actual_deal_date.month
         ty = i.actual_deal_date.year
-        dt = datetime.now()
+        dt = datetime.now()+timedelta(hours=4)
         cm = dt.month
         ye = dt.year
         deals += 1
@@ -648,27 +648,34 @@ def gen_chart(chart,user):
         chartObj['bd'] = bd
     return jsonify({'chart': chartObj})
 
-@app.route('/sales_progress',methods = ['GET','POST'])
+@app.route('/sales_progress/<year>/<month>',methods = ['GET','POST'])
 @login_required
-def sales_progress():
+def sales_progress(year,month):
+
     user_label = []
     user_progress = []
     for i in db.session.query(User).filter_by(sale = True).all():
         user_label.append(i.username)
     for i in user_label:
         deal_amount = 0
-        for j in db.session.query(Deals).filter(and_(Deals.agent_1 == i,Deals.sub_status == "successful")):
-            tm = j.actual_deal_date.month
-            ty = j.actual_deal_date.year
-            dt = datetime.now()
-            cm = dt.month
-            ye = dt.year
+        for j in db.session.query(Leads).filter(and_(Leads.agent == i,Leads.sub_status == "Successful")):
+            tm = j.created_date.month
+            ty = j.created_date.year
+            if month == "00":
+                dt = datetime.now()+timedelta(hours=4)
+                print(dt)
+                cm = dt.month
+                ye = dt.year
+            else:
+                cm = month
+                ye = year
             if int(tm) == int(cm) and int(ty) == int(ye):
-                deal_amount += int(j.deal_price)
+                deal_amount = deal_amount + 1 
         user_progress.append(deal_amount)
     progressObj = {}
     progressObj['ul'] = user_label
     progressObj['up'] = user_progress
+    print(user_progress)
     colors = ['rgba(255, 99, 132, 0.2)','rgba(255, 159, 64, 0.2)','rgba(255, 205, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(54, 162, 235, 0.2)','rgba(153, 102, 255, 0.2)','rgba(201, 203, 207, 0.2)']
     borderColor = ['rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)','rgb(54, 162, 235)','rgb(153, 102, 255)','rgb(201, 203, 207)']
     progressObj['bg'] = random.sample(colors, len(user_label))
@@ -685,10 +692,10 @@ def listing_progress():
     for i in user_label:
         dataset = {}
         de = 0
-        for j in db.session.query(Deals).filter(and_(Deals.agent_1 == i,Deals.sub_status == "successful")):
+        for j in db.session.query(Deals).filter(and_(Deals.agent_1 == i,Deals.sub_status == "Successful")):
             tm = j.actual_deal_date.month
             ty = j.actual_deal_date.year
-            dt = datetime.now()
+            dt = datetime.now()+timedelta(hours=4)
             cm = dt.month
             ye = dt.year
             if int(tm) == int(cm) and int(ty) == int(ye):
@@ -697,7 +704,7 @@ def listing_progress():
         for j in db.session.query(Leads).filter(Leads.property_requirements != "").all():
             tm = j.created_date.month
             ty = j.created_date.year
-            dt = datetime.now()
+            dt = datetime.now()+timedelta(hours=4)
             cm = dt.month
             ye = dt.year
             if int(tm) == int(cm) and int(ty) == int(ye):
@@ -708,7 +715,7 @@ def listing_progress():
             try:
                 tm = j.lastupdated.month
                 ty = j.lastupdated.year
-                dt = datetime.now()
+                dt = datetime.now()+timedelta(hours=4)
                 cm = dt.month
                 ye = dt.year
                 if int(tm) == int(cm) and int(ty) == int(ye):

@@ -118,7 +118,7 @@ def add_lead_buyer():
         street = form.street.data
         size = form.size.data
         lead_type = form.lead_type.data
-        created_date = datetime.now()
+        created_date = datetime.now()+timedelta(hours=4)
         newlead = Leads(type="secondary",created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
         db.session.add(newlead)
         db.session.commit()
@@ -169,7 +169,7 @@ def add_lead_developer():
         street = form.street.data
         size = form.size.data
         lead_type = form.lead_type.data
-        created_date = datetime.now()
+        created_date = datetime.now()+timedelta(hours=4)
         newlead = Leads(type="developer",created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
         db.session.add(newlead)
         db.session.commit()
@@ -222,7 +222,7 @@ def community(substatus):
     a = substatus
     status = []
     stats_open = ['In progress','Not yet contacted','Called no reply','Follow up','Offer made','Viewing arranged','Viewing Done','Interested','Interested to meet','Not interested','Needs time','Client not reachable']
-    stats_closed = ['successful', 'unsuccessful']
+    stats_closed = ['Successful', 'Unsuccessful']
     if a == 'Open':
         for i in stats_open:
             status.append((i,i))
@@ -327,7 +327,7 @@ def import_leads():
                 try:
                     created_date = datetime.strptime(i[32][0:6]+i[32][8:], '%d/%m/%y %H:%M:%S')
                 except:
-                    created_date = datetime.now()
+                    created_date = datetime.now()+timedelta(hours=4)
                 newlead = Leads(type=type,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=created_by,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,size = size,lead_type=lead_type)
                 db.session.add(newlead)
                 db.session.commit()

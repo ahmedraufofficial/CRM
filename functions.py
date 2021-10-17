@@ -26,7 +26,7 @@ def logs(username,ref,task):
     task = task.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
-        now = datetime.now()
+        now = datetime.now()+timedelta(hours=4)
         date = now.strftime("%d/%m/%Y")
         time = now.strftime("%H:%M:%S")
         task = task
@@ -94,7 +94,7 @@ def update_note(username, listid, com):
     with open(os.path.join(NOTES, listid+'.json'),'r+') as file:
         columns = json.load(file)
         a = columns['notes']
-        now = datetime.now()
+        now = datetime.now()+timedelta(hours=4)
         date = now.strftime("%d/%m/%Y")
         time = now.strftime("%H:%M:%S")
         columns["notes"].append({
@@ -113,7 +113,7 @@ def update_lead_note(username, listid, com, status, substatus):
     substatus = substatus.replace("%20"," ")
     with open(os.path.join(NOTES, listid+'.json'),'r+') as file:
         columns = json.load(file)
-        now = datetime.now()
+        now = datetime.now()+timedelta(hours=4)
         date = now.strftime("%d/%m/%Y")
         time = now.strftime("%H:%M:%S")
         columns["notes"].append({
@@ -176,10 +176,10 @@ def get_lead():
         return leadObj
 
 def getAvailableAgents(usernames,leads):
-    now = datetime.now()
+    now = datetime.now()+timedelta(hours=4)
     from_date = now.strftime("%Y-%m-%d")
     from_time = now.strftime("%H:%M")
-    expiry_now = datetime.now() + timedelta(hours=2)
+    expiry_now = datetime.now()+timedelta(hours=4) + timedelta(hours=2)
     to_date = expiry_now.strftime("%Y-%m-%d")
     to_time = expiry_now.strftime("%H:%M")
     available_agents = []
@@ -202,7 +202,7 @@ def getAvailableAgents(usernames,leads):
                 if columns["lead"][i]["sub_status"] == "In progress" and columns["lead"][i]["status"] != "Lost":
                     d = columns["lead"][i]["expiry date"] +'T'+ columns["lead"][i]["expiry time"]+":00"
                     b = datetime.strptime(d, '%Y-%m-%dT%H:%M:%S')
-                    if b < datetime.now():
+                    if b < datetime.now()+timedelta(hours=4):
                         no_follow_up.append((i,username))
             if check == True:
                 available_agents.append(username)    
@@ -240,10 +240,10 @@ def assign_lead(username,lead,substatus):
 
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
-        now = datetime.now()
+        now = datetime.now()+timedelta(hours=4)
         from_date = now.strftime("%Y-%m-%d")
         from_time = now.strftime("%H:%M")
-        expiry_now = datetime.now() + timedelta(hours=int(c))
+        expiry_now = datetime.now()+timedelta(hours=4) + timedelta(hours=int(c))
         to_date = expiry_now.strftime("%Y-%m-%d")
         to_time = expiry_now.strftime("%H:%M")
         columns["lead"].update({lead:{
@@ -285,7 +285,7 @@ def add_user_list(username,list_id):
     username = username.replace("%20"," ")
     list_id = list_id.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
-        now = datetime.now()
+        now = datetime.now()+timedelta(hours=4)
         from_date = now.strftime("%Y-%m-%d")
         from_time = now.strftime("%H:%M")
         columns = json.load(file)
@@ -313,7 +313,7 @@ def chart_data(chart, username):
                 exp = columns["lead"][i]["expiry date"] +'T'+ columns["lead"][i]["expiry time"]+":00"
                 exp = datetime.strptime(exp, '%Y-%m-%dT%H:%M:%S')
             else:
-                exp = datetime.now()
+                exp = datetime.now()+timedelta(hours=4)
             start = columns["lead"][i]["date"] +'T'+ columns["lead"][i]["time"]+":00"
             start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S')
             labels.append(i)
@@ -399,7 +399,7 @@ def viewings(username,lead,status,min_price,max_price,min_room,max_room,area,spe
             'username':username,
             'status':status,
             'lead':lead,
-            'datetime':str(datetime.now()),
+            'datetime':str(datetime.now()+timedelta(hours=4)),
             'min_price':min_price,
             'max_price':max_price,
             'min_room':min_room,
@@ -427,8 +427,8 @@ def assign_viewing(current,lead_id,lead,lists):
         for i in lists.split(","):
             update_note(username, i, "Assigned a viewing by "+current+" : Awaiting Feedback")
             update_lead_note(current, listid, "Assigned Viewing for "+i, "Awating Feedback", "-")
-        date = datetime.now().strftime("%Y-%m-%d")
-        end_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
-        time = datetime.now().strftime("%H:%M")
+        date = datetime.now()+timedelta(hours=4).strftime("%Y-%m-%d")
+        end_date = (datetime.now()+timedelta(hours=4) + timedelta(days=1)).strftime("%Y-%m-%d")
+        time = datetime.now()+timedelta(hours=4).strftime("%H:%M")
         post_reminders(username,date,end_date,time,time,"Viewing assigned for "+lead)
         

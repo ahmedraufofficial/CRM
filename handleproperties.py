@@ -13,8 +13,7 @@ import glob
 from functions import logs, notes, add_user_list
 from sqlalchemy import or_, and_
 import xml.etree.cElementTree as e
-from datetime import datetime
-
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -103,7 +102,7 @@ def dubbizlexml():
         e.SubElement(listing,"permit_number").text = i['permit_number']
         e.SubElement(listing,"view360").text = i['view360']
         e.SubElement(listing,"video_url").text = i['video_url']
-        e.SubElement(listing,"lastupdated").text = str(datetime.now())
+        e.SubElement(listing,"lastupdated").text = str(datetime.now()+timedelta(hours=4))
         z = z + 1
 
     a = e.ElementTree(r)
@@ -188,7 +187,7 @@ def add_property_rent():
         rentpriceterm = form.rentpriceterm.data
         price_per_area = form.price_per_area.data
         bedrooms = form.bedrooms.data
-        lastupdated = datetime.now()
+        lastupdated = datetime.now()+timedelta(hours=4)
         w = open('abudhabi.json')
         file_data = json.load(w)
         locationtext = file_data[form.locationtext.data]
@@ -263,7 +262,7 @@ def add_property_sale():
         price = form.price.data
         price_per_area = form.price_per_area.data
         bedrooms = form.bedrooms.data
-        lastupdated = datetime.now()
+        lastupdated = datetime.now()+timedelta(hours=4)
         w = open('abudhabi.json')
         file_data = json.load(w)
         locationtext = file_data[form.locationtext.data]

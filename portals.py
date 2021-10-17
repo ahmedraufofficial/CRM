@@ -3,7 +3,7 @@ from models import Properties
 from flask_sqlalchemy import SQLAlchemy
 from flask import Blueprint, jsonify, make_response, render_template
 import xml.etree.cElementTree as e
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import json
 
@@ -49,8 +49,8 @@ def bayut():
         a = i['photos'].split('|')
         for y in a:
             e.SubElement(Images,"ImageUrl").text = y
-        e.SubElement(listing,"Listing_Date").text = str(datetime.now())
-        e.SubElement(listing,"Last_Updated").text = str(datetime.now())
+        e.SubElement(listing,"Listing_Date").text = str(datetime.now()+timedelta(hours=4))
+        e.SubElement(listing,"Last_Updated").text = str(datetime.now()+timedelta(hours=4))
         Views = e.SubElement(listing,"Views")
         Facilities = e.SubElement(listing,"Facilities")
         f = i['privateamenities'].split(',') + i['commercialamenities'].split(',')
@@ -159,7 +159,7 @@ def dubizzle():
         e.SubElement(listing,"permit_number").text = i['permit_number']
         e.SubElement(listing,"view360").text = i['view360']
         e.SubElement(listing,"video_url").text = i['video_url']
-        e.SubElement(listing,"lastupdated").text = str(datetime.now())
+        e.SubElement(listing,"lastupdated").text = str(datetime.now()+timedelta(hours=4))
         z = z + 1
 
     a = e.ElementTree(r)

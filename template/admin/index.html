@@ -141,11 +141,38 @@
     <h4>Sales Progress</h4>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col">
+        <select class="btn btn-primary" name="year_sales" id="year_sales">
+            <option value="2020">2020</option>
+            <option selected value="2021">2021</option>
+            <option value="2022">2022</option>
+        </select>
+        <select class="btn btn-primary" name="month_sales" id="month_sales">
+            <option selected value="00">Now</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+        <button class="btn btn-warning" onclick="progress()">
+            Search
+        </button>
+        </div>
+    </div>
     <div class="row justify-content-center">
         <div class="col-1"><p style="color: black; font-size: 8pt; text-align: center;padding-top: 160px;">Employee</p></div>
-        <div class="col-8">
+        <div id="d_column" class="col-8">
             <canvas id="progressChart"></canvas>
-            <p style="color: black; font-size: 8pt; text-align: center;">Deals Sum</p>
+            <p style="color: black; font-size: 8pt; text-align: center;">Successful Leads</p>
         </div>
     </div>
 </div>
@@ -165,25 +192,20 @@
 
 
 <script>
-        function list_progress(){
+    function list_progress(){
         
-        fetch('/listing_progress').then(function(response){
+    fetch('/listing_progress').then(function(response){
           response.json().then(function(res){
  
      
 
-            new Chart(document.getElementById("bubble-chart"), {
+        new Chart(document.getElementById("bubble-chart"), {
     type: 'bubble',
     data: {
       datasets: res.datasets
     },
     options: {}
-});
-
-
-
-
-
+    });
     })
     })
     }
@@ -191,8 +213,9 @@
     window.onload = list_progress();
 
     function progress(){
-        
-        fetch('/sales_progress').then(function(response){
+        var year_sales =  document.getElementById("year_sales").value
+        var month_sales = document.getElementById("month_sales").value;
+        fetch('/sales_progress/'+year_sales+'/'+month_sales).then(function(response){
           response.json().then(function(res){
             var progress = res.progress
                 const progress_data = {
@@ -219,14 +242,22 @@
                     }
                 }
                 };
-               
+                
+                make_chart_sales(progress_config)
             
-                new Chart(document.getElementById('progressChart'),progress_config)
     })
     })
     }
 
-    window.onload = progress();
+
+    function make_chart_sales(progress_config){
+    $('#progressChart').remove();
+    $('#d_column').append('<canvas id="progressChart"><canvas>');
+    var myChart = new Chart(document.getElementById('progressChart'),progress_config);
+}
+
+
+
 
     function get_chart(){
 

@@ -11,7 +11,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
-from datetime import datetime,time
+from datetime import datetime, timedelta,time
 from functions import assign_lead, logs, notes, update_note
 from sqlalchemy import or_
 

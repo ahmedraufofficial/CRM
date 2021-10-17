@@ -340,7 +340,7 @@ function post_lead_note(){
       }
       var status = document.getElementById('status_note').value;
       var substatus = document.getElementById('sub_status_note').value;
-      if (substatus == "successful"){
+      if (substatus == "Successful"){
         $('#closelead').append("<a class='btn btn-warning' href='/add_deal/sale/"+list_id+"'>Move to Deal Sale Page</a> <a class='btn btn-warning' href='/add_deal/rent/"+list_id+"'>Move to Deal Rent Page</a> <a class='btn btn-warning' href='/add_deal/developer/"+list_id+"'>Move to Deal Developer Sale Page</a>")
       
       }
@@ -360,8 +360,8 @@ function close_lead(x){
   var sel = document.getElementById('sub_status_note')
   sel.innerHTML = '';
   let optionHTML = '';
-    optionHTML += '<option value="successful">successful</option>';
-    optionHTML += '<option value="unsuccessful">unsuccessful</option>';
+    optionHTML += '<option value="Successful">Successful</option>';
+    optionHTML += '<option value="Unsuccessful">Unsuccessful</option>';
     sel.innerHTML = optionHTML;
     $('#close_lead').hide();
     $('#open_lead').show();
