@@ -14,7 +14,7 @@ from datetime import date, datetime,time
 from functions import assign_lead, logs, notes, update_note
 from sqlalchemy import or_
 import csv
-
+from datetime import datetime, timedelta
 
 path = os.getcwd()
 UPLOAD_FOLDER = os.path.join(path, 'uploads')
