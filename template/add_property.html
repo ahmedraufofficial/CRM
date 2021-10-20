@@ -469,7 +469,7 @@ price_form.addEventListener('input', inputHandler);
             response.json().then(function(data){
                 var jsonData = data.all_contacts
                 $(function () {
-                var $table = $('#table').bootstrapTable({data: jsonData});
+                var $table = $('#table').bootstrapTable({data: jsonData.reverse()});
                 });
             })
         })
