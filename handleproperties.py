@@ -382,11 +382,11 @@ def community(location):
     a = location
     f = open('sublocation.json')
     file_data = json.load(f)
-    print(a)
+    a = str(int(a))
     try:
-        locs = file_data[a[1:]]
-    except:
         locs = file_data[a]
+    except:
+        locs = {"9998":"None"}
     locs = list(locs.values())
     locations = []
     for i in locs:
@@ -405,10 +405,11 @@ def propertyloc(location):
     for key, value in x[0].items():
         if a == value:
             a = key
+    a = str(int(a))
     try:
-        locs = file_data[a[1:]]
-    except:
         locs = file_data[a]
+    except:
+        locs = {"9998":"None"}
     locs = list(locs.values())
     locations = []
     for i in locs:

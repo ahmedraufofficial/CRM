@@ -11,6 +11,7 @@ import csv
 import arabic_reshaper
 from bidi.algorithm import get_display
 from sqlalchemy import or_
+from datetime import datetime, timedelta
 
 
 a = os.getcwd()
@@ -46,11 +47,11 @@ def display_contacts():
     if current_user.contact == False:
         return abort(404)
     data = []
-    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username)):
+    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True)):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in []: new.pop(k)
-        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a>'+"</div>"
+        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contact/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
         data.append(new)
     #with open('contacts.json', 'w') as fout:
     #    json.dump(data , fout)
@@ -132,6 +133,26 @@ def edit_contact(variable):
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handlecontacts.display_contacts'))
     return render_template('add_contact.html', form=form, assign = current_user.username,user = current_user.username)
+
+@handlecontacts.route('/delete_contact/<variable>', methods = ['GET','POST'])
+@login_required
+def delete_contacts(variable):
+    if current_user.contact == False or current_user.edit == False:
+        return abort(404) 
+    delete = db.session.query(Contacts).filter_by(id=variable).first()
+    db.session.delete(delete)
+    db.session.commit()
+    directory = UPLOAD_FOLDER+'/UNI-O-'+str(variable)
+    try:
+        os.rmdir(directory)
+    except OSError as error:
+        print(error)
+        return("Directory '% s' can not be removed but contact removed, Contact your tech support" % directory)
+    return redirect(url_for('handlecontacts.display_contacts'))
+    
+
+
+
 
 '''
 @handlecontacts.route('/import_contacts', methods = ['GET','POST'])

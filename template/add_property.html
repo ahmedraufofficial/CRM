@@ -422,6 +422,7 @@ price_form.addEventListener('input', inputHandler);
     var building = '{{ building }}'
     function get_location(){
         var location = $("#locationtext").val();
+        console.log(location)
         fetch('/community/' + location).then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';

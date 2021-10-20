@@ -18,10 +18,13 @@ for i in con:
 
 com = columns["ABD"]
 communities = []
+communities.append(("9999","None"))
 file_data = str(columns["ABD"][0]).replace('{','').replace('}','').replace(', ',',').replace(': ',':')
 file_data = re.sub("'","",file_data).split(',')
 for i in file_data:
     communities.append(tuple(i.split(':')))
+
+
 
 fea = columns["Features"]
 features = []
