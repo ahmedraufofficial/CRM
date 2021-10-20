@@ -47,7 +47,7 @@ def display_contacts():
     if current_user.contact == False:
         return abort(404)
     data = []
-    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True)):
+    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True, current_user.listing == True)):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in []: new.pop(k)
