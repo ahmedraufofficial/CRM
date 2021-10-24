@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.expression import except_all
 from models import Leads, Properties,Contacts
 from forms import AddLeadForm, BuyerLead, DeveloperLead
 import json
@@ -11,7 +12,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note
+from functions import assign_lead, logs, notes, update_note,lead_email
 from sqlalchemy import or_
 import csv
 from datetime import datetime, timedelta
@@ -106,7 +107,10 @@ def add_lead_buyer():
         property_requirements = form.property_requirements.data
         w = open('abudhabi.json')
         file_data = json.load(w)
-        locationtext = file_data[form.locationtext.data]
+        try:
+            locationtext = file_data[form.locationtext.data]
+        except:
+            locationtext = "None"
         building = form.building.data
         subtype = form.subtype.data
         min_beds = form.min_beds.data
@@ -130,7 +134,9 @@ def add_lead_buyer():
         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
         if property_requirements != "":
             update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
+        lead_email(current_user.email, 'UNI-L-' + str(newlead.id))
         return redirect(url_for('handleleads.display_leads'))
+
     return render_template('add_lead_buyer.html', form=form, user = current_user.username)
 
 @handleleads.route('/add_lead_developer/', methods = ['GET','POST'])
@@ -157,7 +163,10 @@ def add_lead_developer():
         property_requirements = form.property_requirements.data
         w = open('abudhabi.json')
         file_data = json.load(w)
-        locationtext = file_data[form.locationtext.data]
+        try:
+            locationtext = file_data[form.locationtext.data]
+        except:
+            locationtext = "None"
         building = form.building.data
         subtype = form.subtype.data
         min_beds = form.min_beds.data
@@ -207,7 +216,10 @@ def edit_lead(markettype,var):
     if request.method == 'POST':
         form.populate_obj(edit)
         edit.propertyamenities = ",".join(form.propertyamenities.data)
-        edit.locationtext = mydict[new]
+        try:
+            edit.locationtext = mydict[new]
+        except:
+            edit.locationtext = ""
         db.session.commit()
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handleleads.display_leads'))

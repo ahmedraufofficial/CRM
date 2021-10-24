@@ -4,11 +4,27 @@ import json
 from datetime import datetime, timedelta
 import random
 import easyimap
-
+import smtplib
 
 USERS_FOLDER = os.getcwd() + '/static/userdata'
 NOTES = os.getcwd() + '/static/notes'
 SCHEDULER = os.getcwd() + '/static/scheduler'
+
+
+def lead_email(email, lead):
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login("uhpaeworldwide@gmail.com","Uhp@421907")
+        message = lead+" Has been assigned to you! Kindly follow up."
+        server.sendmail("uhpaeworldwide@gmail.com", email, message)
+        server.quit
+        print('done')
+    except:
+        pass
+       
+
+
 
 def create_json(username):
     username = username.replace("%20"," ")
