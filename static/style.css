@@ -71,6 +71,12 @@ width: 50px !important;
 height: 40px !important;
 }
 
+.si2{
+  width:30px !important;height:30px !important;border-radius:20px !important;
+  display: inline;
+
+  }
+s
 .btn-primary {
   background-color:#001524 !important;
 }

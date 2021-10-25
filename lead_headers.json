@@ -30,6 +30,11 @@
       "sortable": "True"
     },
     {
+      "field": "created_date",
+      "title": "CREATED DATE",
+      "sortable": "True"
+    },
+    {
       "field": "lead_type",
       "title": "LEAD TYPE",
       "sortable": "True"

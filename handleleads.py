@@ -53,7 +53,7 @@ def display_leads():
                 followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn btn-info si" style="color:white;">Follow Up</button>'
             else:
                 followup = ""
-            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn btn-success si" style="color:white;">Request Viewing</button>'
+            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success" style="color:white;"><i class="bi bi-eye"></i></button>'
             new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+followup+viewing+"</div>"
             data.append(new)
     else:

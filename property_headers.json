@@ -20,6 +20,11 @@
       "sortable": "True"
     },
     {
+      "field": "assign_to",
+      "title": "ASSIGNED",
+      "sortable": "True"
+    },
+    {
       "field": "type",
       "title": "PURPOSE",
       "sortable": "True"
