@@ -20,6 +20,11 @@
       "sortable": "True"
     },
     {
+      "field": "contact_number",
+      "title": "NUMBER",
+      "sortable": "True"
+    },
+    {
       "field": "agent",
       "title": "AGENT",
       "sortable": "True"
@@ -36,7 +41,7 @@
     },
     {
       "field": "lead_type",
-      "title": "LEAD TYPE",
+      "title": "TYPE",
       "sortable": "True"
     },
     {
@@ -52,11 +57,6 @@
     {
       "field": "sub_status",
       "title": "SUB STATUS",
-      "sortable": "True"
-    },
-    {
-      "field": "source",
-      "title": "SOURCE",
       "sortable": "True"
     }
   ]

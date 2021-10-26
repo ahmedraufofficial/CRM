@@ -74,9 +74,11 @@ height: 40px !important;
 .si2{
   width:30px !important;height:30px !important;border-radius:20px !important;
   display: inline;
-
+  padding-bottom: 15px;
+  margin: 2px;
+  border: 1px solid white !important;
   }
-s
+
 .btn-primary {
   background-color:#001524 !important;
 }
