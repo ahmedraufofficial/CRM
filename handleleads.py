@@ -63,17 +63,17 @@ def display_leads():
             #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
                 if r.created_by == current_user.username or r.agent == current_user.username:
-                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
                 else:
                     edit_btn = ''
             else:
                 edit_btn = ''
             if new['agent'] == current_user.username and new['sub_status'] == "In progress":
-                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn btn-info si" style="color:white;">Follow Up</button>'
+                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
             else:
                 followup = ""
-            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn btn-success si" style="color:white;">Request Viewing</button>'
-            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_leads('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+followup+viewing+"</div>"
+            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
+            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+"</div>"
             data.append(new)
 
     f = open('lead_headers.json')
