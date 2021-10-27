@@ -752,7 +752,9 @@ def export(type,data):
     elif type == "properties":
         type = Properties
     elif type == "deals":
-        type = Deals 
+        type = Deals
+    elif type == "contacts":
+        type = Contacts 
     ref = data.split(',')
     Obj = db.session.query(type).all()
     output = io.StringIO()
