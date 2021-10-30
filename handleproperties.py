@@ -477,196 +477,21 @@ def reassign():
                 db.session.commit()
     return "ok"
 
-'''
-@handleproperties.route('/import_listing',methods = ['GET','POST'])
+@handleproperties.route('/reassign2',methods = ['GET','POST'])
 @login_required
-def import_listing():
-    with open("listings.csv", "r") as f:
-        reader = csv.reader(f, delimiter=",")
-        listings = []
-        for row in reader:
-            a = row
-            listings.append(a[1:])
-        listings = listings[1:]
-        listings.reverse()
-        for i in listings:
-            if i[0] == "Unpublished":
-                portal = 1
-            else:
-                portal = 0
-            if i[16] == "Rented":
-                status = 'Rented'
-            elif i[16] == 'Available':
-                status = 'Available'
-            elif i[16] == "--":
-                status = 'Archived'
-            elif i[16] == 'Owner Occupied':
-                status = 'Owner Occupied'
-            elif i[16] == 'Sold':
-                status = 'Sold'
-            elif i[16] == 'Pending':
-                status = 'Pending'
-            elif i[16] == 'Upcoming':
-                status = 'Upcoming'    
-            
-            city = "Abu Dhabi"
-            if i[1].split('-')[1] == "R":
-                type = "Rent"
-                identity = "R"
-            else:
-                type = "Sale"
-                identity = "S"
-            subtype = i[2]
-            
-            title = i[6]
-            description = i[24]
-            unit = i[3]
-            plot = i[9]
-            try:
-                size = float(i[10])
-            except:
-                size = float(0)
-            try:
-                plot_size = float(i[17])
-            except:
-                plot_size = float(0)
-            try:
-                price = int(i[11])
-            except:
-                price = 0
-            try:
-                price_per_area = float(i[22])
-            except:
-                price_per_area = float(0)
-            try:
-                commission = int(float(i[20]))
-            except:
-                commission = float(0)
-            try:
-                deposit = int(float(i[21]))
-            except:
-                deposit = float(0)
-            if str(i[7]) == "Studio":
-                bedrooms = "ST"
-            else:
-                bedrooms = str(i[7])
-            locationtext = i[4]
-            building = i[5]
-            bathrooms = i[8]
-
-            source = 'Cold Call'
-            try:
-                number = int(i[15].replace('+','').replace(' ','')) 
-            except:
-                number = 00000000000000000000000000000
-            try:
-                o = db.session.query(Contacts).filter_by(number=number).first()
-                owner = o.refno
-            except:
-                owner = ""
-            owner_name = i[13]
-            owner_contact = number
-            owner_email = i[14]
-            assign_to = "chadia_Lami"
-            featured = 0
-
-             
-            contactemail = "bayut@uhpae.com"
-            contactnumber = 971549981998
-
-            newproperty = Properties(commission=commission,deposit=deposit,portal=portal,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,bedrooms = bedrooms,locationtext = locationtext,building = building,bathrooms = bathrooms,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,created_by=assign_to)
-            db.session.add(newproperty)
-            db.session.commit()
-            db.session.refresh(newproperty)
-            newproperty.refno = 'UNI-'+identity+'-'+str(newproperty.id)
-            with open('map_listing.json','r+') as file:
-                columns = json.load(file)
-                columns["map_listing"].update({i[1]:newproperty.refno})
-                file.seek(0)
-                json.dump(columns, file,indent=4)
-                file.truncate()
-            directory = UPLOAD_FOLDER+'/'+newproperty.refno        
-            if not os.path.isdir(directory):
-                os.mkdir(directory)
-            try:
-                with open('map_photos.json','r+') as file:
-                    columns = json.load(file)
-                    y = columns["map_photos"]
-                    if i[1] in y:
-                        total = 0
-                        filenames = []
-                        for img in y[i[2]].split(","):
-                            total = total+1
-                            try:
-                                response = requests.get(img)
-                                filename = directory+"/"+str(total)+".jpeg"
-                                file = open(filename, "wb")
-                                file.write(response.content)
-                                file.close()
-                            except:
-                                pass
-                        print('Pics added')
-                        newproperty.photos = '|'.join(filenames)
-                        db.session.commit()
-            except:
-                newproperty.photos = ''
-                db.session.commit()
-            db.session.commit()
-            notes('UNI-'+identity+'-' + str(newproperty.id))
-            print('added '+ 'UNI-'+identity+'-' + str(newproperty.id))
-            #add_user_list(current_user.username, 'UNI-S-'+str(newproperty.id))
-        return redirect(url_for('handleproperties.display_properties'))
-
-@handleproperties.route('/move_img',methods = ['GET','POST'])
-@login_required
-def move_img():
-    get_properties = db.session.query(Properties).all()
-    with open('map_listing.json','r+') as file:
-        columns = json.load(file)
-    with open('map_photos.json','r+') as file:
-        photos = json.load(file)
-        
-    for property in get_properties:
-        
-        for key, value in columns["map_listing"].items():
-            if property.refno == value:
-                try:
-                    pics = photos["map_photos"][key]
-                    directory = UPLOAD_FOLDER+'/'+property.refno
-                    total = 0
-                    filenames = []
-                    for img in pics.split(','):
-                        total = total+1
-                        try:
-                            response = requests.get(img)
-                            filename = directory+"/"+str(total)+".jpeg"
-                            file = open(filename, "wb")
-                            file.write(response.content)
-                            file.close()
-                            filenames.append(filename)
-                        except:
-                            pass
-                    print('Pics added')
-                    property.photos = '|'.join(filenames)
-                    db.session.commit()    
-                except:
-                    pass
-    return "done"
-
-
-@handleproperties.route('/edit_img',methods = ['GET','POST'])
-@login_required
-def edit_img():
-    get_lead = db.session.query(Properties).all()
-    for lead in get_lead:
+def reassign2():
+    z = datetime.strptime("21-04-03 00:00:00", '%y-%m-%d %H:%M:%S')
+    for i in db.session.query(Properties).all():
+        conn = sqlite3.connect('test2.db')
+        cur = conn.cursor()
+        teststr = "SELECT lastupdated FROM Properties WHERE refno='{}'".format(i.refno)
+        cur.execute(teststr)
+        rows = cur.fetchone()
         try:
-            new_photos=[]
-            photos = lead.photos.split('|')
-            for i in photos:
-                a = i.replace('/home/ubuntu/Desktop/revamped_crm','')
-                new_photos.append(a)
-            lead.photos = '|'.join(new_photos)
-            db.session.commit()
-        except:
-            pass
-'''
+            date_time_obj = datetime.strptime(rows[0][2:].split('.')[0], '%y-%m-%d %H:%M:%S')
+        except: 
+            date_time_obj = z
+        i.lastupdated = date_time_obj
+        db.session.commit()
+    return  "posla"
+
