@@ -426,9 +426,11 @@ price_form.addEventListener('input', inputHandler);
         fetch('/community/' + location).then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';
+                building = building.replace("&#39;","'")
                 for (let location of data.locations){
+
                     if (location[0] == building)
-                    {
+                    { 
                         optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
                     }
                     else

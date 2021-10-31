@@ -127,7 +127,7 @@ def display_properties():
             new = row2dict(r)
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
-                if r.created_by == current_user.username or r.assign_to == current_user.username:
+                if r.created_by == current_user.username or r.assign_to == current_user.username or current_user.is_admin == True:
                     edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
                 else:
                     edit_btn = ''
