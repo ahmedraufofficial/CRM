@@ -351,6 +351,8 @@ def edit_property(variable):
         edit.locationtext = file_data[new]
         files_filenames = []
         delete = form.new_files.data
+        if not os.path.isdir(UPLOAD_FOLDER+'/'+edit.refno):
+            os.mkdir(UPLOAD_FOLDER+'/'+edit.refno)
         if delete == '1':
             files = glob.glob(UPLOAD_FOLDER+'/'+edit.refno+'/*')
             for f in files:
