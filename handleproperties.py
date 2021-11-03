@@ -447,36 +447,16 @@ def date():
 @handleproperties.route('/reassign',methods = ['GET','POST'])
 @login_required
 def reassign():
-    o = db.session.query(Properties).filter_by(refno="UNI-S-448").first()
-    o = o.lastupdated
     for i in db.session.query(Properties).filter_by(locationtext="Al Raha Beach").all():
-        try:
-            print(i.lastupdated.date())
-        except:
-            i.lastupdated = o
+        m = i.lastupdated.month
+        y = i.lastupdated.year
+        if int(y) <= 2020:
+            i.assign_to = "maria" 
             db.session.commit()
-            m = i.lastupdated.month
-            y = i.lastupdated.year
-            if int(y) <= 2020:
-                i.assign_to = "maria" 
-                db.session.commit()
-            elif int(y) > 2020 and int(m) <= 8:
-                i.assign_to = "maria" 
-                db.session.commit()
-    for i in db.session.query(Properties).filter_by(locationtext="Al Reem Island").all():
-        try:
-            print(i.lastupdated.date())
-        except:
-            i.lastupdated = o
+        elif int(y) > 2020 and int(m) <= 8:
+            i.assign_to = "maria" 
             db.session.commit()
-            m = i.lastupdated.month
-            y = i.lastupdated.year
-            if int(y) <= 2020:
-                i.assign_to = "islam_roushdy" 
-                db.session.commit()
-            elif int(y) > 2020 and int(m) <= 8:
-                i.assign_to = "islam_roushdy" 
-                db.session.commit()
+
     return "ok"
 
 @handleproperties.route('/reassign2',methods = ['GET','POST'])
