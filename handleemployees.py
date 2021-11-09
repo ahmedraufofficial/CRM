@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import datetime, timedelta,time
-from functions import assign_lead, logs, notes, update_note
+from functions import *
 from sqlalchemy import or_
 
 path = os.getcwd()
@@ -144,6 +144,8 @@ def add_employee_account(var):
         newuser = User(username=form.username.data, password=passer, number=form.number.data, email = form.email.data, job_title = form.job_title.data, department = form.department.data)
         db.session.add(newuser)
         db.session.commit()
+        create_json(form.username.data)
+        logs(form.username.data,form.username.data,"Created")
         return redirect(url_for('handleemployees.display_employees'))
     return render_template('create_user_hr.html',form=form)
 
