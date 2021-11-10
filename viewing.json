@@ -13,6 +13,20 @@
             "area": "Al Reem Island",
             "specific_area": "The Bridges",
             "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"1\",\"UNI-L-2818\")'>Assign</button>"
+        },
+        {
+            "id": 2,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-2889",
+            "datetime": "2021-11-10 15:16:39.541875",
+            "min_price": null,
+            "max_price": null,
+            "min_room": "2",
+            "max_room": "",
+            "area": "Yas Island",
+            "specific_area": "La Perla",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"2\",\"UNI-L-2889\")'>Assign</button>"
         }
     ]
 }
