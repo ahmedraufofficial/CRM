@@ -469,7 +469,7 @@ def all_users_commission(variable, type):
 @app.route('/all_properties',methods = ['GET','POST'])
 @login_required
 def all_properties():
-    get_properties = db.session.query(Properties).filter(or_(Properties.status == 'Available',Properties.status == 'Rented',Properties.status == 'Upcoming',Properties.status == 'Owner Occupied',Properties.status == 'Moved In',Properties.status == 'Reserved'))
+    get_properties = db.session.query(Properties).all()
     all_properties = []
     for property in get_properties:
         a = property
