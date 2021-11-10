@@ -149,7 +149,7 @@ class AddLeadForm(FlaskForm):
     plot = StringField('Unit Floor/Plot', [validators.Length(min=4, max=50)])
     street = StringField('Zip Code', [validators.Length(min=4, max=50)])
     size = FloatField('Build Area')
-    source = SelectField(u'Source *',[validators.DataRequired()],choices = [('Cold Call', 'Cold Call'), ('Whatsapp', 'Whatsapp'), ('Email', 'Email'), ('Facebook', 'Facebook'), ('Instagram', 'Instagram'), ('Company Website', 'Company Website'), ('Dubizzle', 'Dubizzle'), ('Google', 'Google'), ('Agent', 'Agent'), ('Bayut', 'Bayut'), ('Property Finder', 'Property Finder'), ('Walk-In', 'Walk-In')])
+    source = SelectField(u'Source *',[validators.DataRequired()],choices = [('Cold Call', 'Cold Call'), ('Whatsapp', 'Whatsapp'), ('Email', 'Email'), ('Facebook', 'Facebook'), ('Instagram', 'Instagram'),('Tiktok','Tiktok'), ('Company Website', 'Company Website'), ('Dubizzle', 'Dubizzle'), ('Google', 'Google'), ('Agent', 'Agent'), ('Bayut', 'Bayut'), ('Property Finder', 'Property Finder'), ('Walk-In', 'Walk-In')])
 
 class BuyerLead(AddLeadForm):
     lead_type = SelectField(u'Lead Type',choices = [('Buy','Buy'),('Rent','Rent')])
