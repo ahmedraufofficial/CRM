@@ -133,8 +133,13 @@ def display_properties():
                     edit_btn = ''
             else:
                 edit_btn = ''
+            if new["assign_to"] == current_user.username or new["created_by"] == current_user.username:
+                pass
+            else:
+                new["owner_contact"] = "*"
             new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
             data.append(new)
+        
     elif current_user.viewall == False and current_user.listing == True:
         for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}

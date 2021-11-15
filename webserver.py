@@ -494,6 +494,10 @@ def view_properties(variable):
             propertyObj['photos'] = a
     except:
         a=[]
+    if propertyObj["assign_to"] == current_user.username or propertyObj["created_by"] == current_user.username:
+        pass
+    else:
+        propertyObj["owner_contact"] = "*"
     all_property.append(propertyObj)
     return jsonify({'property':all_property})
 
