@@ -120,12 +120,12 @@ def add_deal_rent():
         bank_representative_name = form.bank_representative_name.data
         bank_representative_mobile = form.bank_representative_mobile.data
         referral_date = form.referral_date.data
-        file_filename = secure_filename(form.emi_id.data.filename)
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, file_filename))
-        form.emi_id.data.save(os.path.join(directory, file_filename))
+        #file_filename = secure_filename(form.emi_id.data.filename)
+        #directory = UPLOAD_FOLDER+'/'+contact_buyer
+        #if not os.path.isdir(directory):
+        #    os.mkdir(directory)
+        #form.passport.data.save(os.path.join(directory, file_filename))
+        #form.emi_id.data.save(os.path.join(directory, file_filename))
         newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date)
         db.session.add(newdeal)
         db.session.commit()
@@ -193,12 +193,12 @@ def add_deal_sale():
         bank_representative_name = form.bank_representative_name.data
         bank_representative_mobile = form.bank_representative_mobile.data
         referral_date = form.referral_date.data
-        file_filename = secure_filename(form.emi_id.data.filename)
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, file_filename))
-        form.emi_id.data.save(os.path.join(directory, file_filename))
+        #file_filename = secure_filename(form.emi_id.data.filename)
+        #directory = UPLOAD_FOLDER+'/'+contact_buyer
+        #if not os.path.isdir(directory):
+        #    os.mkdir(directory)
+        #form.passport.data.save(os.path.join(directory, file_filename))
+        #form.emi_id.data.save(os.path.join(directory, file_filename))
         newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date)
         db.session.add(newdeal)
         db.session.commit()
@@ -274,13 +274,13 @@ def add_deal_developer():
         amount = form.amount.data
         pre_approval_loan = form.pre_approval_loan.data
         loan_amount = form.loan_amount.data
-        file_filename = secure_filename(form.emi_id.data.filename)
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, file_filename))
-        form.emi_id.data.save(os.path.join(directory, file_filename))
-        form.developer_doc.data.save(os.path.join(directory, file_filename))
+        #file_filename = secure_filename(form.emi_id.data.filename)
+        #directory = UPLOAD_FOLDER+'/'+contact_buyer
+        #if not os.path.isdir(directory):
+        #    os.mkdir(directory)
+        #form.passport.data.save(os.path.join(directory, file_filename))
+        #form.emi_id.data.save(os.path.join(directory, file_filename))
+        #form.developer_doc.data.save(os.path.join(directory, file_filename))
         newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,plot_size = plot_size,floor_no = floor_no,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date)
         db.session.add(newdeal)
         db.session.commit()
@@ -374,12 +374,12 @@ def add_closed_deal_rent(variable):
         bank_representative_name = form.bank_representative_name.data
         bank_representative_mobile = form.bank_representative_mobile.data
         referral_date = form.referral_date.data
-        file_filename = secure_filename(form.emi_id.data.filename)
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, file_filename))
-        form.emi_id.data.save(os.path.join(directory, file_filename))
+        #file_filename = secure_filename(form.emi_id.data.filename)
+        #directory = UPLOAD_FOLDER+'/'+contact_buyer
+        #if not os.path.isdir(directory):
+        #    os.mkdir(directory)
+        #form.passport.data.save(os.path.join(directory, file_filename))
+        #form.emi_id.data.save(os.path.join(directory, file_filename))
         newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date)
         db.session.add(newdeal)
         db.session.commit()
@@ -465,12 +465,12 @@ def add_closed_deal_sale(variable):
         bank_representative_name = form.bank_representative_name.data
         bank_representative_mobile = form.bank_representative_mobile.data
         referral_date = form.referral_date.data
-        file_filename = secure_filename(form.emi_id.data.filename)
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, file_filename))
-        form.emi_id.data.save(os.path.join(directory, file_filename))
+        #file_filename = secure_filename(form.emi_id.data.filename)
+        #directory = UPLOAD_FOLDER+'/'+contact_buyer
+        #if not os.path.isdir(directory):
+        #    os.mkdir(directory)
+        #form.passport.data.save(os.path.join(directory, file_filename))
+        #form.emi_id.data.save(os.path.join(directory, file_filename))
         newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date)
         db.session.add(newdeal)
         db.session.commit()
@@ -564,13 +564,13 @@ def add_closed_deal_developer(variable):
         amount = form.amount.data
         pre_approval_loan = form.pre_approval_loan.data
         loan_amount = form.loan_amount.data
-        file_filename = secure_filename(form.emi_id.data.filename)
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, file_filename))
-        form.emi_id.data.save(os.path.join(directory, file_filename))
-        form.developer_doc.data.save(os.path.join(directory, file_filename))
+        #file_filename = secure_filename(form.emi_id.data.filename)
+        #directory = UPLOAD_FOLDER+'/'+contact_buyer
+        #if not os.path.isdir(directory):
+        #    os.mkdir(directory)
+        #form.passport.data.save(os.path.join(directory, file_filename))
+        #form.emi_id.data.save(os.path.join(directory, file_filename))
+        #form.developer_doc.data.save(os.path.join(directory, file_filename))
         newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,plot_size = plot_size,floor_no = floor_no,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date)
         db.session.add(newdeal)
         db.session.commit()

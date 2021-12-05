@@ -252,9 +252,14 @@ def null_leads():
         db.session.commit()
 
 
-@handleleads.route('/test')
-def test():
-
+@handleleads.route('/reassign_leads/<personA>/<personB>')
+@login_required
+def reassign_leads(personA,personB):
+    all_leads = db.session.query(Leads).filter(or_(Leads.agent == personA,Leads.created_by == personA))
+    for i in all_leads:
+        i.agent = personB
+        i.created_by = personB
+        db.session.commit()
     return "ok"
 
 @handleleads.route('/marketing_leads',methods = ['GET','POST'])
