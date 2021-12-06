@@ -528,7 +528,7 @@ padding-top: 10px;
         fetch('/all_properties').then(function(response){
             response.json().then(function(data){
                 let newtable = '';
-                var jsonData = data.all_properties
+                var jsonData = data.all_properties.reverse()
                 $(function () {
                 var $table = $('#table').bootstrapTable({data: jsonData});
    
@@ -590,7 +590,7 @@ padding-top: 10px;
         fetch('/all_leads').then(function(response){
             response.json().then(function(data){
                 let newtable = '';
-                var jsonData = data.all_leads
+                var jsonData = data.all_leads.reverse()
                 $(function () {
                 var $table = $('#lead_table').bootstrapTable({data: jsonData});
 

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.util.langhelpers import NoneType
 from models import Deals, Leads, Properties
 from forms import AddDealForm
 import json
@@ -24,13 +25,16 @@ db = SQLAlchemy()
 
 handledeals = Blueprint('handledeals', __name__, template_folder='templates')
 
-def update_listing(ref,con,con_name,con_number,con_email):
-    if ref != "":    
+def update_listing(ref,con,con_name,con_number,con_email,transaction_type):
+    if ref != None:    
         property = db.session.query(Properties).filter_by(refno=ref).first()
-        property.owner = con
-        property.owner_name = con_name
-        property.owner_contact = con_number
-        property.owner_email = con_email
+        if transaction_type == "Leased":
+            property.tenant = con+" | "+con_name+" | "+str(con_number)
+        else:
+            property.owner = con
+            property.owner_name = con_name
+            property.owner_contact = con_number
+            property.owner_email = con_email
         db.session.commit()
         
 
@@ -133,7 +137,7 @@ def add_deal_rent():
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
-        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email)
+        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent" , loc = "")
@@ -206,7 +210,7 @@ def add_deal_sale():
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
-        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email)
+        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale",loc = "")
@@ -288,7 +292,7 @@ def add_deal_developer():
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
-        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email)
+        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale",loc = "", type="developer")
@@ -387,7 +391,7 @@ def add_closed_deal_rent(variable):
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
-        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email)
+        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent", building = building, loc = loc )
@@ -407,7 +411,8 @@ def add_closed_deal_sale(variable):
     form.unit_beds.data = lead.min_beds
     form.deal_price.data = lead.min_price
     form.listing_ref.data = lead.property_requirements
-    if lead.property_requirements != "":
+    if lead.property_requirements != None:
+        print("Property: " + lead.property_requirements)
         property = db.session.query(Properties).filter_by(refno=lead.property_requirements).first()
         form.contact_seller.data = property.owner
         form.contact_seller_name.data = property.owner_name
@@ -478,7 +483,7 @@ def add_closed_deal_sale(variable):
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
-        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email)
+        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", building = building, loc = loc )
@@ -578,7 +583,7 @@ def add_closed_deal_developer(variable):
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
-        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email)
+        update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", building = building, loc = loc )

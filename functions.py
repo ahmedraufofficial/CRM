@@ -259,7 +259,7 @@ def assign_lead(username,lead,substatus):
         now = datetime.now()+timedelta(hours=4)
         from_date = now.strftime("%Y-%m-%d")
         from_time = now.strftime("%H:%M")
-        expiry_now = datetime.now()+timedelta(hours=4) + timedelta(hours=int(c))
+        expiry_now = datetime.now()+timedelta(hours=4)
         to_date = expiry_now.strftime("%Y-%m-%d")
         to_time = expiry_now.strftime("%H:%M")
         columns["lead"].update({lead:{
@@ -291,8 +291,24 @@ def update_user_note(username,lead,status,sub_status):
     sub_status = sub_status.replace("%20"," ")
     with open(os.path.join(USERS_FOLDER, username+'.json'),'r+') as file:
         columns = json.load(file)
-        columns["lead"][lead]["sub_status"] = sub_status
-        columns["lead"][lead]["status"] = status
+        try:
+            columns["lead"][lead]["sub_status"] = sub_status
+            columns["lead"][lead]["status"] = status
+        except:
+            now = datetime.now()+timedelta(hours=4)
+            from_date = now.strftime("%Y-%m-%d")
+            from_time = now.strftime("%H:%M")
+            expiry_now = datetime.now()+timedelta(hours=4)
+            to_date = expiry_now.strftime("%Y-%m-%d")
+            to_time = expiry_now.strftime("%H:%M")
+            columns["lead"].update({lead:{
+                'date':from_date,
+                'time':from_time,
+                'expiry date':to_date,
+                'expiry time':to_time,
+                'status':status,
+                'sub_status':sub_status
+                }})
         file.seek(0)
         json.dump(columns, file,indent=4)
         file.truncate()
