@@ -98,6 +98,12 @@ def notes(listid):
         data['notes'] = []
         json.dump(data, f)
 
+def additional_details(listid):
+    with open(os.path.join(NOTES,listid+'.json'), 'w') as f:
+        data = {}
+        data['notes'] = []
+        json.dump(data, f)
+
 def get_notes(listid):
     f = open(os.path.join(NOTES,listid+'.json'))
     columns = json.load(f)
@@ -118,6 +124,25 @@ def update_note(username, listid, com):
             'time':time,
             'user':username,
             'comment': com
+        })
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
+
+def update_detail(list_id,detail,val):
+    val = val.replace("%20"," ")
+    detail = detail.replace("%20"," ")
+    with open(os.path.join(NOTES, list_id+'.json'),'r+') as file:
+        columns = json.load(file)
+        a = columns['notes']
+        now = datetime.now()+timedelta(hours=4)
+        date = now.strftime("%d/%m/%Y")
+        time = now.strftime("%H:%M:%S")
+        columns["notes"].append({
+            'date':date,
+            'time':time,
+            'detail':detail,
+            'value': val
         })
         file.seek(0)
         json.dump(columns, file,indent=4)

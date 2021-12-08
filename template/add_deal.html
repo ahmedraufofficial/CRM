@@ -38,29 +38,39 @@ padding-top: 10px;
             {{ wtf.form_field(form.developer) }} 
             {% endif %}
             <h4>DEAL DETAILS</h4> 
-
+        {% if current_user.listing == True %}
         <a data-toggle="modal" href="#listing" class="btn btn-primary" style="margin-bottom: 5px;">Add Listing</a>
+        {% endif %}
         {{ wtf.form_field(form.listing_ref) }}
+
+        {% if current_user.sale == True %}
         <a data-toggle="modal" href="#lead" class="btn btn-primary" style="margin-bottom: 5px;">Add Lead</a>
         {{ wtf.form_field(form.lead_ref) }}
+        {% endif %}
         {{ wtf.form_field(form.transaction_type) }}
         {{ wtf.form_field(form.status) }}
         {{ wtf.form_field(form.sub_status) }}
         {{ wtf.form_field(form.source) }}
+    
 
+
+        {% if current_user.sale == True %}
         <h4>BUYER CONTACT DETAILS</h4>
         <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
         {{ wtf.form_field(form.contact_buyer) }}
         {{ wtf.form_field(form.contact_buyer_name) }}
         {{ wtf.form_field(form.contact_buyer_number) }}
         {{ wtf.form_field(form.contact_buyer_email) }}
+        {% endif %}
+
+        {% if current_user.listing == True %}
         <h4>SELLER CONTACT DETAILS</h4>
         <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
         {{ wtf.form_field(form.contact_seller) }}
         {{ wtf.form_field(form.contact_seller_name) }}
         {{ wtf.form_field(form.contact_seller_number) }}
         {{ wtf.form_field(form.contact_seller_email) }}
-
+        {% endif %}
         
    </div>
     <div class="col column">
@@ -483,14 +493,7 @@ padding-top: 10px;
     document.getElementById("close").click();
     }
 
-    function getcontact2(){
-    var data = $('#contacttable2').bootstrapTable('getSelections');
-    $('#contact_seller').val(data[0].refno)
-    $('#contact_seller_name').val(data[0].name)
-    $('#contact_seller_number').val(data[0].contact)
-    $('#contact_seller_email').val(data[0].email)
-    document.getElementById("close2").click();
-    }
+
 
     function quick_add(){
     

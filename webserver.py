@@ -589,6 +589,14 @@ def view_notes(variable):
             noteObj['status'] = i['status']
             noteObj['substatus'] = i['substatus']
             all_notes.append(noteObj)
+    elif 'e' in variable.lower():
+        for i in notes:
+            noteObj = {}
+            noteObj['date'] = i['date']
+            noteObj['time'] = i['time']
+            noteObj['detail'] = i['detail']
+            noteObj['value'] = i['value']
+            all_notes.append(noteObj)
     else:
         for i in notes:
             noteObj = {}
@@ -614,6 +622,12 @@ def post_lead_note(list_id,com,status,substatus):
     db.session.commit()
     update_lead_note(current_user.username,list_id,com,status,substatus)
     update_user_note(current_user.username,list_id,status,substatus)
+    return jsonify(success=True)
+
+@app.route('/post_detail/<list_id>/<detail>/<val>',methods = ['GET','POST'])
+@login_required
+def post_detail(list_id,detail,val):
+    update_detail(list_id,detail,val)
     return jsonify(success=True)
 
 @app.route('/follow_up/<list_id>/<com>',methods = ['GET','POST'])

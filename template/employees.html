@@ -36,11 +36,112 @@
     <br>
     </div>
     </section>
+
+    
+<!--details Modal-->
+<div class="modal" id="detailsModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">ADDITIONAL DETAILS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div id="notetoolbar">
+                <h5> </h5>
+              </div>
+                <table id="detailstable"        
+                data-toggle="true"
+                data-toolbar="#detailstoolbar"
+                class="oswald"
+                data-search="true"
+                data-show-columns="true"
+                data-pagination="true"
+                data-height="350"
+                style="font-size: 10pt;">
+                  <thead>
+                      <tr>
+                          <th data-field="date">DATE</th>
+                          <th data-field="time">TIME</th>
+                          <th data-field="detail">DETAIL</th>
+                          <th data-field="value">VALUE</th>
+                      </tr>
+                  </thead>
+              </table>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <input type="hidden" id="list_id">
+              <div class="row">
+              <div class="col">
+              <input class="form-control" type="text" id="detail">
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" id="value">
+              </div>
+
+            </div>
+              
+              <button onclick="post_detail()" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Post</button>
+
+            </div>
+          </div>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 {% endblock %}
 
 
 {% block scripts %}
 <script type='text/javascript'>
+
+function view_details(x){
+  fetch('/all_notes/'+x).then(function(response){
+    response.json().then(function(data){
+      $('#list_id').val(x)
+      var jsonData = data.notes
+      console.log(jsonData)
+      $(function () {
+                $('#detailstable').bootstrapTable('destroy')
+                $('#detailstable').bootstrapTable({data: jsonData});
+                document.getElementById('detail').value = ''
+                document.getElementById('value').value = ''
+                });
+    })
+  })
+}
+
+function post_detail(){
+      var list_id = document.getElementById('list_id').value;
+      var detail = document.getElementById('detail').value;
+      var val = document.getElementById('value').value;
+      fetch('/post_detail/'+list_id+'/'+detail+'/'+val).then(function(response){
+            response.json().then(function(){
+              view_details(list_id)
+            })
+        })
+      };
+
+
+
 
 $(window).on('load',(function(){      
     var columns = {{columns|tojson}};

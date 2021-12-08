@@ -42,9 +42,8 @@ def display_employees():
         for r in db.session.query(Employees).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
-                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'
+                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#detailsModal" onclick="view_details('+"'UNI-E-"+new['Employee_ID']+"'"+')">Details</button>'
             else:
                 edit_btn = ''
             
@@ -59,7 +58,6 @@ def display_employees():
         for r in db.session.query(Employees).filter(Employees.created_by == current_user.username):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
-            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
             if current_user.edit == True:
                 edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a  href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'
             else:
@@ -112,10 +110,11 @@ def add_employee():
         employee = Employees(created_by = created_by, Status = Status,  Employee_Status = Employee_Status,  Employee_ID = Employee_ID,  Name = Name,  Position = Position,  Nationality = Nationality,  UID = UID,  Date_of_Birth = Date_of_Birth,  Date_of_Joining = Date_of_Joining,  Emirates_ID = Emirates_ID,  Card_No = Card_No,  Emirates_Card_Expiry = Emirates_Card_Expiry,  Mobile_No = Mobile_No,  MOL_Personal_No = MOL_Personal_No,  Labor_Card_No = Labor_Card_No,  Labor_Card_Expiry = Labor_Card_Expiry,  Insurance_No = Insurance_No,  Insurance_Effective_Date = Insurance_Effective_Date,  Insurance_Expiry_Date = Insurance_Expiry_Date,  Date_of_Submission = Date_of_Submission,  Residence_Expiry = Residence_Expiry,  Remarks = Remarks)
         db.session.add(employee)
         db.session.commit()
+        additional_details('UNI-E-' + str(Employee_ID))
+        print("here")
         return redirect(url_for('handleemployees.display_employees'))
     return render_template('add_employee.html', form=form, user = current_user.username)
-
-
+   
 @handleemployees.route('/edit_employee/<var>', methods = ['GET','POST'])
 @login_required
 def edit_employee(var):

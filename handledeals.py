@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.elements import Null
 from sqlalchemy.util.langhelpers import NoneType
 from models import Deals, Leads, Properties
 from forms import AddDealForm
@@ -79,14 +80,26 @@ def add_deal_rent():
         created_by = current_user.username
         listing_ref = form.listing_ref.data
         lead_ref = form.lead_ref.data
-        contact_buyer = form.contact_buyer.data
-        contact_buyer_name = form.contact_buyer_name.data
-        contact_buyer_number = form.contact_buyer_number.data
-        contact_buyer_email = form.contact_buyer_email.data
-        contact_seller = form.contact_seller.data
-        contact_seller_name = form.contact_seller_name.data
-        contact_seller_number = form.contact_seller_number.data
-        contact_seller_email = form.contact_seller_email.data
+        if current_user.sale == True:
+            contact_buyer = form.contact_buyer.data
+            contact_buyer_name = form.contact_buyer_name.data
+            contact_buyer_number = form.contact_buyer_number.data
+            contact_buyer_email = form.contact_buyer_email.data
+        else:
+            contact_buyer = ""
+            contact_buyer_name = ""
+            contact_buyer_number = 0
+            contact_buyer_email = ""
+        if current_user.listing == True:
+            contact_seller = form.contact_seller.data
+            contact_seller_name = form.contact_seller_name.data
+            contact_seller_number = form.contact_seller_number.data
+            contact_seller_email = form.contact_seller_email.data
+        else:
+            contact_seller = ""
+            contact_seller_name = ""
+            contact_seller_number = 0
+            contact_seller_email = ""
         source = form.source.data
         status = form.status.data
         sub_status = form.sub_status.data
