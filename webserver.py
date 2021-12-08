@@ -572,11 +572,6 @@ def all_count():
     all_count.append(countObj)
     return jsonify({'all_count':all_count})
 
-@app.route('/create',methods = ['GET','POST'])
-@login_required
-def cr():
-    create()
-    return "ok"
 
 @app.route('/all_notes/<variable>',methods = ['GET','POST'])
 @login_required
