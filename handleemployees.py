@@ -159,3 +159,4 @@ def delete_employee(var):
     db.session.commit()
     return redirect(url_for('handleemployees.display_employees'))
     
+    
