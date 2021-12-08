@@ -148,6 +148,14 @@ def update_detail(list_id,detail,val):
         json.dump(columns, file,indent=4)
         file.truncate()
 
+def create():
+    eid = ["017","014","004","018","019","026","035","036","037","039"]
+    for i in eid:
+        with open(os.path.join(NOTES,"UNI-E-"+i+'.json'), 'w') as f:
+            data = {}
+            data['notes'] = []
+            json.dump(data, f)
+
 def update_lead_note(username, listid, com, status, substatus):
     username = username.replace("%20"," ")
     com = com.replace("%20"," ")
