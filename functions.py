@@ -142,13 +142,23 @@ def update_detail(list_id,detail,val):
             'date':date,
             'time':time,
             'detail':detail,
-            'value': val
+            'value': val,
+            'options':'<a href="/delete_detail/'+list_id+'/'+detail+'"><button class="btn btn-danger si">Delete</button></a>'
         })
         file.seek(0)
         json.dump(columns, file,indent=4)
         file.truncate()
 
-
+def del_detail(list_id,detail):
+    with open(os.path.join(NOTES, list_id+'.json'),'r+') as file:
+        columns = json.load(file)
+        a = columns['notes']
+        for i in a:
+            if i["detail"] == detail:
+                columns['notes'].remove(i)
+        file.seek(0)
+        json.dump(columns, file,indent=4)
+        file.truncate()
 
 def update_lead_note(username, listid, com, status, substatus):
     username = username.replace("%20"," ")

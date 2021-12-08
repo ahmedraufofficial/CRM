@@ -595,6 +595,7 @@ def view_notes(variable):
             noteObj['time'] = i['time']
             noteObj['detail'] = i['detail']
             noteObj['value'] = i['value']
+            noteObj['options'] = i['options']
             all_notes.append(noteObj)
     else:
         for i in notes:
@@ -611,6 +612,12 @@ def view_notes(variable):
 def post_note(list_id,com):
     update_note(current_user.username,list_id,com)
     return jsonify(success=True)
+
+@app.route('/delete_detail/<list_id>/<detail>',methods = ['GET','POST'])
+@login_required
+def delete_detail(list_id,detail):
+    del_detail(list_id,detail)
+    return redirect(url_for('handleemployees.display_employees'))
 
 @app.route('/post_lead_note/<list_id>/<com>/<status>/<substatus>',methods = ['GET','POST'])
 @login_required

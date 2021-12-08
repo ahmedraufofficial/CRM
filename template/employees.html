@@ -6,7 +6,7 @@
   <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.5);">
 <br>
 
-    <div class="container" style="padding: 10px;">
+    <div class="container-fluid" style="padding: 10px;">
       <br/>
       <div id="toolbar">
         {% if current_user.export == True %}
@@ -31,7 +31,7 @@
       </table>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
     <a href="/add_employee" class="btn btn-primary">Add Employee</a>
     <a href="/cloudstorage/hr" class="btn btn-info">Access Storage</a>
     </div>
@@ -72,6 +72,7 @@
                           <th data-field="time">TIME</th>
                           <th data-field="detail">DETAIL</th>
                           <th data-field="value">VALUE</th>
+                          <th data-field="options">OPTIONS</th>
                       </tr>
                   </thead>
               </table>
