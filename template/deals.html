@@ -6,7 +6,7 @@
   <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.5);">
 <br>
 
-    <div class="container" style="padding: 10px; ">
+    <div class="container-fluid" style="padding: 10px; ">
       <br/>
       <div id="toolbar">
         {% if current_user.export == True %}
@@ -25,10 +25,12 @@
         data-search="true"
         data-show-columns="true"
         data-pagination="true"
-        data-height="500">
+        data-height="750"
+        data-page-size="25"
+        data-page-list="[25, 50, 100, 200, All]">
       </table>
     </div>
-      <div class="container">
+      <div class="container-fluid">
         <a href="/add_deal/rent" class="btn btn-primary">Add Rental Deal</a>
         <a href="/add_deal/sale" class="btn btn-warning" style="margin-left: 10px; color: white;">Add Sale Deal</a>
         <a href="/add_deal/developer" class="btn btn-warning" style="margin-left: 10px; color: white;">Add Developer Sale Deal</a>
@@ -50,7 +52,7 @@
 
     $(function() {
         $('#table').bootstrapTable({ 
-          data: data,
+          data: data.reverse(),
           columns: columns,
         });
         $('#user_data').click(function () {

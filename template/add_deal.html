@@ -481,7 +481,7 @@ padding-top: 10px;
     function get_contacts(){
         fetch('/all_contacts').then(function(response){
             response.json().then(function(data){
-                var jsonData = data.all_contacts
+                var jsonData = data.all_contacts.reverse()
                 $(function () {
                 var $table = $('#contacttable').bootstrapTable({data: jsonData});
                 var $table = $('#contacttable2').bootstrapTable({data: jsonData});
@@ -582,7 +582,6 @@ padding-top: 10px;
     var x = $('#unit_location option:contains("'+data[0].locationtext+'")');
     $('#unit_location').val(x[0].value)
     get_location()
-    console.log(data[0])
     $('#unit_type').val(data[0].subtype)
     $('#contact_seller').val(data[0].owner)
     $('#contact_seller_name').val(data[0].owner_name)
@@ -626,7 +625,6 @@ padding-top: 10px;
     var x = $('#unit_location option:contains("'+data[0].locationtext+'")');
     $('#unit_location').val(x[0].value)
     get_location()
-    console.log(data[0])
     $('#unit_type').val(data[0].subtype)
     $('#unit_beds').val(data[0].min_beds)
     $('#deal_price').val(data[0].min_price)
