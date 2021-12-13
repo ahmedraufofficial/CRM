@@ -35,7 +35,7 @@ padding-top: 10px;
             {{ wtf.form_field(form.emi_id) }} 
             {{ wtf.form_field(form.passport) }} 
             {% if type == "developer" %}
-            {{ wtf.form_field(form.developer) }} 
+            {{ wtf.form_field(form.developer_doc) }}
             {% endif %}
             <h4>DEAL DETAILS</h4> 
         {% if current_user.listing == True %}
@@ -43,10 +43,10 @@ padding-top: 10px;
         {% endif %}
         {{ wtf.form_field(form.listing_ref) }}
 
-        {% if current_user.sale == True %}
+        
         <a data-toggle="modal" href="#lead" class="btn btn-primary" style="margin-bottom: 5px;">Add Lead</a>
         {{ wtf.form_field(form.lead_ref) }}
-        {% endif %}
+      
         {{ wtf.form_field(form.transaction_type) }}
         {{ wtf.form_field(form.status) }}
         {{ wtf.form_field(form.sub_status) }}
@@ -54,15 +54,14 @@ padding-top: 10px;
     
 
 
-        {% if current_user.sale == True %}
+        
         <h4>BUYER CONTACT DETAILS</h4>
         <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
         {{ wtf.form_field(form.contact_buyer) }}
         {{ wtf.form_field(form.contact_buyer_name) }}
         {{ wtf.form_field(form.contact_buyer_number) }}
         {{ wtf.form_field(form.contact_buyer_email) }}
-        {% endif %}
-
+     
         {% if current_user.listing == True %}
         <h4>SELLER CONTACT DETAILS</h4>
         <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
@@ -83,6 +82,8 @@ padding-top: 10px;
         {{ wtf.form_field(form.include_vat) }}
         {{ wtf.form_field(form.total_commission) }}
         {{ wtf.form_field(form.split_with_external_referral) }}
+        
+        {% if current_user.sale == True %}
         {{ wtf.form_field(form.agent_1) }}
         <div class="row">
             <div class="col">
@@ -92,7 +93,11 @@ padding-top: 10px;
                 <label class="control-label" id="com"></label>
             </div>
         </div>
+        {% endif %}
+
+        
         {{ wtf.form_field(form.agent_2) }}
+        {% if current_user.listing == True %}
         <div class="row">
             <div class="col">
                 {{ wtf.form_field(form.commission_agent_2) }}
@@ -101,6 +106,8 @@ padding-top: 10px;
                 <label class="control-label" id="com2"></label>
             </div>
         </div>
+        {% endif %}
+        
         {% if purpose == "rent" %}
         {{ wtf.form_field(form.cheques) }}
         {% endif %}
@@ -637,13 +644,15 @@ padding-top: 10px;
     let agent1 = document.getElementById('agent_1');
     let agent2 = document.getElementById('agent_2');
     var assign = '{{ assign }}'
+    var assign2 = '{{ assign2 }}'
     function get_user(){
         fetch('/all_users').then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';
+                let optionHTML2 = '';
                 optionHTML += '<option value="">none</option>';
+                optionHTML2 += '<option value="">none</option>';
                 for (let users of data.all_users){
-                    
                     if ( users.name == assign ){
                         optionHTML += '<option value="'+users.name+'" selected>'+users.name+'</option>';
                     }
@@ -651,8 +660,16 @@ padding-top: 10px;
                     optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
                     }
                 }
+                for (let users of data.all_users){
+                    if ( users.name == assign2 ){
+                        optionHTML2 += '<option value="'+users.name+'" selected>'+users.name+'</option>';
+                    }
+                    else{
+                    optionHTML2 += '<option value="'+users.name+'">'+users.name+'</option>';
+                    }
+                }
                 agent1.innerHTML = optionHTML;
-                agent2.innerHTML = optionHTML;
+                agent2.innerHTML = optionHTML2;
             })
         })
     };

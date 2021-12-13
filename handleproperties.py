@@ -453,7 +453,7 @@ def date():
 @handleproperties.route('/reassign',methods = ['GET','POST'])
 @login_required
 def reassign():
-    for i in db.session.query(Properties).filter_by(locationtext="Al Raha Beach").all():
+    for i in db.session.query(Properties).filter_by(building="Water's Edge").all():
         m = i.lastupdated.month
         y = i.lastupdated.year
         if int(y) <= 2020:

@@ -188,9 +188,9 @@ class AddDealForm(FlaskForm):
     include_vat = SelectField(u'Include VAT',choices = [('yes', 'Yes'), ('no', 'No')])
     total_commission = IntegerField('Total Commission')
     split_with_external_referral = SelectField(u'Split with Externl Referral',choices = [('yes', 'Yes'), ('no', 'No')])
-    agent_1 = SelectField(u'Agent *', [validators.DataRequired()],choices = [])
+    agent_1 = SelectField(u'Sales Agent *', [validators.DataRequired()],choices = [])
     commission_agent_1 = StringField('Commission')
-    agent_2 = SelectField(u'Agent',choices = [])
+    agent_2 = SelectField(u'Listing Agent',choices = [])
     commission_agent_2 = StringField('Commission')
     
     estimated_deal_date = DateField('Estimated Deal Date')

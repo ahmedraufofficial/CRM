@@ -464,6 +464,8 @@ def all_users_commission(variable, type):
         commission = get_commission("list", total_deal, type)
     elif get_user.sale == True:
         commission = get_commission("sale", total_deal, type)
+    else:
+        commission = 0
     return jsonify({'commission':commission})
 
 @app.route('/all_properties',methods = ['GET','POST'])
