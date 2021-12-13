@@ -638,8 +638,11 @@ padding-top: 10px;
     setTimeout(function(){ $('#unit_sub_location').val(data[0].building); }, 100);
     }
 
-
+    try {
     let agent1 = document.getElementById('agent_1');
+    } catch (error) {
+        console.log(error)
+    }
     let agent2 = document.getElementById('agent_2');
     var assign = '{{ assign }}'
     var assign2 = '{{ assign2 }}'
@@ -666,7 +669,11 @@ padding-top: 10px;
                     optionHTML2 += '<option value="'+users.name+'">'+users.name+'</option>';
                     }
                 }
-                agent1.innerHTML = optionHTML;
+                try {
+                    agent1.innerHTML = optionHTML;
+                } catch (error) {
+                    console.log(error)
+                }
                 agent2.innerHTML = optionHTML2;
             })
         })
