@@ -145,14 +145,14 @@ def add_deal_rent():
         try:
             passport = secure_filename(form.passport.data.filename)
             emi = secure_filename(form.emi_id.data.filename)
+            directory = UPLOAD_FOLDER+'/'+contact_buyer
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.passport.data.save(os.path.join(directory, passport))
+            form.emi_id.data.save(os.path.join(directory, emi))
         except:
-            return "Upload the necessary documents!"
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, passport))
-        form.emi_id.data.save(os.path.join(directory, emi))
-
+            pass
+        
         agent_2 = form.agent_2.data
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
