@@ -62,10 +62,10 @@ def display_deals():
         listing_rent = db.session.query(Properties).filter(and_(Properties.refno == r.listing_ref,r.type == "Rent")).first()
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
-        try:
-            transfer = '<a href="/update_listing/'+r.listing_ref+'/'+r.contact_buyer+'/'+r.contact_buyer_name+'/'+r.contact_buyer_number+'/'+r.contact_buyer_email+'/'+r.transaction_type+'"><button class="btn btn-warning si" style="width:100% !important;">Update Transfer/Tenant</button></a>'
-        except:
+        if r.listing_ref == "" or r.listing_ref == None:
             transfer = '<label class="btn btn-danger si" style="width:100% !important;">Missing Listing Info</label>'
+        else:
+            transfer = '<a href="/update_listing/'+r.listing_ref+'/'+r.contact_buyer+'/'+r.contact_buyer_name+'/'+r.contact_buyer_number+'/'+r.contact_buyer_email+'/'+r.transaction_type+'"><button class="btn btn-warning si" style="width:100% !important;">Update Transfer/Tenant</button></a>'
         if listing_rent:
             if listing_rent.tenant:
                 a = listing_rent.tenant.split(" | ")[0]
