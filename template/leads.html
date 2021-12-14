@@ -281,6 +281,16 @@
         <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
         <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
         <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
+        <select name="lead_status" class="btn btn-info" id="lead_status">
+          <option value="">Sub Status</option>
+          <option value="Successful">Successful</option>
+          <option value="Follow up">Follow Up</option>
+          <option value="In progress">In progress</option>
+          <option value="Interested">Interested</option>
+          <option value="Viewing arranged">Viewing arranged</option>
+          <option value="Offer Made">Offer Made</option>
+          <option value="Unsuccessful">Unsuccessful</option>
+        </select>
       </div>
       <table
         id="table"
@@ -443,11 +453,6 @@ function request_viewing(list_id){
 
 
 
-
-
-
-
-
 function view_leads(x){
         fetch('/all_leads/'+x).then(function(response){
           response.json().then(function(data){
@@ -498,6 +503,22 @@ $(window).on('load',(function(){
           data: data,
           columns: columns,
         });
+        var grepFunc;
+                            grepFunc = function (item) {
+                              console.log(item.status)
+                              return item.status == 'Open'
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+
+                    
+        $('#lead_status').change(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.sub_status == $('#lead_status').val() 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
 
         $('#user_data').click(function () {
                     var grepFunc;
