@@ -483,3 +483,25 @@ def reassign2():
         db.session.commit()
     return  "posla"
 
+
+@handleproperties.route('/delete_all_properties',methods = ['GET','POST'])
+@login_required
+def deleteallleads():
+    r = "UNI-R-"
+    s = "UNI-S-"
+    l = [s+'1854',s+'1853',s+'1852',s+'1851',s+'1850',s+'1849',s+'1675',s+'1261',s+'862',s+'736',r+'373',r+'372',r+'2028',s+'1283',r+'1747',s+'852',r+'1219',r+'1782',r+'1788',r+'1223',r+'1224',r+'1811',r+'1802',r+'1787',r+'1789',r+'1785',s+'1523',r+'1748',r+'1827',r+'2002']
+    for i in l:
+        delete = db.session.query(Properties).filter_by(refno=i).first()
+        if delete:
+            db.session.delete(delete)
+            db.session.commit()
+    return "ok"
+
+@handleproperties.route('/no_portals',methods = ['GET','POST'])
+@login_required
+def rmportals():
+    l = db.session.query(Properties).all()
+    for i in l:
+        i.portal = 1
+        db.session.commit()
+    return "ok"

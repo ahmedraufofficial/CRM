@@ -27,6 +27,20 @@
             "area": "Yas Island",
             "specific_area": "La Perla",
             "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"2\",\"UNI-L-2889\")'>Assign</button>"
+        },
+        {
+            "id": 3,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-3100",
+            "datetime": "2021-12-27 19:20:52.431420",
+            "min_price": null,
+            "max_price": null,
+            "min_room": null,
+            "max_room": null,
+            "area": "Al Ghadeer",
+            "specific_area": "Al Ghadeer 2",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"3\",\"UNI-L-3100\")'>Assign</button>"
         }
     ]
 }

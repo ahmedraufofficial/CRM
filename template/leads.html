@@ -208,6 +208,7 @@
               <div class="col">
               <select class="form-control" id="sub_status_note" name="sub_status_note">
                 <option value='Follow up'>Follow up</option>
+                <option value='Flag'>Flag</option>
                 <option value='Not yet contacted'>Not yet contacted</option>
                 <option value='Called no reply'>Called no reply</option>
                 <option value='Offer made'>Offer made</option>
@@ -278,6 +279,7 @@
         {% if current_user.viewall == True %}
         <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
         {% endif %}
+        <button class="btn btn-danger" id="flag"><i class="bi bi-flag"></i></button>
         <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
         <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
         <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
@@ -292,6 +294,7 @@
           <option value="Unsuccessful">Unsuccessful</option>
         </select>
       </div>
+      
       <table
         id="table"
         data-toggle="true"
@@ -552,7 +555,16 @@ $(window).on('load',(function(){
                             };
                             
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
-                });         
+                });  
+        $('#flag').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              console.log(item.status)
+                              return item.sub_status == 'Flag'
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });             
       });
 
     }));

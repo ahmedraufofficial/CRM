@@ -150,6 +150,7 @@ def update_detail(list_id,detail,val):
         file.truncate()
 
 def del_detail(list_id,detail):
+    detail = detail.replace("%20"," ")
     with open(os.path.join(NOTES, list_id+'.json'),'r+') as file:
         columns = json.load(file)
         a = columns['notes']
