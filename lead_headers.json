@@ -50,6 +50,11 @@
       "sortable": "True"
     },
     {
+      "field": "locationtext",
+      "title": "LOCATION",
+      "sortable": "True"
+    },
+    {
       "field": "status",
       "title": "STATUS",
       "sortable": "True"

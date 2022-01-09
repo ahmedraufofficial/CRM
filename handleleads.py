@@ -51,10 +51,12 @@ def display_leads():
                 edit_btn = ''
             if new['agent'] == current_user.username and new['sub_status'] == "In progress":
                 followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
             else:
                 followup = ""
+                followupBG = ""
             viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+"</div>"
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+"</div>"
             data.append(new)
     else:
         for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
@@ -70,10 +72,12 @@ def display_leads():
                 edit_btn = ''
             if new['agent'] == current_user.username and new['sub_status'] == "In progress":
                 followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
+                followupBG = 'background-color:#138496;background-color:rgba(19, 132, 150,0.7);border-radius:20px;'
             else:
+                followupBG = ""
                 followup = ""
             viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+"</div>"
+            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+"</div>"
             data.append(new)
 
     f = open('lead_headers.json')
