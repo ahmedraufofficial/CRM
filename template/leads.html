@@ -454,6 +454,11 @@ function request_viewing(list_id){
         })
       };
 
+function flag_lead(list_id){
+      fetch('/flag_lead/'+list_id).then(function(response){
+              location.reload();
+        })
+      };
 
 
 function view_leads(x){
@@ -508,7 +513,6 @@ $(window).on('load',(function(){
         });
         var grepFunc;
                             grepFunc = function (item) {
-                              console.log(item.status)
                               return item.status == 'Open'
                             };
                             
@@ -541,7 +545,6 @@ $(window).on('load',(function(){
         $('#lead_pool').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
-                              console.log(item.status)
                               return item.status == 'Closed'
                             };
                             
@@ -550,7 +553,6 @@ $(window).on('load',(function(){
         $('#active').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
-                              console.log(item.status)
                               return item.status == 'Open'
                             };
                             
@@ -559,7 +561,6 @@ $(window).on('load',(function(){
         $('#flag').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
-                              console.log(item.status)
                               return item.sub_status == 'Flag'
                             };
                             
