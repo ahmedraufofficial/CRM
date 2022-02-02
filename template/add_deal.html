@@ -518,9 +518,14 @@ padding-top: 10px;
     'last_name':$('#last_name').val(),
     'number':$('#number').val(),
     'email':$('#email').val()},
-    success: function(){
-        alert('Added!');
-        location.reload(); 
+    success: function(data){
+        if (data.success == false){
+            alert('Contact already exists and assigned to ' + data.name);
+        }
+        else {
+            alert('Added!'+ data); 
+            location.reload(); 
+        }
     }
         })
     }
@@ -534,9 +539,14 @@ padding-top: 10px;
     'last_name':$('#last_name2').val(),
     'number':$('#number2').val(),
     'email':$('#email2').val()},
-    success: function(){
-        alert('Added!');
-        location.reload(); 
+    success: function(data){
+        if (data.success == false){
+            alert('Contact already exists and assigned to ' + data.name);
+        }
+        else {
+            alert('Added!'+ data); 
+            location.reload(); 
+        }
     }
         })
     }

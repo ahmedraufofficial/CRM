@@ -71,6 +71,9 @@ def add_contact():
         first_name = form.first_name.data
         last_name = form.last_name.data
         number = form.number.data
+        check = db.session.query(Contacts).filter_by(number = number).first()
+        if check:
+            return("<body style='background-color: rgb(204, 8, 8);'><p style='font-family: Arial; text-align: center; margin-top: 50vh; color: white;'>Integrity Error: Number already exists under the User - "+check.assign_to+"<a style='display:block; margin-top: 10px' href='/add_contact'><button  style='background-color: rgb(5, 179, 231); color: white; border: none; padding: 5px;cursor: pointer;'>Back</button></a><a style='display:block; margin-top: 30px;' href='/contacts'><button  style='background-color: rgb(105, 103, 103); color: white; border: none; padding: 5px;cursor: pointer; '>All Contacts</button></a></p></body>")
         alternate_number = form.alternate_number.data
         contact_type = form.contact_type.data
         role = form.role.data
@@ -106,6 +109,9 @@ def quick_add():
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         number = request.form['number']
+        check = db.session.query(Contacts).filter_by(number = number).first()
+        if check:
+            return jsonify(success=False, name=check.assign_to)
         email = request.form['email']
         newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to=current_user.username)
         db.session.add(newcontact)

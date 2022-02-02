@@ -496,9 +496,14 @@ price_form.addEventListener('input', inputHandler);
     'last_name':$('#last_name').val(),
     'number':$('#number').val(),
     'email':$('#email').val()},
-    success: function(){
-        alert('Added!');
-        location.reload(); 
+    success: function(data){
+        if (data.success == false){
+            alert('Contact already exists and assigned to ' + data.name);
+        }
+        else {
+            alert('Added!'+ data); 
+            location.reload(); 
+        }
     }
         })
     }

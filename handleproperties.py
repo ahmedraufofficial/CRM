@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
+from itsdangerous import exc
 from sqlalchemy.sql.elements import Null
 from models import Properties, Contacts
 from forms import AddPropertyForm
@@ -371,7 +372,10 @@ def edit_property(variable):
             files_filenames.append('/static/uploads'+'/'+edit.refno+'/'+file_filename)
         if delete == '0':
             z = '|'.join(files_filenames)    
-            edit.photos = old_photos+'|'+z
+            if old_photos == None:
+                edit.photos = z
+            else:
+                edit.photos = old_photos+'|'+z
         else:
             edit.photos = '|'.join(files_filenames)
         db.session.commit()
@@ -453,17 +457,28 @@ def date():
 @handleproperties.route('/reassign',methods = ['GET','POST'])
 @login_required
 def reassign():
-    for i in db.session.query(Properties).filter_by(building="Water's Edge").all():
-        m = i.lastupdated.month
-        y = i.lastupdated.year
-        if int(y) <= 2020:
-            i.assign_to = "maria" 
+    a = "S-1896,S-1888,S-1887,S-1883,S-1882,S-1866,S-1864,S-1863,S-1861,S-1860,S-1859,S-1857,R-2125,S-1656,S-1686,S-1673,R-1623,R-1610,R-1602,R-1592,S-1455,R-1399,R-1388,S-2184,R-2183,R-2181,R-2169,R-2165,R-2157,R-2129,S-2117,S-2099,S-2091,S-2090,S-2081,R-2007,R-1991,R-1990,R-1993,S-1923,S-1915,S-1914,S-1911,S-1909,S-1908"
+    for j in a.split(","):
+        try:
+            i = db.session.query(Properties).filter_by(refno="UNI-"+j).first()
+            i.assign_to = "kristine" 
+            i.created_by = "kristine" 
             db.session.commit()
-        elif int(y) > 2020 and int(m) <= 8:
-            i.assign_to = "maria" 
-            db.session.commit()
-
+        except:
+            continue
+    #for i in db.session.query(Properties).filter_by(building="West Yas").all():
     return "ok"
+
+@handleproperties.route('/reassign_property/<personA>/<personB>')
+@login_required
+def reassign_properties(personA,personB):
+    all_leads = db.session.query(Properties).filter(or_(Properties.created_by == personA,Properties.assign_to == personA))
+    for i in all_leads:
+        i.assign_to = personB
+        i.created_by = personB
+        db.session.commit()
+    return "ok"
+
 
 @handleproperties.route('/reassign2',methods = ['GET','POST'])
 @login_required

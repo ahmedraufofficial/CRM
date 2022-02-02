@@ -513,7 +513,7 @@ $(window).on('load',(function(){
         });
         var grepFunc;
                             grepFunc = function (item) {
-                              return item.status == 'Open'
+                              return item.agent == '{{user}}' && item.status == 'Open';
                             };
                             
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
@@ -530,7 +530,7 @@ $(window).on('load',(function(){
         $('#user_data').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
-                              return item.agent == '{{user}}' 
+                              return item.agent == '{{user}}' && item.status == 'Open';
                      };
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
                 });
