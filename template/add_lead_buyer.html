@@ -374,10 +374,10 @@ padding-top: 10px;
         fetch('/all_properties').then(function(response){
             response.json().then(function(data){
                 let newtable = '';
+                console.log("here")
                 var jsonData = data.all_properties
                 $(function () {
                 var $table = $('#table').bootstrapTable({data: jsonData.reverse()});
-   
                 $('#price').click(function () {
                     var grepFunc;
                     category = $("#type").val();

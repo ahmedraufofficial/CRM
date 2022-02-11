@@ -26,7 +26,7 @@ import json
 from forms import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from functions import *
-from sqlalchemy import or_
+from sqlalchemy import JSON, or_
 import io 
 import csv
 from logging import FileHandler, WARNING
@@ -478,6 +478,7 @@ def all_properties():
         propertyObj = vars(a)
         propertyObj.pop('_sa_instance_state')
         all_properties.append(propertyObj)
+
     return jsonify({'all_properties':all_properties})
 
 @app.route('/all_properties/<variable>',methods = ['GET','POST'])
@@ -713,7 +714,7 @@ def sales_progress(year,month):
 def listing_progress():
     user_label = []
     datasets = []
-    for i in db.session.query(User).filter_by(listing = True).all():
+    for i in db.session.query(User).filter(and_(User.listing == True, User.sale == False)).all():
         user_label.append(i.username)
     for i in user_label:
         dataset = {}

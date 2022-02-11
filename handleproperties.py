@@ -457,16 +457,10 @@ def date():
 @handleproperties.route('/reassign',methods = ['GET','POST'])
 @login_required
 def reassign():
-    a = "S-1896,S-1888,S-1887,S-1883,S-1882,S-1866,S-1864,S-1863,S-1861,S-1860,S-1859,S-1857,R-2125,S-1656,S-1686,S-1673,R-1623,R-1610,R-1602,R-1592,S-1455,R-1399,R-1388,S-2184,R-2183,R-2181,R-2169,R-2165,R-2157,R-2129,S-2117,S-2099,S-2091,S-2090,S-2081,R-2007,R-1991,R-1990,R-1993,S-1923,S-1915,S-1914,S-1911,S-1909,S-1908"
-    for j in a.split(","):
-        try:
-            i = db.session.query(Properties).filter_by(refno="UNI-"+j).first()
-            i.assign_to = "kristine" 
-            i.created_by = "kristine" 
-            db.session.commit()
-        except:
-            continue
-    #for i in db.session.query(Properties).filter_by(building="West Yas").all():
+    for i in db.session.query(Properties).filter_by(building="Hidd Al Saadiyat").all():
+        i.assign_to = "april" 
+        i.created_by = "april" 
+        db.session.commit()
     return "ok"
 
 @handleproperties.route('/reassign_property/<personA>/<personB>')
@@ -483,19 +477,13 @@ def reassign_properties(personA,personB):
 @handleproperties.route('/reassign2',methods = ['GET','POST'])
 @login_required
 def reassign2():
-    z = datetime.strptime("21-04-03 00:00:00", '%y-%m-%d %H:%M:%S')
-    for i in db.session.query(Properties).all():
-        conn = sqlite3.connect('test2.db')
-        cur = conn.cursor()
-        teststr = "SELECT lastupdated FROM Properties WHERE refno='{}'".format(i.refno)
-        cur.execute(teststr)
-        rows = cur.fetchone()
-        try:
-            date_time_obj = datetime.strptime(rows[0][2:].split('.')[0], '%y-%m-%d %H:%M:%S')
-        except: 
-            date_time_obj = z
-        i.lastupdated = date_time_obj
-        db.session.commit()
+    for i in db.session.query(Properties).filter_by(building = "West Yas"):
+        d = i.lastupdated
+        z = d.date().year
+        if z < 2022:
+            i.assign_to = "maria" 
+            i.created_by = "maria" 
+            db.session.commit()
     return  "posla"
 
 
