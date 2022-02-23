@@ -478,7 +478,6 @@ def all_properties():
         propertyObj = vars(a)
         propertyObj.pop('_sa_instance_state')
         all_properties.append(propertyObj)
-
     return jsonify({'all_properties':all_properties})
 
 @app.route('/all_properties/<variable>',methods = ['GET','POST'])
