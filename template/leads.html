@@ -283,7 +283,10 @@
         <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
         <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
         <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
-        <select name="lead_status" class="btn btn-info" id="lead_status">
+        {% if current_user.team_lead == True %}
+        <button id="get_team" style="margin-left: 10px;"  class="btn btn-primary">Team Leads</button>
+        {% endif %}
+        <select name="lead_status" style="margin-left: 10px; padding-top: 5px !important; padding-bottom: 4px !important;" class="btn btn-info" id="lead_status">
           <option value="">Sub Status</option>
           <option value="Successful">Successful</option>
           <option value="Follow up">Follow Up</option>
@@ -294,7 +297,6 @@
           <option value="Unsuccessful">Unsuccessful</option>
         </select>
       </div>
-      
       <table
         id="table"
         data-toggle="true"
@@ -432,10 +434,6 @@ function close_lead(x){
   }
   }
 
-
-
-
-
 function follow_up(list_id){
       var com = "Assigned";
       fetch('/follow_up/'+list_id+'/'+com).then(function(response){
@@ -512,13 +510,10 @@ $(window).on('load',(function(){
           columns: columns,
         });
         var grepFunc;
-                            grepFunc = function (item) {
-                              return item.agent == '{{user}}' && item.status == 'Open';
-                            };
-                            
-                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
-
-                    
+                    grepFunc = function (item) {
+                      return item.agent == '{{user}}' && item.status == 'Open';
+                    };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));   
         $('#lead_status').change(function () {
                     var grepFunc;
                             grepFunc = function (item) {
@@ -526,7 +521,6 @@ $(window).on('load',(function(){
                      };
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
                 });
-
         $('#user_data').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
@@ -554,20 +548,27 @@ $(window).on('load',(function(){
                     var grepFunc;
                             grepFunc = function (item) {
                               return item.status == 'Open'
-                            };
-                            
+                            };                           
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
                 });  
         $('#flag').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
                               return item.sub_status == 'Flag'
-                            };
-                            
+                            };    
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
-                });             
+                });
+        $('#get_team').click(function () {
+                  var grepFunc;
+                          grepFunc = function (item) {
+                            if (("{{current_user.team_members}}").includes(item.agent))
+                            { return item }
+                            else if (("{{current_user.team_members}}").includes(item.created_by))
+                            { return item }
+                          };    
+                  $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });               
       });
-
     }));
   </script>
 

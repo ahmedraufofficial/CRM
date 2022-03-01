@@ -148,6 +148,7 @@ class User(UserMixin, db.Model):
     number = db.Column(db.Integer)
     job_title = db.Column(db.String(50))
     department = db.Column(db.String(50))
+    team_members = db.Column(db.String(200))
     profile_picture = db.Column(db.String())
     is_admin = db.Column(db.Boolean, default=False)
     listing = db.Column(db.Boolean, default=False)
@@ -159,6 +160,8 @@ class User(UserMixin, db.Model):
     viewall = db.Column(db.Boolean, default=False)
     export = db.Column(db.Boolean, default=False)
     schedule = db.Column(db.Boolean, default=False)
+    team_lead = db.Column(db.Boolean, default=False)
+    
 
 class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     viewall = db.Column(db.Boolean, default=False)
     export = db.Column(db.Boolean, default=False)
     schedule = db.Column(db.Boolean, default=False)
+    team_lead = db.Column(db.Boolean, default=False)
+    team_members = db.Column(db.String(200))
 
 class Contacts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
