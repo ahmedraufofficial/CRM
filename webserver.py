@@ -120,7 +120,8 @@ app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////'+os.getcwd()+'/test.db'
+print(os.getcwd())
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 db = SQLAlchemy(app)
 admin = Admin(app,template_mode='bootstrap3')
@@ -161,7 +162,7 @@ class User(UserMixin, db.Model):
     export = db.Column(db.Boolean, default=False)
     schedule = db.Column(db.Boolean, default=False)
     team_lead = db.Column(db.Boolean, default=False)
-    
+    team_members = db.Column(db.String(200))
 
 class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -616,6 +617,16 @@ def view_notes(variable):
 @login_required
 def post_note(list_id,com):
     update_note(current_user.username,list_id,com)
+    if current_user.team_members == "QC" or current_user.listing == True:
+        listing_admin = db.session.query(User).filter_by(team_members = "LA").first()
+        if listing_admin:
+            now = datetime.now()
+            fd = now.strftime("%Y-%m-%d")
+            ft = now.strftime("%H:%M")
+            expiry_now = datetime.now()
+            td = expiry_now.strftime("%Y-%m-%d")
+            tt = expiry_now.strftime("%H:%M")
+            post_reminders(listing_admin.username,fd,td,ft,tt,"Note! "+current_user.username + " added note for " + list_id)
     return jsonify(success=True)
 
 @app.route('/delete_detail/<list_id>/<detail>',methods = ['GET','POST'])

@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import exc
 from sqlalchemy.sql.elements import Null
-from models import Properties, Contacts
+from models import Properties, Contacts, User
 from forms import AddPropertyForm
 import json
 import os 
@@ -15,15 +15,12 @@ from functions import logs, notes, add_user_list
 from sqlalchemy import or_, and_
 import xml.etree.cElementTree as e
 from datetime import datetime, timedelta
-from bs4 import BeautifulSoup
 import requests
 import json
 import re
 import sqlite3
 import os
 import csv
-import arabic_reshaper
-from bidi.algorithm import get_display
 
 
 a = os.getcwd()
@@ -154,6 +151,13 @@ def display_properties():
                 edit_btn = ''
             new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
             data.append(new)
+    elif current_user.team_members == "QC" and current_user.listing == False:
+        for r in db.session.query(Properties).all():
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            new["edit"] = '<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
+            data.append(new)
     elif current_user.sale == True and current_user.listing == False:
         for r in db.session.query(Properties).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -166,7 +170,8 @@ def display_properties():
     e = open('viewing.json')
     viewings = json.load(e)
     viewings = viewings["viewings"]
-    return render_template('properties.html', viewings=viewings,data = data , columns = columns, user = current_user.username)
+    all_listing_users = db.session.query(User).filter_by(listing = True).all()
+    return render_template('properties.html', viewings=viewings,data = data , columns = columns, user = current_user.username, all_listing_users = all_listing_users)
 
     
 @handleproperties.route('/add_property/rent', methods = ['GET','POST'])

@@ -8,8 +8,6 @@ import json
 from functions import logs
 import os 
 import csv
-import arabic_reshaper
-from bidi.algorithm import get_display
 from sqlalchemy import or_
 from datetime import datetime, timedelta
 

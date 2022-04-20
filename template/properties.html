@@ -7,7 +7,6 @@
   <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.5);">
 <br>
 
-
 <!--View Modal-->
 <div class="modal" id="viewModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -580,12 +579,16 @@
               <option value="Sale">Sale</option>
               <option value="Rent">Rent</option>
             </select>
-
-
+            <select name="listing_users" id="listing_users" class="filter_add">
+              <option selected="selected" value="">Users</option>
+              {% for users in all_listing_users %}
+              <option value="{{users.username}}">{{users.username}}</option>
+              {% endfor %}
+            </select>
+            
             <button id="filter_search" class="filter_add"> Search</button>
             <button id="filter_reset" class="filter_add"> Reset</button>
             </div>
-
 
           </div>
         </div>
@@ -807,13 +810,14 @@ function view_property(x){
         var l = $("#location_category").val();
         var c = $("#community_category").val();
         var p = $("#purpose_category").val()
-
+        var u = $("#listing_users").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
         var grepFunc4;
         var grepFunc5;
         var grepFunc6;
+        var grepFunc7;
 
 
         grepFunc = function(item){
@@ -840,6 +844,10 @@ function view_property(x){
               return item.type == p;
           }
 
+        grepFunc7 = function(item){
+              return item.assign_to == u;
+          }
+
         if (s != "")
         {test = $.grep(test, grepFunc)}
 
@@ -857,6 +865,9 @@ function view_property(x){
         
         if (p != "")
         {test = $.grep(test, grepFunc6)}
+
+        if (u != "")
+        {test = $.grep(test, grepFunc7)}
 
           $('#table').bootstrapTable('load', test);
         })
