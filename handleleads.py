@@ -37,6 +37,22 @@ def display_leads():
     if current_user.sale == False:
         return abort(404)
     data = []
+    if current_user.team_members == "QC" and current_user.sale == True and current_user.is_admin == False:
+        for r in db.session.query(Leads).all():
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            if new['sub_status'] != "Flag":
+                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
+            else:
+                flag = ''
+            #for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            new["edit"] = '<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+"</div>"
+            
+            data.append(new)
+        f = open('lead_headers.json')
+        columns = json.load(f)
+        columns = columns["headers"]
+        return render_template('leads.html', data = data , columns = columns, user=current_user.username)
     if current_user.viewall == True and current_user.is_admin == True:
         for r in db.session.query(Leads).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
