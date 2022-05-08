@@ -265,7 +265,36 @@
   </div>
 </div>
 
+<!--Reassign Modal-->
+<div class="modal" id="reassignModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Reassign User!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
 
+        <select onchange="reassign()" name="sale_users" id="sale_users" class="filter_add">
+          <option selected="selected" value="None">Users</option>
+          {% for users in all_lead_users %}
+          <option value="{{users.username}}">{{users.username}}</option>
+          {% endfor %}
+        </select>
+
+        <div class="container unselectable oswald" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+          <a id="reassign_lead">Reassign</a>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -325,6 +354,13 @@
 <script>
   function delete_(x){
     document.getElementById("delete").href="/delete_lead/"+x;
+  };
+  function reassign(){
+    var u = $("#sale_users").val()
+    document.getElementById("reassign_lead").href = document.getElementById("reassign_lead").href + "/" + u
+  }
+  function reassign_lead(x){
+    document.getElementById("reassign_lead").href="/reassign_lead/"+x;
   };
 </script>
 

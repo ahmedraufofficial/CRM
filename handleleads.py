@@ -4,7 +4,7 @@ from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
-from models import Leads, Properties,Contacts
+from models import Leads, Properties,Contacts, User
 from forms import AddLeadForm, BuyerLead, DeveloperLead
 import json
 import os 
@@ -46,13 +46,14 @@ def display_leads():
             else:
                 flag = ''
             #for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
-            new["edit"] = '<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+"</div>"
+            new["edit"] = '<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+'<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="reassign_lead('+"'"+new['refno']+"'"+')">R</button></div>'
             
             data.append(new)
         f = open('lead_headers.json')
         columns = json.load(f)
         columns = columns["headers"]
-        return render_template('leads.html', data = data , columns = columns, user=current_user.username)
+        all_lead_users = db.session.query(User).filter_by(sale = True).all()
+        return render_template('leads.html', data = data , columns = columns, user=current_user.username,all_lead_users=all_lead_users)
     if current_user.viewall == True and current_user.is_admin == True:
         for r in db.session.query(Leads).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -145,6 +146,23 @@ def display_leads():
     columns = json.load(f)
     columns = columns["headers"]
     return render_template('leads.html', data = data , columns = columns, user=current_user.username)
+
+@handleleads.route('/reassign_lead/<variable>/<user>', methods = ['GET','POST'])
+@login_required
+def reassign_lead(variable, user):
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    edit = db.session.query(Leads).filter_by(refno=variable).first()
+    edit.agent = user
+    db.session.commit()
+    return redirect(url_for('handleleads.display_leads'))
+
+@handleleads.route('/reassign_lead/<variable>', methods = ['GET','POST'])
+@login_required
+def reassign_lead_nouser(variable):
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    return redirect(url_for('handleleads.display_leads'))
 
 @handleleads.route('/delete_lead/<variable>', methods = ['GET','POST'])
 @login_required
