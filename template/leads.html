@@ -547,6 +547,9 @@ $(window).on('load',(function(){
         });
         var grepFunc;
                     grepFunc = function (item) {
+                      if ("{{current_user.team_members}}" == "QC") {
+                        return item.status == 'Open';
+                      }
                       return item.agent == '{{user}}' && item.status == 'Open';
                     };
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));   
