@@ -131,7 +131,7 @@ def display_properties():
                     edit_btn = ''
             else:
                 edit_btn = ''
-            if new["assign_to"] == current_user.username or new["created_by"] == current_user.username or current_user.is_admin == True:
+            if new["assign_to"] == current_user.username or new["created_by"] == current_user.username or current_user.is_admin == True or current_user.team_members == "LA":
                 pass
             else:
                 new["owner_contact"] = "*"
@@ -198,6 +198,7 @@ def add_property_rent():
         price_per_area = form.price_per_area.data
         bedrooms = form.bedrooms.data
         lastupdated = datetime.now()+timedelta(hours=4)
+        created_at = datetime.now()+timedelta(hours=4)
         w = open('abudhabi.json')
         file_data = json.load(w)
         locationtext = file_data[form.locationtext.data]
@@ -225,7 +226,7 @@ def add_property_rent():
         contactemail = assigned[2]
         contactnumber = assigned[1]
         portal = form.portal.data
-        newproperty = Properties(lastupdated=lastupdated,portal=portal,geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
+        newproperty = Properties(created_at=created_at,lastupdated=lastupdated,portal=portal,geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
         db.session.add(newproperty)
         db.session.commit()
         db.session.refresh(newproperty)
@@ -273,6 +274,7 @@ def add_property_sale():
         price_per_area = form.price_per_area.data
         bedrooms = form.bedrooms.data
         lastupdated = datetime.now()+timedelta(hours=4)
+        created_at = datetime.now()+timedelta(hours=4)
         w = open('abudhabi.json')
         file_data = json.load(w)
         locationtext = file_data[form.locationtext.data]
@@ -303,7 +305,7 @@ def add_property_sale():
         contactemail = assigned[2]
         contactnumber = assigned[1]
         portal = form.portal.data
-        newproperty = Properties(lastupdated=lastupdated,portal=portal, geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,offplan_status = offplan_status, completion_date = completion_date,tenure=tenure,featured=featured,parking=parking,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360, video_url = video_url, completion_status = completion_status,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
+        newproperty = Properties(created_at=created_at,lastupdated=lastupdated,portal=portal, geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,offplan_status = offplan_status, completion_date = completion_date,tenure=tenure,featured=featured,parking=parking,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360, video_url = video_url, completion_status = completion_status,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
         db.session.add(newproperty)
         db.session.commit()
         db.session.refresh(newproperty)
@@ -356,7 +358,7 @@ def edit_property(variable):
         edit.assign_to = assigned[0]
         edit.contactemail = assigned[2]
         edit.contactnumber = assigned[1]
-        edit.lastupdated = datetime.now()
+        #edit.lastupdated = datetime.now()
         w = open('abudhabi.json')
         file_data = json.load(w)
         edit.locationtext = file_data[new]

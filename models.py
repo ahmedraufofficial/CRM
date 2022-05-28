@@ -96,7 +96,7 @@ class Properties(db.Model):
     parking = db.Column(db.Integer)
     offplan_status = db.Column(db.String(100))
     portal = db.Column(db.String(100))
-
+    created_at = db.Column(db.DateTime)
 
 class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -133,6 +133,7 @@ class Leads(db.Model):
     street = db.Column(db.String(50))
     size = db.Column(db.Float)
     source = db.Column(db.String(50))
+    lastupdated = db.Column(db.DateTime)
 
  
 class Deals(db.Model):

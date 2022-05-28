@@ -40,6 +40,11 @@
       "sortable": "True"
     },
     {
+      "field": "lastupdated",
+      "title": "LAST UPDATED",
+      "sortable": "True"
+    },
+    {
       "field": "lead_type",
       "title": "TYPE",
       "sortable": "True"

@@ -215,7 +215,8 @@ def add_lead_buyer():
         size = form.size.data
         lead_type = form.lead_type.data
         created_date = datetime.now()+timedelta(hours=4)
-        newlead = Leads(type="secondary",created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
+        lastupdated = datetime.now()+timedelta(hours=4)
+        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
         db.session.add(newlead)
         db.session.commit()
         db.session.refresh(newlead)
@@ -271,7 +272,8 @@ def add_lead_developer():
         size = form.size.data
         lead_type = form.lead_type.data
         created_date = datetime.now()+timedelta(hours=4)
-        newlead = Leads(type="developer",created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
+        lastupdated = datetime.now()+timedelta(hours=4)
+        newlead = Leads(type="developer",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
         db.session.add(newlead)
         db.session.commit()
         db.session.refresh(newlead)
@@ -306,6 +308,7 @@ def edit_lead(markettype,var):
     except:
         form.locationtext.data = ""
     if request.method == 'POST':
+        edit.lastupdated = datetime.now()+timedelta(hours=4)
         form.populate_obj(edit)
         edit.propertyamenities = ",".join(form.propertyamenities.data)
         try:

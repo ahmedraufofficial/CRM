@@ -199,7 +199,7 @@ class Leads(db.Model):
     street = db.Column(db.String(50))
     size = db.Column(db.Float)
     source = db.Column(db.String(50))
-
+    lastupdated = db.Column(db.DateTime)
  
 class Deals(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -617,16 +617,24 @@ def view_notes(variable):
 @login_required
 def post_note(list_id,com):
     update_note(current_user.username,list_id,com)
+    if "R" in list_id or "S" in list_id:
+        p = db.session.query(Properties).filter_by(refno=list_id).first()
+        p.lastupdated = datetime.now() + timedelta(hours=4)
+        db.session.commit()
+    if "L" in list_id:
+        p = db.session.query(Leads).filter_by(refno=list_id).first()
+        p.lastupdated = datetime.now() + timedelta(hours=4)
+        db.session.commit()
     if current_user.team_members == "QC" or current_user.listing == True:
-        listing_admin = db.session.query(User).filter_by(team_members = "LA").first()
-        if listing_admin:
+        listing_admin = db.sesssion.query(User).filter_by(team_members = "LA").first()
+        '''if listing_admin:
             now = datetime.now()
             fd = now.strftime("%Y-%m-%d")
             ft = now.strftime("%H:%M")
             expiry_now = datetime.now()
             td = expiry_now.strftime("%Y-%m-%d")
             tt = expiry_now.strftime("%H:%M")
-            post_reminders(listing_admin.username,fd,td,ft,tt,"Note! "+current_user.username + " added note for " + list_id)
+            post_reminders(listing_admin.username,fd,td,ft,tt,"Note! "+current_user.username + " added note for " + list_id)'''
     return jsonify(success=True)
 
 @app.route('/delete_detail/<list_id>/<detail>',methods = ['GET','POST'])
