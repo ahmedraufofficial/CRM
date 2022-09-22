@@ -22,6 +22,7 @@ import sqlite3
 import os
 import csv
 
+FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
 
 a = os.getcwd()
 UPLOAD_FOLDER = os.path.join(a+'/static', 'uploads')
@@ -125,13 +126,13 @@ def display_properties():
             new = row2dict(r)
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
-                if r.created_by == current_user.username or r.assign_to == current_user.username or current_user.is_admin == True:
+                if r.created_by == current_user.username or r.assign_to == current_user.username or current_user.is_admin == True or current_user.team_members == "LA":
                     edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
                 else:
                     edit_btn = ''
             else:
                 edit_btn = ''
-            if new["assign_to"] == current_user.username or new["created_by"] == current_user.username or current_user.is_admin == True or current_user.team_members == "LA":
+            if new["assign_to"] == current_user.username or new["created_by"] == current_user.username or current_user.is_admin == True or current_user.team_members == "LA" or current_user.listing == True:
                 pass
             else:
                 new["owner_contact"] = "*"
@@ -479,6 +480,15 @@ def reassign_properties(personA,personB):
         db.session.commit()
     return "ok"
 
+@handleproperties.route('/reassign69_property/<personA>/<personB>') #lesssgooo
+@login_required
+def reassign69_properties(personA,personB):
+    all_leads = db.session.query(Properties).filter(and_(Properties.assign_to == personA,Properties.status == "Available",Properties.locationtext == "Yas Island", Properties.building == "Water's Edge"))
+    for i in all_leads:
+        i.assign_to = personB
+        db.session.commit()
+    return "ok"
+
 
 @handleproperties.route('/reassign2',methods = ['GET','POST'])
 @login_required
@@ -514,3 +524,86 @@ def rmportals():
         i.portal = 1
         db.session.commit()
     return "ok"
+
+
+@handleproperties.route('/uploadlisting',methods = ['GET','POST'])
+@login_required
+def uploadFiles():
+    uploaded_file = request.files['file']
+    filepath = os.path.join(FILE_UPLOADS, uploaded_file.filename)
+    uploaded_file.save(filepath)
+    with open(filepath) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                line_count += 1
+            else:
+                num_check = row[13].replace(" ", "").replace("+","")[3:]
+                i = db.session.query(Contacts).filter(Contacts.number.endswith(num_check)).first()
+                if (i):
+                    owner = i.refno
+                    row[11] = i.first_name + i.last_name
+                    row[12] = i.email
+                    row[13] = row[13].replace(" ", "").replace("+","")
+                else: 
+                    first_name = row[11].split(" ")[0]
+                    if len(row[11].split(" ")) > 1: 
+                        last_name = ' '.join(row[11].split(" ")[1:])
+                    else: 
+                        last_name = ''
+                    number = row[13]
+                    email = row[12]
+                    newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to=current_user.username)
+                    db.session.add(newcontact)
+                    db.session.commit()
+                    db.session.refresh(newcontact)
+                    newcontact.refno = 'UNI-O-'+str(newcontact.id)
+                    db.session.commit()
+                    owner = 'UNI-O-'+str(newcontact.id)
+                fa = db.session.query(Properties).filter(and_(Properties.locationtext == row[4], Properties.building == row[5], Properties.unit == row[1])).first()
+                if not (fa):
+                    status = row[0]
+                    unit = row[1]
+                    subtype = row[2]
+                    city = row[3]
+                    locationtext = row[4]
+                    building = row[5]
+                    bedrooms = row[6]
+                    size = row[7]
+                    price = row[8]
+                    description = row[9]
+                    assign_to = row[10]
+                    owner_name = row[11]
+                    owner_email = row[12] 
+                    owner_contact = row[13]
+                    plot = row[14]
+                    bathrooms = row[15]
+                    street = row[16]
+                    source = row[17]
+                    furnished = row[18]
+                    plot_size = row[19]
+                    title = row[20]
+                    commission = row[21]
+                    deposit = row[22]
+                    price_per_area = row[23]
+                    created_by = row[24]
+                    completion_status = row[25]
+                    #expiry_date = ''
+                    parking = row[27]
+                    type = row[28]
+                    lastupdated = datetime.now()+timedelta(hours=4)
+                    created_at = datetime.now()+timedelta(hours=4)
+                    newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,size=size,price=price,description=description,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,plot=plot,bathrooms=bathrooms,street=street,source=source,furnished=furnished,plot_size=plot_size,title=title,commission=commission,deposit=deposit,price_per_area=price_per_area,created_by=created_by,completion_status=completion_status,parking=parking,owner=owner,type=type)
+                    db.session.add(newproperty)
+                    db.session.commit()
+                    db.session.refresh(newproperty)
+                    if (type == "Sale"):
+                        newproperty.refno = 'UNI-S-'+str(newproperty.id)
+                    else:
+                        newproperty.refno = 'UNI-R-'+str(newproperty.id)
+                    db.session.commit()                    
+                line_count += 1
+                break
+        print(f'Processed {line_count} lines.')
+    return jsonify(success=True)
