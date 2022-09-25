@@ -364,6 +364,24 @@ def reassign_leads(personA,personB):
         db.session.commit()
     return "ok"
 
+@handleleads.route('/reassign_leads70/<personA>/<personB>/<personC>/<personD>/<personE>/<personF>/<personG>/<personH>/<personI>/<personJ>/<personK>/<personL>/<personM>/<personN>/<personZ>') #lesssgooo
+@login_required
+def reassign_leads70(personA,personB,personC,personD,personE,personF,personG,personH,personI,personJ,personK,personL,personM,personN,personZ):
+    all_leads = db.session.query(Leads).filter(or_(Leads.agent == personA,Leads.agent == personB,Leads.agent == personC,Leads.agent == personD,Leads.agent == personE,Leads.agent == personF,Leads.agent == personG,Leads.agent == personH,Leads.agent == personI,Leads.agent == personJ,Leads.agent == personK,Leads.agent == personL,Leads.agent == personM,Leads.agent == personN))
+    for i in all_leads:
+        i.agent = personZ
+        db.session.commit()
+    return "ok"
+
+@handleleads.route('/reassign_leads71/<personA>/<personB>/<personC>/<personD>/<personE>') #lesssgooo
+@login_required
+def reassign_leads71(personA,personB,personC,personD,personE):
+    all_leads = db.session.query(Leads).filter(or_(Leads.created_by == personA,Leads.created_by == personB,Leads.created_by == personC,Leads.created_by == personD))
+    for i in all_leads:
+        i.created_by = personE
+        db.session.commit()
+    return "ok"
+
 @handleleads.route('/marketing_leads',methods = ['GET','POST'])
 @login_required
 def marketing_leads():
