@@ -489,6 +489,15 @@ def reassign69_properties(personA,personB):
         db.session.commit()
     return "ok"
 
+@handleproperties.route('/reassign72_property/<personA>') #lesssgooo
+@login_required
+def reassign72_properties(personA):
+    all_leads = db.session.query(Properties).filter(and_(Properties.assign_to != personA,Properties.status == "Available",Properties.locationtext == "Al Reem Island"))
+    for i in all_leads:
+        i.assign_to = personA
+        db.session.commit()
+    return "ok"
+
 
 @handleproperties.route('/reassign2',methods = ['GET','POST'])
 @login_required
