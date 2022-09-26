@@ -330,6 +330,8 @@
         id="table"
         data-toggle="true"
         class="unselectable oswald"
+        data-sort-name="lastupdated"
+        data-sort-order="desc"
         data-toolbar="#toolbar"
         data-search="true"
         data-show-columns="true"
@@ -541,7 +543,7 @@ $(window).on('load',(function(){
   var data = {{data|tojson}};
   data.reverse()
       $(function() {
-        $('#table').bootstrapTable({ 
+        $('#table').bootstrapTable({                    
           data: data,
           columns: columns,
         });
