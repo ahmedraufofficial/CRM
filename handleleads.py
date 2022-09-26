@@ -1,4 +1,6 @@
+from curses.ascii import NUL
 from operator import methodcaller
+from xml.dom.minicompat import EmptyNodeList
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask.globals import session
 from flask_login import login_required, current_user
@@ -13,7 +15,7 @@ from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
 from functions import assign_lead, logs, notes, update_note,lead_email
-from sqlalchemy import or_
+from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
 
@@ -379,6 +381,15 @@ def reassign_leads71(personA,personB,personC,personD,personE):
     all_leads = db.session.query(Leads).filter(or_(Leads.created_by == personA,Leads.created_by == personB,Leads.created_by == personC,Leads.created_by == personD))
     for i in all_leads:
         i.created_by = personE
+        db.session.commit()
+    return "ok"
+
+@handleleads.route('/reassign_lastupdated') #lesssgooo
+@login_required
+def reassign_lastupdated():
+    all_leads = db.session.query(Leads).filter(Leads.lastupdated == None)
+    for i in all_leads:
+        i.lastupdated = i.created_date
         db.session.commit()
     return "ok"
 
