@@ -1,13 +1,13 @@
 import email
-from operator import and_
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort, Response
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from wtforms import BooleanField, StringField, PasswordField, validators, IntegerField, FileField
+from operator import and_ #exports a set of efficient functions corresponding to the intrinsic operators of Python (addition, subtraction, etc.)
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort, Response #just flask tings, redirecting to new pages and all
+from flask_sqlalchemy import SQLAlchemy 
+from werkzeug.security import generate_password_hash, check_password_hash 
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user #handles the common tasks of logging in, logging out, and remembering your users' sessions over extended periods of time
+from wtforms import BooleanField, StringField, PasswordField, validators, IntegerField, FileField #provides flexible web form rendering, you can use it to render text fields, text areas, password fields, radio buttons, and others
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.widgets import HiddenInput
-from flask_wtf import FlaskForm
+#from flask_wtf import FlaskFor
 from flask_admin.contrib.sqla import ModelView
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
@@ -120,7 +120,6 @@ app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
-print(os.getcwd())
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 db = SQLAlchemy(app)
@@ -626,15 +625,15 @@ def post_note(list_id,com):
         p.lastupdated = datetime.now() + timedelta(hours=4)
         db.session.commit()
     if current_user.team_members == "QC" or current_user.listing == True:
-        listing_admin = db.sesssion.query(User).filter_by(team_members = "LA").first()
-        '''if listing_admin:
+        listing_admin = db.session.query(User).filter_by(team_members = "LA").first()
+        if listing_admin:
             now = datetime.now()
             fd = now.strftime("%Y-%m-%d")
             ft = now.strftime("%H:%M")
             expiry_now = datetime.now()
             td = expiry_now.strftime("%Y-%m-%d")
             tt = expiry_now.strftime("%H:%M")
-            post_reminders(listing_admin.username,fd,td,ft,tt,"Note! "+current_user.username + " added note for " + list_id)'''
+            post_reminders(listing_admin.username,fd,td,ft,tt,"Note! "+current_user.username + " added note for " + list_id)
     return jsonify(success=True)
 
 @app.route('/delete_detail/<list_id>/<detail>',methods = ['GET','POST'])
@@ -784,13 +783,6 @@ def listing_progress():
         datasets.append(dataset)
     return jsonify({'datasets':datasets})
 
-
-
-
-
-
-
-
 @app.route('/export/<type>/<data>',methods = ['GET','POST'])
 @login_required
 def export(type,data):
@@ -843,7 +835,9 @@ def post_viewing(lead_id,lead,lists):
     assign_viewing(current_user.username,lead_id,lead,lists)
     return jsonify(success=True)
 
-
+@app.route('/upload/listing')
+def upload_listing():
+    return render_template('upload_listing.html')
 
 if __name__ == '__main__':
     app.run(debug = True)
