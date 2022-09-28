@@ -138,6 +138,15 @@ def edit_contact(variable):
         return redirect(url_for('handlecontacts.display_contacts'))
     return render_template('add_contact.html', form=form, assign = current_user.username,user = current_user.username)
 
+@handlecontacts.route('/reassign_contacts69/<personA>/<personB>/<personC>/<personD>/<personE>/<personF>/<personG>/<personH>/<personI>/<personJ>') #lesssgooo
+@login_required
+def reassign_contacts69(personA,personB,personC,personD,personE,personF,personG,personH,personI,personJ):
+    all_contacts = db.session.query(Contacts).filter(or_(Contacts.assign_to == personA,Contacts.assign_to == personB,Contacts.assign_to == personC,Contacts.assign_to == personD,Contacts.assign_to == personE,Contacts.assign_to == personF,Contacts.assign_to == personG,Contacts.assign_to == personH,Contacts.assign_to == personI))
+    for i in all_contacts:
+        i.assign_to = personJ
+        db.session.commit()
+    return "ok"
+
 @handlecontacts.route('/delete_contact/<variable>', methods = ['GET','POST'])
 @login_required
 def delete_contacts(variable):
