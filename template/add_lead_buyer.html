@@ -42,19 +42,20 @@ padding-top: 10px;
               </table>
             <div id="toolbar">
               
-                <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
-                <button id="price" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Search</button>
-                <input class="form-control" style="float: left; width: 100px;margin-right: 5px;" type="text" id="minprice" placeholder="Min Price">
-                <input class="form-control" style="float: left; width: 100px; margin-right: 5px;" type="text" id="maxprice" placeholder="Max Price" >
-                <select name="type" id="type" style="float: left;width: 100px;" class="form-control"><option selected="selected" value="">Type</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option><option value="Residential Floor">Residential Floor</option><option value="Residential Plot">Residential Plot</option><option value="Townhouse">Townhouse</option><option value="Residential Building">Residential Building</option><option value="Penthouse">Penthouse</option><option value="Villa Compound">Villa Compound</option><option value="Hotel Apartment">Hotel Apartment</option><option value="Office">Office</option><option value="Other">Other</option></select>
-                <select name="status_category" id="status_category" style="float: left;width: 100px;margin-left: 5px;" class="form-control"><option selected="selected" value="">Status</option><option value="Available">Available</option>
+                <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 3px;">Reset</button>
+                <button id="price" type="button" class="btn btn-primary" style="float: left; margin-right: 3px;">Search</button>
+                <input class="form-control" style="float: left; width: 80px;" type="text" id="minprice" placeholder="Min Price">
+                <input class="form-control" style="float: left; width: 80px;" type="text" id="maxprice" placeholder="Max Price" >
+                <select name="type" id="type" style="float: left;width: 80px;" class="form-control"><option selected="selected" value="">Type</option><option value="Villa">Villa</option><option value="Apartment">Apartment</option><option value="Residential Floor">Residential Floor</option><option value="Residential Plot">Residential Plot</option><option value="Townhouse">Townhouse</option><option value="Residential Building">Residential Building</option><option value="Penthouse">Penthouse</option><option value="Villa Compound">Villa Compound</option><option value="Hotel Apartment">Hotel Apartment</option><option value="Office">Office</option><option value="Other">Other</option></select>
+                <select name="status_category" id="status_category" style="float: left;width: 80px;" class="form-control"><option selected="selected" value="">Status</option><option value="Available">Available</option>
                     <option value="Rented">Rented</option>
                     <option value="Upcoming">Upcoming</option>
                     <option value="Owner Occupied">Owner Occupied</option>
                     <option value="Moved In">Moved In</option>
-                    <option value="Reserved">Reserved</option>
+                    <option value="Reserved">Reserved</option>   
                 </select>
-                
+                <select name="purpose_cat" id="purpose_cat" style="float: left;width: 80px;" class="form-control"><option selected="selected" value="">Purpose</option><option value="Sale">Sale</option><option value="Rent">Rent</option></select>
+
             </div>
               <table id="table"        
               data-toggle="true"
@@ -381,6 +382,7 @@ padding-top: 10px;
                 $('#price').click(function () {
                     var grepFunc;
                     category = $("#type").val();
+                    pc = $("#purpose_cat").val();
                     sc = $("#status_category").val(); 
                     min = $("#minprice").val();
                     if (min == "")
@@ -389,14 +391,22 @@ padding-top: 10px;
                     if (max == "")
                     {max = 9999999}
                             grepFunc = function (item) {
-                                if (category == "" && sc == "")
+                                if (category == "" && sc == "" && pc == "")
                                 { return item.price >= min && item.price <= max }
-                                else if (category != "" && sc == "")
+                                else if (category != "" && sc == "" && pc == "")
                                 {return item.price >= min && item.price <= max && item.subtype == category;}
-                                else if (category == "" && sc != "")
+                                else if (category == "" && sc != "" && pc == "")
                                 {return item.price >= min && item.price <= max && item.status == sc;}
-                                else
+                                else if (category == "" && sc == "" && pc != "")
+                                {return item.price >= min && item.price <= max && item.type == pc;}
+                                else if (category != "" && sc != "" && pc == "")
                                 {return item.price >= min && item.price <= max && item.subtype == category && item.status == sc;}
+                                else if (category != "" && sc == "" && pc != "")
+                                {return item.price >= min && item.price <= max && item.subtype == category && item.type == pc;}
+                                else if (category == "" && sc != "" && pc != "")
+                                {return item.price >= min && item.price <= max && item.type == pc && item.status == sc;}
+                                else
+                                {return item.price >= min && item.price <= max && item.subtype == category && item.status == sc && item.type == pc;}
                             };
                     $table.bootstrapTable('load', $.grep(jsonData, grepFunc));
                 });
