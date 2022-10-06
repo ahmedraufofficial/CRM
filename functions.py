@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 import random
 import easyimap
 import smtplib
-#from twilio.rest import Client
-#from twilio.base.exceptions import TwilioRestException
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 
-#account_sid = "AC039a6ee69cef7a34fa54d878beba76e5"
-#auth_token = "03f8e6a2f20d70c1cac647626cc370e7"
+account_sid = "AC039a6ee69cef7a34fa54d878beba76e5"
+auth_token = "03f8e6a2f20d70c1cac647626cc370e7"
 
 
 USERS_FOLDER = os.getcwd() + '/static/userdata'
@@ -509,25 +509,25 @@ def assign_viewing(current,lead_id,lead,lists):
         post_reminders(username,date,end_date,time,time,"Viewing assigned for "+lead)
         
 
-#def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
- #   if(int(str(contactno)[:1]) == 9):
-  #      b = "+"+str(contactno)
-   # else:
- #       b = "+971"+str(contactno)
-  #  client = Client(account_sid, auth_token)
-   # message1 = client.messages.create(
-    #to=b,
- #   from_="+14454476482",
-  #  body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+str(agentno)+" regarding the property in "+str(building)+", "+str(location)+". Your Reference Number is: "+refno+". Thank you for choosing UHP."
+def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
+    if(int(str(contactno)[:1]) == 9):
+        b = "+"+str(contactno)
+    else:
+        b = "+971"+str(contactno)
+    client = Client(account_sid, auth_token)
+    message1 = client.messages.create(
+    to=b,
+    from_="+14454476482",
+    body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+str(agentno)+" regarding the property in "+str(building)+", "+str(location)+". Your Reference Number is: "+refno+". Thank you for choosing UHP."
 
-  #  )
-  #  if(int(str(agentno)[:1]) == 9):
-   #     c = "+"+str(agentno)
- #   else:
-  #      c = "+971"+str(agentno)
-  #  message2 = client.messages.create(
-   # to=c,
-   # from_="+14454476482",
-   # body="Dear Agent, Please contact your lead "+str(contactname)+" on "+str(contactno)+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Reference Number is: "+refno
+    )
+    if(int(str(agentno)[:1]) == 9):
+        c = "+"+str(agentno)
+    else:
+        c = "+971"+str(agentno)
+    message2 = client.messages.create(
+    to=c,
+    from_="+14454476482",
+    body="Dear Agent, Please contact your lead "+str(contactname)+" on "+str(contactno)+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Reference Number is: "+refno
 
-   # )
+    )
