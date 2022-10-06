@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note,lead_email
+from functions import assign_lead, deploy_message, logs, notes, update_note,lead_email
 from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
@@ -175,7 +175,7 @@ def delete_lead(variable):
     db.session.delete(delete)
     db.session.commit()
     return redirect(url_for('handleleads.display_leads'))
-    
+
 
 @handleleads.route('/add_lead_buyer/', methods = ['GET','POST'])
 @login_required
@@ -224,14 +224,16 @@ def add_lead_buyer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
+        get_agent = db.session.query(User).filter_by(username = agent).first()
+        deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
         notes('UNI-L-' + str(newlead.id))
         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
         if property_requirements != "":
             update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
         lead_email(current_user.email, 'UNI-L-' + str(newlead.id))
-        return redirect(url_for('handleleads.display_leads'))
 
+        return redirect(url_for('handleleads.display_leads'))
     return render_template('add_lead_buyer.html', form=form, user = current_user.username)
 
 @handleleads.route('/add_lead_developer/', methods = ['GET','POST'])
@@ -281,6 +283,8 @@ def add_lead_developer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
+        get_agent = db.session.query(User).filter_by(username = agent).first()
+        deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
         notes('UNI-L-' + str(newlead.id))
         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
