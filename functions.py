@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 import random
 import easyimap
 import smtplib
-from twilio.rest import Client
-from twilio.base.exceptions import TwilioRestException
+#from twilio.rest import Client
+#from twilio.base.exceptions import TwilioRestException
 
-account_sid = "AC8dc1c2e5a9c6c77d8d6d2e830f9c83bb"
-auth_token = "bc7eb896a1c3f796280a126b9e249ede"
+#account_sid = "AC8dc1c2e5a9c6c77d8d6d2e830f9c83bb"
+#auth_token = "bc7eb896a1c3f796280a126b9e249ede"
 
 
 USERS_FOLDER = os.getcwd() + '/static/userdata'
@@ -509,32 +509,32 @@ def assign_viewing(current,lead_id,lead,lists):
         post_reminders(username,date,end_date,time,time,"Viewing assigned for "+lead)
         
 
-def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
-    if(int(str(contactno)[:1]) == 9):
-        b = "+"+str(contactno)
-    else:
-        b = "+971"+str(contactno)
-    client = Client(account_sid, auth_token)
-    try:
-        message1 = client.messages.create(
-            to=b,
-            from_="+17819123482",
-            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+str(agentno)+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
-            )
-    except TwilioRestException as err:
-        pass
+#def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
+ #   if(int(str(contactno)[:1]) == 9):
+  #      b = "+"+str(contactno)
+  #  else:
+ #       b = "+971"+str(contactno)
+  #  client = Client(account_sid, auth_token)
+ #   try:
+  #      message1 = client.messages.create(
+ #           to=b,
+  #          from_="+17819123482",
+ #           body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+str(agentno)+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
+  #          )
+  #  except TwilioRestException as err:
+  #      pass
 
 
-    if(int(str(agentno)[:1]) == 9):
-        c = "+"+str(agentno)
-    else:
-        c = "+971"+str(agentno)
-    try:
-        message2 = client.messages.create(
-            to=c,
-            from_="+17819123482",
-            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+str(contactno)+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
-            )
-    except TwilioRestException as err:
-        pass
+  #  if(int(str(agentno)[:1]) == 9):
+   #     c = "+"+str(agentno)
+ #   else:
+ #       c = "+971"+str(agentno)
+ #   try:
+  #      message2 = client.messages.create(
+   #         to=c,
+  #          from_="+17819123482",
+   #         body="Dear Agent, Please contact your lead "+str(contactname)+" on "+str(contactno)+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
+  #          )
+  #  except TwilioRestException as err:
+   #     pass
     

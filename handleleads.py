@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note,lead_email, deploy_message
+from functions import assign_lead, logs, notes, update_note,lead_email
 from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
@@ -224,11 +224,11 @@ def add_lead_buyer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
-        if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
-            get_agent = db.session.query(User).filter_by(username = agent).first()
-            deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
-        else:
-            pass
+        #if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
+           # get_agent = db.session.query(User).filter_by(username = agent).first()
+            #deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+        #else:
+          #  pass
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
         notes('UNI-L-' + str(newlead.id))
         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
@@ -286,11 +286,11 @@ def add_lead_developer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
-        if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
-            get_agent = db.session.query(User).filter_by(username = agent).first()
-            deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
-        else:
-            pass
+       # if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
+          #  get_agent = db.session.query(User).filter_by(username = agent).first()
+          #  deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+       # else:
+           # pass
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
         notes('UNI-L-' + str(newlead.id))
         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
