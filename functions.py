@@ -515,25 +515,27 @@ def deploy_message(agentname,contactname,agentno,contactno,refno,location,buildi
     else:
         b = "+971"+str(contactno)
     client = Client(account_sid, auth_token)
-    try:
-        message1 = client.messages.create(
-            to=b,
-            from_="+19895141482",
-            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+str(agentno)+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
-            )
-    except TwilioRestException as err:
-        pass
-
-
+    w = b[4:]
+    x = "0"+w
     if(int(str(agentno)[:1]) == 9):
         c = "+"+str(agentno)
     else:
         c = "+971"+str(agentno)
+    y = c[4:]
+    z = "0"+y
+    try:
+        message1 = client.messages.create(
+            to=b,
+            from_="+19895141482",
+            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+z+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
+            )
+    except TwilioRestException as err:
+        pass
     try:
         message2 = client.messages.create(
             to=c,
             from_="+19895141482",
-            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+str(contactno)+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
+            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+x+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
             )
     except TwilioRestException as err:
         pass
