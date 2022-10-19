@@ -510,32 +510,42 @@ def assign_viewing(current,lead_id,lead,lists):
         
 
 def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
-    if(int(str(contactno)[:1]) == 9):
-        b = "+"+str(contactno)
-    else:
-        b = "+971"+str(contactno)
     client = Client(account_sid, auth_token)
-    w = b[4:]
-    x = "0"+w
-    if(int(str(agentno)[:1]) == 9):
-        c = "+"+str(agentno)
+
+    if(int(str(agentno)[:2]) == 97):
+        e1 = "+"+str(agentno)
+        e2 = "0"+str(agentno)[3:]
+    elif(int(str(agentno)[:1]) == 5):
+        e1 = "+971"+str(agentno)
+        e2 = "0"+str(agentno)
     else:
-        c = "+971"+str(agentno)
-    y = c[4:]
-    z = "0"+y
+        e1 = "+"+str(agentno)
+        e2 = e1
+
+    if(int(str(contactno)[:2]) == 97):
+        d1 = "+"+str(contactno)
+        d2 = "0"+str(contactno)[3:]
+    elif(int(str(contactno)[:1]) == 5):
+        d1 = "+971"+str(contactno)
+        d2 = "0"+str(contactno)
+    else:
+        d1 = "+"+str(contactno)
+        d2 = d1
+        e2 = e1
+
     try:
         message1 = client.messages.create(
-            to=b,
+            to=d1,
             from_="+19895141482",
-            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+z+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
+            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+e2+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
             )
     except TwilioRestException as err:
         pass
     try:
         message2 = client.messages.create(
-            to=c,
+            to=e1,
             from_="+19895141482",
-            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+x+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
+            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+d2+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
             )
     except TwilioRestException as err:
         pass
