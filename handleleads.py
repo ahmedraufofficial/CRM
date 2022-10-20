@@ -206,6 +206,7 @@ def add_lead_buyer():
         except:
             locationtext = "None"
         building = form.building.data
+        sendSMS = form.sendSMS.data
         subtype = form.subtype.data
         min_beds = form.min_beds.data
         max_beds = form.max_beds.data
@@ -224,9 +225,12 @@ def add_lead_buyer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
-        if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
-            get_agent = db.session.query(User).filter_by(username = agent).first()
-            deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+        if (sendSMS == "1"):
+            if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
+                get_agent = db.session.query(User).filter_by(username = agent).first()
+                deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+            else:
+                pass
         else:
             pass
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
@@ -269,6 +273,7 @@ def add_lead_developer():
             locationtext = "None"
         building = form.building.data
         subtype = form.subtype.data
+        sendSMS = form.sendSMS.data
         min_beds = form.min_beds.data
         max_beds = form.max_beds.data
         min_price = form.min_price.data
@@ -286,9 +291,12 @@ def add_lead_developer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
-        if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
-            get_agent = db.session.query(User).filter_by(username = agent).first()
-            deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+        if (sendSMS == "1"):
+            if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
+                get_agent = db.session.query(User).filter_by(username = agent).first()
+                deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+            else:
+                pass
         else:
             pass
         logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')

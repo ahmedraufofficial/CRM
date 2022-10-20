@@ -57,7 +57,7 @@ padding-top: 10px;
                     <option value="Reserved">Reserved</option>   
                 </select>
                 <select name="purpose_cat" id="purpose_cat" style="float: left;width: 80px;" class="form-control"><option selected="selected" value="">Purpose</option><option value="Sale">Sale</option><option value="Rent">Rent</option></select>
-                </select>
+                
             </div>
               <table id="table"        
               data-toggle="true"
@@ -165,6 +165,8 @@ padding-top: 10px;
         {{ wtf.form_field(form.role) }}
         {{ wtf.form_field(form.agent) }}
         {{ wtf.form_field(form.enquiry_date) }}
+        {{ form.sendSMS.label(class="control-label") }}
+        {{wtf.form_field(form.sendSMS)}}
      
   
         

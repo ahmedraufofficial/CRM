@@ -163,6 +163,8 @@ padding-top: 10px;
         {{ wtf.form_field(form.role) }}
         {{ wtf.form_field(form.agent) }}
         {{ wtf.form_field(form.enquiry_date) }}
+        {{ form.sendSMS.label(class="control-label") }}
+        {{wtf.form_field(form.sendSMS)}}
         
 
    </div>
@@ -346,6 +348,7 @@ padding-top: 10px;
     $('#contact_email').val(data[0].email)
     $('#nationality').val(data[0].nationality)
     document.getElementById("close").click();
+
     }
 
     function quick_add(){
