@@ -312,6 +312,7 @@
         <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
         <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
         <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
+        <button id="referral" class="btn btn-warning" style="margin-left: 10px; color: white;">Referral Leads</button>
         {% if current_user.team_lead == True %}
         <button id="get_team" style="margin-left: 10px;"  class="btn btn-primary">Team Leads</button>
         {% endif %}
@@ -592,6 +593,13 @@ $(window).on('load',(function(){
                             };                           
                     $('#table').bootstrapTable('load', $.grep(data, grepFunc));
                 });  
+        $('#referral').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.created_by == '{{user}}'
+                            };                           
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                }); 
         $('#flag').click(function () {
                     var grepFunc;
                             grepFunc = function (item) {
