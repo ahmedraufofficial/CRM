@@ -359,7 +359,7 @@ def edit_property(variable):
         edit.assign_to = assigned[0]
         edit.contactemail = assigned[2]
         edit.contactnumber = assigned[1]
-        #edit.lastupdated = datetime.now()
+        edit.lastupdated = datetime.now()+timedelta(hours=4)
         w = open('abudhabi.json')
         file_data = json.load(w)
         edit.locationtext = file_data[new]
