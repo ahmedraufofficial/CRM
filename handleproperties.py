@@ -483,7 +483,7 @@ def reassign_properties(personA,personB):
 @handleproperties.route('/reassign69_property/<personA>/<personB>') #lesssgooo
 @login_required
 def reassign69_properties(personA,personB):
-    all_leads = db.session.query(Properties).filter(and_(Properties.assign_to == personA,Properties.status == "Available",Properties.locationtext == "Yas Island", Properties.building == "Water's Edge"))
+    all_leads = db.session.query(Properties).filter(and_(Properties.assign_to == personA,Properties.status == "Available",Properties.locationtext == "Saadiyat Island", Properties.building == "Mamsha Al Saadiyat"))
     for i in all_leads:
         i.assign_to = personB
         db.session.commit()
@@ -545,9 +545,12 @@ def uploadFiles():
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
+            print(row[11])
             if line_count == 0:
+                print("Lesssgooo with count = 0")
                 line_count += 1
             else:
+                print("Now count is greater than 0")
                 num_check = row[13].replace(" ", "").replace("+","")[3:]
                 i = db.session.query(Contacts).filter(Contacts.number.endswith(num_check)).first()
                 if (i):
@@ -561,6 +564,7 @@ def uploadFiles():
                         last_name = ' '.join(row[11].split(" ")[1:])
                     else: 
                         last_name = ''
+                    
                     number = row[13]
                     email = row[12]
                     newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to=current_user.username)
@@ -570,6 +574,7 @@ def uploadFiles():
                     newcontact.refno = 'UNI-O-'+str(newcontact.id)
                     db.session.commit()
                     owner = 'UNI-O-'+str(newcontact.id)
+                print("Property Checking")    
                 fa = db.session.query(Properties).filter(and_(Properties.locationtext == row[4], Properties.building == row[5], Properties.unit == row[1])).first()
                 if not (fa):
                     status = row[0]
@@ -606,6 +611,7 @@ def uploadFiles():
                     newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,size=size,price=price,description=description,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,plot=plot,bathrooms=bathrooms,street=street,source=source,furnished=furnished,plot_size=plot_size,title=title,commission=commission,deposit=deposit,price_per_area=price_per_area,created_by=created_by,completion_status=completion_status,parking=parking,owner=owner,type=type)
                     db.session.add(newproperty)
                     db.session.commit()
+                    print("ROPERTY ADDED")
                     db.session.refresh(newproperty)
                     if (type == "Sale"):
                         newproperty.refno = 'UNI-S-'+str(newproperty.id)
@@ -613,6 +619,9 @@ def uploadFiles():
                         newproperty.refno = 'UNI-R-'+str(newproperty.id)
                     db.session.commit()                    
                 line_count += 1
-                break
+                print("Check marin jaani")
+                print(line_count)
+                if(line_count == 3):
+                    break
         print(f'Processed {line_count} lines.')
     return jsonify(success=True)
