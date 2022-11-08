@@ -649,7 +649,7 @@ def post_lead_note(list_id,com,status,substatus):
     a = db.session.query(Leads).filter_by(refno = list_id).first()
     a.sub_status = substatus.replace("%20"," ")
     a.status = status
-    a.lastupdated = datetime.now() + timedelta(hours=4)
+    
     db.session.commit()
     update_lead_note(current_user.username,list_id,com,status,substatus)
     update_user_note(current_user.username,list_id,status,substatus)
