@@ -1,3 +1,5 @@
+from crypt import methods
+from distutils.log import ERROR
 import email
 from operator import and_ #exports a set of efficient functions corresponding to the intrinsic operators of Python (addition, subtraction, etc.)
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort, Response #just flask tings, redirecting to new pages and all
@@ -120,7 +122,7 @@ app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test(2).db'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 db = SQLAlchemy(app)
 admin = Admin(app,template_mode='bootstrap3')
@@ -577,7 +579,6 @@ def all_count():
     all_count.append(countObj)
     return jsonify({'all_count':all_count})
 
-
 @app.route('/all_notes/<variable>',methods = ['GET','POST'])
 @login_required
 def view_notes(variable):
@@ -648,6 +649,7 @@ def post_lead_note(list_id,com,status,substatus):
     a = db.session.query(Leads).filter_by(refno = list_id).first()
     a.sub_status = substatus.replace("%20"," ")
     a.status = status
+    a.lastupdated = datetime.now() + timedelta(hours=4)
     db.session.commit()
     update_lead_note(current_user.username,list_id,com,status,substatus)
     update_user_note(current_user.username,list_id,status,substatus)
@@ -838,6 +840,8 @@ def post_viewing(lead_id,lead,lists):
 @app.route('/upload/listing')
 def upload_listing():
     return render_template('upload_listing.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug = True)
