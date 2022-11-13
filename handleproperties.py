@@ -489,7 +489,7 @@ def reassign69_properties(personA,personB):
         db.session.commit()
     return "ok"
 
-@handleproperties.route('/c') #lesssgooo
+@handleproperties.route('/reassign72_property/<personA>') #lesssgooo
 @login_required
 def reassign72_properties(personA):
     all_leads = db.session.query(Properties).filter(and_(Properties.bedrooms == "4",Properties.status == "Rented",Properties.locationtext == "Yas Island", Properties.building == "Yas Acres"))
