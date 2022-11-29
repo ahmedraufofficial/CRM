@@ -572,8 +572,11 @@
               <option value='Zayed Sports City'>Zayed Sports City</option>
             </select>
             <select name="community_category" id="community_category" class="filter_add">
-              <option selected="selected" value="">Community</option>
+              <option selected="selected" value="">Comunity</option>
             </select>
+            <input type="text" name="minprice" id="minprice" class="filter_add" placeholder="Min. Price" aria-label="minprice">
+            <input type="text" name="maxprice" id="maxprice" class="filter_add" placeholder="Max. Price" aria-label="maxprice">
+            <input type="date" id="propdate" name="propdate" class="filter_add01">
             <select name="purpose_category" id="purpose_category" class="filter_add">
               <option selected="selected" value="">Purpose</option>
               <option value="Sale">Sale</option>
@@ -811,6 +814,9 @@ function view_property(x){
         var c = $("#community_category").val();
         var p = $("#purpose_category").val()
         var u = $("#listing_users").val()
+        var v = $("#minprice").val()
+        var w = $("#maxprice").val()
+        var x = $("#propdate").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -818,6 +824,9 @@ function view_property(x){
         var grepFunc5;
         var grepFunc6;
         var grepFunc7;
+        var grepFunc8;
+        var grepFunc9;
+        var grepFunc10;
 
 
         grepFunc = function(item){
@@ -847,6 +856,18 @@ function view_property(x){
         grepFunc7 = function(item){
               return item.assign_to == u;
           }
+        
+        grepFunc8 = function(item){
+              return parseInt(item.price) >= parseInt(v);
+            }
+        
+        grepFunc9 = function(item){
+              return parseInt(item.price) <= parseInt(w);
+          }
+
+        grepFunc10 = function(item){
+              return item.created_at.slice(0,10) == x;
+          }
 
         if (s != "")
         {test = $.grep(test, grepFunc)}
@@ -869,6 +890,15 @@ function view_property(x){
         if (u != "")
         {test = $.grep(test, grepFunc7)}
 
+        if (v != "")
+        {test = $.grep(test, grepFunc8)}
+
+        if (w != "")
+        {test = $.grep(test, grepFunc9)}
+
+        if (x != "")
+        {test = $.grep(test, grepFunc10)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -880,6 +910,9 @@ function view_property(x){
         $("#location_category").val("");
         $("#community_category").val("");
         $("#purpose_category").val("");
+        $("#minprice").val("");
+        $("#maxprice").val("");
+        $("#propdate").val("");
         })
 
  
