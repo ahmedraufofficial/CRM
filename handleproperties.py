@@ -575,7 +575,7 @@ def uploadFiles():
                         last_name = ' '.join(row[11].split(" ")[1:])
                     else: 
                         last_name = ''
-                    
+
                     number = row[13]
                     email = row[12]
                     newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to=current_user.username)
@@ -595,7 +595,7 @@ def uploadFiles():
                     locationtext = row[4]
                     building = row[5]
                     bedrooms = row[6]
-                    size = row[7]
+                    #size = row[7]
                     price = row[8]
                     description = row[9]
                     assign_to = row[10]
@@ -607,11 +607,11 @@ def uploadFiles():
                     street = row[16]
                     source = row[17]
                     furnished = row[18]
-                    plot_size = row[19]
+                    #plot_size = row[19]
                     title = row[20]
                     commission = row[21]
                     deposit = row[22]
-                    price_per_area = row[23]
+                    #price_per_area = row[23]
                     created_by = row[24]
                     completion_status = row[25]
                     #expiry_date = ''
@@ -619,10 +619,10 @@ def uploadFiles():
                     type = row[28]
                     lastupdated = datetime.now()+timedelta(hours=4)
                     created_at = datetime.now()+timedelta(hours=4)
-                    newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,size=size,price=price,description=description,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,plot=plot,bathrooms=bathrooms,street=street,source=source,furnished=furnished,plot_size=plot_size,title=title,commission=commission,deposit=deposit,price_per_area=price_per_area,created_by=created_by,completion_status=completion_status,parking=parking,owner=owner,type=type)
+                    newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,price=price,description=description,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,plot=plot,bathrooms=bathrooms,street=street,source=source,furnished=furnished,title=title,commission=commission,deposit=deposit,created_by=created_by,completion_status=completion_status,parking=parking,owner=owner,type=type)
                     db.session.add(newproperty)
                     db.session.commit()
-                    print("ROPERTY ADDED")
+                    print("PROPERTY ADDED")
                     db.session.refresh(newproperty)
                     if (type == "Sale"):
                         newproperty.refno = 'UNI-S-'+str(newproperty.id)
@@ -632,7 +632,7 @@ def uploadFiles():
                 line_count += 1
                 print("Check marin jaani")
                 print(line_count)
-                if(line_count == 3):
+                if(line_count == 227):
                     break
         print(f'Processed {line_count} lines.')
     return jsonify(success=True)
