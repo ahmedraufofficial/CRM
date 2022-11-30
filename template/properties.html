@@ -577,6 +577,7 @@
             <input type="text" name="minprice" id="minprice" class="filter_add" placeholder="Min. Price" aria-label="minprice">
             <input type="text" name="maxprice" id="maxprice" class="filter_add" placeholder="Max. Price" aria-label="maxprice">
             <input type="date" id="propdate" name="propdate" class="filter_add01">
+            <input type="date" id="propdate2" name="propdate2" class="filter_add01">
             <select name="purpose_category" id="purpose_category" class="filter_add">
               <option selected="selected" value="">Purpose</option>
               <option value="Sale">Sale</option>
@@ -817,6 +818,7 @@ function view_property(x){
         var v = $("#minprice").val()
         var w = $("#maxprice").val()
         var x = $("#propdate").val()
+        var y = $("#propdate2").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -827,6 +829,7 @@ function view_property(x){
         var grepFunc8;
         var grepFunc9;
         var grepFunc10;
+        var grepFunc11;
 
 
         grepFunc = function(item){
@@ -866,7 +869,11 @@ function view_property(x){
           }
 
         grepFunc10 = function(item){
-              return item.created_at.slice(0,10) == x;
+              return item.created_at.slice(0,10) >= x;
+          }
+
+        grepFunc11 = function(item){
+              return item.created_at.slice(0,10) <= y;
           }
 
         if (s != "")
@@ -899,6 +906,9 @@ function view_property(x){
         if (x != "")
         {test = $.grep(test, grepFunc10)}
 
+        if (y != "")
+        {test = $.grep(test, grepFunc11)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -913,6 +923,7 @@ function view_property(x){
         $("#minprice").val("");
         $("#maxprice").val("");
         $("#propdate").val("");
+        $("#propdate2").val("");
         })
 
  
