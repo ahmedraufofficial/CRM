@@ -147,7 +147,8 @@ def display_leads():
     f = open('lead_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    return render_template('leads.html', data = data , columns = columns, user=current_user.username)
+    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    return render_template('leads.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
 
 @handleleads.route('/reassign_lead/<variable>/<user>', methods = ['GET','POST'])
 @login_required

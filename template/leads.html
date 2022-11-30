@@ -326,7 +326,29 @@
           <option value="Offer Made">Offer Made</option>
           <option value="Unsuccessful">Unsuccessful</option>
         </select>
+
+        <div style="margin-top: 10px;">
+            
+          <select name="typeee" id="typeee" class="filter_add">
+            <option selected="selected" value="">Type</option>
+            <option value="Buy">Buy</option>
+            <option value="Rent">Rent</option>
+          </select>
+          <input type="date" id="propdate" name="propdate" class="filter_add01">
+          <input type="date" id="propdate2" name="propdate2" class="filter_add01">
+          <select name="listing_users" id="listing_users" class="filter_add">
+            <option selected="selected" value="">Users</option>
+            {% for users in all_sale_users %}
+            <option value="{{users.username}}">{{users.username}}</option>
+            {% endfor %}
+          </select>
+          
+          <button id="filter_search" class="filter_add"> Search</button>
+          <button id="filter_reset" class="filter_add"> Reset</button>
+        </div>
       </div>
+
+
       <table
         id="table"
         data-toggle="true"
@@ -548,6 +570,67 @@ $(window).on('load',(function(){
           data: data,
           columns: columns,
         });
+
+        $('#filter_search').click(function () {
+        
+        var test = data
+        var s = $("#typeee").val();
+        var b = $("#listing_users").val();
+        var x = $("#propdate").val();
+        var y = $("#propdate2").val();
+        var grepFunc01;
+        var grepFunc02;
+        var grepFunc03;
+        var grepFunc04;
+
+        grepFunc01 = function(item){
+              return item.lead_type == s;
+          }
+
+        grepFunc02 = function(item){
+              return item.agent == b;
+          }
+
+        grepFunc03 = function(item){
+          return item.created_date.slice(0,10) >= x;
+          }
+
+        grepFunc04 = function(item){
+          return item.created_date.slice(0,10) <= y;
+          }
+
+        if (s != "")
+        {test = $.grep(test, grepFunc01)}
+
+        if (b != "")
+        {test = $.grep(test, grepFunc02)}
+
+        if (x != "")
+        {test = $.grep(test, grepFunc03)}
+
+        if (y != "")
+        {test = $.grep(test, grepFunc04)}
+
+          $('#table').bootstrapTable('load', test);
+        })
+        
+        $('#filter_reset').click(function () {
+        $('#table').bootstrapTable('load', data)
+        $("#typeee").val("");
+        $("#listing_users").val("");
+        $("#propdate").val("");
+        $("#propdate2").val("");
+        })
+
+        $('#user_data').click(function () { //For My Contacts option if required later on 
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.assign_to == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+
+
         var grepFunc;
                     grepFunc = function (item) {
                       if ("{{current_user.team_members}}" == "QC") {
@@ -629,6 +712,13 @@ $(window).on('load',(function(){
     body {
   overflow-x: hidden;
 }
+.filter_add01 {
+  background-color: transparent; color: white;width: 120px; height: 30px; text-align: center; font-family: Oswald; font-size: 10pt !important; border: 1px solid white !important; 
+    }
+
+    .filter_add01:hover {
+  background-color:rgba(0, 0, 0, 0.8); color: white; border: 1px solid black !important
+ }
 
   </style>
 {% endblock %}
