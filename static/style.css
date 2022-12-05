@@ -128,14 +128,14 @@ span{
   color: white;
 }
 .th-inner {
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 11pt !important;
 }
 .table{
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 td{
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 10pt;
 }
 .btn {
@@ -233,7 +233,7 @@ font-family: 'Oswald';font-size: 20pt;
 }
 
 .filter_add {
- background-color: transparent; color: white;width: 100px; height: 30px; text-align: center; font-family: Oswald; font-size: 12pt !important; border: 1px solid white !important; 
+ background-color: transparent; color: rgb(0, 0, 0);width: 80px; height: 30px; text-align: center; font-family: Oswald; font-size: 12pt !important; border: 1px solid rgb(0, 0, 0) !important; 
 }
 
 .filter_add:hover {

@@ -1,1 +1,12 @@
-{"notes": []}
+{
+    "notes": [
+        {
+            "date": "08/11/2022",
+            "time": "20:00:35",
+            "user": "ahmed",
+            "comment": "Wassup",
+            "status": "Open",
+            "substatus": "Offer made"
+        }
+    ]
+}

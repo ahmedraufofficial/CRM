@@ -41,6 +41,76 @@
             "area": "Al Ghadeer",
             "specific_area": "Al Ghadeer 2",
             "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"3\",\"UNI-L-3100\")'>Assign</button>"
+        },
+        {
+            "id": 4,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-3707",
+            "datetime": "2022-10-19 15:42:26.794575",
+            "min_price": null,
+            "max_price": null,
+            "min_room": "3",
+            "max_room": "",
+            "area": "Yas Island",
+            "specific_area": "NOYA",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"4\",\"UNI-L-3707\")'>Assign</button>"
+        },
+        {
+            "id": 5,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-3707",
+            "datetime": "2022-10-19 15:42:36.658711",
+            "min_price": null,
+            "max_price": null,
+            "min_room": "3",
+            "max_room": "",
+            "area": "Yas Island",
+            "specific_area": "NOYA",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"5\",\"UNI-L-3707\")'>Assign</button>"
+        },
+        {
+            "id": 6,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-2848",
+            "datetime": "2022-10-19 15:43:35.318957",
+            "min_price": 50000,
+            "max_price": 50000,
+            "min_room": "1",
+            "max_room": "",
+            "area": "Al Reem Island",
+            "specific_area": "Horizon Tower A",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"6\",\"UNI-L-2848\")'>Assign</button>"
+        },
+        {
+            "id": 7,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-2848",
+            "datetime": "2022-10-19 15:43:39.238243",
+            "min_price": 50000,
+            "max_price": 50000,
+            "min_room": "1",
+            "max_room": "",
+            "area": "Al Reem Island",
+            "specific_area": "Horizon Tower A",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"7\",\"UNI-L-2848\")'>Assign</button>"
+        },
+        {
+            "id": 8,
+            "username": "ahmed",
+            "status": "Not Assigned",
+            "lead": "UNI-L-3707",
+            "datetime": "2022-10-19 15:44:52.652347",
+            "min_price": null,
+            "max_price": null,
+            "min_room": "3",
+            "max_room": "",
+            "area": "Yas Island",
+            "specific_area": "NOYA",
+            "assigned": "<button class='btn btn-success' data-toggle='modal' data-target='#myModal' onclick='assign(\"8\",\"UNI-L-3707\")'>Assign</button>"
         }
     ]
 }

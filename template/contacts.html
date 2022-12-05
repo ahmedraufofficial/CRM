@@ -8,11 +8,71 @@
     <div class="container" style="padding: 10px; ">
       <br/>
       <div id="toolbar">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#viewingModal">SMS</button>
         {% if current_user.export == True %}
         <button onclick="get_check('contacts')" class="btn btn-primary">Export</button>
         {% endif %}
         <a id="download" href="">Download</a>
+        <div style="margin-top: 10px;">
+            
+          <select name="role01" id="role01" class="filter_add">
+            <option selected="selected" value="">Role</option>
+            <option value="Landlord">Landlord</option>
+            <option value="Investor">Investor</option>
+            <option value="Tenant">Tenant</option>
+            <option value="Buyer">Buyer</option>
+            <option value="Developer">Developer</option>
+            <option value="Seller">Seller</option>
+            <option value="Agent">Agent</option>
+            <option value="Other">Other</option>
+          </select>
+          <select name="listing_users" id="listing_users" class="filter_add">
+            <option selected="selected" value="">Users</option>
+            <option value="W">W</option>
+            {% for users in all_listing_users %}
+            <option value="{{users.username}}">{{users.username}}</option>
+            {% endfor %}
+          </select>
+          
+          <button id="filter_search" class="filter_add"> Search</button>
+          <button id="filter_reset" class="filter_add"> Reset</button>
+          </div>
+
       </div>
+
+
+      <div class="modal" id="viewingModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title oswald">Send SMS</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+             
+      <div class="container" style="margin-bottom: 20px;">
+        <div class="row">
+          <div class="col">
+            <div class="input-group input-group-lg">
+              <input id="damessage" name="damessage" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="Write your message">
+            </div>
+          </div>
+       </div>
+        </div>
+      
+            </div>
+            <div class="modal-footer">
+              <button onclick="get_check4sms('contacts')" class="btn btn-primary">Send</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
       <table
         id="table"
         data-toggle="true"
@@ -37,22 +97,86 @@
 
 
 {% block scripts %}
+<script>
+
+
+
+  function get_check4sms(type){
+    
+    var data = $('#table').bootstrapTable('getSelections');
+    var selection = []
+    var ids = $.map(data, function (item) {
+      selection.push(item.number)
+    });
+
+    for (let i = 0; i < selection.length; i++) {
+      console.log(selection[i]);
+    }
+    var dasms = document.getElementById("damessage");
+    console.log(dasms)
+  }
+
+
+</script>
+
 <script type='text/javascript'>
     $(window).on('load',(function(){
       
     var columns = {{columns|tojson}};
     var data = {{data|tojson}};
 
-
+    
       $(function() {
         $('#table').bootstrapTable({ 
           data: data.reverse() ,
           columns: columns,
         });
 
+
+
+        $('#filter_search').click(function () {
+        
+        var test = data
+        var s = $("#role01").val();
+        var b = $("#listing_users").val();
+        var grepFunc01;
+        var grepFunc02;
+
+        grepFunc01 = function(item){
+              return item.role == s;
+          }
+
+        grepFunc02 = function(item){
+              return item.assign_to == b;
+          }
+
+        if (s != "")
+        {test = $.grep(test, grepFunc01)}
+
+        if (b != "")
+        {test = $.grep(test, grepFunc02)}
+
+          $('#table').bootstrapTable('load', test);
+        })
+        
+        $('#filter_reset').click(function () {
+        $('#table').bootstrapTable('load', data)
+        $("#role01").val("");
+        $("#listing_users").val("");
+        })
+
+        $('#user_data').click(function () { //For My Contacts option if required later on 
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.assign_to == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+
       });
 
     }));
+
   </script>
   <style type='text/css'>
     .row-index {
