@@ -480,6 +480,16 @@ def reassign_properties(personA,personB):
         db.session.commit()
     return "ok"
 
+@handleproperties.route('/notescreation')
+@login_required
+def notescreation():
+    all_leads = db.session.query(Properties).filter(and_(Properties.status == "Pending", Properties.created_by == "engy",Properties.building == "Lea", Properties.assign_to == "suha", Properties.locationtext == "Yas Island"))
+    for i in all_leads:
+        notes(str(i.refno))
+    return "ok"
+
+
+
 @handleproperties.route('/reassign69_property/<personA>/<personB>') #lesssgooo
 @login_required
 def reassign69_properties(personA,personB):
