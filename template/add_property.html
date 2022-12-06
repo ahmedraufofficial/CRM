@@ -3,7 +3,7 @@
 {% block content %}
 <style type='text/css'>
 .column{
-       background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+       background-color: rgba(255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
 -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
 -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
 padding-top: 10px;
@@ -13,15 +13,15 @@ padding-top: 10px;
 h4{
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #f5f0e1;
+    color: #000000;
     font-size: 14pt;
     font-family: 'Oswald';
 }
 </style>
 
 <!--script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script-->
-<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
-    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<section>
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
 <div class="container" >
 <form method="POST" enctype="multipart/form-data">
   <dl>
@@ -184,14 +184,14 @@ h4{
               <br>
                     <h4>Private Amenities</h4>
               <div class="row">
-                  <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+                  <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(252, 252, 252, 0.8); height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
                 {{ form.privateamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
         </div>
     </div>
     <br>
     <h4>Property Amenities</h4>
     <div class="row">
-        <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+        <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(255, 255, 255, 0.8); height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
       {{ form.commercialamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
         </div>
     </div>        
@@ -321,14 +321,14 @@ h4{
           <br>
                 <h4>Private Amenities</h4>
           <div class="row">
-              <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+              <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(255, 255, 255, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
             {{ form.privateamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
     </div>
 </div>
 <br>
 <h4>Property Amenities</h4>
 <div class="row">
-    <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(0, 0, 0, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
+    <div class="col-11" style="margin-left: 15px;  width:80%; background-color: rgba(255, 255, 255, 0.8); width:80%; height: 240px;  overflow-y: scroll;border-bottom: 10px solid rgb(0, 0, 0 ,0); border-top: 10px solid rgb(0, 0, 0 ,0); ">
   {{ form.commercialamenities(class="control-label" , style="list-style: none; margin-left:-40px;") }}
     </div>
 </div>        

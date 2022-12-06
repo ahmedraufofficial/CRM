@@ -12,7 +12,7 @@ html  {
     font-display: swap;
   }
   .bg-custom-2 {
-    background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+    background-color: #293645;
     }
 
 .oswald{
@@ -22,7 +22,7 @@ html  {
 .control-label{
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #f5f0e1;
+  color: #000000;
   font-size: 8pt;
   margin-bottom: .2rem !important;
 }
@@ -45,7 +45,7 @@ html  {
   }
 
 .radio {
-    color: rgb(240, 241, 219) !important;
+    color: rgb(0, 0, 0) !important;
 }
 
 .unselectable {
@@ -80,19 +80,23 @@ height: 40px !important;
   }
 
 .btn-primary {
-  background-color:#001524 !important;
+  background-color:#293645 !important;
+  border-radius: 12px !important;
 }
 
 .btn-primary:hover {
-  background-color:transparent !important;
+  background-color: transparent !important;
+  color: black !important;
 }
 
 .btn-danger:hover {
   background-color:transparent !important;
+  color: black !important;
 }
 
 .btn-info:hover {
   background-color:transparent !important;
+  color: black !important;
 }
 
 .btn-warning {
@@ -101,9 +105,11 @@ height: 40px !important;
 
 .btn-warning:hover {
   background-color:transparent !important;
+  color: black !important;
 }
 .btn-success:hover {
   background-color:transparent !important;
+  color: black !important;
 }
 
 .shade{
@@ -111,7 +117,7 @@ height: 40px !important;
   -webkit-box-shadow: 0px 3px 17px 0px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0px 3px 17px 0px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px);
-z-index: 50;
+  z-index: 50;
 }
 .table-bordered th{
   border: 1px solid #4b4b4b !important;
@@ -128,7 +134,8 @@ span{
   color: white;
 }
 .th-inner {
-  color: rgb(0, 0, 0);
+  background-color: #293645;
+  color: rgb(255, 255, 255);
   font-size: 11pt !important;
 }
 .table{
@@ -164,11 +171,12 @@ select{
 }
 
 .page-list {
-  color: white !important;
+  color: rgb(0, 0, 0) !important;
   font-size: 10pt !important;
 }
 .pagination-info {
   font-size: 10pt !important;
+  color: black;
 }
 
 .form-control{
@@ -179,7 +187,7 @@ select{
 }
 
 .modal-content{
-  background-color: rgba(0, 0, 0) !important;
+  background-color: rgb(255, 255, 255) !important;
   border: 1px solid white !important; 
 }
 
@@ -215,7 +223,7 @@ h8{
   font-family: 'Oswald';
 }
 h5 {
-color: white;
+color: rgb(0, 0, 0);
 font-family: 'Oswald';font-size: 20pt;
 }
 
@@ -237,5 +245,13 @@ font-family: 'Oswald';font-size: 20pt;
 }
 
 .filter_add:hover {
+  background-color:rgba(0, 0, 0, 0.8); color: white; border: 1px solid black !important
+ }
+ 
+.filter_add01 {
+  background-color: transparent; color: rgb(0, 0, 0);width: 120px; height: 30px; text-align: center; font-family: Oswald; font-size: 10pt !important; border: 1px solid rgb(0, 0, 0) !important; 
+    }
+  
+  .filter_add01:hover {
   background-color:rgba(0, 0, 0, 0.8); color: white; border: 1px solid black !important
  }
