@@ -127,7 +127,7 @@ def display_properties():
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
                 if r.created_by == current_user.username or r.assign_to == current_user.username or current_user.is_admin == True or current_user.team_members == "LA":
-                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'">Edit</a>'
                 else:
                     edit_btn = ''
             else:
@@ -136,7 +136,9 @@ def display_properties():
                 pass
             else:
                 new["owner_contact"] = "*"
-            new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
+            view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
+            note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
+            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px'>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+"</div></div>"
             data.append(new)
     elif current_user.viewall == False and current_user.listing == True:
         for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
@@ -145,12 +147,14 @@ def display_properties():
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if current_user.edit == True:
                 if r.created_by == current_user.username or r.assign_to == current_user.username:
-                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a>'
+                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'">Edit</a>'
                 else:
                     edit_btn = ''
             else:
                 edit_btn = ''
-            new["edit"] ="<div style='display:flex;'>"+ edit_btn +'<button class="btn btn-danger si" data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</button>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
+            view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
+            note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
+            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px'>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+"</div></div>"
             data.append(new)
     elif current_user.team_members == "QC" and current_user.listing == False:
         for r in db.session.query(Properties).all():
