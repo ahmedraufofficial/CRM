@@ -36,7 +36,14 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link oswald" href="/properties" style="color: white;">Listing</a>
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;">Properties</button>
+                <div class="dropdown-content">
+                  <a href="/properties">Agency Properties</a>
+                  <a href="/add_property/rent">Add Sale </a>
+                  <a href="/add_property/sale">Add Rental </a>
+                </div>
+              </div>
             </li>
             <li class="nav-item">
               <a class="nav-link oswald" href="/leads" style="color: white;">Leads</a>
