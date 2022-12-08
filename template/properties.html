@@ -437,8 +437,8 @@
     <div class="row">
       <div class="col">
         <div class="container" style="width: 340px; float: left;">
-        <input type="text" name="minprice" id="minprice" class="filter_add05" placeholder="Search" aria-label="minprice">
-        <select name="status_category" id="status_category" class="filter_add" style="width: 100px; margin-top: 2px;">
+        <input type="text" name="searchbar" id="searchbar" class="filter_add05" placeholder="Search" aria-label="searchbar">
+        <select name="status_category" id="status_category" class="filter_add" style="width: 100px; margin-top: 7px;">
           <option selected="selected" value="">Status</option>
           <option value="Available">Available</option>
           <option value="Archived">Archived</option>
@@ -453,12 +453,12 @@
           <option value="Reserved">Reserved</option>
           <option value="In process">Available ,Rented, Sold, Upcoming, Reserved, Moved In</option>
         </select>
-        <select name="purpose_category" id="purpose_category" class="filter_add" style="width: 100px; margin-top: 2px;">
+        <select name="purpose_category" id="purpose_category" class="filter_add" style="width: 100px; margin-top: 7px;">
           <option selected="selected" value="">Purpose</option>
           <option value="Sale">Sale</option>
           <option value="Rent">Rent</option>
     </select>
-    <select name="listing_users" id="listing_users" class="filter_add" style="width: 100px; margin-top: 2px;">
+    <select name="listing_users" id="listing_users" class="filter_add" style="width: 100px; margin-top: 7px;">
       <option selected="selected" value="">Users</option>
       {% for users in all_listing_users %}
       <option value="{{users.username}}">{{users.username}}</option>
@@ -885,6 +885,7 @@ function view_property(x){
         var y = $("#propdate2").val()
         var e = $("#ownname").val()
         var r = $("#ownnumber").val()
+        var z = $("#searchbar").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -898,6 +899,7 @@ function view_property(x){
         var grepFunc11;
         var grepFunc12;
         var grepFunc13;
+        var grepFunc14;
 
 
         grepFunc = function(item){
@@ -952,6 +954,10 @@ function view_property(x){
               return item.owner_contact == r;
           }
 
+        grepFunc14 = function(item){
+              return item.refno == z;
+        }
+        
         if (s != "")
         {test = $.grep(test, grepFunc)}
 
@@ -991,6 +997,9 @@ function view_property(x){
         if (r != "")
         {test = $.grep(test, grepFunc13)}
 
+        if (z != "")
+        {test = $.grep(test, grepFunc14)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -1008,6 +1017,7 @@ function view_property(x){
         $("#propdate2").val("");
         $("#ownname").val("");
         $("#ownnumber").val("");
+        $("#searchbar").val("");
         })
 
  
