@@ -523,6 +523,16 @@ def reassign95_properties(personA):
     return "ok"
 
 
+@handleproperties.route('/debugdaddy') #lesssgooo
+@login_required
+def debugdaddy():
+    all_leads = db.session.query(Properties).filter(or_(Properties.refno == "UNI-S-3969", Properties.refno == "UNI-S-4006"))
+    for i in all_leads:
+        i.price_per_area = 0.0
+        db.session.commit()
+    return "ok"
+
+
 
 @handleproperties.route('/reassign2',methods = ['GET','POST'])
 @login_required
