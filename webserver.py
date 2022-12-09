@@ -841,6 +841,12 @@ def post_viewing(lead_id,lead,lists):
 def upload_listing():
     return render_template('upload_listing.html')
 
+@app.route('/refreshdatabase') #lesssgooo
+@login_required
+def refreshdatabase():
+    db.session.flush()
+    return "ok"
+
 
 
 if __name__ == '__main__':
