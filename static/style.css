@@ -136,14 +136,14 @@ span{
 .th-inner {
   background-color: #293645;
   color: rgb(255, 255, 255);
-  font-size: 11pt !important;
+  font-size: 9pt !important;
 }
 .table{
   background-color: rgba(255, 255, 255, 0.7);
 }
 td{
   color: rgb(0, 0, 0);
-  font-size: 10pt;
+  font-size: 8pt;
 }
 .btn {
   border: 1px solid white !important;
