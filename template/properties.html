@@ -642,6 +642,21 @@
         <select name="community_category" id="community_category" class="filter_add02">
           <option selected="selected" value="">Community</option>
         </select>
+        <select name="view_cat" id="view_cat" class="filter_add02">
+          <option selected="selected" value="">View</option>
+          <option value="Canal View">Canal View</option>
+          <option value="Partial Canal">Partial Canal</option>
+          <option value="Island View">Island View</option>
+          <option value="Pool View">Pool View</option>
+          <option value="Golf View">Golf View</option>
+          <option value="Sea View">Sea View</option>
+          <option value="Partial Sea">Partial Sea</option>
+          <option value="Mangrove View">Mangrove View</option>
+          <option value="Ocean View">Ocean View</option>
+          <option value="Building View">Building View</option>
+          <option value="Single Row">Single Row</option>
+          <option value="Double View">Double View</option>
+        </select>
       </div>
         <div class="child">
           <h6 style="text-align: left;">Price</h6>
@@ -886,6 +901,7 @@ function view_property(x){
         var e = $("#ownname").val()
         var r = $("#ownnumber").val()
         var z = $("#searchbar").val()
+        var s1 = $("#view_cat").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -900,6 +916,7 @@ function view_property(x){
         var grepFunc12;
         var grepFunc13;
         var grepFunc14;
+        var grepFunc15;
 
 
         grepFunc = function(item){
@@ -957,6 +974,10 @@ function view_property(x){
         grepFunc14 = function(item){
               return item.refno == z;
         }
+
+        grepFunc15 = function(item){
+              return item.view == s1;
+        }
         
         if (s != "")
         {test = $.grep(test, grepFunc)}
@@ -1000,6 +1021,9 @@ function view_property(x){
         if (z != "")
         {test = $.grep(test, grepFunc14)}
 
+        if (s1 != "")
+        {test = $.grep(test, grepFunc15)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -1018,6 +1042,7 @@ function view_property(x){
         $("#ownname").val("");
         $("#ownnumber").val("");
         $("#searchbar").val("");
+        $("#view_cat").val("");
         })
 
  

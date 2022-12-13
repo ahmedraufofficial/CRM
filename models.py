@@ -97,6 +97,7 @@ class Properties(db.Model):
     offplan_status = db.Column(db.String(100))
     portal = db.Column(db.String(100))
     created_at = db.Column(db.DateTime)
+    view = db.Column(db.String(50))
 
 class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)

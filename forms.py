@@ -103,6 +103,7 @@ class AddPropertyForm(FlaskForm):
     featured = SelectField(u'Featured',choices = [(0, 'No'), (1, 'Yes')])
     parking = SelectField(u'Parking',choices = [(None,'-'),(1, '1'), (2, '2'), (3, '3')])
     portal = SelectField(u'Add to Portals',choices = [(0, "Yes"), (1, "No")])
+    view = SelectField(u'View',choices= [('none', 'None'),('Canal View', 'Canal View'),('Island View', 'Island View'),('Pool View', 'Pool View'),('Partial Canal','Partial Canal'),('Golf View', 'Golf View'),('Sea View', 'Sea View'),('Partial Sea', 'Partial Sea'),('Mangrove View', 'Mangrove View'),('Ocean View', 'Ocean View'),('Building View', 'Building View'),('Single Row', 'Single Row'),('Double Row', 'Double Row')])
 
 class AddContactForm(FlaskForm):
     title = SelectField(u'Title',choices = [('','Select'),('Mr', 'Mr'),('Mrs','Mrs'),('Ms','Ms'),('Miss','Miss'),('Sir','Sir')])

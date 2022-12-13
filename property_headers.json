@@ -9,6 +9,11 @@
      "title": "OPTIONS",
      "sortable": "False"
    },
+   {
+    "field": "portal",
+    "title": "Promotion",
+    "sortable": "False"
+  },
     {
       "field": "refno",
       "title": "REF NO", 
@@ -50,8 +55,8 @@
       "sortable": "True"
     },
     {
-      "field": "bathrooms",
-      "title": "BATHS",
+      "field": "view",
+      "title": "VIEW",
       "sortable": "True"
     },
     {
@@ -71,27 +76,22 @@
     },
     {
       "field": "owner_name",
-      "title": "OWNER NAME",
+      "title": "Name",
       "sortable": "True"
     },
     {
       "field": "owner_contact",
-      "title": "OWNER CONTACT",
-      "sortable": "True"
-    },
-    {
-      "field": "owner_email",
-      "title": "OWNER EMAIL",
+      "title": "Contact",
       "sortable": "True"
     },
     {
       "field": "lastupdated",
-      "title": "LAST UPDATED",
+      "title": "Updated",
       "sortable": "True"
     },
     {
       "field": "created_at",
-      "title": "CREATED AT",
+      "title": "Created",
       "sortable": "True"
     }
   ]

@@ -469,9 +469,5 @@ def marketing_leads():
     return "ok"
 
 
-@handleleads.route('/refreshdatabase') #lesssgooo
-@login_required
-def refreshdatabase():
-    db.session.refresh()
-    return "ok"
+    
 
