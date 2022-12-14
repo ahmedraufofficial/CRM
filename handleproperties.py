@@ -139,7 +139,7 @@ def display_properties():
             if new["portal"] == "0":
                 print("Promoted")
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
-                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:15%;"></a>'
+                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
             else:
                 new["portal"] = "Not Promoted"
             view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/eye.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">View</small><</a>'
@@ -163,7 +163,7 @@ def display_properties():
             if new["portal"] == "0":
                 print("Promoted")
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
-                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:15%;"></a>'
+                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
             else:
                 new["portal"] = "Not Promoted"
             view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
@@ -184,6 +184,12 @@ def display_properties():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
+            if new["portal"] == "0":
+                print("Promoted")
+                website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
+                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
+            else:
+                new["portal"] = "Not Promoted"
             view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
             note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
             new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+view_btn+note_btn+"</div></div>"
