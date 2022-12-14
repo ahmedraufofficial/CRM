@@ -29,15 +29,16 @@
 
   <div class="parent">
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom-2">
-        <a class="navbar-brand oswald" href="{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('dashboard')}}" style="width: 50px;"><img src="/static/images/logo_white.png" style="width: 25px; margin-top: 10%;"/></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="vl" style="margin-top: 0.5%;"></div>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;">Properties</button>
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/apartment.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Properties</small></button>
                 <div class="dropdown-content">
                   <a href="/properties">Agency Properties</a>
                   <a href="/add_property/sale">Add Sale </a>
@@ -45,28 +46,56 @@
                 </div>
               </div>
             </li>
+            <div class="vl"></div>
             <li class="nav-item">
-              <a class="nav-link oswald" href="/leads" style="color: white;">Leads</a>
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Leads</small></button>
+                <div class="dropdown-content">
+                  <a href="/leads">Agency Leads</a>
+                  <a href="">Add Lead </a>
+                </div>
+              </div>
             </li>
+            <div class="vl"></div>
             <li class="nav-item">
-              <a class="nav-link oswald" href="/deals" style="color: white;">Deals</a>
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/handshake.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Deals</small></button>
+                <div class="dropdown-content">
+                  <a href="/deals">Agency Deals</a>
+                  <a href="">Add Deal</a>
+                </div>
+              </div>
             </li>
+            <div class="vl"></div>
             <li class="nav-item">
-                <a class="nav-link oswald" href="/contacts" style="color: white;">Contacts</a>
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/man.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Contacts</small></button>
+                <div class="dropdown-content">
+                  <a href="/contacts">Agency Contacts</a>
+                  <a href="">Add Contact</a>
+                </div>
+              </div>
             </li>
+            <div class="vl"></div>
             <li class="nav-item">
-              <a class="nav-link oswald" href="/human_resource/employees" style="color: white;">Human Resource</a>
-          </li>
-            <li class="nav-item">
-                <a class="nav-link oswald" href="{{url_for('logout')}}" style="color: white;">Logout</a>
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/human-resources.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">HR</small></button>
+                <div class="dropdown-content">
+                  <a href="/human_resource/employees">HR</a>
+                </div>
+              </div>
             </li>
+            <div class="vl"></div>
             <li class="nav-item">
-              <a class="nav-link oswald" href="/cloudstorage" style="color: white;">Cloud Storage</a>
-          </li>
-
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/log-out.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logout</small></button>
+                <div class="dropdown-content">
+                  <a href="{{url_for('logout')}}">Bye Bye!</a>
+                </div>
+              </div>
+            </li>
           </ul>
         </div>
-        <img src="/static/images/logo.png" style="width: 3%; float: right; margin-right: 2%;"/>
       </nav>
 
 {% block content %}
@@ -96,6 +125,13 @@ function download_csv(sel,type){
   $("#download").show()
 }
 </script>
+<style>
+  .vl {
+    border-left: 2px solid rgb(255, 255, 255);
+    height: 25px;
+    margin-top: 1%;
+  }
+  </style>
 <script src="/static/owlcarousel/dist/owl.carousel.min.js"></script>
 
 </body>

@@ -11,6 +11,8 @@
   border-radius: 12px;
   background-color: rgba(41, 54, 69, 1);
   color: white;
+  float: left;
+
 }
 
 .child01 {
@@ -432,70 +434,72 @@
     </div>
   </div>
 -->
-  <div class="container-fluid" style="padding: 10px; text-align: center;">
-    <div class="parrot">
+  <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
     <div class="row">
-      <div class="col">
-        <div class="container" style="width: 340px; float: left;">
-        <input type="text" name="searchbar" id="searchbar" class="filter_add05" placeholder="Search" aria-label="searchbar">
-        <select name="status_category" id="status_category" class="filter_add" style="width: 100px; margin-top: 7px;">
-          <option selected="selected" value="">Status</option>
-          <option value="Available">Available</option>
-          <option value="Archived">Archived</option>
-          <option value="Rented">Rented</option>
-          <option value="Blocked">Blocked</option>s
-          <option value="Moved In">Moved In</option>
-          <option value="Expired">Expired</option>
-          <option value="Owner Occupied">Owner Occupied</option>
-          <option value="Pending">Pending</option>
-          <option value="Sold">Sold</option>
-          <option value="Upcoming">Upcoming</option>
-          <option value="Reserved">Reserved</option>
-          <option value="In process">Available ,Rented, Sold, Upcoming, Reserved, Moved In</option>
-        </select>
-        <select name="purpose_category" id="purpose_category" class="filter_add" style="width: 100px; margin-top: 7px;">
-          <option selected="selected" value="">Purpose</option>
-          <option value="Sale">Sale</option>
-          <option value="Rent">Rent</option>
-    </select>
-    <select name="listing_users" id="listing_users" class="filter_add" style="width: 100px; margin-top: 7px;">
-      <option selected="selected" value="">Users</option>
-      {% for users in all_listing_users %}
-      <option value="{{users.username}}">{{users.username}}</option>
-      {% endfor %}
-    </select>
-  </div>
-        <div class="child" style="margin-left: 0px;">
-          <h6 style="text-align: left;">Description</h6>
-        <select name="beds_category" id="beds_category" class="filter_add02">
-          <option selected="selected" value="">Beds</option>
-          <option value="ST">Studio</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </select>
-        <select name="subtype_category" id="subtype_category" class="filter_add02">
-          <option selected="selected" value=''>Type</option>
-          <option value='Villa'>Villa</option>
-          <option value='Apartment'>Apartment</option>
-          <option value='Loft Apartment'>Loft Apartment</option>
-          <option value='Residential Floor'>Residential Floor</option>
-          <option value='Residential Plot'>Residential Plot</option>
-          <option value='Townhouse'>Townhouse</option>
-          <option value='Residential Building'>Residential Building</option>
-          <option value='Penthouse'>Penthouse</option>
-          <option value='Villa Compound'>Villa Compound</option>
-          <option value='Hotel Apartment'>Hotel Apartment</option>
-          <option value='Office'>Office</option>
-          <option value='Land'>Land</option>
-          <option value='Other'>Other</option>
-        </select>
+      <div style="width: 14.5%; height: 10%; height:30px; margin-left: 1%; margin-right: 0.5%; margin-top: 0.8%;">
+        <input style="width: 100%; height: 10%; height:30px; margin-left: 1%; margin-right: 0.5%;" type="text" name="searchbar" id="searchbar" class="filter_add05" placeholder="Search" aria-label="searchbar">
       </div>
-        <div class="child">
-          <h6 style="text-align: left;">Area</h6>
+      <div class="child" style="margin-left: 0px;">
+        <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/product-description.png"/><span><h6 style="text-align: left;">Description</h6>
+      <select name="beds_category" id="beds_category" class="filter_add02">
+        <option selected="selected" value="">Beds</option>
+        <option value="ST">Studio</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+      <select name="subtype_category" id="subtype_category" class="filter_add02">
+        <option selected="selected" value=''>Type</option>
+        <option value='Villa'>Villa</option>
+        <option value='Apartment'>Apartment</option>
+        <option value='Loft Apartment'>Loft Apartment</option>
+        <option value='Residential Floor'>Residential Floor</option>
+        <option value='Residential Plot'>Residential Plot</option>
+        <option value='Townhouse'>Townhouse</option>
+        <option value='Residential Building'>Residential Building</option>
+        <option value='Penthouse'>Penthouse</option>
+        <option value='Villa Compound'>Villa Compound</option>
+        <option value='Hotel Apartment'>Hotel Apartment</option>
+        <option value='Office'>Office</option>
+        <option value='Land'>Land</option>
+        <option value='Other'>Other</option>
+      </select>
+    </div>
+      <div class="child" style="width: auto;">
+        <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Availablility</h6>
+      <select name="status_category" id="status_category" class="filter_add02">
+        <option selected="selected" value="">Status</option>
+        <option value="Available">Available</option>
+        <option value="Archived">Archived</option>
+        <option value="Rented">Rented</option>
+        <option value="Blocked">Blocked</option>s
+        <option value="Moved In">Moved In</option>
+        <option value="Expired">Expired</option>
+        <option value="Owner Occupied">Owner Occupied</option>
+        <option value="Pending">Pending</option>
+        <option value="Sold">Sold</option>
+        <option value="Upcoming">Upcoming</option>
+        <option value="Reserved">Reserved</option>
+        <option value="In process">Available ,Rented, Sold, Upcoming, Reserved, Moved In</option>
+      </select>
+      <select name="purpose_category" id="purpose_category" class="filter_add02">
+        <option selected="selected" value="">Purpose</option>
+        <option value="Sale">Sale</option>
+        <option value="Rent">Rent</option>
+    </select>
+    <select name="listing_users" id="listing_users" class="filter_add02" >
+    <option selected="selected" value="">Users</option>
+    {% for users in all_listing_users %}
+    <option value="{{users.username}}">{{users.username}}</option>
+    {% endfor %}
+    </select>
+
+      </div>
+        <div class="child" style="width: auto;">
+          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/location-pointer.png"/><span><h6 style="text-align: left;">Area</h6>
         <select name="location_category" id="location_category" class="filter_add02">
           <option selected="selected" value=''>Location</option>
           <option value='Abu Dhabi Gate City'>Abu Dhabi Gate City</option>
@@ -659,32 +663,46 @@
         </select>
       </div>
         <div class="child">
-          <h6 style="text-align: left;">Price</h6>
+          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/different-currencies.png"/><span><h6 style="text-align: left;">Price</h6>
           <input type="text" name="minprice" id="minprice" class="filter_add02" placeholder="Min. Price" aria-label="minprice">
           <input type="text" name="maxprice" id="maxprice" class="filter_add02" placeholder="Max. Price" aria-label="maxprice">
         </div>
-        <div class="child">
-          <h6 style="text-align: left;">Duration</h6>
-          <input type="date" id="propdate" name="propdate" class="filter_add02">
-          <input type="date" id="propdate2" name="propdate2" class="filter_add02">
+        <div class="child" style="margin-left: 0px;">
+          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/global.png"/><span><h6 style="text-align: left;">Promotions</h6>
+        <select name="beds_category" id="beds_category" class="filter_add02">
+          <option selected="selected" value="">Promoted</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+        <select name="subtype_category" id="subtype_category" class="filter_add02">
+          <option selected="selected" value=''>Platform</option>
+          <option value='UHP'>UHP</option>
+          <option value='Property Finder'>Property Finder</option>
+          <option value='Bayut'>Bayut</option>
+        </select>
+      </div>
+        <div class="child" style="width: auto; margin-top: 0.25%; margin-left: 1%;">
+          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+          <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+          <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
         </div>
-        <div class="child">
-          <h6 style="text-align: left;">Owner Details</h6>
+        <div class="child" style="width: auto; margin-top: 0.25%;">
+          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/real-estate-agent.png"/><span><h6 style="text-align: left;">Owner Details</h6>
           <input type="text" name="ownname" id="ownname" class="filter_add02" placeholder="Name" aria-label="ownname">
           <input type="text" name="ownnumber" id="ownnumber" class="filter_add02" placeholder="Number" aria-label="ownnumber">
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"> Search</button>
-        <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;">Reset</button>
-        
+
+      <div class="row">
+        <div class="col">
+          <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+          <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+          
+        </div>
       </div>
-    </div>
   </div>
 
-  </div>
+
     <div class="container-fluid" style="padding: 10px; ">
       <div class="row">
         <div class="col">
@@ -695,7 +713,7 @@
           data-toolbar="#toolbar"
           data-search="true"
           data-pagination="true"
-          data-height="750"
+          data-height="700"
           data-page-size="100"
           data-page-list="[25, 50, 100, 200, All]">
           </table>
@@ -972,7 +990,7 @@ function view_property(x){
           }
 
         grepFunc14 = function(item){
-              return item.refno == z;
+              return (item.refno == z || item.owner_contact == z);
         }
 
         grepFunc15 = function(item){
@@ -1115,6 +1133,23 @@ function view_property(x){
             })
         })
     }
+
+    function startpromotion(x){
+      fetch('/startpromotion/'+x).then(function(response){
+            response.json().then(function(){
+              location.reload();
+            }
+            )})
+          }
+
+    function stoppromotion(x){
+      fetch('/removepromotion/'+x).then(function(response){
+            response.json().then(function(){
+              location.reload();
+            }
+            )})
+          }
+
 
     function getproperty(){
     var data = $('#property_table').bootstrapTable('getSelections');
