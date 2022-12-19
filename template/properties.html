@@ -11,7 +11,6 @@
   border-radius: 12px;
   background-color: rgba(41, 54, 69, 1);
   color: white;
-  float: left;
 
 }
 
@@ -526,6 +525,7 @@
           <option value='Al Hudayriat Island'>Al Hudayriat Island</option>
           <option value='Al Ittihad Road'>Al Ittihad Road</option>
           <option value='Al Jubail Island'>Al Jubail Island</option>
+          <option value='Al Jubail Island'>Al Jurf Island</option>
           <option value='Al Karamah'>Al Karamah</option>
           <option value='Al Khaleej Al Arabi Street'>Al Khaleej Al Arabi Street</option>
           <option value='Al Khalidiya'>Al Khalidiya</option>
@@ -674,7 +674,7 @@
           <option value="Yes">Yes</option>
           <option value="No">No</option>
         </select>
-        <select name="subtype_category" id="subtype_category" class="filter_add02">
+        <select name="webpromote" id="webpromote" class="filter_add02">
           <option selected="selected" value=''>Platform</option>
           <option value='UHP'>UHP</option>
           <option value='Property Finder'>Property Finder</option>
@@ -920,6 +920,7 @@ function view_property(x){
         var r = $("#ownnumber").val()
         var z = $("#searchbar").val()
         var s1 = $("#view_cat").val()
+        var s2 = $("#webpromote").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -935,6 +936,7 @@ function view_property(x){
         var grepFunc13;
         var grepFunc14;
         var grepFunc15;
+        var grepFunc16;
 
 
         grepFunc = function(item){
@@ -996,6 +998,10 @@ function view_property(x){
         grepFunc15 = function(item){
               return item.view == s1;
         }
+
+        grepFunc16 = function(item){
+              return item.portal != "Not Promoted";         
+        }
         
         if (s != "")
         {test = $.grep(test, grepFunc)}
@@ -1042,6 +1048,9 @@ function view_property(x){
         if (s1 != "")
         {test = $.grep(test, grepFunc15)}
 
+        if (s2 != "")
+        {test = $.grep(test, grepFunc16)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -1061,6 +1070,7 @@ function view_property(x){
         $("#ownnumber").val("");
         $("#searchbar").val("");
         $("#view_cat").val("");
+        $("#webpromote").val("");
         })
 
  
