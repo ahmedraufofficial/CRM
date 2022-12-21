@@ -719,6 +719,10 @@
           </table>
         </div>
       </div>
+      {% if current_user.export == True %}
+            <button onclick="get_check('properties')" class="btn btn-primary">Export</button>
+            {% endif %}
+            <a id="download" href="">Download</a>
 
     </div>
 
