@@ -460,6 +460,10 @@ def edit_property(variable):
         delete2 = form.new_files02.data
         if not os.path.isdir(UPLOAD_FOLDER+'/'+edit.refno): 
             os.mkdir(UPLOAD_FOLDER+'/'+edit.refno)
+        if not os.path.isdir(UPLOAD_FOLDER+'/'+edit.refno+'/floorplan'): 
+            os.mkdir(UPLOAD_FOLDER+'/'+edit.refno+'/floorplan')
+        if not os.path.isdir(UPLOAD_FOLDER+'/'+edit.refno+'/masterplan'): 
+            os.mkdir(UPLOAD_FOLDER+'/'+edit.refno+'/masterplan')
 
 
 
@@ -544,7 +548,7 @@ def edit_property(variable):
 
         db.session.commit()
         logs(current_user.username,edit.refno,'Edited')
-        return redirect(url_for('handleproperties.display_properties'))
+        return (redirect(url_for('handleproperties.display_properties')))
     if edit.privateamenities != None:
         form.privateamenities.data = edit.privateamenities.split(',')
     if edit.commercialamenities != None:
