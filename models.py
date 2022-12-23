@@ -98,6 +98,8 @@ class Properties(db.Model):
     portal = db.Column(db.String(100))
     created_at = db.Column(db.DateTime)
     view = db.Column(db.String(50))
+    floorplan = db.Column(db.String(1000))
+    masterplan = db.Column(db.String(1000))
 
 class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)

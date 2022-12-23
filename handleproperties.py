@@ -212,6 +212,8 @@ def add_property_rent():
     form = AddPropertyForm()
     if request.method == 'POST': 
         files_filenames = []
+        files01_filenames = []
+        files02_filenames = []
         status = form.status.data
         city = form.city.data
         type = "Rent"
@@ -275,12 +277,38 @@ def add_property_rent():
         except:
             newproperty.photos = ''
             db.session.commit()
+        try:
+            for filex in form.floorplan.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/UNI-R-'+str(newproperty.id)+'/floorplan'
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files01_filenames.append('/static/uploads'+'/UNI-R-'+str(newproperty.id)+"/floorplan/"+file_filename)
+            newproperty.floorplan = '|'.join(files01_filenames)
+            db.session.commit()
+        except:
+             newproperty.floorplan = ''
+             db.session.commit()
+        try:
+            for filex in form.masterplan.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/UNI-R-'+str(newproperty.id)+'/masterplan'
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files02_filenames.append('/static/uploads'+'/UNI-R-'+str(newproperty.id)+"/masterplan/"+file_filename)
+            newproperty.masterplan = '|'.join(files02_filenames)
+            db.session.commit()
+        except:
+             newproperty.masterplan = ''
+             db.session.commit()
         logs(current_user.username,'UNI-R-'+str(newproperty.id),'Added')
         notes('UNI-R-' + str(newproperty.id))
         add_user_list(current_user.username, 'UNI-R-'+str(newproperty.id))
         #dubbizlexml()
         return redirect(url_for('handleproperties.display_properties'))
-    return render_template('add_property.html', form=form, radio_enable = 'disabled', purpose = "rent",user = current_user.username)
+    return render_template('add_property.html', form=form, radio_enable = 'disabled', purpose = "rent",user = current_user.username, old_photos = "", variable="", old_floorplan = "", old_masterplan = "")
 
 @handleproperties.route('/add_property/sale', methods = ['GET','POST'])
 @login_required
@@ -290,6 +318,8 @@ def add_property_sale():
     form = AddPropertyForm()
     if request.method == 'POST': 
         files_filenames = []
+        files01_filenames = []
+        files02_filenames = []
         status = form.status.data
         city = form.city.data
         type = "Sale"
@@ -355,11 +385,37 @@ def add_property_sale():
         except:
              newproperty.photos = ''
              db.session.commit()
+        try:
+            for filex in form.floorplan.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/UNI-S-'+str(newproperty.id)+'/floorplan'
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files01_filenames.append('/static/uploads'+'/UNI-S-'+str(newproperty.id)+"/floorplan/"+file_filename)
+            newproperty.floorplan = '|'.join(files01_filenames)
+            db.session.commit()
+        except:
+             newproperty.floorplan = ''
+             db.session.commit()
+        try:
+            for filex in form.masterplan.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/UNI-S-'+str(newproperty.id)+'/masterplan'
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files02_filenames.append('/static/uploads'+'/UNI-S-'+str(newproperty.id)+"/masterplan/"+file_filename)
+            newproperty.masterplan = '|'.join(files02_filenames)
+            db.session.commit()
+        except:
+             newproperty.masterplan = ''
+             db.session.commit()
         logs(current_user.username,'UNI-S-'+str(newproperty.id),'Added')
         notes('UNI-S-' + str(newproperty.id))
         add_user_list(current_user.username, 'UNI-S-'+str(newproperty.id))
         return redirect(url_for('handleproperties.display_properties'))
-    return render_template('add_property.html', form=form, radio_enable = 'disabled', purpose = "sale", user=current_user.username)
+    return render_template('add_property.html', form=form, radio_enable = 'disabled', purpose = "sale", user=current_user.username, old_photos = "", variable="", old_floorplan = "", old_masterplan = "")
 
 
 
@@ -381,6 +437,8 @@ def edit_property(variable):
     new = form.locationtext.data
     form.locationtext.data = list(mydict.keys())[list(mydict.values()).index(edit.locationtext)]
     old_photos = edit.photos
+    old_floorplan = edit.floorplan
+    old_masterplan = edit.masterplan
     if request.method == 'POST':
         form.populate_obj(edit)
         edit.privateamenities = ",".join(form.privateamenities.data)
@@ -395,27 +453,95 @@ def edit_property(variable):
         file_data = json.load(w)
         edit.locationtext = file_data[new]
         files_filenames = []
+        files_filenames01 = []
+        files_filenames02 = []
         delete = form.new_files.data
-        if not os.path.isdir(UPLOAD_FOLDER+'/'+edit.refno):
+        delete1 = form.new_files01.data
+        delete2 = form.new_files02.data
+        if not os.path.isdir(UPLOAD_FOLDER+'/'+edit.refno): 
             os.mkdir(UPLOAD_FOLDER+'/'+edit.refno)
-        if delete == '1':
+
+
+
+
+        if delete == '1': # for deleting purposes
             files = glob.glob(UPLOAD_FOLDER+'/'+edit.refno+'/*')
-            for f in files:
+            for f in files: # simply deleting all the photos in the current directory
                 os.remove(f)
-        for filex in form.photos.data:
-            file_filename = secure_filename(filex.filename)
-            if file_filename == '':
-                break
-            filex.save(os.path.join(UPLOAD_FOLDER+'/'+edit.refno, file_filename))
-            files_filenames.append('/static/uploads'+'/'+edit.refno+'/'+file_filename)
+        for filex in form.photos.data: # these are the new photos uploaded 
+            file_filename = secure_filename(filex.filename) # checking for valid file name 
+            if file_filename == '': 
+                break # gawddamn yahan pe tou scene hi khatam hoo geya 
+            filex.save(os.path.join(UPLOAD_FOLDER+'/'+edit.refno, file_filename)) # directory mei saved 
+            files_filenames.append('/static/uploads'+'/'+edit.refno+'/'+file_filename) # new pictures are now saved in an array 
         if delete == '0':
-            z = '|'.join(files_filenames)    
-            if old_photos == None:
-                edit.photos = z
+            z = '|'.join(files_filenames)    # new pictures saved in the "|" format
+            if old_photos == None and file_filename != '':
+                edit.photos = z # only new pictures being added 
+            elif file_filename != '':
+                edit.photos = old_photos+'|'+z # new pictures added with the new ones here 
             else:
-                edit.photos = old_photos+'|'+z
+                edit.photos = old_photos
         else:
-            edit.photos = '|'.join(files_filenames)
+            pass
+
+
+
+
+        
+        if delete1 == '1': # for deleting purposes
+            files = glob.glob(UPLOAD_FOLDER+'/'+edit.refno+'/floorplan/*')
+            for f in files: # simply deleting all the photos in the current directory
+                os.remove(f)
+        for filex in form.floorplan.data: # these are the new photos uploaded 
+            file_filename01 = secure_filename(filex.filename) # checking for valid file name 
+            if file_filename01 == '': 
+                break # gawddamn yahan pe tou scene hi khatam hoo geya 
+            filex.save(os.path.join(UPLOAD_FOLDER+'/'+edit.refno+'/floorplan', file_filename01)) # directory mei saved 
+            files_filenames01.append('/static/uploads'+'/'+edit.refno+'/floorplan/'+file_filename01) # new pictures are now saved in an array 
+        if delete1 == '0':
+            z = '|'.join(files_filenames01)    #new pictures saved in the "|" format
+            if old_floorplan == None and file_filename01 != '':
+                edit.floorplan = z # only new pictures being added 
+            elif file_filename01 != '':
+                edit.floorplan = old_floorplan+'|'+z # new pictures added with the new ones here 
+            else:
+                edit.floorplan = old_floorplan
+        else:
+            if file_filename01 != '':
+                edit.floorplan = '|'.join(files_filenames01)
+            else:
+                edit.floorplan = None
+
+
+
+
+        if delete2 == '1': # for deleting purposes
+            files = glob.glob(UPLOAD_FOLDER+'/'+edit.refno+'/masterplan/*')
+            for f in files: # simply deleting all the photos in the current directory
+                os.remove(f)
+        for filex in form.masterplan.data: # these are the new photos uploaded 
+            file_filename02 = secure_filename(filex.filename) # checking for valid file name 
+            if file_filename02 == '': 
+                break # gawddamn yahan pe tou scene hi khatam hoo geya 
+            filex.save(os.path.join(UPLOAD_FOLDER+'/'+edit.refno+'/masterplan', file_filename02)) # directory mei saved 
+            files_filenames02.append('/static/uploads'+'/'+edit.refno+'/masterplan/'+file_filename02) # new pictures are now saved in an array 
+        if delete2 == '0':
+            z = '|'.join(files_filenames02)    # new pictures saved in the "|" format
+            if old_masterplan == None and file_filename02 != '': 
+                edit.masterplan = z # only new pictures being added 
+            elif file_filename02 != '':
+                edit.masterplan = old_masterplan+'|'+z # new pictures added with the new ones here 
+            else:
+                edit.masterplan = old_masterplan
+        else:
+            if file_filename02 != '':
+                edit.masterplan = '|'.join(files_filenames02)
+            else:
+                edit.masterplan = None
+
+
+
         db.session.commit()
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handleproperties.display_properties'))
@@ -423,7 +549,7 @@ def edit_property(variable):
         form.privateamenities.data = edit.privateamenities.split(',')
     if edit.commercialamenities != None:
         form.commercialamenities.data = edit.commercialamenities.split(',')
-    return render_template('add_property.html', form=form, radio_enable = 'enabled',community=edit.locationtext, building = edit.building, purpose=category, assign=edit.assign_to,user=current_user.username)
+    return render_template('add_property.html', form=form, radio_enable = 'enabled',community=edit.locationtext, building = edit.building, purpose=category, assign=edit.assign_to,user=current_user.username, old_photos=old_photos, variable=variable, old_floorplan = old_floorplan, old_masterplan = old_masterplan)
 
 
 @handleproperties.route('/community/<location>',methods = ['GET','POST'])
@@ -567,6 +693,36 @@ def removepromotion(refnum):
         i.portal = "1"
         db.session.commit()
     return jsonify(success=True)
+
+@handleproperties.route('/deleteimages/<element>/<refnum>') #lesssgooo
+@login_required
+def deleteimage(element, refnum):
+    all_leads = db.session.query(Properties).filter(Properties.refno == refnum)
+    files = sorted(glob.glob(UPLOAD_FOLDER+'/'+refnum+'/*'))
+    print(element)
+    yo = element.split(",")
+    for i in all_leads:
+        x=i.photos.split("|")
+    w=0
+    for i in yo:
+        for f in files:
+            if x[int(i)-w][-15:] == f[-15:]:
+                os.remove(f)
+                x.__delitem__(int(i)-w)
+                w+=1
+                print(w)
+                break
+            else:
+                continue
+    z="|".join(x)
+    for i in all_leads:
+        if z != "":
+            i.photos = z
+        else:
+            i.photos = None
+    db.session.commit()
+    return jsonify(success=True)
+
 
 @handleproperties.route('/debugdaddy') #lesssgooo
 @login_required

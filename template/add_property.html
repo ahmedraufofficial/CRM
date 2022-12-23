@@ -10,6 +10,11 @@ padding-top: 10px;
     margin: 5px;
     margin-top: 20px;
 }
+.column1{
+    padding-top: 10px;
+    margin: 5px;
+    margin-top: 20px;
+}
 h4{
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -17,12 +22,15 @@ h4{
     font-size: 14pt;
     font-family: 'Oswald';
 }
+img {
+  border-radius: 20%;
+}
 </style>
 
 <!--script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script-->
 <section>
     <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
-<div class="container" >
+<div class="container-fluid" >
 <form method="POST" enctype="multipart/form-data">
   <dl>
   
@@ -172,14 +180,10 @@ h4{
    
            
  
-                {{ form.photos.label(class="control-label") }}
-                {{ form.photos(class="form-control-file", style="color:white;") }}
+                
 
 
-                    {% if radio_enable == 'enabled' %}
-                    {{ form.new_files.label(class="control-label") }}
-                    {{ wtf.form_field(form.new_files) }}
-                    {% endif %}
+                    
             
               <br>
                     <h4>Private Amenities</h4>
@@ -223,9 +227,29 @@ h4{
                 {{ wtf.form_field(form.view) }}
 
                 {{ wtf.form_field(form.assign_to) }}
+
+                {% if radio_enable == 'enabled' %}
+                    {{ form.new_files01.label(class="control-label") }}
+                    {{ wtf.form_field(form.new_files01) }}
+                    {{ form.new_files02.label(class="control-label") }}
+                    {{ wtf.form_field(form.new_files02) }}
+                    {% endif %}
  
         </div>
+        <div class="col column">
+            <h4>Media</h4>
+            {{ form.photos.label(class="control-label") }}
+            {{ form.photos(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+            <div id="images007" style="padding-left: 25px; border: 1px solid grey; border-radius: 12px; margin: 3px;"></div>
+            {{ form.floorplan.label(class="control-label") }}
+            {{ form.floorplan(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+            <div id="images008" style="padding-left: 25px; border: 1px solid grey; border-radius: 12px; margin: 3px;"></div>
+            {{ form.masterplan.label(class="control-label") }}
+            {{ form.masterplan(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+            <div id="images009" style="padding-left: 25px; border: 1px solid grey; border-radius: 12px; margin: 3px;"></div>
+        </div>
 </div>
+
 {% endif %}    
 
 {% if purpose == "sale" %}
@@ -308,16 +332,9 @@ h4{
   
             {{ form.furnished.label(class="control-label") }}
             {{wtf.form_field(form.furnished)}}
-       
-
-            {{ form.photos.label(class="control-label") }}
-            {{ form.photos(class="form-control-file", style="color:white;") }}
 
 
-                {% if radio_enable == 'enabled' %}
-                {{ form.new_files.label(class="control-label") }}
-                {{ wtf.form_field(form.new_files) }}
-                {% endif %}
+                
         
           <br>
                 <h4>Private Amenities</h4>
@@ -359,6 +376,25 @@ h4{
             {{ wtf.form_field(form.view) }}
 
             {{ wtf.form_field(form.assign_to) }}
+
+            {% if radio_enable == 'enabled' %}
+                {{ form.new_files01.label(class="control-label") }}
+                {{ wtf.form_field(form.new_files01) }}
+                {{ form.new_files02.label(class="control-label") }}
+                {{ wtf.form_field(form.new_files02) }}
+                {% endif %}
+    </div>
+    <div class="col column">
+        <h4>Media</h4>
+        {{ form.photos.label(class="control-label") }}
+        {{ form.photos(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+        <div id="images007" style="padding-left: 25px; border: 1px solid grey; border-radius: 12px; margin: 3px;"></div>
+        {{ form.floorplan.label(class="control-label") }}
+        {{ form.floorplan(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+        <div id="images008" style="padding-left: 25px; border: 1px solid grey; border-radius: 12px; margin: 3px;"></div>
+        {{ form.masterplan.label(class="control-label") }}
+        {{ form.masterplan(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+        <div id="images009" style="padding-left: 25px; border: 1px solid grey; border-radius: 12px; margin: 3px;"></div>
     </div>
 </div>
 {% endif %}   
@@ -479,6 +515,95 @@ price_form.addEventListener('input', inputHandler);
         })
     }
     window.onload = get_contacts();
+    
+    window.onload = get_images();
+
+    window.onload = get_floorplans();
+
+    window.onload = get_masterplans();
+
+    function get_images() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            h = {{old_photos|tojson}}
+            if (h != null ) {
+                a=h.split('|')
+                imagedata = "<div class='row'>"
+                for(i = 0; i<a.length ; i++){
+                    imagedata += '<div class="column1"><div class="item"><img style="height:80px; width: 120px, border-radius: 20%;" src="' + a[i] + '"></div></div><label class="switch"><input type="checkbox" id="image.no.'+a[i]+'" checked<span class="slider round"></span></label>'
+                }
+                imagedata += "</div><div class='row' ><button type='button' onClick='DeleteImage()' style='border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white'>Delete</button></div>"
+                document.getElementById("images007").innerHTML = imagedata;
+
+            }
+            
+        }
+        else {
+            console.log("No Wassup")
+        }
+    }
+
+    function get_floorplans() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            h = {{old_floorplan|tojson}}
+            if (h != null ) {
+                a=h.split('|')
+                imagedata = "<div class='row'>"
+                for(i = 0; i<a.length ; i++){
+                    imagedata += '<div class="column1"><div class="item"><img style="height:110px; width: 180px; border-radius: 20%;" src="' + a[i] + '"></div></div>'
+                }
+                document.getElementById("images008").innerHTML = imagedata;
+            }
+            
+        }
+        else {
+            console.log("No Wassup")
+        }
+    }
+
+    function get_masterplans() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            h = {{old_masterplan|tojson}}
+            if (h != null ) {
+                a=h.split('|')
+                imagedata = "<div class='row'>"
+                for(i = 0; i<a.length ; i++){
+                    imagedata += '<div class="column1"><div class="item"><img style="height:120px; width: 180px; border-radius: 20%;" src="' + a[i] + '"></div></div>'
+                }
+                document.getElementById("images009").innerHTML = imagedata;
+            }
+            
+        }
+        else {
+            console.log("No Wassup")
+        }
+    }
+
+
+    function DeleteImage() {
+        h = {{old_photos|tojson}}
+        refno = {{variable|tojson}}
+        a=h.split('|')
+        z=[]
+        for(i = 0; i<a.length ; i++){
+            checkBox = document.getElementById("image.no."+a[i]);
+            if (checkBox.checked == true){
+                z.push(i)
+            } 
+            else {
+                continue
+            }
+        }
+        if ( z != "") {
+            fetch('/deleteimages/'+z+'/'+refno).then(function(response){
+                response.json().then(function(){
+                    location.reload();
+            }
+            )})
+        }
+    }
 
     function getcontact(){
     var data = $('#table').bootstrapTable('getSelections');
@@ -509,6 +634,32 @@ price_form.addEventListener('input', inputHandler);
     }
         })
     }
+
+    function view_property(x){
+        fetch('/all_properties/'+x).then(function(response){
+          response.json().then(function(data){
+            var p = data.property
+            Object.keys(p[0]).map(function (key, index) {
+                if (p[0][key] == null) {
+                    p[0][key] = "";
+                }
+            });
+            var x = p[0].photos
+            $('#images').empty();
+            $('#notes').hide();
+            var imagedata = '';
+            imagedata += '<div class="owl-carousel" id="owl-demo">'
+   for (i = 0; i < x.length; i++) {
+      if (x[i] != ''){
+      imagedata += '<div class="item"><img style="height:200px;" src="' + x[i] + '"></div>'
+      }
+    }
+    imagedata += '</div>'
+            $('#images').append(imagedata);
+            $("#owl-demo").owlCarousel();
+            })
+        })
+    };
 
 
 

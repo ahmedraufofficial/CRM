@@ -65,7 +65,7 @@ class AddPropertyForm(FlaskForm):
     title = StringField('Title *',[validators.DataRequired()])
     description = TextAreaField('Description *',[validators.DataRequired()], widget=TextArea())
     unit = StringField('Unit *', [validators.DataRequired(),validators.Length(min=4, max=50)])
-    plot = StringField('Unit Floor/Plot', [validators.Length(min=4, max=50)])
+    plot = StringField('Floor/Plot', [validators.Length(min=4, max=50)])
     street = StringField('Street', [validators.Length(min=4, max=50)])
     size = FloatField('Build Area *', [validators.DataRequired()])
     plot_size = FloatField('Plot Size')
@@ -81,7 +81,7 @@ class AddPropertyForm(FlaskForm):
     building = SelectField(u'Location *',[validators.DataRequired()],choices = [])
     privateamenities = MultiCheckboxField('Property Features', choices=features)
     commercialamenities = MultiCheckboxField('Commercial Amenities',choices=amenities)
-    photos = MultipleFileField('File(s) Upload')
+    photos = MultipleFileField('Photos')
     new_files = RadioField('Delete Uploaded Images',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
     geopoint = StringField('GeoPoint (LAT,LON) *')
     bathrooms = SelectField(u'Baths',choices = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'), (10, '10'),(0,'Other')])
@@ -104,6 +104,10 @@ class AddPropertyForm(FlaskForm):
     parking = SelectField(u'Parking',choices = [(None,'-'),(1, '1'), (2, '2'), (3, '3')])
     portal = SelectField(u'Promote on Website',choices = [(1, "No"), (0, "Yes")])
     view = SelectField(u'View',choices= [('none', 'None'),('Canal View', 'Canal View'),('Island View', 'Island View'),('Pool View', 'Pool View'),('Partial Canal','Partial Canal'),('Golf View', 'Golf View'),('Sea View', 'Sea View'),('Partial Sea', 'Partial Sea'),('Mangrove View', 'Mangrove View'),('Ocean View', 'Ocean View'),('Building View', 'Building View'),('Single Row', 'Single Row'),('Double Row', 'Double Row')])
+    floorplan = MultipleFileField('Floorplan')
+    masterplan = MultipleFileField('Masterplan')
+    new_files01 = RadioField('Delete Uploaded Floorplan',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
+    new_files02 = RadioField('Delete Uploaded Masterplan',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
 
 class AddContactForm(FlaskForm):
     title = SelectField(u'Title',choices = [('','Select'),('Mr', 'Mr'),('Mrs','Mrs'),('Ms','Ms'),('Miss','Miss'),('Sir','Sir')])
