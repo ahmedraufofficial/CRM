@@ -530,7 +530,7 @@ price_form.addEventListener('input', inputHandler);
                 a=h.split('|')
                 imagedata = "<div class='row'>"
                 for(i = 0; i<a.length ; i++){
-                    imagedata += '<div class="column1"><div class="item"><img style="height:80px; width: 120px, border-radius: 20%;" src="' + a[i] + '"></div></div><label class="switch"><input type="checkbox" id="image.no.'+a[i]+'" checked<span class="slider round"></span></label>'
+                    imagedata += '<div class="column1"><div class="item"><img style="height:80px !important; width: 110px !important; border-radius: 20% !important;" src="' + a[i] + '"></div></div><label class="switch"><input type="checkbox" id="image.no.'+a[i]+'" checked<span class="slider round"></span></label>'
                 }
                 imagedata += "</div><div class='row' ><button type='button' onClick='DeleteImage()' style='border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white'>Delete</button></div>"
                 document.getElementById("images007").innerHTML = imagedata;
