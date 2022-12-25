@@ -774,6 +774,30 @@ def rmportals():
         db.session.commit()
     return "ok"
 
+@handleproperties.route('/cleaning_photos',methods = ['GET','POST'])
+@login_required
+def cleaning_photos():
+    l = db.session.query(Properties).all()
+    for i in l:
+        a=i.photos
+        if a != None:
+            q=a.split("|")
+            h=0
+            for w in range(len(q)):
+                if q[w-h]=="":
+                    q.__delitem__(w-h)
+                    h+=1
+                else:
+                    continue
+            if q == []:
+                i.photos = None
+            else:
+                i.photos='|'.join(q)
+        else:
+            continue
+    db.session.commit()
+    return "ok"
+
 
 @handleproperties.route('/uploadlisting',methods = ['GET','POST'])
 @login_required
