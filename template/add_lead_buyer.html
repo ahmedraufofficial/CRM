@@ -314,11 +314,11 @@ padding-top: 10px;
                 let optionHTML = '';
                 
                 for (let users of data.all_users){
-                    if ( users.name == assign ){
-                        optionHTML += '<option value="'+users.name+'" selected>'+users.name+'</option>';
+                    if ( users.sale == true ){
+                        optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
                     }
-                    else{
-                    optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                    else{ 
+                        continue
                     }
                 }
                 assign_to.innerHTML = optionHTML;

@@ -74,9 +74,9 @@ height: 40px !important;
 .si2{
   width:30px !important;height:30px !important;border-radius:20px !important;
   display: inline;
-  padding-bottom: 15px;
+  padding-bottom: 3px;
   margin: 2px;
-  border: 1px solid white !important;
+  border: 0 !important;
   }
 
 .btn-primary {
@@ -87,6 +87,20 @@ height: 40px !important;
 .btn-primary:hover {
   background-color: transparent !important;
   color: black !important;
+}
+.btn-secondary {
+  background-color:#2b4562 !important;
+  border-radius: 12px !important;
+}
+
+.btn-secondary:hover {
+  background-color: transparent !important;
+  color: black !important;
+}
+
+.btn-danger {
+  background-color:#1c4472 !important;
+  border-radius: 12px !important;
 }
 
 .btn-danger:hover {
@@ -100,13 +114,19 @@ height: 40px !important;
 }
 
 .btn-warning {
-  background-color:#ffae00 !important;
+  background-color:#0c519f !important;
 }
 
 .btn-warning:hover {
   background-color:transparent !important;
   color: black !important;
 }
+
+.btn-success {
+  background-color:#1c6ac2 !important;
+  border-radius: 12px !important;
+}
+
 .btn-success:hover {
   background-color:transparent !important;
   color: black !important;

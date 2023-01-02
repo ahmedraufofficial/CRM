@@ -52,7 +52,9 @@
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Leads</small></button>
                 <div class="dropdown-content">
                   <a href="/leads">Agency Leads</a>
-                  <a href="">Add Lead </a>
+                  <a href="/add_lead_buyer">Add Buyer</a>
+                  <a href="/add_lead_developer">Add Developer</a>
+
                 </div>
               </div>
             </li>
@@ -72,26 +74,20 @@
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/man.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Contacts</small></button>
                 <div class="dropdown-content">
                   <a href="/contacts">Agency Contacts</a>
-                  <a href="">Add Contact</a>
+                  <a href="/add_contact">Add Contact</a>
                 </div>
               </div>
             </li>
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/human-resources.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">HR</small></button>
-                <div class="dropdown-content">
-                  <a href="/human_resource/employees">HR</a>
-                </div>
+                <a href="/human_resource/employees"><button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/human-resources.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">HR</small></button></a>
               </div>
             </li>
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/log-out.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logout</small></button>
-                <div class="dropdown-content">
-                  <a href="{{url_for('logout')}}">Bye Bye!</a>
-                </div>
+                <a href="{{url_for('logout')}}"><button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/log-out.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logout</small></button></a>
               </div>
             </li>
           </ul>

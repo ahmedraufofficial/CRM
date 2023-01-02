@@ -74,8 +74,8 @@ def display_leads():
             else:
                 followup = ""
                 followupBG = ""
-            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+flag+"</div>"
+            #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
             data.append(new)
     elif current_user.viewall == True and current_user.team_lead == True:
         for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
@@ -95,8 +95,8 @@ def display_leads():
             else:
                 followup = ""
                 followupBG = ""
-            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+flag+"</div>"
+            #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
             data.append(new)
         for i in current_user.team_members.split(','):
             for r in db.session.query(Leads).filter(or_(Leads.created_by == i,Leads.agent == i)):
@@ -116,8 +116,8 @@ def display_leads():
                 else:
                     followup = ""
                     followupBG = ""
-                viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-                new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+flag+"</div>"
+                #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
+                new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
                 data.append(new)
     else:
         for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
@@ -141,8 +141,8 @@ def display_leads():
             else:
                 followupBG = ""
                 followup = ""
-            viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+viewing+flag+"</div>"
+            #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
+            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
             data.append(new)
     f = open('lead_headers.json')
     columns = json.load(f)
@@ -184,6 +184,7 @@ def add_lead_buyer():
     if current_user.sale == False:
         return abort(404)  
     form = BuyerLead()
+    all_sale_users = db.session.query(User).filter_by(sale = True).all()
     if request.method == 'POST':
         contact = form.contact.data
         contact_name = form.contact_name.data
@@ -242,7 +243,7 @@ def add_lead_buyer():
         lead_email(current_user.email, 'UNI-L-' + str(newlead.id))
 
         return redirect(url_for('handleleads.display_leads'))
-    return render_template('add_lead_buyer.html', form=form, user = current_user.username)
+    return render_template('add_lead_buyer.html', form=form, user = current_user.username, all_sale_users = all_sale_users)
 
 @handleleads.route('/add_lead_developer/', methods = ['GET','POST'])
 @login_required
@@ -250,6 +251,7 @@ def add_lead_developer():
     if current_user.sale == False:
         return abort(404)  
     form = DeveloperLead()
+    all_sale_users = db.session.query(User).filter_by(sale = True).all()
     if request.method == 'POST':
         contact = form.contact.data
         contact_name = form.contact_name.data
@@ -306,7 +308,7 @@ def add_lead_developer():
         if property_requirements != "":
             update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
         return redirect(url_for('handleleads.display_leads'))
-    return render_template('add_lead_developer.html', form=form, user = current_user.username)
+    return render_template('add_lead_developer.html', form=form, user = current_user.username, all_sale_users = all_sale_users)
 
 
 @handleleads.route('/edit_lead/<markettype>/<var>', methods = ['GET','POST'])
