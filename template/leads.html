@@ -624,6 +624,13 @@
     <a href="/add_lead_developer" class="btn btn-warning" style="color: white;">Add Developer Lead</a>
     </div>
     -->
+  <div id="toolbar">
+    {% if current_user.export == True %}
+    <button onclick="get_check('leads')" class="btn btn-primary">Export</button>
+    {% endif %}
+    <a id="download" href="">Download</a>
+  </div>
+
     </div>
     </section>
 {% endblock %}
