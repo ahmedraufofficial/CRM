@@ -446,6 +446,7 @@ def all_users():
         userObj['name'] = contact.username
         userObj['number'] = contact.number
         userObj['email'] = contact.email
+        userObj['sale'] = contact.sale
         all_users.append(userObj)
     return jsonify({'all_users':all_users})
 
