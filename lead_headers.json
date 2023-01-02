@@ -6,67 +6,82 @@
     },
     {
      "field": "edit",
-     "title": "OPTIONS",
+     "title": "Options",
      "sortable": "False"
    },
     {
       "field": "refno",  
-      "title": "REF NO", 
+      "title": "Ref No.", 
       "sortable": "True"
     },
     {
       "field": "contact_name",
-      "title": "CONTACT",
+      "title": "Contact",
       "sortable": "True"
     },
     {
       "field": "contact_number",
-      "title": "NUMBER",
+      "title": "Number",
       "sortable": "True"
     },
     {
       "field": "agent",
-      "title": "AGENT",
-      "sortable": "True"
-    },
-    {
-      "field": "enquiry_date",
-      "title": "ENQUIRY DATE",
+      "title": "Agent",
       "sortable": "True"
     },
     {
       "field": "created_date",
-      "title": "CREATED DATE",
+      "title": "Created Date",
       "sortable": "True"
     },
     {
       "field": "lastupdated",
-      "title": "LAST UPDATED",
+      "title": "Last Updated",
       "sortable": "True"
     },
     {
       "field": "lead_type",
-      "title": "TYPE",
+      "title": "Type",
       "sortable": "True"
     },
     {
       "field": "created_by",
-      "title": "CREATED BY",
+      "title": "Created By",
       "sortable": "True"
     },
     {
       "field": "locationtext",
-      "title": "LOCATION",
+      "title": "Location",
+      "sortable": "True"
+    },
+    {
+      "field": "building",
+      "title": "Community",
+      "sortable": "True"
+    },
+    {
+      "field": "min_beds",
+      "title": "Beds",
+      "sortable": "True"
+    },
+    {
+      "field": "min_price",
+      "title": "Min Price",
+      "sortable": "True"
+    },
+    {
+      "field": "max_price",
+      "title": "Max Price",
       "sortable": "True"
     },
     {
       "field": "status",
-      "title": "STATUS",
+      "title": "Status",
       "sortable": "True"
     },
     {
       "field": "sub_status",
-      "title": "SUB STATUS",
+      "title": "Sub Status",
       "sortable": "True"
     }
   ]
