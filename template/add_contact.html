@@ -48,7 +48,8 @@ padding-top: 10px;
           {{ wtf.form_field(form.role) }}
           {{ wtf.form_field(form.nationality) }}
           {{ wtf.form_field(form.source) }}
-          {{ wtf.form_field(form.comment) }}
+          {{ form.comment.label(class="control-label")  }}
+          {{ form.comment(rows="4", id='description', style="display:block; width:100%; margin-bottom:15px; border: 1px solid black !important;border-radius: 0px !important;font-size: 10pt !important;") }}
         </div>
       </div>
   </dl>
