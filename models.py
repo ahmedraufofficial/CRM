@@ -100,6 +100,8 @@ class Properties(db.Model):
     view = db.Column(db.String(50))
     floorplan = db.Column(db.String(1000))
     masterplan = db.Column(db.String(1000))
+    cheques = db.Column(db.Integer)
+    property_finder = db.Column(db.String(500))
 
 class Leads(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -331,6 +331,12 @@
   </div>
 </div>
 
+<div id="myModal007" class="modal01">
+  <div class="modal-content">
+    <span class="close007">&times;</span>
+    <div id="message" style="text-align: center;"></div>
+  </div>
+</div>
 
 
 
@@ -976,7 +982,7 @@ function view_property(x){
             }
         
         grepFunc9 = function(item){
-              return parseInt(item.price) <= parseInt(w);
+              return pars/startpromotion/eInt(item.price) <= parseInt(w);
           }
 
         grepFunc10 = function(item){
@@ -1155,6 +1161,29 @@ function view_property(x){
             }
             )})
           }
+        
+    function propertyfinder03(x){
+      document.getElementById("message").innerHTML = '<h5 style="text-align: center;">Please wait while we connect to Property Finder</h5><div class="loader"></div>'
+      var modal = document.getElementById("myModal007");
+      var span = document.getElementsByClassName("close")[0];
+      modal.style.display = "block";
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+      fetch('/propertyfinder03/'+x).then(function(response){
+            response.json().then(function(message){
+              message=message.split('|')
+              final_message=''
+              for (i in message){
+                final_message += '<div><h6>'+message[i]+'</h6></div>'
+              }
+              lastly=final_message+'<div><button onclick="backtoback()" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-top: 7px; width: 200px; margin-left: auto; margin-right: auto;">Back to Agency Properties</button></div>'
+              document.getElementById("message").innerHTML = lastly
+            }
+            )})
+          }
 
     function stoppromotion(x){
       fetch('/removepromotion/'+x).then(function(response){
@@ -1163,7 +1192,18 @@ function view_property(x){
             }
             )})
           }
+    
+    function stoppf(x){
+      fetch('/delete_pf/'+x).then(function(response){
+            response.json().then(function(){
+              location.reload();
+            }
+            )})
+          }
 
+    function backtoback(){
+      location.reload()
+    }
 
     function getproperty(){
     var data = $('#property_table').bootstrapTable('getSelections');
@@ -1211,5 +1251,63 @@ function assign(x,y){
     }
     #owl-demo .item img{
       display: block;
-    }</style>
+    }
+    .modal01 {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal01-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .loader {
+      border: 12px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 12px solid #3498db;
+      width: 60px;
+      height: 60px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+      margin-top: 3%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 {% endblock %}

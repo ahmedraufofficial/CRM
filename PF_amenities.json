@@ -1,0 +1,415 @@
+{"amenities":
+  [
+    {
+        "id": 1,
+        "name": "Balcony"
+    },
+    {
+        "id": 2,
+        "name": "Basement parking"
+    },
+    {
+        "id": 3,
+        "name": "BBQ area"
+    },
+    {
+        "id": 4,
+        "name": "Cable-ready"
+    },
+    {
+        "id": 5,
+        "name": "Built in wardrobes"
+    },
+    {
+        "id": 6,
+        "name": "Carpets"
+    },
+    {
+        "id": 7,
+        "name": "Central air conditioning"
+    },
+    {
+        "id": 8,
+        "name": "Covered parking"
+    },
+    {
+        "id": 9,
+        "name": "Drivers room"
+    },
+    {
+        "id": 10,
+        "name": "Fully fitted kitchen"
+    },
+    {
+        "id": 11,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 12,
+        "name": "Gazebo"
+    },
+    {
+        "id": 13,
+        "name": "Private Gym"
+    },
+    {
+        "id": 14,
+        "name": "Private Jacuzzi"
+    },
+    {
+        "id": 15,
+        "name": "Kitchen Appliances"
+    },
+    {
+        "id": 16,
+        "name": "Maids Room"
+    },
+    {
+        "id": 17,
+        "name": "Marble floors"
+    },
+    {
+        "id": 18,
+        "name": "On high floor"
+    },
+    {
+        "id": 19,
+        "name": "On low floor"
+    },
+    {
+        "id": 20,
+        "name": "On mid floor"
+    },
+    {
+        "id": 21,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 22,
+        "name": "Pets allowed"
+    },
+    {
+        "id": 23,
+        "name": "Private garage"
+    },
+    {
+        "id": 24,
+        "name": "Private Garden"
+    },
+    {
+        "id": 25,
+        "name": "Private Pool"
+    },
+    {
+        "id": 26,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 27,
+        "name": "Sauna"
+    },
+    {
+        "id": 28,
+        "name": "Shared swimming pool"
+    },
+    {
+        "id": 29,
+        "name": "Wood flooring"
+    },
+    {
+        "id": 30,
+        "name": "Steam room"
+    },
+    {
+        "id": 31,
+        "name": "Study"
+    },
+    {
+        "id": 32,
+        "name": "Upgraded interior"
+    },
+    {
+        "id": 33,
+        "name": "Garden view"
+    },
+    {
+        "id": 34,
+        "name": "Sea\/Water view"
+    },
+    {
+        "id": 35,
+        "name": "Security"
+    },
+    {
+        "id": 36,
+        "name": "Maintenance"
+    },
+    {
+        "id": 37,
+        "name": "Within a Compound"
+    },
+    {
+        "id": 38,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 39,
+        "name": "Indoor swimming pool"
+    },
+    {
+        "id": 40,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 41,
+        "name": "Separate entrance for females"
+    },
+    {
+        "id": 42,
+        "name": "Basement"
+    },
+    {
+        "id": 43,
+        "name": "Storage room"
+    },
+    {
+        "id": 44,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 45,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 46,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 47,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 48,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 49,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 50,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 51,
+        "name": "Teacher idk"
+    },
+    {
+        "id": 52,
+        "name": "Community view"
+    },
+    {
+        "id": 53,
+        "name": "Golf view"
+    },
+    {
+        "id": 54,
+        "name": "City view"
+    },
+    {
+        "id": 55,
+        "name": "North orientation"
+    },
+    {
+        "id": 56,
+        "name": "South orientation"
+    },
+    {
+        "id": 57,
+        "name": "East orientation"
+    },
+    {
+        "id": 58,
+        "name": "West orientation"
+    },
+    {
+        "id": 59,
+        "name": "Near school"
+    },
+    {
+        "id": 60,
+        "name": "Near hospital"
+    },
+    {
+        "id": 61,
+        "name": "Terrace"
+    },
+    {
+        "id": 62,
+        "name": "Near mosque"
+    },
+    {
+        "id": 63,
+        "name": "Near supermarket"
+    },
+    {
+        "id": 64,
+        "name": "Near mall"
+    },
+    {
+        "id": 65,
+        "name": "Near public transportation"
+    },
+    {
+        "id": 66,
+        "name": "Near metro"
+    },
+    {
+        "id": 67,
+        "name": "Near veterinary"
+    },
+    {
+        "id": 68,
+        "name": "Beach access"
+    },
+    {
+        "id": 69,
+        "name": "Public parks"
+    },
+    {
+        "id": 70,
+        "name": "Near restaurants"
+    },
+    {
+        "id": 71,
+        "name": "Near Golf"
+    },
+    {
+        "id": 72,
+        "name": "Near airport"
+    },
+    {
+        "id": 73,
+        "name": "Concierge Service"
+    },
+    {
+        "id": 74,
+        "name": "Spa"
+    },
+    {
+        "id": 75,
+        "name": "Shared Gym"
+    },
+    {
+        "id": 76,
+        "name": "Maid Service"
+    },
+    {
+        "id": 77,
+        "name": "Walk-in Closet"
+    },
+    {
+        "id": 78,
+        "name": "Heating"
+    },
+    {
+        "id": 79,
+        "name": "Ground floor"
+    },
+    {
+        "id": 80,
+        "name": "Server room"
+    },
+    {
+        "id": 81,
+        "name": "Pantry"
+    },
+    {
+        "id": 82,
+        "name": "Reception area"
+    },
+    {
+        "id": 83,
+        "name": "Visitors parking"
+    },
+    {
+        "id": 84,
+        "name": "Office partitions"
+    },
+    {
+        "id": 85,
+        "name": "Core and Shell"
+    },
+    {
+        "id": 86,
+        "name": "Children daycare"
+    },
+    {
+        "id": 87,
+        "name": "Cleaning services"
+    },
+    {
+        "id": 88,
+        "name": "Near Hotel"
+    },
+    {
+        "id": 89,
+        "name": "Conference room"
+    },
+    {
+        "id": 90,
+        "name": "View of Landmark"
+    },
+    {
+        "id": 91,
+        "name": "Children's Play Area"
+    }
+  ],
+  "Type": 
+  [
+    {
+        "id": 1,
+        "name": "Apartment"
+    },
+    {
+        "id": 2,
+        "name": "Bungalow"
+    },
+    {
+        "id": 3,
+        "name": "Compound"
+    },
+    {
+        "id": 4,
+        "name": "Duplex"
+    },
+    {
+        "id": 5,
+        "name": "Full floor"
+    },
+    {
+        "id": 6,
+        "name": "Half floor"
+    },
+    {
+        "id": 7,
+        "name": "Land"
+    },
+    {
+        "id": 8,
+        "name": "Penthouse"
+    },
+    {
+        "id": 9,
+        "name": "Townhouse"
+    },
+    {
+        "id": 10,
+        "name": "Villa"
+    },
+    {
+        "id": 11,
+        "name": "Whole Building"
+    }
+  ]
+}

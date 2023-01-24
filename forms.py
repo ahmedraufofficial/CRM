@@ -88,7 +88,7 @@ class AddPropertyForm(FlaskForm):
     permit_number = StringField('Permit Number', [validators.Length(min=4, max=50)])
     view360 = StringField('View 360', [validators.Length(min=4, max=50)])
     video_url = StringField('Video URL', [validators.Length(min=4, max=100)])
-    completion_status = SelectField(u'Completion Status',choices = [('offplan', 'Off-Plan'), ('completed', 'Completed Property')])
+    completion_status = SelectField(u'Completion Status *',choices = [('', ''),('completed', 'Ready Primary'), ('off-plan_primary', 'Off-Plan Primary'), ('completed_secondary', 'Ready Secondary'), ('off-plan_secondary', 'Off-Plan Secondary')])
     offplan_status = SelectField(u'Construction Status (if offplan)',choices = [('', ''),('not started', 'Not Started'), ('under construction', 'Under Constrution')])
     completion_date = DateField('Completion Date (If offplan)', format='%Y-%m-%d')
     source = SelectField(u'Source',choices = [('Cold Call', 'Cold Call'),('Client Referral','Client Referral'),('Direct Client','Direct Client'), ('Whatsapp', 'Whatsapp'), ('Email', 'Email'), ('Facebook', 'Facebook'), ('Snapchat', 'Snapchat'), ('Instagram', 'Instagram'), ('Company Website', 'Company Website'), ('Dubizzle', 'Dubizzle'), ('Google', 'Google'), ('Agent', 'Agent'), ('Bayut', 'Bayut'), ('Property Finder', 'Property Finder'), ('Walk-In', 'Walk-In')])
@@ -108,6 +108,8 @@ class AddPropertyForm(FlaskForm):
     masterplan = MultipleFileField('Masterplan')
     new_files01 = RadioField('Delete Uploaded Floorplan',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
     new_files02 = RadioField('Delete Uploaded Masterplan',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
+    #property_finder = SelectField(u'Promote on Property Finder',choices = [(0, "No"), (1, "Yes")])
+    cheques = SelectField(u'Cheques',choices = [(0, None),(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'), (10, '10'),(11,'11'),(12,'12')], default=0)
 
 class AddContactForm(FlaskForm):
     title = SelectField(u'Title',choices = [('','Select'),('Mr', 'Mr'),('Mrs','Mrs'),('Ms','Ms'),('Miss','Miss'),('Sir','Sir')])

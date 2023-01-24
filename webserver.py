@@ -33,6 +33,11 @@ import io
 import csv
 from logging import FileHandler, WARNING
 
+USERS_FOLDER = os.getcwd() + '/static/userdata'
+NOTES = os.getcwd() + '/static/notes'
+a = os.getcwd()
+UPLOAD_FOLDER = os.path.join(a+'/static', 'uploads')
+
 def assign_lead(lead,contact_refno):
     print('lead for ' + lead['refno'])
     p = db.session.query(Properties).filter_by(refno=lead['refno']).first()
@@ -297,6 +302,8 @@ class Employees(db.Model):
     Residence_Expiry = db.Column(db.DateTime)
     Remarks = db.Column(db.String(100))
     created_by = db.Column(db.String(100))
+    #crm_username = db.Column(db.String(100))
+    #documents = db.Column(db.String(5000))
 
 class Controller(ModelView):
     def is_accessible(self):
@@ -850,6 +857,70 @@ def refreshdatabase():
     return "ok"
 
 
+@app.route('/recover_userdata') #lesssgooo
+@login_required
+def recover_data():
+    a = db.session.query(User)
+    for i in a:
+        try:
+            with open(os.path.join(USERS_FOLDER, i.username+'.json'),'r+') as file:
+                pass
+        except:
+            create_json(i.username)
+            logs(i.username,i.username,"Created")
+    return('ok')
+
+
+@app.route('/recover_notes_leads') #lesssgooo
+@login_required
+def recover_notes_leads():
+    a = db.session.query(Leads)
+    for i in a:
+        try:
+            with open(os.path.join(NOTES, i.refno+'.json'),'r+') as file:
+                pass
+        except:
+            logs('florien',i.refno,'Added')
+            notes(i.refno)
+    return('ok')
+
+
+@app.route('/recover_notes_properties') #lesssgooo
+@login_required
+def recover_notes_properties():
+    a = db.session.query(Properties)
+    for i in a:
+        total+=1
+        try:
+            with open(os.path.join(NOTES, i.refno+'.json'),'r+') as file:
+                pass
+        except:
+            notes(i.refno)
+            try:
+                logs(i.created_by,i.refno,'Added')
+            except:
+                logs('engy',i.refno,'Added')
+            try:
+                add_user_list(i.created_by, i.refno)
+            except:
+                add_user_list('engy', i.refno)
+    return('ok')
+
+@app.route('/neutral_photos') #lesssgooo
+@login_required
+def neutral_photos():
+    a = db.session.query(Properties)
+    for i in a:
+        if i.photos != None:
+            directory = UPLOAD_FOLDER+'/'+i.refno
+            if not os.path.isdir(directory):
+                i.photos = None
+            else:
+                pass
+        else:
+            pass
+    db.session.commit()
+    return('ok')
 
 if __name__ == '__main__':
     app.run(debug = True)

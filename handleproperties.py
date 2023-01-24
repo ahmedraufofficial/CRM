@@ -137,16 +137,25 @@ def display_properties():
             else:
                 new["owner_contact"] = "*"
             if new["portal"] == "0":
-                print("Promoted")
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
                 new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
             else:
                 new["portal"] = "Not Promoted"
-            view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/eye.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">View</small><</a>'
-            note_btn = '<a style="border-bottom: 0.5px solid black;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/notes.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Notes</small><</a>'
-            startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small><</a>'
-            stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small><</a>'
-            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+"</div></div>"
+            if new['property_finder'] != 'None':
+                link = new['property_finder'].split('|')
+                if new["portal"] == "Not Promoted":
+                    new["portal"] = '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px;"></a>'
+                else:
+                    new["portal"] += '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px; margin-left:15px"></a>'                
+            else:
+                pass
+            view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/eye.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">View</small></a>'
+            note_btn = '<a style="border-bottom: 0.5px solid black;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/notes.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Notes</small></a>'
+            startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small></a>'
+            stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
+            stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
             data.append(new)
     elif current_user.viewall == False and current_user.listing == True:
         for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
@@ -161,16 +170,25 @@ def display_properties():
             else:
                 edit_btn = ''
             if new["portal"] == "0":
-                print("Promoted")
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
                 new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
             else:
                 new["portal"] = "Not Promoted"
+            if new['property_finder'] != 'None':
+                link = new['property_finder'].split('|')
+                if new["portal"] == "Not Promoted":
+                    new["portal"] = '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px;"></a>'
+                else:
+                    new["portal"] += '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px; margin-left:15px"></a>'                
+            else:
+                pass
             view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
             note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
             startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small><</a>'
             stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small><</a>'
-            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+"</div></div>"
+            startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
+            stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
             data.append(new)
     elif current_user.team_members == "QC" and current_user.listing == False:
         for r in db.session.query(Properties).all():
@@ -185,11 +203,18 @@ def display_properties():
             new = row2dict(r)
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if new["portal"] == "0":
-                print("Promoted")
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
                 new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
             else:
                 new["portal"] = "Not Promoted"
+            if new['property_finder'] != 'None':
+                link = new['property_finder'].split('|')
+                if new["portal"] == "Not Promoted":
+                    new["portal"] = '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px;"></a>'
+                else:
+                    new["portal"] += '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px; margin-left:15px"></a>'                
+            else:
+                pass
             view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
             note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
             new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+view_btn+note_btn+"</div></div>"
@@ -240,6 +265,7 @@ def add_property_rent():
         building = form.building.data
         privateamenities = ",".join(form.privateamenities.data)
         commercialamenities = ",".join(form.commercialamenities.data)
+        completion_status = form.completion_status.data
         geopoint = form.geopoint.data
         bathrooms = form.bathrooms.data
         permit_number = form.permit_number.data
@@ -259,7 +285,8 @@ def add_property_rent():
         contactnumber = assigned[1]
         portal = form.portal.data
         view = form.view.data
-        newproperty = Properties(created_at=created_at,lastupdated=lastupdated,portal=portal,geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,view=view,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,created_by=current_user.username)
+        cheques = form.cheques.data
+        newproperty = Properties(created_at=created_at,lastupdated=lastupdated,portal=portal,geopoint=geopoint,owner_name=owner_name,owner_contact=owner_contact,owner_email=owner_email,contactemail=contactemail,completion_status = completion_status,contactnumber=contactnumber,featured=featured,parking=parking,tenant=tenant,expiry_date=expiry_date,price_per_area = price_per_area,plot_size = plot_size,status = status,city = city,type = type,subtype = subtype,title = title,description = description,size = size,price = price,rentpriceterm = rentpriceterm,bedrooms = bedrooms,locationtext = locationtext,furnished = furnished,building = building,privateamenities = privateamenities,bathrooms = bathrooms,permit_number = permit_number,view360 =  view360,view=view,video_url = video_url,source=source,owner=owner,assign_to=assign_to,unit=unit,plot=plot,street=street,commercialamenities=commercialamenities,cheques=cheques,created_by=current_user.username)
         db.session.add(newproperty)
         db.session.commit()
         db.session.refresh(newproperty)
@@ -889,3 +916,296 @@ def uploadFiles():
                     break
         print(f'Processed {line_count} lines.')
     return jsonify(success=True)
+
+#Property Finder API Integration
+
+def propertyfinder01(): #generating token
+    url = "https://api-v2.mycrm.com/token"
+    payload = json.dumps({
+        "grant_type": "password",
+        "domain": "",
+        "username": "",
+        "password": "",
+        "scope": "offline"
+        })
+    headers = {
+        'Content-Type': 'application/json'
+        }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    x = json.loads(response.text)
+    return (x["access_token"])
+
+
+def locationid(community, location, access_token): #generating location ID
+    community = community.replace(" ","_")
+    community = community.replace("'","")
+    print(community)
+    location = location
+    url = "https://api-v2.mycrm.com/locations?filters[string]="+community
+    payload = ""
+    headers = {
+        'Authorization': 'Bearer '+access_token
+        }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    x = json.loads(response.text)
+    y = x['location']
+    w=''
+    for a in range(len(y)):
+        if y[a]['community'] == location:
+            w = y[a]['id']
+            break
+        else:
+            continue
+    return (w)
+    
+
+#@handleproperties.route('/propertyfinder_advert/<pf_id>',methods = ['GET','POST']) # getting posted property ad link
+#@login_required
+def propertyfinder_advert(pf_id, access_token, refno):
+    #access_token = propertyfinder01()
+    url = "http://api-v2.mycrm.com/properties/"+str(pf_id)
+    payload = ""
+    headers = {
+        'Authorization': 'Bearer '+access_token
+        }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    x = json.loads(response.text)
+    y=x['property']['import']['propertyfinder']['id']
+    y=y.split('-')
+    print(y[-1])
+    w = propertyfinder(refno=refno)
+    if (w['type'] == "Sale"):
+        tag = "buy"
+    else:
+        tag = "rent" 
+    loctext=w['locationtext'].replace(" ","-").replace("'","").lower()
+    build=w['building'].replace(" ","-").replace("'","").lower()
+    website="https://www.propertyfinder.ae/en/plp/"+tag+"/"+w['subtype'].lower()+"-for-"+w['type'].lower()+"-abu-dhabi-"+loctext+"-"+build+"-"+y[-1]+".html"
+    return(website)
+
+
+@handleproperties.route('/propertyfinder03/<refno>',methods = ['GET','POST']) # creating properties 
+@login_required
+def propertyfinder03(refno):
+    print("lets_start")
+    url = "https://api-v2.mycrm.com/properties"
+    access_token = propertyfinder01()
+    w = propertyfinder(refno)
+    loc = locationid(community = w["building"], location = w["locationtext"], access_token=access_token)
+    print(loc)
+    rentorsale = w["refno"][4:5]
+    if (rentorsale == "R"):
+        offering = 'rent'
+        valueS = None
+        period = 'year'
+        default_period = 'year'
+        valueR = w['price']
+        cheques = 3
+    else:
+        offering = 'sale'
+        valueS = w['price']
+        period = None
+        default_period = None
+        valueR = None
+        cheques = None
+    priv = w['privateamenities'].split(",")
+    prop = w['commercialamenities'].split(",")
+    amen = priv+prop
+    amenety=amenities(amen)
+    typeid=type_id(w['subtype'])
+    images = w['photos'].split("|")
+    imagetoken=image_token(data=images, access_token=access_token)
+    payload = json.dumps({
+        "property": {
+            "draft": False,
+            "bathrooms": w["bathrooms"], 
+            "bedrooms": w["bedrooms"],
+            "project_status": w['completion_status'],
+            "size": w["size"],
+            "built_up_area": w["size"],
+            "type": typeid,
+            "status": w["status"].lower(),
+            "languages": {
+            "en": {
+                "title": w["title"],
+                "description": w["description"]
+            }
+            },
+            "location": {
+                "id":loc
+            },
+            "price": {
+                "offering_type":offering,
+                "value": valueS,
+                "default_period": default_period,
+                "cheques": cheques,
+                "prices": [
+                    {
+                    "period":period,
+                    "value":valueR
+                }
+                ]
+            },
+            "views": {
+                "view": w["view"]
+            },
+            "publication": {
+                "genericportal": True,
+                "privatesite": True,
+                "propertyfinder": True,
+            },
+            "amenities": amenety,
+            "images": imagetoken
+            }
+        })
+    headers = {
+        'Authorization': 'Bearer '+access_token
+        }
+    message=[]
+    try:
+        print(payload)
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
+        x = json.loads(response.text)
+        x1 = x['property']['id']
+        db_update(refno=w['refno'],data=x1)
+        message.append("Property posted successfully")
+    except:
+        message.append(str(x))
+    try:
+        website=propertyfinder_advert(pf_id=x1, access_token=access_token, refno=w['refno'])
+        f = []
+        f.append(str(x1))
+        f.append(website)
+        k = "|".join(f)
+        db_update(refno=w['refno'],data=k)
+        message.append("Website Link generated succesfully")
+    except:
+        message.append("WEBSITE GENERATION FAILED")
+    message01 = "|".join(message)
+    return jsonify(message01)
+
+
+@handleproperties.route('/propertyfinder/<refno>',methods = ['GET','POST']) #getting property data from in-house CRM
+@login_required
+def propertyfinder(refno):
+    lesssgooo = db.session.query(Properties).filter_by(refno = refno).first()
+    all_property = []
+    propertyObj = {}
+    propertyObj = vars(lesssgooo)
+    propertyObj.pop('_sa_instance_state')
+    all_property.append(propertyObj) 
+    return (propertyObj)
+
+
+def image_token(data, access_token):
+    imagetoken = []
+    dub=1
+    for i in data:
+        print(i)
+        data01=i.split("/")
+        data02=data01[-1].split(".")
+        url = "https://api-upload.mycrm.com/upload?type=property_image"
+        payload={}
+        files=[
+            ('file',(data01[-1],open(i[1:],'rb'),'image/'+data02[1]))
+            ]
+        headers = {
+            'Authorization': 'Bearer '+access_token
+            }
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload, files=files)
+            x = json.loads(response.text)
+            print(x)
+            y = x['upload']['token']
+            imagetoken.append({"image":{"token":y, "order":dub}})
+            dub+=1
+        except:
+            print("Not Happening")   
+    return(imagetoken)
+
+def amenities(amen):
+    f = open('PF_amenities.json')
+    f1 = json.load(f)
+    f2 = f1['amenities']
+    amenity = []
+    for i in amen:
+        for j in f2:
+            if i == j["name"]:
+                amenity.append(j["id"])
+            else:
+                continue
+    return(amenity)
+
+def type_id(typeid):
+    f = open('PF_amenities.json')
+    f1 = json.load(f)
+    f2 = f1['Type']
+    for j in f2:
+        if typeid == j["name"]:
+            typeid1=j["id"]
+            break
+        else:
+            continue
+    return(typeid1)
+
+
+def db_update(refno, data):
+    all_leads = db.session.query(Properties).filter(Properties.refno == refno)
+    for i in all_leads:
+        i.property_finder = data
+        db.session.commit()
+    return ("ok")
+
+def db_downdate(refno):
+    all_leads = db.session.query(Properties).filter(Properties.refno == refno)
+    for i in all_leads:
+        i.property_finder = None
+        db.session.commit()
+    return ("ok")
+
+@handleproperties.route('/delete_pf/<refno>',methods = ['GET','POST'])
+@login_required
+def delete_pf(refno):
+    access_token = propertyfinder01()
+    w = propertyfinder(refno)
+    k=w['property_finder'].split('|')
+    try:
+        url = "https://api-v2.mycrm.com/properties/"+k[0]
+        payload = ""
+        headers = {
+            'Authorization': 'Bearer '+access_token
+            }
+        response = requests.request("DELETE", url, headers=headers, data=payload)
+        db_downdate(refno=w['refno'])
+        print("Deleted Successfully")
+        return jsonify(success=True)
+    except:
+        print("Could NOT be deleted")
+        return jsonify(success=True)
+    
+
+@handleproperties.route('/testingnaaa',methods = ['GET','POST'])
+@login_required
+def testing():
+    access_token = propertyfinder01()
+    x = 3743443
+    dub = propertyfinder_advert(pf_id=x, access_token=access_token, refno='UNI-S-4404')
+    f = []
+    f.append(str(x))
+    f.append(dub)
+    k = "|".join(f)
+    db_update(refno='UNI-S-4404',data=k)
+    return(dub)
+
+#def image_id(data, access_token, loc):
+#    access_token = propertyfinder01()
+#    url = "http://api-v2.mycrm.com/properties?filters[status]=available"
+#    payload = ""
+#    headers = {
+#        'Authorization': 'Bearer '+access_token
+#        }
+#    response = requests.request("GET", url, headers=headers, data=payload)
+#    x = json.loads(response.text)
+#    return(x)
+
