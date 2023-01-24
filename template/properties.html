@@ -675,16 +675,13 @@
         </div>
         <div class="child" style="margin-left: 0px;">
           <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/global.png"/><span><h6 style="text-align: left;">Promotions</h6>
-        <select name="beds_category" id="beds_category" class="filter_add02">
-          <option selected="selected" value="">Promoted</option>
+        <select name="uhp" id="uhp" class="filter_add02">
+          <option selected="selected" value="">UHP</option>
           <option value="Yes">Yes</option>
-          <option value="No">No</option>
         </select>
-        <select name="webpromote" id="webpromote" class="filter_add02">
-          <option selected="selected" value=''>Platform</option>
-          <option value='UHP'>UHP</option>
-          <option value='Property Finder'>Property Finder</option>
-          <option value='Bayut'>Bayut</option>
+        <select name="prop_find" id="prop_find" class="filter_add02">
+          <option selected="selected" value="">PF</option>
+          <option value="Yes">Yes</option>
         </select>
       </div>
         <div class="child" style="width: auto; margin-top: 0.25%; margin-left: 1%;">
@@ -930,7 +927,8 @@ function view_property(x){
         var r = $("#ownnumber").val()
         var z = $("#searchbar").val()
         var s1 = $("#view_cat").val()
-        var s2 = $("#webpromote").val()
+        var s2 = $("#uhp").val()
+        var s3 = $("#prop_find").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -947,6 +945,7 @@ function view_property(x){
         var grepFunc14;
         var grepFunc15;
         var grepFunc16;
+        var grepFunc17;
 
 
         grepFunc = function(item){
@@ -1012,6 +1011,10 @@ function view_property(x){
         grepFunc16 = function(item){
               return item.portal != "Not Promoted";         
         }
+
+        grepFunc17 = function(item){
+              return item.property_finder != 'None';         
+        }
         
         if (s != "")
         {test = $.grep(test, grepFunc)}
@@ -1061,6 +1064,9 @@ function view_property(x){
         if (s2 != "")
         {test = $.grep(test, grepFunc16)}
 
+        if (s3 != "")
+        {test = $.grep(test, grepFunc17)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -1080,7 +1086,8 @@ function view_property(x){
         $("#ownnumber").val("");
         $("#searchbar").val("");
         $("#view_cat").val("");
-        $("#webpromote").val("");
+        $("#uhp").val("");
+        $("#prop_find").val("");
         })
 
  
