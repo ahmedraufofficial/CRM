@@ -938,6 +938,14 @@ def propertyfinder01(): #generating token
 
 
 def locationid(community, location, access_token): #generating location ID
+    if community == 'Contemporary Village':
+        community = 'Contemporary Style'
+    else:
+        pass
+    if location == 'Al Reef Villas':
+        location = 'Al Reef'
+    else:
+        pass
     community = community.replace(" ","_")
     community = community.replace("'","")
     location = location
@@ -1208,7 +1216,7 @@ def testing_loc():
     h = open('sublocation.json')
     h1 = json.load(h)
     for i in f2[0]:
-        if f2[0][i] == 'Saadiyat Island':
+        if f2[0][i] == 'Al Reef Villas':
             for j in h1[i[1:]]:
                 print(h1[i[1:]][j])
                 x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
@@ -1231,7 +1239,7 @@ def find_that_link(pfno, refno):
 
 @handleproperties.route('/delete_that_link/<refno>',methods = ['GET','POST'])
 @login_required
-def find_that_link(refno):
+def delete_that_link(refno):
     db_downdate(refno)
     return('ok')
 
