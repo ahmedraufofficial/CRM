@@ -1228,7 +1228,13 @@ def find_that_link(pfno, refno):
     k = "|".join(f)
     db_update(refno=refno,data=k)
     return('ok')
-    
+
+@handleproperties.route('/delete_that_link/<refno>',methods = ['GET','POST'])
+@login_required
+def find_that_link(refno):
+    db_downdate(refno)
+    return('ok')
+
 #def image_id(data, access_token, loc):
 #    access_token = propertyfinder01()
 #    url = "http://api-v2.mycrm.com/properties?filters[status]=available"
