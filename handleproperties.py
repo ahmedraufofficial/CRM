@@ -21,6 +21,7 @@ import re
 import sqlite3
 import os
 import csv
+import time
 
 FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
 
@@ -1216,6 +1217,18 @@ def testing_loc():
             pass
     return('ok')
 
+@handleproperties.route('/find_that_link/<pfno>/<refno>',methods = ['GET','POST'])
+@login_required
+def find_that_link(pfno, refno):
+    access_token = propertyfinder01()
+    website=propertyfinder_advert(pf_id=pfno, access_token=access_token, refno=refno)
+    f = []
+    f.append(pfno)
+    f.append(website)
+    k = "|".join(f)
+    db_update(refno=refno,data=k)
+    return('ok')
+    
 #def image_id(data, access_token, loc):
 #    access_token = propertyfinder01()
 #    url = "http://api-v2.mycrm.com/properties?filters[status]=available"
