@@ -88,7 +88,7 @@ class AddPropertyForm(FlaskForm):
     permit_number = StringField('Permit Number', [validators.Length(min=4, max=50)])
     view360 = StringField('View 360', [validators.Length(min=4, max=50)])
     video_url = StringField('Video URL', [validators.Length(min=4, max=100)])
-    completion_status = SelectField(u'Completion Status *',choices = [('', ''),('completed', 'Ready Primary'), ('off_plan_primary', 'Off-Plan Primary'), ('completed_secondary', 'Ready Secondary'), ('off_plan_secondary', 'Off-Plan Secondary')])
+    completion_status = SelectField(u'Completion Status *',choices = [('', ''),('completed', 'Ready Primary'), ('off_plan_primary', 'Off-Plan Primary'), ('completed', 'Ready Secondary'), ('off_plan_secondary', 'Off-Plan Secondary')])
     offplan_status = SelectField(u'Construction Status (if offplan)',choices = [('', ''),('not started', 'Not Started'), ('under construction', 'Under Constrution')])
     completion_date = DateField('Completion Date (If offplan)', format='%Y-%m-%d')
     source = SelectField(u'Source',choices = [('Cold Call', 'Cold Call'),('Client Referral','Client Referral'),('Direct Client','Direct Client'), ('Whatsapp', 'Whatsapp'), ('Email', 'Email'), ('Facebook', 'Facebook'), ('Snapchat', 'Snapchat'), ('Instagram', 'Instagram'), ('Company Website', 'Company Website'), ('Dubizzle', 'Dubizzle'), ('Google', 'Google'), ('Agent', 'Agent'), ('Bayut', 'Bayut'), ('Property Finder', 'Property Finder'), ('Walk-In', 'Walk-In')])
