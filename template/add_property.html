@@ -178,17 +178,23 @@ img {
                     <label class="control-label" id="dep"></label>
                 </div>
             </div-->
+                <div>
+                    <span style="color: #000000; float: right; font-size: small;" id="current1">0</span>
+                </div>
                 {{ wtf.form_field(form.title) }}
+                <div>
+                    <span style="color: #000000; float: right; font-size: small;" id="current2">0</span>
+                </div>
                 {{ form.description.label(class="control-label")  }}
                 {{ form.description(rows="4", id='description', style="display:block; width:100%; margin-bottom:15px; border: 1px solid black !important;border-radius: 0px !important;font-size: 10pt !important;") }}
-   
-           
- 
-                
 
 
-                    
-            
+
+
+
+
+
+
               <br>
                     <h4>Private Amenities</h4>
               <div class="row">
@@ -330,7 +336,13 @@ img {
                     <label class="control-label" id="dep"></label>
                 </div>
             </div-->
+            <div>
+                <span style="color: #000000; float: right; font-size: small;" id="current1">0</span>
+            </div>
             {{ wtf.form_field(form.title) }}
+            <div>
+                <span style="color: #000000; float: right; font-size: small;" id="current2">0</span>
+            </div>
             {{ form.description.label(class="control-label")  }}
             {{ form.description(rows="4", id='description', style="display:block; width:100%; margin-bottom:15px; border: 1px solid black !important;border-radius: 0px !important;font-size: 10pt !important;") }}
   
@@ -664,6 +676,26 @@ price_form.addEventListener('input', inputHandler);
             })
         })
     };
+
+    $('textarea').keyup(function() {
+    
+    var characterCount = $(this).val().length,
+        current = $('#current2'),
+        maximum = $('#maximum'),
+        theCount = $('#the-count');
+      
+    current.text(characterCount);
+    })
+
+    $('input').keyup(function() {
+    
+    var characterCount = $(this).val().length,
+        current = $('#current1'),
+        maximum = $('#maximum'),
+        theCount = $('#the-count');
+      
+    current.text(characterCount);
+    })
 
 
 

@@ -75,7 +75,7 @@ class AddPropertyForm(FlaskForm):
     #pricecurrency = StringField('Currency', [validators.Length(min=4, max=50)])
     commission = IntegerField('Commission (%)')
     deposit = IntegerField('Deposit (%)')
-    bedrooms = SelectField(u'Beds *',[validators.DataRequired()],choices = [('ST', 'ST'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10'),('10+', '10+'),(0,'Other')])
+    bedrooms = SelectField(u'Beds *',[validators.DataRequired()],choices = [('Studio', 'Studio'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10'),('10+', '10+'),(0,'Other')])
     locationtext = SelectField(u'Community *',[validators.DataRequired()],choices = communities)
     furnished = RadioField('Furnished', choices=[(0,'No'),(1,'Yes')], default=0)
     building = SelectField(u'Location *',[validators.DataRequired()],choices = [])
