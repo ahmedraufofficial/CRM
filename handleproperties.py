@@ -939,7 +939,6 @@ def propertyfinder01(): #generating token
 def locationid(community, location, access_token): #generating location ID
     community = community.replace(" ","_")
     community = community.replace("'","")
-    print(community)
     location = location
     url = "https://api-v2.mycrm.com/locations?filters[string]="+community
     payload = ""
@@ -1108,7 +1107,7 @@ def image_token(data, access_token):
         url = "https://api-upload.mycrm.com/upload?type=property_image"
         payload={}
         files=[
-            ('file',(data01[-1],open(i[1:],'rb'),'image/'+data02[1]))
+            ('file',(data01[-1],open(i[1:],'rb'),'image/jpeg'))
             ]
         headers = {
             'Authorization': 'Bearer '+access_token
@@ -1197,6 +1196,25 @@ def testing():
     k = "|".join(f)
     db_update(refno='UNI-S-4404',data=k)
     return(dub)
+
+@handleproperties.route('/testing_loc',methods = ['GET','POST'])
+@login_required
+def testing_loc():
+    access_token = propertyfinder01()
+    f = open('contacts.json')
+    f1 = json.load(f)
+    f2 = f1['ABD']
+    h = open('sublocation.json')
+    h1 = json.load(h)
+    for i in f2[0]:
+        if f2[0][i] == 'Saadiyat Island':
+            for j in h1[i[1:]]:
+                print(h1[i[1:]][j])
+                x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
+                print(x)
+        else:
+            pass
+    return('ok')
 
 #def image_id(data, access_token, loc):
 #    access_token = propertyfinder01()
