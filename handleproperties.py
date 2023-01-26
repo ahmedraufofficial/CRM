@@ -942,6 +942,14 @@ def locationid(community, location, access_token): #generating location ID
         community = 'Contemporary Style'
     else:
         pass
+    if community == 'Arabian Village':
+        community = 'Arabian Style'
+    else:
+        pass
+    if community == 'Desert Village':
+        community = 'Desert Style'
+    else:
+        pass
     if location == 'Al Reef Villas':
         location = 'Al Reef'
     else:
@@ -1026,6 +1034,7 @@ def propertyfinder03(refno):
     payload = json.dumps({
         "property": {
             "draft": False,
+            "user": 77167,
             "bathrooms": w["bathrooms"], 
             "bedrooms": w["bedrooms"],
             "project_status": w['completion_status'],
