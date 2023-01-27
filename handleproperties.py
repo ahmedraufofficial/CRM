@@ -954,6 +954,11 @@ def locationid(community, location, access_token): #generating location ID
         location = 'Al Reef'
     else:
         pass
+    if location[:17] == 'Meera Shams Tower':
+        print(location[:17])
+        location = 'Meera Shams'
+    else:
+        pass
     community = community.replace(" ","_")
     community = community.replace("'","")
     location = location
@@ -1225,7 +1230,7 @@ def testing_loc():
     h = open('sublocation.json')
     h1 = json.load(h)
     for i in f2[0]:
-        if f2[0][i] == 'Al Reef Villas':
+        if f2[0][i] == 'Al Reem Island':
             for j in h1[i[1:]]:
                 print(h1[i[1:]][j])
                 x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
