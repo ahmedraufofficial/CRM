@@ -932,9 +932,9 @@ def propertyfinder01(): #generating token
     url = "https://api-v2.mycrm.com/token"
     payload = json.dumps({
         "grant_type": "password",
-        "domain": "uniquehomes",
-        "username": "florien@uhpae.com",
-        "password": "Welcome@123",
+        "domain": "",
+        "username": "",
+        "password": "",
         "scope": "offline"
         })
     headers = {
