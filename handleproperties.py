@@ -827,6 +827,14 @@ def cleaning_photos():
     return "ok"
 
 
+@handleproperties.route('/cleaning_photos_hardcore/<refno>',methods = ['GET','POST'])
+@login_required
+def cleaning_photos_hardcore(refno):
+    l = db.session.query(Properties).filter_by(refno=refno).first()
+    l.photos = None
+    db.session.commit()
+    return "ok"
+
 @handleproperties.route('/uploadlisting',methods = ['GET','POST'])
 @login_required
 def uploadFiles():
@@ -924,9 +932,9 @@ def propertyfinder01(): #generating token
     url = "https://api-v2.mycrm.com/token"
     payload = json.dumps({
         "grant_type": "password",
-        "domain": "",
-        "username": "",
-        "password": "",
+        "domain": "uniquehomes",
+        "username": "florien@uhpae.com",
+        "password": "Welcome@123",
         "scope": "offline"
         })
     headers = {
@@ -954,9 +962,8 @@ def locationid(community, location, access_token): #generating location ID
         location = 'Al Reef'
     else:
         pass
-    if location[:17] == 'Meera Shams Tower':
-        print(location[:17])
-        location = 'Meera Shams'
+    if community[:17] == 'Meera Shams Tower':
+        community = 'Meera Shams'
     else:
         pass
     community = community.replace(" ","_")
@@ -1232,9 +1239,12 @@ def testing_loc():
     for i in f2[0]:
         if f2[0][i] == 'Al Reem Island':
             for j in h1[i[1:]]:
-                print(h1[i[1:]][j])
-                x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
-                print(x)
+                if h1[i[1:]][j] == 'Meera Shams Tower 1':
+                    print(h1[i[1:]][j][:17])
+                    x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
+                    print(x)
+                else:
+                    pass
         else:
             pass
     return('ok')
