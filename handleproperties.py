@@ -785,7 +785,7 @@ def reassign2():
 def deleteallleads():
     r = "UNI-R-"
     s = "UNI-S-"
-    l = [s+'1854',s+'1853',s+'1852',s+'1851',s+'1850',s+'1849',s+'1675',s+'1261',s+'862',s+'736',r+'373',r+'372',r+'2028',s+'1283',r+'1747',s+'852',r+'1219',r+'1782',r+'1788',r+'1223',r+'1224',r+'1811',r+'1802',r+'1787',r+'1789',r+'1785',s+'1523',r+'1748',r+'1827',r+'2002']
+    l = [r+'4393', r+'4394', r+'4395']
     for i in l:
         delete = db.session.query(Properties).filter_by(refno=i).first()
         if delete:
@@ -832,6 +832,18 @@ def cleaning_photos():
 def cleaning_photos_hardcore(refno):
     l = db.session.query(Properties).filter_by(refno=refno).first()
     l.photos = None
+    db.session.commit()
+    return "ok"
+
+@handleproperties.route('/pf_uhp',methods = ['GET','POST'])
+@login_required
+def pf_uhp():
+    l = db.session.query(Properties)
+    for m in l:
+        if m.property_finder!=None:
+            m.portal = 0
+        else:
+            pass
     db.session.commit()
     return "ok"
 
@@ -964,6 +976,10 @@ def locationid(community, location, access_token): #generating location ID
         pass
     if community[:17] == 'Meera Shams Tower':
         community = 'Meera Shams'
+    else:
+        pass
+    if community[:11] == 'Amaya Tower':
+        community = 'Amaya Towers'
     else:
         pass
     community = community.replace(" ","_")
@@ -1239,8 +1255,8 @@ def testing_loc():
     for i in f2[0]:
         if f2[0][i] == 'Al Reem Island':
             for j in h1[i[1:]]:
-                if h1[i[1:]][j] == 'Meera Shams Tower 1':
-                    print(h1[i[1:]][j][:17])
+                if h1[i[1:]][j] == 'Amaya Tower 2':
+                    print(h1[i[1:]][j])
                     x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
                     print(x)
                 else:
