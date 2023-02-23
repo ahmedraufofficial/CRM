@@ -154,8 +154,12 @@ def display_properties():
             note_btn = '<a style="border-bottom: 0.5px solid black;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/notes.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Notes</small></a>'
             startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small></a>'
             stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
-            startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
-            stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            if new['property_finder'] == 'None':
+                startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
+                stoppf = ''
+            else:
+                startpf = '<a onclick="update_that_property('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Update</small></a>'
+                stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
             new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
             data.append(new)
     elif current_user.viewall == False and current_user.listing == True:
@@ -187,8 +191,12 @@ def display_properties():
             note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
             startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small><</a>'
             stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small><</a>'
-            startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
-            stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            if new['property_finder'] == 'None':
+                startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
+                stoppf = ''
+            else:
+                startpf = '<a onclick="update_that_property('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Update</small></a>'
+                stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
             new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
             data.append(new)
     elif current_user.team_members == "QC" and current_user.listing == False:
@@ -1283,6 +1291,91 @@ def delete_that_link(refno):
     db_downdate(refno)
     return('ok')
 
+
+@handleproperties.route('/propertyfinder07/<refno>',methods = ['GET','POST']) # updating properties 
+@login_required
+def propertyfinder07(refno):
+    access_token = propertyfinder01()
+    w = propertyfinder(refno)
+    x = w['property_finder'].split('|')
+    y = define_listing_level(pf_id=x[0], access_token=access_token)
+    url = "https://api-v2.mycrm.com/properties/"+x[0]
+    try:
+        payload = json.dumps({
+            "operations": [
+                {
+                    "op": "replace",
+                    "path": "/listing_level",
+                    "value": {
+                        "listing_level": y,
+                        "product_id": "ca731c8c-98fd-11ea-a2d4-ad21ef03ed0a",
+                        "renewal": 0
+                    }
+                    }
+                ]
+                })
+        headers = {
+            'Authorization': 'Bearer '+access_token,
+            'Content-Type': 'application/json'
+            }
+        response = requests.request("PATCH", url, headers=headers, data=payload)
+        message = "Your property has been successfully updated on property finder"
+    except:
+        message = "Property update FAILED"
+    return jsonify(message)
+
+def define_listing_level(pf_id, access_token):
+    url = "http://api-v2.mycrm.com/properties/"+str(pf_id)
+    payload = ""
+    headers = {
+        'Authorization': 'Bearer '+access_token
+        }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    x = json.loads(response.text)
+    y=x['property']['listing_level']
+    return(y)
+
+@handleproperties.route('/bulk_update/<arr>',methods = ['GET','POST']) # updating properties 
+@login_required
+def bulk_update(arr):
+    access_token = propertyfinder01()
+    arr_01 = arr.split(',')
+    messages = []
+    for i in arr_01:
+        w = bulk_update_loop(refno=i,access_token=access_token)
+        messages.append(w)
+    return jsonify(messages)
+
+def bulk_update_loop(refno, access_token):
+    w = propertyfinder(refno)
+    x = w['property_finder'].split('|')
+    y = define_listing_level(pf_id=x[0], access_token=access_token)
+    url = "https://api-v2.mycrm.com/properties/"+x[0]
+    try:
+        payload = json.dumps({
+            "operations": [
+                {
+                    "op": "replace",
+                    "path": "/listing_level",
+                    "value": {
+                        "listing_level": y,
+                        "product_id": "ca731c8c-98fd-11ea-a2d4-ad21ef03ed0a",
+                        "renewal": 0
+                    }
+                    }
+                ]
+                })
+        headers = {
+                'Authorization': 'Bearer '+access_token,
+                'Content-Type': 'application/json'
+                }
+        response = requests.request("PATCH", url, headers=headers, data=payload)
+        message = refno+" has been successfully updated on property finder"
+    except:
+        message = refno+" update FAILED"
+    return(message)
+
+
 #def image_id(data, access_token, loc):
 #    access_token = propertyfinder01()
 #    url = "http://api-v2.mycrm.com/properties?filters[status]=available"
@@ -1294,3 +1387,28 @@ def delete_that_link(refno):
 #    x = json.loads(response.text)
 #    return(x)
 
+@handleproperties.route('/bigboytesting',methods = ['GET','POST']) #to checkd duplicate properties
+@login_required
+def bigboytesting():
+    print("lets start")
+    lesssgooo = db.session.query(Properties)
+    a=[]
+    for i in lesssgooo:
+        a.append({'location':i.locationtext, 'Community':i.building, 'Unit':i.unit, 'Refno': i.refno})
+    b = a
+    x=0
+    for i in range(len(a)):
+        dub = 0
+        w=[]
+        for j in range(len(b)):
+            if a[i]['location'] == b[j]['location'] and a[i]['Community'] == b[j]['Community'] and a[i]['Unit'] == b[j]['Unit'] and b[j]['location'] != 'locationtext':
+                dub+=1
+                if dub > 1:
+                    w.append({b[j]['Refno']})
+                    b[j]={'location':'locationtext', 'Community':'building', 'Unit':'unit'}
+                    x+=1
+        if dub > 1:
+            w.append({a[i]['Refno']})
+            print(w)
+    print(x)
+    return ('ok')

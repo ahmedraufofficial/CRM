@@ -637,6 +637,7 @@
           <option value='New Khalifa City'>New Khalifa City</option>
           <option value='Nurai Island'>Nurai Island</option>
           <option value='Officers Club Area'>Officers Club Area</option>
+          <option value='Ramhan Island'>Ramhan Island</option>
           <option value='Saadiyat Island'>Saadiyat Island</option>
           <option value='Salam Street'>Salam Street</option>
           <option value='Sas Al Nakhl'>Sas Al Nakhl</option>
@@ -673,7 +674,7 @@
           <input type="text" name="minprice" id="minprice" class="filter_add02" placeholder="Min. Price" aria-label="minprice">
           <input type="text" name="maxprice" id="maxprice" class="filter_add02" placeholder="Max. Price" aria-label="maxprice">
         </div>
-        <div class="child" style="margin-left: 0px;">
+        <div class="child" style="margin-left: 1%;">
           <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/global.png"/><span><h6 style="text-align: left;">Promotions</h6>
         <select name="uhp" id="uhp" class="filter_add02">
           <option selected="selected" value="">UHP</option>
@@ -683,6 +684,7 @@
           <option selected="selected" value="">PF</option>
           <option value="Yes">Yes</option>
         </select>
+        <button onclick="get_check01('properties')" style="background-color: #293645; color: white; margin-right: 5px; margin-top: 7px; border: 1px solid white !important;" class="filter_add">Bulk Update</button>
       </div>
         <div class="child" style="width: auto; margin-top: 0.25%; margin-left: 1%;">
           <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
@@ -703,7 +705,7 @@
           
         </div>
       </div>
-  </div>
+    </div>
 
 
     <div class="container-fluid" style="padding: 10px; ">
@@ -1207,6 +1209,55 @@ function view_property(x){
             }
             )})
           }
+    
+    function update_that_property(x){
+      document.getElementById("message").innerHTML = '<h5 style="text-align: center;">Please wait while we connect to Property Finder</h5><div class="loader"></div>'
+      var modal = document.getElementById("myModal007");
+      var span = document.getElementsByClassName("close")[0];
+      modal.style.display = "block";
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+      fetch('/propertyfinder07/'+x).then(function(response){
+            response.json().then(function(message){
+              final_message=message
+              lastly=final_message+'<div><button onclick="backtoback()" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-top: 7px; width: 200px; margin-left: auto; margin-right: auto;">Back to Agency Properties</button></div>'
+              document.getElementById("message").innerHTML = lastly
+            }
+            )})
+          }
+      
+    function get_check01(type){
+      document.getElementById("message").innerHTML = '<h5 style="text-align: center;">Please wait while we connect to Property Finder</h5><div class="loader"></div>'
+      var modal = document.getElementById("myModal007");
+      var span = document.getElementsByClassName("close")[0];
+      modal.style.display = "block";
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+      var data = $('#table').bootstrapTable('getSelections');
+      arr = []
+      for (i = 0; i < data.length; i++)
+      {
+        arr.push(data[i]['refno'])
+      }
+      fetch('/bulk_update/'+arr).then(function(response){
+            response.json().then(function(messages){
+              final_message = "<div>"+messages[0]+"</div>"
+              for (i = 1; i < messages.length; i++)
+              {
+                final_message += "<div>"+messages[i]+"</div>"
+              }
+              lastly=final_message+'<div><button onclick="backtoback()" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-top: 7px; width: 200px; margin-left: auto; margin-right: auto;">Back to Agency Properties</button></div>'
+              document.getElementById("message").innerHTML = lastly
+            }
+            )})
+    }
+
 
     function backtoback(){
       location.reload()
