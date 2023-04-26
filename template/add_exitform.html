@@ -1,0 +1,178 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+    .column{
+           background-color: (255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           padding-top: 10px;
+           margin: 5px;
+           margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 14pt;
+        font-family: 'Oswald';
+    }
+      </style>
+    
+
+<section>
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+<div class="container" >
+<form method="POST" enctype="multipart/form-data">
+    <dl>
+        <div class="row">
+            <div class="col column">
+                <h4>Exit Form</h4>
+                {{ wtf.form_field(form.name) }}
+                {{ wtf.form_field(form.designation) }}
+                {{ wtf.form_field(form.department) }}
+                <div class="container">
+                    <div class="row" style="margin-bottom: 9px;">
+                        <div class="col" style="font-size: 15px;">
+                            From Date *
+                        </div>
+                        <div class="col">
+                            {{ form.date_from }}
+                        </div>
+                        <div class="col" style="font-size: 15px;">
+                            To Date
+                        </div>
+                        <div class="col">
+                            {{ form.date_to }}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 9px;">
+                        <div class="col" style="font-size: 15px;">
+                            From Time *
+                        </div>
+                        <div class="col">
+                            {{ form.time_from }}
+                        </div>
+                        <div class="col" style="font-size: 15px;">
+                            To Time *
+                        </div>
+                        <div class="col">
+                            {{ form.time_to }}
+                        </div>
+                    </div>
+                </div>
+                {{ wtf.form_field(form.reason) }}
+                <a data-toggle="modal" href="#lead" class="btn btn-primary" style="margin-bottom: 5px;">Add Lead</a>
+                {{ wtf.form_field(form.viewing_lead) }}
+                {% if current_user.is_admin == True or current_user.job_title == 'Manager' or current_user.job_title == 'HR Manager' %}
+                {{ wtf.form_field(form.manager_approval) }}
+                {% endif %}
+                {% if current_user.is_admin == True or current_user.job_title == 'HR Manager' %}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        HR Acknowledge Date
+                    </div>
+                    <div class="col">
+                        {{ form.hr_acknowledge }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.hr_approval) }}
+                {{ wtf.form_field(form.remarks) }}
+                {% endif %}
+            </div>
+        </div>
+    </dl>
+  <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
+  <input id="sub" class="btn btn-primary" value="Submit" type="submit" value="Submit">
+</form>
+</div>
+
+<!-- LEAD MODAL -->
+<div class="modal fade" id="lead">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+        <div id="lead_toolbar">
+            <button id="reset" type="button" class="btn btn-primary" style="float: left; margin-right: 5px;">Reset</button>
+        </div>
+          <table id="lead_table"        
+          data-toggle="true"
+          data-toolbar="#lead_toolbar"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-radio="true" data-show-select-title="true">SELECT</th>
+                <th data-field="refno">REF NO</th>
+                <th data-field="contact">CONTACT</th>
+                <th data-field="contact_name">CONTACT NAME</th>
+                <th data-field="lead_type">LEAD TYPE</th>
+                <th data-field="property_requirements">PROPERTY</th>
+                <th data-field="subtype">TYPE</th>
+                <th data-field="locationtext">COMMUNITY</th>
+                <th data-field="building">LOCATION</th>
+                <th data-field="price">PRICE</th>
+            </tr>
+            </thead>
+        </table>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="float: left;"  data-dismiss="modal" onclick="getlead()">Select</button>
+          <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+    </div>
+<!-- /.modal -->
+
+
+<br></div>
+</section>
+
+<script>
+    function get_leads(){
+        fetch('/all_leads').then(function(response){
+            response.json().then(function(data){
+                let newtable = '';
+                var jsonData = data.all_leads.reverse()
+                $(function () {
+                var $table = $('#lead_table').bootstrapTable({data: jsonData});
+
+
+                $('#reset').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $lead_table.bootstrapTable('load', $.grep(jsonData, grepFunc));
+                });
+ 
+
+                });
+            })
+        })
+    }
+
+    function getlead(){
+    var data = $('#lead_table').bootstrapTable('getSelections');
+    $('#viewing_lead').val(data[0].refno)
+    }
+
+    window.onload = get_leads();
+
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+

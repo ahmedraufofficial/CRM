@@ -1,0 +1,58 @@
+{"headers":
+  [
+    {
+        "field": "state",
+        "checkbox": "true"
+    },
+    {
+        "field": "edit",
+        "title": "Options","sortable": "False"
+    },
+    {
+        "field": "refno",  
+        "title": "Ref No.", 
+        "sortable": "True"
+    },
+    {
+        "field": "name",  
+        "title": "Name"
+    },
+    {
+        "field": "department",  
+        "title": "Department"
+    },
+    {
+        "field": "leave_type",  
+        "title": "Leave Type"
+    },
+    {
+        "field": "date_from",  
+        "title": "From Date"
+    },
+    {
+        "field": "date_to",  
+        "title": "To Date"
+    },
+    {
+        "field": "no_of_days",  
+        "title": "No. of Days"
+    },
+    {
+        "field": "manager_approval",  
+        "title": "Manager Approval"
+    },
+    {
+        "field": "hr_approval",  
+        "title": "HR Approval"
+    },
+    {
+        "field": "remarks",  
+        "title": "Remarks"
+    },
+    {
+        "field": "created_date",  
+        "title": "Created Date",
+        "sortable": "True"
+    }
+  ]
+}

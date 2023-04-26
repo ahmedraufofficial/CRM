@@ -3,179 +3,212 @@
 {% block content %}
 <style type='text/css'>
     .column{
-           background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
--webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
--moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
-padding-top: 10px;
-        margin: 5px;
-        margin-top: 20px;
+           background-color: (255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           padding-top: 10px;
+           margin: 5px;
+           margin-top: 20px;
     }
     h4{
         letter-spacing: 1px;
         text-transform: uppercase;
-        color: #f5f0e1;
+        color: #000000;
         font-size: 14pt;
         font-family: 'Oswald';
     }
-
       </style>
     
 
-<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
-    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
-
-
+<section>
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
 <div class="container" >
 <form method="POST" enctype="multipart/form-data">
-  <dl>
-
-    <div class="row">
-        <div class="col column">
-            <h4>UPLOAD DOCUMENTS</h4>
-            {{ wtf.form_field(form.emi_id) }} 
-            {{ wtf.form_field(form.passport) }} 
-            {% if type == "developer" %}
-            {{ wtf.form_field(form.developer_doc) }}
-            {% endif %}
-            <h4>DEAL DETAILS</h4> 
-        {% if current_user.listing == True %}
-        <a data-toggle="modal" href="#listing" class="btn btn-primary" style="margin-bottom: 5px;">Add Listing</a>
-        {% endif %}
-        {{ wtf.form_field(form.listing_ref) }}
-
-        
-        <a data-toggle="modal" href="#lead" class="btn btn-primary" style="margin-bottom: 5px;">Add Lead</a>
-        {{ wtf.form_field(form.lead_ref) }}
-      
-        {{ wtf.form_field(form.transaction_type) }}
-        {{ wtf.form_field(form.status) }}
-        {{ wtf.form_field(form.sub_status) }}
-        {{ wtf.form_field(form.source) }}
-    
-
-
-        
-        <h4>BUYER CONTACT DETAILS</h4>
-        <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
-        {{ wtf.form_field(form.contact_buyer) }}
-        {{ wtf.form_field(form.contact_buyer_name) }}
-        {{ wtf.form_field(form.contact_buyer_number) }}
-        {{ wtf.form_field(form.contact_buyer_email) }}
-     
-        {% if current_user.listing == True %}
-        <h4>SELLER CONTACT DETAILS</h4>
-        <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
-        {{ wtf.form_field(form.contact_seller) }}
-        {{ wtf.form_field(form.contact_seller_name) }}
-        {{ wtf.form_field(form.contact_seller_number) }}
-        {{ wtf.form_field(form.contact_seller_email) }}
-        {% endif %}
-        
-   </div>
-    <div class="col column">
-        <h4>PRICING</h4>
-        {{ wtf.form_field(form.deal_price) }}
-        {{ wtf.form_field(form.deposit) }}
-        {{ wtf.form_field(form.agency_fee_seller) }}
-        {{ wtf.form_field(form.agency_fee_buyer) }}
-        {{ wtf.form_field(form.gross_commission) }}
-        {{ wtf.form_field(form.include_vat) }}
-        {{ wtf.form_field(form.total_commission) }}
-        {{ wtf.form_field(form.split_with_external_referral) }}
-        
-        {% if current_user.sale == True %}
-        {{ wtf.form_field(form.agent_1) }}
+    <dl>
         <div class="row">
-            <div class="col">
+            <div class="col column">
+                <h4>BUYER CONTACT DETAILS</h4>
+                <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
+                {{ wtf.form_field(form.contact_buyer) }}
+                {{ wtf.form_field(form.contact_buyer_name) }}
+                {{ wtf.form_field(form.contact_buyer_number) }}
+                {{ wtf.form_field(form.contact_buyer_email) }}
+                <a data-toggle="modal" href="#lead" class="btn btn-primary" style="margin-bottom: 5px;">Add Lead</a>
+                {{ wtf.form_field(form.lead_ref) }}
+
+                
+                <h4>DEAL DETAILS</h4> 
+                {{ wtf.form_field(form.deal_price) }}
+                {% if purpose == "sale" or type == "developer" %}
+                {{ wtf.form_field(form.finance_type) }}
+                {{ wtf.form_field(form.down_payment_available) }}
+                {{ wtf.form_field(form.down_payment) }}
+                {% endif %}
+                {% if purpose == "rent" %}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Tenancy Start Date
+                    </div>
+                    <div class="col">
+                        {{ form.tenancy_start_date }}
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Tenancy Renewal Date
+                    </div>
+                    <div class="col">
+                        {{ form.tenancy_renewal_date }}
+                    </div>
+                </div>
+                
+                {{ wtf.form_field(form.number_cheque_payment) }}
+                <!--
+                {{ wtf.form_field(form.buyer_type) }}
+                {{ wtf.form_field(form.cheques) }}
+                {{ wtf.form_field(form.estimated_deal_date) }}
+                -->
+                {{ wtf.form_field(form.cheque_payment_type) }}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Move In Date
+                    </div>
+                    <div class="col">
+                        {{ form.move_in_date }}
+                    </div>
+                </div>
+                
+                {% endif %} 
+                {% if type == "developer" %}
+                {{ wtf.form_field(form.unit_price) }}
+                {{ wtf.form_field(form.percentage) }}
+                {{ wtf.form_field(form.amount) }}
+                {% endif %}
+                {{ wtf.form_field(form.agent_1) }}
                 {{ wtf.form_field(form.commission_agent_1) }}
-            </div>
-            <div class="col">
-                <label class="control-label" id="com"></label>
-            </div>
-        </div>
-        {% endif %}
+                {{ wtf.form_field(form.gross_commission) }}
+                {{ wtf.form_field(form.include_vat) }}
+                {{ wtf.form_field(form.total_commission) }}
 
-        
-        {{ wtf.form_field(form.agent_2) }}
-        {% if current_user.listing == True %}
-        <div class="row">
-            <div class="col">
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Deal Completion Date
+                    </div>
+                    <div class="col">
+                        {{ form.actual_deal_date }}
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col column">
+                {% if current_user.listing == True %}
+                <h4>SELLER CONTACT DETAILS</h4>
+                <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
+                {{ wtf.form_field(form.contact_seller) }}
+                {{ wtf.form_field(form.contact_seller_name) }}
+                {{ wtf.form_field(form.contact_seller_number) }}
+                {{ wtf.form_field(form.contact_seller_email) }}
+                {% endif %}
+                
+                <h4>Listing</h4>
+                {{ wtf.form_field(form.transaction_type) }}
+                <div id="existing_listing">
+                </div>
+                {{ wtf.form_field(form.unit_no)}}
+                {{ wtf.form_field(form.unit_category) }}
+                {{ wtf.form_field(form.unit_beds) }}
+                {{ wtf.form_field(form.unit_location) }}
+                {{ wtf.form_field(form.unit_sub_location) }}
+                {{ wtf.form_field(form.unit_floor) }}
+                {{ wtf.form_field(form.unit_type) }}
+                {{ wtf.form_field(form.agent_2) }}
                 {{ wtf.form_field(form.commission_agent_2) }}
-            </div>
-            <div class="col">
-                <label class="control-label" id="com2"></label>
-            </div>
-        </div>
-        {% endif %}
-        
-        {% if purpose == "rent" %}
-        {{ wtf.form_field(form.cheques) }}
-        {% endif %}
-        {{ wtf.form_field(form.estimated_deal_date) }}
-        {{ wtf.form_field(form.actual_deal_date) }}
-    </div>
-    <div class="col column">
-        <h4>LOCATION</h4>
-        {{ wtf.form_field(form.unit_no)}}
-        {{ wtf.form_field(form.unit_category) }}
-        {{ wtf.form_field(form.unit_beds) }}
-        {{ wtf.form_field(form.unit_location) }}
-        {{ wtf.form_field(form.unit_sub_location) }}
-        {{ wtf.form_field(form.unit_floor) }}
-        {{ wtf.form_field(form.unit_type) }}
-        {% if type == "developer" %}
-        <div class="row">
-            <div class="col">
-                {{ wtf.form_field(form.plot_size) }}
-            </div>
-            <div class="col">
-                {{ wtf.form_field(form.floor_no) }}
-            </div>
-            <div class="col">
-                {{ wtf.form_field(form.project) }}
-            </div>
-        </div>
-        {% endif %}
-        {% if purpose == "sale" or type == "developer" %}
-        {{ wtf.form_field(form.buyer_type) }}
-        {{ wtf.form_field(form.finance_type) }}
-        {{ wtf.form_field(form.down_payment_available) }}
-        {{ wtf.form_field(form.down_payment) }}
-        {% endif %}
-        {% if purpose == "rent" %}
-        {{ wtf.form_field(form.tenancy_start_date) }}
-        {{ wtf.form_field(form.tenancy_renewal_date) }}
-        {{ wtf.form_field(form.number_cheque_payment) }}
-        {{ wtf.form_field(form.cheque_payment_type) }}
-        {{ wtf.form_field(form.move_in_date) }}
-        {% endif %} 
-        {% if type == "developer" %}
-        {{ wtf.form_field(form.unit_price) }}
-        {{ wtf.form_field(form.percentage) }}
-        {{ wtf.form_field(form.amount) }}
-        {% endif %}
 
-    </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <h4>FOR UHP USE ONLY</h4>
-            {% if type == "developer" %}
-            {{ wtf.form_field(form.pre_approval_loan) }}
-            {{ wtf.form_field(form.loan_amount) }}
+                
+                
+
+                <!-- Basically will be used for remarks
+                {{ wtf.form_field(form.status) }}
+                {{ wtf.form_field(form.sub_status) }}
+                {{ wtf.form_field(form.source) }}
+                -->
+                
+                <!--
+                <h4>PRICING</h4>
+                
+                {{ wtf.form_field(form.deposit) }}
+                {{ wtf.form_field(form.agency_fee_seller) }}
+                {{ wtf.form_field(form.agency_fee_buyer) }}
+                
+                {{ wtf.form_field(form.split_with_external_referral) }}
+                -->
+                
+            </div>
+            <div class="col column">
+                <h4>UPLOAD DOCUMENTS</h4>
+                {{ wtf.form_field(form.emi_id) }} 
+                <div id="doc01" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                {{ wtf.form_field(form.passport) }} 
+                <div id="doc02" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                {% if type == "developer" %}
+                {{ wtf.form_field(form.developer_doc) }}
+                {% endif %}
+                <h4>REMARKS</h4>
+                {{ wtf.form_field(form.source) }}
+                {{ wtf.form_field(form.status) }}
+                {{ wtf.form_field(form.sub_status) }}
+                {% if type == "developer" %}
+                <div class="row">
+                    <div class="col">
+                        {{ wtf.form_field(form.plot_size) }}
+                    </div>
+                    <div class="col">
+                        {{ wtf.form_field(form.floor_no) }}
+                    </div>
+                    <div class="col">
+                        {{ wtf.form_field(form.project) }}
+                    </div>
+                </div>
+                {% endif %}
+                <h4>FOR UHP USE ONLY</h4>
+                {% if type == "developer" %}
+                {{ wtf.form_field(form.pre_approval_loan) }}
+                {{ wtf.form_field(form.loan_amount) }}
+                {% endif %}
+                {{ wtf.form_field(form.client_referred_bank) }}
+                {{ wtf.form_field(form.bank_representative_name) }}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Date of Referral
+                    </div>
+                    <div class="col">
+                        {{ form.referral_date }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.bank_representative_mobile) }}
+                {% if current_user.is_admin == True or current_user.job_title == 'Accountant' or current_user.job_title == 'Manager' %}
+                <h4>Approvals</h4>
+                {{ wtf.form_field(form.lm_approval) }}
+                {% endif %}
+                {% if current_user.is_admin == True or current_user.job_title == 'Accountant' %}
+                {{ wtf.form_field(form.sm_approval) }}
+                {{ wtf.form_field(form.admin_approval) }}
+                {% endif %}
+            </div>
+            {% if current_user.is_admin == True and radio_enable == 'enabled' %}
+            <div class="col column">
+                <h4>Commission Status</h4>
+                {{ wtf.form_field(form.amount_received) }} 
+                {{ wtf.form_field(form.agent_pers_comm) }} 
+                {{ wtf.form_field(form.amount_eligible) }} 
+                {{ wtf.form_field(form.agent_received) }} 
+                {{ wtf.form_field(form.agent_pending) }} 
+            </div>
             {% endif %}
-            {{ wtf.form_field(form.client_referred_bank) }}
-            {{ wtf.form_field(form.bank_representative_name) }}
-            {{ wtf.form_field(form.referral_date) }}
-            {{ wtf.form_field(form.bank_representative_mobile) }}
         </div>
-    </div>
-
-
-  </dl>
+    </dl>
   <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
   <input id="sub" class="btn btn-primary" value="Confirm Submission" type="submit" value="Submit">
-
 </form>
 </div>
 
@@ -491,6 +524,22 @@ padding-top: 10px;
     }
     window.onload = get_contacts();
 
+    const transaction_type = document.getElementById('transaction_type');
+    const inputHandler = function(e) {
+        if (e.target.id == 'transaction_type')
+        {
+            if(document.getElementById('transaction_type').value != "Offplan")
+            {
+                document.getElementById('existing_listing').innerHTML = '<a data-toggle=modal href="#listing" class="btn btn-primary" style="margin-bottom: 5px; margin-left: auto; margin-right: auto;">Add Listing</a><div class="form-group "><label class="control-label" for="listing_ref">Listing Ref</label><input class="form-control" id="listing_ref" name="listing_ref" style="pointer-events: none;" type="text" value=""></div>'
+            }
+            if(document.getElementById('transaction_type').value == "Offplan")
+            {
+                document.getElementById('existing_listing').innerHTML = ""
+            }
+        }
+    }
+    transaction_type.addEventListener('input', inputHandler);
+
     function getcontact(){
     var data = $('#contacttable').bootstrapTable('getSelections');
     $('#contact_buyer').val(data[0].refno)
@@ -605,7 +654,6 @@ padding-top: 10px;
     $('#contact_seller_number').val(data[0].owner_contact)
     $('#contact_seller_email').val(data[0].owner_email)
     $('#unit_beds').val(data[0].bedrooms)
-    $('#deal_price').val(data[0].price)
     $('#unit_no').val(data[0].unit)
     $('#unit_floor').val(data[0].plot)
     setTimeout(function(){ $('#unit_sub_location').val(data[0].building); }, 100);
@@ -698,51 +746,107 @@ padding-top: 10px;
     window.onload = get_properties();
     window.onload = get_leads();
     window.onload = get_user();
+    window.onload = get_eid();
+    window.onload = get_passport();
 
     
+    function get_eid() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            h = {{old_eid|tojson}}
+            if (h != null ) {
+                a=h
+                imagedata = "<div class='row'>"
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 111px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 90px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += "</div>"
+                document.getElementById("doc01").innerHTML = imagedata;
 
-    function stat(x,agent){
-        try {
-            if (x!=""){
-        fetch('/all_users_commission/'+x+'/'+$("#deal_type").val()).then(function(response){
-            response.json().then(function(data){
-               if (agent == 1){
-                $("#commission_agent_1").val(data.commission)
-                let deal_price = document.getElementById('deal_price').value
-                let total_price = parseFloat(deal_price)
-                let percent = data.commission
-                let float_percent = parseFloat(percent)
-                document.getElementById('com').innerHTML = (total_price *  (float_percent / 100)).toFixed(2) +' AED'
             }
-               else if (agent == 2){
-                $("#commission_agent_2").val(data.commission)
-                let deal_price = document.getElementById('deal_price').value
-                let total_price = parseFloat(deal_price)
-                let percent = data.commission
-                let float_percent = parseFloat(percent)
-                document.getElementById('com2').innerHTML = (total_price *  (float_percent / 100)).toFixed(2) +' AED'
-               } 
-            })
-        })
-    }
-    }
-    catch(error){
-        console.error(error);
-    }
+            
+        }
+        else {
+            console.log("No EID")
+        }
     }
 
-    $("#agent_1").on('change', function() {
-        stat(this.value,"1")
-    });
-    $("#agent_1").on('click', function() {
-        stat(this.value,"1")
-    });
-    $("#agent_2").on('change', function() {
-        stat(this.value,"2")
-    });
-    $("#agent_2").on('click', function() {
-        stat(this.value,"2")
-    });
+    function get_passport() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            h = {{old_passport|tojson}}
+            if (h != null ) {
+                a=h
+                imagedata = "<div class='row'>"
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 111px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 90px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += "</div>"
+                document.getElementById("doc02").innerHTML = imagedata;
+
+            }
+            
+        }
+        else {
+            console.log("No Passport")
+        }
+    }
+
+
+    const commission_form = document.getElementById('commission_agent_1');
+    const inputHandler01 = function(e) {
+    var commission01 = document.getElementById('commission_agent_1').value
+    let total_commission01 = parseFloat(commission01)
+    if (e.target.id == 'commission_agent_1')
+    {
+        let deal_price01 = document.getElementById('deal_price').value
+        let float_price = parseFloat(deal_price01)
+        document.getElementById('gross_commission').value = parseInt(((total_commission01/100) * float_price).toFixed(2))
+    }
+    }
+    commission_form.addEventListener('input', inputHandler01);
+
+    const include_vat = document.getElementById('include_vat');
+    const inputHandler02 = function(e) {
+    var vat01 = document.getElementById('include_vat').value
+    let total_commission = parseFloat(vat01)
+    if (e.target.id == 'include_vat')
+    {
+        if (vat01 == "no")
+        {
+            let com_excl_vat = document.getElementById('gross_commission').value
+            let float_price = parseFloat(com_excl_vat)
+            document.getElementById('total_commission').value = parseInt(((float_price/1.05).toFixed(2)))
+        }
+        if (vat01 == "yes")
+        {
+            let com_excl_vat = document.getElementById('gross_commission').value
+            let float_price = parseFloat(com_excl_vat)
+            document.getElementById('total_commission').value = parseInt(((float_price*1.05).toFixed(2)))
+        }
+    }
+    }
+    include_vat.addEventListener('input', inputHandler02);
+
+    const commissioning = document.getElementById('amount_received');
+    const commissioning02 = document.getElementById('agent_pers_comm');
+    const commissioning03 = document.getElementById('agent_received');
+    const inputHandler03 = function(e) {
+    var t_comm = document.getElementById('total_commission').value
+    let total_commission = parseFloat(t_comm)
+    var bag_received = document.getElementById('amount_received').value
+    let bag_received_float = parseFloat(bag_received)
+    var bag_given = document.getElementById('agent_received').value
+    let bag_given_float = parseFloat(bag_given)
+    var agent_p_com = document.getElementById('agent_pers_comm').value
+    let agent_p_com_float = parseFloat(agent_p_com)
+    if (e.target.id == 'amount_received' || e.target.id == 'agent_received' || e.target.id == 'agent_pers_comm') 
+    {
+        console.log("Wassup")
+        document.getElementById('agent_pending').value = parseInt((total_commission*(agent_p_com_float/100))-bag_given_float)
+        document.getElementById('amount_eligible').value = parseInt((bag_received_float*(agent_p_com_float/100))-bag_given_float)
+    }
+    }
+    commissioning.addEventListener('input', inputHandler03);
+    commissioning02.addEventListener('input', inputHandler03);
+    commissioning03.addEventListener('input', inputHandler03);
+
 
 
 </script>

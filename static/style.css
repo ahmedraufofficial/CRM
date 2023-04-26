@@ -71,6 +71,14 @@ width: 50px !important;
 height: 40px !important;
 }
 
+.si3{
+  display: inline;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 12px;
+  color: white !important;
+  }
+
 .si2{
   width:30px !important;height:30px !important;border-radius:20px !important;
   display: inline;

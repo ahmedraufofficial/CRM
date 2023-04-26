@@ -15,11 +15,6 @@
       "sortable": "True"
     },
     {
-      "field": "deal_type",
-      "title": "DEAL TYPE",
-      "sortable": "True"
-    },
-    {
       "field": "status",
       "title": "STATUS",
       "sortable": "True"
@@ -30,18 +25,28 @@
       "sortable": "True"
     },
     {
-      "field": "contact_buyer",
-      "title": "BUYER/TENANT",
+      "field": "lead_ref",
+      "title": "Lead Ref No.",
       "sortable": "True"
     },
     {
-      "field": "contact_seller",
-      "title": "SELLER/LANDLORD",
+      "field": "contact_buyer_name",
+      "title": "Buyer/Tenant",
+      "sortable": "True"
+    },
+    {
+      "field": "listing_ref",
+      "title": "Listing Ref No.",
+      "sortable": "True"
+    },
+    {
+      "field": "contact_seller_name",
+      "title": "Seller/Landlord",
       "sortable": "True"
     },
     {
       "field": "deal_price",
-      "title": "DEAL PRICE",
+      "title": "Deal Price",
       "sortable": "True"
     },
     {
@@ -55,8 +60,43 @@
       "sortable": "True"
     },
     {
+      "field": "sm_approval",
+      "title": "Sales Approval",
+      "sortable": "False"
+    },
+    {
+      "field": "lm_approval",
+      "title": "Listing Approval",
+      "sortable": "False"
+    },
+    {
+      "field": "admin_approval",
+      "title": "Admin Approval",
+      "sortable": "False"
+    },
+    {
+      "field": "created_date",
+      "title": "Created",
+      "sortable": "False"
+    },
+    {
       "field": "edit",
       "title": "OPTIONS",
+      "sortable": "False"
+    },
+    {
+      "field": "amount_eligible",
+      "title": "Eligible Commission",
+      "sortable": "False"
+    },
+    {
+      "field": "agent_pending",
+      "title": "Pending Commission",
+      "sortable": "False"
+    },
+    {
+      "field": "edit01",
+      "title": "Commission Status",
       "sortable": "False"
     }
   ]
