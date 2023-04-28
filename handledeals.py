@@ -80,6 +80,12 @@ def display_deals():
                 transfer = '<label class="btn si3" style="width:70% !important; background-color: green !important; padding: 7% !important; margin-right: 3px !important;">Deal Successful</label>'
             else:
                 transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
+            
+            if new['project'] == "":
+                pass
+            else:
+                new['contact_seller_name'] = new['project']
+                new['listing_ref'] = '-'
 
             if current_user.is_admin == True:
                 delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
@@ -122,10 +128,11 @@ def display_deals():
                 transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 2% !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
 
             for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','gross_commission','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_no','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
-            if current_user.sale == True:
+            if current_user.sale == True and new['project'] == "":
                 new['contact_seller_name'] = '-'
             else:
-                pass
+                new['contact_seller_name'] = new['project']
+                new['listing_ref'] = '-'
             if current_user.sale != True:
                 new['agent_pending'] = '-'
                 new['amount_eligible'] = '-'
@@ -136,9 +143,9 @@ def display_deals():
             else:
                 comm_status = '<label class="btn si3" style="width:100% !important; background-color: #293645 !important; padding: 7% !important">Commission Pending</label>'
             if new['sm_approval'] == "Pending" and new['lm_approval'] == "Pending":
-                    edit_btn = '<a href="/edit_deal/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                edit_btn = '<a href="/edit_deal/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
             else:
-                    edit_btn = ""
+                edit_btn = ""
             new["edit"] = "<div style='display:flex;'>"+edit_btn+transfer+"</div>"
             new["edit01"] = "<div style='display:flex;'>"+comm_status+"</div>"
             data.append(new)
@@ -775,19 +782,17 @@ def add_closed_deal_developer(variable):
     lead = db.session.query(Leads).filter_by(refno=variable).first()
     form = AddDealForm()
     form.lead_ref.data = variable
-    loc = lead.locationtext
-    building = lead.building
-    form.unit_type.data = lead.subtype
-    form.unit_beds.data = lead.min_beds
-    form.deal_price.data = lead.min_price
-    form.listing_ref.data = lead.property_requirements
     form.contact_buyer.data = lead.contact
     form.contact_buyer_name.data = lead.contact_name
     form.contact_buyer_number.data = lead.contact_number
     form.contact_buyer_email.data = lead.contact_email
+    form.source.data = lead.source
+    w = open('abudhabi.json')
+    mydict = json.load(w)
+    newie = form.unit_location.data
     if request.method == 'POST': 
         type = "Sale"
-        deal_type = "Secondary"
+        deal_type = "Primary"
         transaction_type = form.transaction_type.data
         created_by = current_user.username
         listing_ref = form.listing_ref.data
@@ -796,23 +801,26 @@ def add_closed_deal_developer(variable):
         sub_status = form.sub_status.data
         priority = form.priority.data
         deal_price = form.deal_price.data
-        deposit = form.deposit.data
-        agency_fee_seller = form.agency_fee_seller.data
-        agency_fee_buyer = form.agency_fee_buyer.data
+        #deposit = form.deposit.data
+        #agency_fee_seller = form.agency_fee_seller.data
+        #agency_fee_buyer = form.agency_fee_buyer.data
         gross_commission = form.gross_commission.data
         include_vat = form.include_vat.data
         total_commission = form.total_commission.data
-        split_with_external_referral = form.split_with_external_referral.data
-        estimated_deal_date = form.estimated_deal_date.data
+        #split_with_external_referral = form.split_with_external_referral.data
+        #estimated_deal_date = form.estimated_deal_date.data
         actual_deal_date = form.actual_deal_date.data
         unit_no = form.unit_no.data
         unit_category = form.unit_category.data
         unit_beds = form.unit_beds.data
-        unit_location = form.unit_location.data
+        try:
+            unit_location = mydict[newie]
+        except:
+            unit_location = ""
         unit_sub_location = form.unit_sub_location.data
         unit_floor = form.unit_floor.data
         unit_type = form.unit_type.data
-        buyer_type = form.buyer_type.data
+        #buyer_type = form.buyer_type.data
         finance_type = form.finance_type.data
         down_payment_available = form.down_payment_available.data
         down_payment = form.down_payment.data
@@ -820,8 +828,9 @@ def add_closed_deal_developer(variable):
         bank_representative_name = form.bank_representative_name.data
         bank_representative_mobile = form.bank_representative_mobile.data
         referral_date = form.referral_date.data
-        plot_size = form.plot_size.data
-        floor_no = form.floor_no.data
+
+        #plot_size = form.plot_size.data
+        #floor_no = form.floor_no.data
         project = form.project.data
         unit_price = form.unit_price.data
         percentage = form.percentage.data
@@ -835,41 +844,45 @@ def add_closed_deal_developer(variable):
         contact_buyer_name = form.contact_buyer_name.data
         contact_buyer_number = form.contact_buyer_number.data
         contact_buyer_email = form.contact_buyer_email.data
-        agent_2 = form.agent_2.data
-        try:
-            passport = secure_filename(form.passport.data.filename)
-            emi = secure_filename(form.emi_id.data.filename)
-            dev = secure_filename(form.dev.data.filename)
-        except:
-            return "Upload the necessary documents!"
-        directory = UPLOAD_FOLDER+'/'+contact_buyer
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        form.passport.data.save(os.path.join(directory, passport))
-        form.emi_id.data.save(os.path.join(directory, emi))
-        form.developer_doc.data.save(os.path.join(directory, dev))
+        #agent_2 = form.agent_2.data
+
+        if form.sm_approval.data != None:
+            sm_approval = form.sm_approval.data
+        else:
+            sm_approval = 'Pending'
+        if form.lm_approval.data != None:
+            lm_approval = form.lm_approval.data
+        else:
+            lm_approval = 'Pending'
+        if form.admin_approval.data != None:
+            admin_approval = form.admin_approval.data
+        else:
+            admin_approval = 'Pending'
+
+        created_date = datetime.now()+timedelta(hours=4)
+        updated_date = datetime.now()+timedelta(hours=4)
 
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,plot_size = plot_size,floor_no = floor_no,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)    
         #listing
-        elif current_user.listing == True and current_user.sale == False:
-            contact_seller = form.contact_seller.data
-            contact_seller_name = form.contact_seller_name.data
-            contact_seller_number = form.contact_seller_number.data
-            contact_seller_email = form.contact_seller_email.data
-            commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,plot_size = plot_size,floor_no = floor_no,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date)
+        #elif current_user.listing == True and current_user.sale == False:
+            #contact_seller = form.contact_seller.data
+            #contact_seller_name = form.contact_seller_name.data
+            #contact_seller_number = form.contact_seller_number.data
+            #contact_seller_email = form.contact_seller_email.data
+            #commission_agent_2 = form.commission_agent_2.data
+            #newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date,created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
         else:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            contact_seller = form.contact_seller.data
-            contact_seller_name = form.contact_seller_name.data
-            contact_seller_number = form.contact_seller_number.data
-            contact_seller_email = form.contact_seller_email.data
-            commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,deposit=deposit,agency_fee_seller=agency_fee_seller,agency_fee_buyer=agency_fee_buyer,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,split_with_external_referral=split_with_external_referral,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,estimated_deal_date=estimated_deal_date,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,buyer_type=buyer_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,plot_size = plot_size,floor_no = floor_no,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date)
+            #contact_seller = form.contact_seller.data
+            #contact_seller_name = form.contact_seller_name.data
+            #contact_seller_number = form.contact_seller_number.data
+            #contact_seller_email = form.contact_seller_email.data
+            #commission_agent_2 = form.commission_agent_2.data
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date,created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
 
 
         
@@ -877,12 +890,27 @@ def add_closed_deal_developer(variable):
         db.session.commit()
         db.session.refresh(newdeal)
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
+
+        try:
+            passport01 = secure_filename(form.passport.data.filename)
+            emi = secure_filename(form.emi_id.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.passport.data.save(os.path.join(directory, passport01))
+            newdeal.passport = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport01)
+            form.emi_id.data.save(os.path.join(directory, emi))
+            newdeal.eid = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi)
+        except:
+            newdeal.passport = ""
+            newdeal.eid = ""
+
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
-        update_lead(lead_ref,status,sub_status,current_user.username)
+        #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", building = building, loc = loc, radio_enable="disabled" )
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", old_eid = "", old_passport = "", type = "developer" )
 
 
 
@@ -904,7 +932,10 @@ def edit_deal(variable):
     old_eid = edit.eid
     old_passport = edit.passport
     purpose = edit.type.lower()
-    print(purpose)
+    if edit.project != '':
+        type01 = 'developer'
+    else:
+        type01=''
     if request.method == 'POST':
         form.populate_obj(edit)
         edit.updated_date = datetime.now()+timedelta(hours=4)
@@ -922,7 +953,7 @@ def edit_deal(variable):
             form.developer_doc.data.save(os.path.join(directory, file_filename))
         except:
             pass
-        if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve":
+        if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.project == '':
             print("Lesssgooo")
             update_listing(edit.listing_ref, edit.contact_buyer, edit.contact_buyer_name, edit.contact_buyer_number, edit.contact_buyer_email, edit.transaction_type)
             update_lead(edit.lead_ref,edit.status,edit.sub_status,current_user.username) 
@@ -931,7 +962,7 @@ def edit_deal(variable):
         db.session.commit()
         logs(current_user.username,'deal no','Edited Deal')
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", old_eid = old_eid, old_passport = old_passport, purpose = purpose)
+    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", old_eid = old_eid, old_passport = old_passport, purpose = purpose, type=type01)
 
 @handledeals.route('/delete_deal/<variable>', methods = ['GET','POST'])
 @login_required

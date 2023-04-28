@@ -242,7 +242,7 @@ class AddDealForm(FlaskForm):
     number_cheque_payment = SelectField(u'Number of cheque payment',choices = [('1', '1'), ('2', '2'), ('3', '3'), ('4', '4')])
     cheque_payment_type = SelectField(u'Cheque payment type',choices = [('Self','Self'),('Company','Company')])
     move_in_date = DateField('Move in Date', format='%Y-%m-%d')
-    project = StringField('Project', [validators.Length(min=4, max=50)])
+    project = StringField('Developer Name*', [validators.DataRequired()])
     unit_price = IntegerField('Unit Price')
     percentage = IntegerField('Percentage')
     amount = IntegerField('Amount')

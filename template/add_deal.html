@@ -101,7 +101,7 @@
                 
             </div>
             <div class="col column">
-                {% if current_user.listing == True %}
+                {% if current_user.listing == True and type != "developer" %}
                 <h4>SELLER CONTACT DETAILS</h4>
                 <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
                 {{ wtf.form_field(form.contact_seller) }}
@@ -110,6 +110,11 @@
                 {{ wtf.form_field(form.contact_seller_email) }}
                 {% endif %}
                 
+                {% if type == "developer" %}
+                <h4>DEVELOPER DETAILS</h4>
+                {{ wtf.form_field(form.project) }}
+                {% endif %}
+
                 <h4>Listing</h4>
                 {{ wtf.form_field(form.transaction_type) }}
                 <div id="existing_listing">
@@ -150,31 +155,22 @@
                 <div id="doc01" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
                 {{ wtf.form_field(form.passport) }} 
                 <div id="doc02" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                 <!-- Developer Documents
                 {% if type == "developer" %}
                 {{ wtf.form_field(form.developer_doc) }}
                 {% endif %}
+                 -->
                 <h4>REMARKS</h4>
                 {{ wtf.form_field(form.source) }}
                 {{ wtf.form_field(form.status) }}
                 {{ wtf.form_field(form.sub_status) }}
-                {% if type == "developer" %}
-                <div class="row">
-                    <div class="col">
-                        {{ wtf.form_field(form.plot_size) }}
-                    </div>
-                    <div class="col">
-                        {{ wtf.form_field(form.floor_no) }}
-                    </div>
-                    <div class="col">
-                        {{ wtf.form_field(form.project) }}
-                    </div>
-                </div>
-                {% endif %}
                 <h4>FOR UHP USE ONLY</h4>
+                <!-- Developer Banking
                 {% if type == "developer" %}
                 {{ wtf.form_field(form.pre_approval_loan) }}
                 {{ wtf.form_field(form.loan_amount) }}
                 {% endif %}
+                -->
                 {{ wtf.form_field(form.client_referred_bank) }}
                 {{ wtf.form_field(form.bank_representative_name) }}
                 <div class="row" style="margin-bottom: 9px;">
