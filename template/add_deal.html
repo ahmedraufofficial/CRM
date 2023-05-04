@@ -42,6 +42,7 @@
                 {% if purpose == "sale" or type == "developer" %}
                 {{ wtf.form_field(form.finance_type) }}
                 {{ wtf.form_field(form.down_payment_available) }}
+                {{ wtf.form_field(form.percentage) }}
                 {{ wtf.form_field(form.down_payment) }}
                 {% endif %}
                 {% if purpose == "rent" %}
@@ -67,6 +68,10 @@
                 {{ wtf.form_field(form.buyer_type) }}
                 {{ wtf.form_field(form.cheques) }}
                 {{ wtf.form_field(form.estimated_deal_date) }}
+                {% if type == "developer" %}
+                {{ wtf.form_field(form.unit_price) }}
+                {{ wtf.form_field(form.amount) }}
+                {% endif %}
                 -->
                 {{ wtf.form_field(form.cheque_payment_type) }}
                 <div class="row" style="margin-bottom: 9px;">
@@ -77,13 +82,7 @@
                         {{ form.move_in_date }}
                     </div>
                 </div>
-                
                 {% endif %} 
-                {% if type == "developer" %}
-                {{ wtf.form_field(form.unit_price) }}
-                {{ wtf.form_field(form.percentage) }}
-                {{ wtf.form_field(form.amount) }}
-                {% endif %}
                 {{ wtf.form_field(form.agent_1) }}
                 {{ wtf.form_field(form.commission_agent_1) }}
                 {{ wtf.form_field(form.gross_commission) }}
@@ -784,6 +783,26 @@
         }
     }
 
+    const deal_price_coma = document.getElementById('deal_price');
+    const inputHandler05 = function(e) {
+    var deal_price_coma01 = document.getElementById('deal_price').value
+    if (e.target.id == 'deal_price')
+    {
+        if (deal_price_coma01.substring(deal_price_coma01.length - 1) == ".") {
+            document.getElementById('deal_price').value = deal_price_coma01;
+        }
+        else {
+            deal_price_coma02 = deal_price_coma01.replaceAll(",", "");
+            var parts = deal_price_coma02.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('deal_price').value = m;
+        }
+    }
+    }
+    deal_price_coma.addEventListener('input', inputHandler05);
 
     const commission_form = document.getElementById('commission_agent_1');
     const inputHandler01 = function(e) {
@@ -791,9 +810,9 @@
     let total_commission01 = parseFloat(commission01)
     if (e.target.id == 'commission_agent_1')
     {
-        let deal_price01 = document.getElementById('deal_price').value
+        let deal_price01 = document.getElementById('deal_price').value.replaceAll(',','')
         let float_price = parseFloat(deal_price01)
-        document.getElementById('gross_commission').value = parseInt(((total_commission01/100) * float_price).toFixed(2))
+        document.getElementById('gross_commission').value = (((total_commission01/100) * float_price).toLocaleString(undefined, {minimumFractionDigits: 2}))
     }
     }
     commission_form.addEventListener('input', inputHandler01);
@@ -804,17 +823,17 @@
     let total_commission = parseFloat(vat01)
     if (e.target.id == 'include_vat')
     {
-        if (vat01 == "no")
-        {
-            let com_excl_vat = document.getElementById('gross_commission').value
-            let float_price = parseFloat(com_excl_vat)
-            document.getElementById('total_commission').value = parseInt(((float_price/1.05).toFixed(2)))
-        }
         if (vat01 == "yes")
         {
-            let com_excl_vat = document.getElementById('gross_commission').value
+            let com_excl_vat = document.getElementById('gross_commission').value.replaceAll(',','')
             let float_price = parseFloat(com_excl_vat)
-            document.getElementById('total_commission').value = parseInt(((float_price*1.05).toFixed(2)))
+            document.getElementById('total_commission').value = (((float_price/1.05).toLocaleString(undefined, {minimumFractionDigits: 2})))
+        }
+        if (vat01 == "no")
+        {
+            let com_excl_vat = document.getElementById('gross_commission').value.replaceAll(',','')
+            let float_price = parseFloat(com_excl_vat)
+            document.getElementById('total_commission').value = (((float_price*1.05).toLocaleString(undefined, {minimumFractionDigits: 2})))
         }
     }
     }
@@ -824,24 +843,79 @@
     const commissioning02 = document.getElementById('agent_pers_comm');
     const commissioning03 = document.getElementById('agent_received');
     const inputHandler03 = function(e) {
-    var t_comm = document.getElementById('total_commission').value
+    var t_comm = document.getElementById('gross_commission').value.replaceAll(',','')
     let total_commission = parseFloat(t_comm)
-    var bag_received = document.getElementById('amount_received').value
+    var bag_received = document.getElementById('amount_received').value.replaceAll(',','')
     let bag_received_float = parseFloat(bag_received)
-    var bag_given = document.getElementById('agent_received').value
+    var bag_given = document.getElementById('agent_received').value.replaceAll(',','')
     let bag_given_float = parseFloat(bag_given)
-    var agent_p_com = document.getElementById('agent_pers_comm').value
+    var agent_p_com = document.getElementById('agent_pers_comm').value.replaceAll(',','')
     let agent_p_com_float = parseFloat(agent_p_com)
     if (e.target.id == 'amount_received' || e.target.id == 'agent_received' || e.target.id == 'agent_pers_comm') 
     {
         console.log("Wassup")
-        document.getElementById('agent_pending').value = parseInt((total_commission*(agent_p_com_float/100))-bag_given_float)
-        document.getElementById('amount_eligible').value = parseInt((bag_received_float*(agent_p_com_float/100))-bag_given_float)
+        document.getElementById('agent_pending').value = (((total_commission*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+        document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
     }
     }
     commissioning.addEventListener('input', inputHandler03);
     commissioning02.addEventListener('input', inputHandler03);
     commissioning03.addEventListener('input', inputHandler03);
+
+    const down_pay_percentage = document.getElementById('percentage');
+    const inputHandler04 = function(e) {
+    var down_pay_percentage01 = document.getElementById('percentage').value
+    let down_pay_percentage01_float = parseFloat(down_pay_percentage01)
+    if (e.target.id == 'percentage')
+    {
+        let deal_price01 = document.getElementById('deal_price').value.replaceAll(',','')
+        let float_price = parseFloat(deal_price01)
+        document.getElementById('down_payment').value = (((down_pay_percentage01_float/100) * float_price).toLocaleString(undefined, {minimumFractionDigits: 2}))
+    }
+    }
+    down_pay_percentage.addEventListener('input', inputHandler04);
+
+    const amount_received_coma = document.getElementById('amount_received');
+    const inputHandler06 = function(e) {
+    var amount_received_coma01 = document.getElementById('amount_received').value
+    if (e.target.id == 'amount_received')
+    {
+        if (amount_received_coma01.substring(amount_received_coma01.length - 1) == ".") {
+            document.getElementById('amount_received').value = amount_received_coma01;
+        }
+        else {
+            amount_received_coma02 = amount_received_coma01.replaceAll(",", "");
+            var parts = amount_received_coma02.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('amount_received').value = m;
+        }
+    }
+    }
+    amount_received_coma.addEventListener('input', inputHandler06);
+
+    const agent_received_coma = document.getElementById('agent_received');
+    const inputHandler07 = function(e) {
+    var agent_received_coma01 = document.getElementById('agent_received').value
+    if (e.target.id == 'agent_received')
+    {
+        if (agent_received_coma01.substring(agent_received_coma01.length - 1) == ".") {
+            document.getElementById('agent_received').value = agent_received_coma01;
+        }
+        else {
+            agent_received_coma02 = agent_received_coma01.replaceAll(",", "");
+            var parts = agent_received_coma02.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('agent_received').value = m;
+        }
+    }
+    }
+    agent_received_coma.addEventListener('input', inputHandler07);
 
 
 
