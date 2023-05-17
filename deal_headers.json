@@ -50,6 +50,11 @@
       "sortable": "True"
     },
     {
+      "field": "gross_commission",
+      "title": "Commission",
+      "sortable": "True"
+    },
+    {
       "field": "unit_location",
       "title": "COMMUNITY",
       "sortable": "True"
@@ -57,6 +62,11 @@
     {
       "field": "unit_sub_location",
       "title": "LOCATION",
+      "sortable": "True"
+    },
+    {
+      "field": "unit_no",
+      "title": "Unit No.",
       "sortable": "True"
     },
     {

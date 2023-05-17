@@ -97,7 +97,7 @@ def display_deals():
             else:
                 comm_status = '<label class="btn si3" style="width:100% !important; background-color: #293645 !important; padding: 7% !important">Commission Pending</label>'
 
-            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','gross_commission','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_no','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
+            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
             edit_btn = '<a href="/edit_deal/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
             new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+transfer+"</div>"
             new["edit01"] = "<div style='display:flex;'>"+comm_status+"</div>"
@@ -127,7 +127,7 @@ def display_deals():
             else:
                 transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 2% !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
 
-            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','gross_commission','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_no','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
+            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
             if current_user.sale == True and new['project'] == "":
                 new['contact_seller_name'] = '-'
             else:
@@ -932,10 +932,12 @@ def edit_deal(variable):
     old_eid = edit.eid
     old_passport = edit.passport
     purpose = edit.type.lower()
-    if edit.project != '':
-        type01 = 'developer'
-    else:
+    if edit.project == None:
+        type01 = ''
+    elif edit.project == '':
         type01=''
+    else:
+        type01='developer'
     if request.method == 'POST':
         form.populate_obj(edit)
         edit.updated_date = datetime.now()+timedelta(hours=4)
@@ -944,13 +946,15 @@ def edit_deal(variable):
         except:
             edit.unit_location = ""
         try:
-            file_filename = secure_filename(form.emi_id.data.filename)
+            passport01 = secure_filename(form.passport.data.filename)
+            emi = secure_filename(form.emi_id.data.filename)
             directory = UPLOAD_FOLDER+'/'+edit.refno
             if not os.path.isdir(directory):
                 os.mkdir(directory)
-            form.passport.data.save(os.path.join(directory, file_filename))
-            form.emi_id.data.save(os.path.join(directory, file_filename))
-            form.developer_doc.data.save(os.path.join(directory, file_filename))
+            form.passport.data.save(os.path.join(directory, passport01))
+            edit.passport = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+passport01)
+            form.emi_id.data.save(os.path.join(directory, emi))
+            edit.eid = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+emi)
         except:
             pass
         if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.project == '':
