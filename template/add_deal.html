@@ -149,16 +149,6 @@
                 
             </div>
             <div class="col column">
-                <h4>UPLOAD DOCUMENTS</h4>
-                {{ wtf.form_field(form.emi_id) }} 
-                <div id="doc01" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
-                {{ wtf.form_field(form.passport) }} 
-                <div id="doc02" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
-                 <!-- Developer Documents
-                {% if type == "developer" %}
-                {{ wtf.form_field(form.developer_doc) }}
-                {% endif %}
-                 -->
                 <h4>REMARKS</h4>
                 {{ wtf.form_field(form.source) }}
                 {{ wtf.form_field(form.status) }}
@@ -189,17 +179,46 @@
                 {{ wtf.form_field(form.sm_approval) }}
                 {{ wtf.form_field(form.admin_approval) }}
                 {% endif %}
-            </div>
-            {% if current_user.is_admin == True and radio_enable == 'enabled' %}
-            <div class="col column">
+                {% if current_user.is_admin == True and radio_enable == 'enabled' %}
                 <h4>Commission Status</h4>
                 {{ wtf.form_field(form.amount_received) }} 
                 {{ wtf.form_field(form.agent_pers_comm) }} 
                 {{ wtf.form_field(form.amount_eligible) }} 
                 {{ wtf.form_field(form.agent_received) }} 
                 {{ wtf.form_field(form.agent_pending) }} 
+                {% endif %}
             </div>
-            {% endif %}
+            <div class="col column">
+                <h4>Buyer Documents</h4>
+                {{ wtf.form_field(form.emi_id) }} 
+                <div id="doc01" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                {{ wtf.form_field(form.passport) }} 
+                <div id="doc02" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                 <!-- Developer Documents
+                {% if type == "developer" %}
+                {{ wtf.form_field(form.developer_doc) }}
+                {% endif %}
+                 -->
+                <h4 style="margin-top: 7%;">Seller Documents</h4>
+                {{ wtf.form_field(form.emi_id_seller) }} 
+                <div id="doc03" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                {{ wtf.form_field(form.passport_seller) }} 
+                <div id="doc04" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+
+
+
+                <div id="box1">
+                    <h4 style="margin-top: 7%;">MOU</h4>
+                    {{ wtf.form_field(form.mou) }} 
+                    <div id="doc05" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                </div>
+                <div id="box2">
+                    <h4 style="margin-top: 7%;">Tenancy Contract</h4>
+                    {{ wtf.form_field(form.tenancy_contract) }} 
+                    <div id="doc06" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+                </div>
+            </div>
+            
         </div>
     </dl>
   <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
@@ -743,16 +762,21 @@
     window.onload = get_user();
     window.onload = get_eid();
     window.onload = get_passport();
+    window.onload = get_eid_seller();
+    window.onload = get_passport_seller();
+    window.onload = get_mou();
+    window.onload = get_tenancy_contract();
 
     
     function get_eid() {
         check = {{radio_enable|tojson}}
         if (check == "enabled"){
-            h = {{old_eid|tojson}}
-            if (h != null ) {
-                a=h
+            m = {{mydiction|tojson}}
+            h = JSON.parse(m)
+            if (h.old_eid != null ) {
+                a=h.old_eid
                 imagedata = "<div class='row'>"
-                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 111px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 90px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
                 imagedata += "</div>"
                 document.getElementById("doc01").innerHTML = imagedata;
 
@@ -767,11 +791,12 @@
     function get_passport() {
         check = {{radio_enable|tojson}}
         if (check == "enabled"){
-            h = {{old_passport|tojson}}
-            if (h != null ) {
-                a=h
+            m = {{mydiction|tojson}}
+            h = JSON.parse(m)
+            if (h.old_passport != null ) {
+                a=h.old_passport
                 imagedata = "<div class='row'>"
-                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 111px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 90px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
                 imagedata += "</div>"
                 document.getElementById("doc02").innerHTML = imagedata;
 
@@ -782,6 +807,86 @@
             console.log("No Passport")
         }
     }
+
+    function get_eid_seller() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            m = {{mydiction|tojson}}
+            h = JSON.parse(m)
+            if (h.old_eid1 != null ) {
+                a=h.old_eid1
+                imagedata = "<div class='row'>"
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += "</div>"
+                document.getElementById("doc03").innerHTML = imagedata;
+
+            }
+            
+        }
+        else {
+            console.log("No EID")
+        }
+    }
+
+    function get_passport_seller() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            m = {{mydiction|tojson}}
+            h = JSON.parse(m)
+            if (h.old_passport1 != null ) {
+                a=h.old_passport1
+                imagedata = "<div class='row'>"
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += "</div>"
+                document.getElementById("doc04").innerHTML = imagedata;
+            }
+            
+        }
+        else {
+            console.log("No Passport")
+        }
+    }
+
+    function get_mou() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            m = {{mydiction|tojson}}
+            h = JSON.parse(m)
+            if (h.old_mou != null ) {
+                a=h.old_mou
+                imagedata = "<div class='row'>"
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += "</div>"
+                document.getElementById("doc05").innerHTML = imagedata;
+
+            }
+            
+        }
+        else {
+            console.log("No Passport")
+        }
+    }
+
+    function get_tenancy_contract() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            m = {{mydiction|tojson}}
+            h = JSON.parse(m)
+            if (h.old_tenancy_contract != null ) {
+                a=h.old_tenancy_contract
+                imagedata = "<div class='row'>"
+                imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                imagedata += "</div>"
+                document.getElementById("doc06").innerHTML = imagedata;
+
+            }
+            
+        }
+        else {
+            console.log("No Passport")
+        }
+    }
+
 
     const deal_price_coma = document.getElementById('deal_price');
     const inputHandler05 = function(e) {
@@ -839,28 +944,75 @@
     }
     include_vat.addEventListener('input', inputHandler02);
 
-    const commissioning = document.getElementById('amount_received');
-    const commissioning02 = document.getElementById('agent_pers_comm');
-    const commissioning03 = document.getElementById('agent_received');
-    const inputHandler03 = function(e) {
-    var t_comm = document.getElementById('gross_commission').value.replaceAll(',','')
-    let total_commission = parseFloat(t_comm)
-    var bag_received = document.getElementById('amount_received').value.replaceAll(',','')
-    let bag_received_float = parseFloat(bag_received)
-    var bag_given = document.getElementById('agent_received').value.replaceAll(',','')
-    let bag_given_float = parseFloat(bag_given)
-    var agent_p_com = document.getElementById('agent_pers_comm').value.replaceAll(',','')
-    let agent_p_com_float = parseFloat(agent_p_com)
-    if (e.target.id == 'amount_received' || e.target.id == 'agent_received' || e.target.id == 'agent_pers_comm') 
-    {
-        console.log("Wassup")
-        document.getElementById('agent_pending').value = (((total_commission*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
-        document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+    if (check == "enabled"){
+        const commissioning = document.getElementById('amount_received');
+        const commissioning02 = document.getElementById('agent_pers_comm');
+        const commissioning03 = document.getElementById('agent_received');
+        const inputHandler03 = function(e) {
+        var t_comm = document.getElementById('gross_commission').value.replaceAll(',','')
+        let total_commission = parseFloat(t_comm)
+        var bag_received = document.getElementById('amount_received').value.replaceAll(',','')
+        let bag_received_float = parseFloat(bag_received)
+        var bag_given = document.getElementById('agent_received').value.replaceAll(',','')
+        let bag_given_float = parseFloat(bag_given)
+        var agent_p_com = document.getElementById('agent_pers_comm').value.replaceAll(',','')
+        let agent_p_com_float = parseFloat(agent_p_com)
+        if (e.target.id == 'amount_received' || e.target.id == 'agent_received' || e.target.id == 'agent_pers_comm') 
+        {
+            console.log("Wassup")
+            document.getElementById('agent_pending').value = (((total_commission*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+            document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+        }
+        }
+        commissioning.addEventListener('input', inputHandler03);
+        commissioning02.addEventListener('input', inputHandler03);
+        commissioning03.addEventListener('input', inputHandler03);
+
+        const amount_received_coma = document.getElementById('amount_received');
+        const inputHandler06 = function(e) {
+        var amount_received_coma01 = document.getElementById('amount_received').value
+        if (e.target.id == 'amount_received')
+        {
+            if (amount_received_coma01.substring(amount_received_coma01.length - 1) == ".") {
+                document.getElementById('amount_received').value = amount_received_coma01;
+            }
+            else {
+                amount_received_coma02 = amount_received_coma01.replaceAll(",", "");
+                var parts = amount_received_coma02.toString().split(".");
+                const numberPart = parts[0];
+                const decimalPart = parts[1];
+                const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+                m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+                document.getElementById('amount_received').value = m;
+            }
+        }
+        }
+        amount_received_coma.addEventListener('input', inputHandler06);
+
+        const agent_received_coma = document.getElementById('agent_received');
+        const inputHandler07 = function(e) {
+        var agent_received_coma01 = document.getElementById('agent_received').value
+        if (e.target.id == 'agent_received')
+        {
+            if (agent_received_coma01.substring(agent_received_coma01.length - 1) == ".") {
+                document.getElementById('agent_received').value = agent_received_coma01;
+            }
+            else {
+                agent_received_coma02 = agent_received_coma01.replaceAll(",", "");
+                var parts = agent_received_coma02.toString().split(".");
+                const numberPart = parts[0];
+                const decimalPart = parts[1];
+                const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+                m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+                document.getElementById('agent_received').value = m;
+            }
+        }
+        }
+        agent_received_coma.addEventListener('input', inputHandler07);
     }
+    else {
+        console.log("New Deal")
     }
-    commissioning.addEventListener('input', inputHandler03);
-    commissioning02.addEventListener('input', inputHandler03);
-    commissioning03.addEventListener('input', inputHandler03);
 
     const down_pay_percentage = document.getElementById('percentage');
     const inputHandler04 = function(e) {
@@ -875,48 +1027,34 @@
     }
     down_pay_percentage.addEventListener('input', inputHandler04);
 
-    const amount_received_coma = document.getElementById('amount_received');
-    const inputHandler06 = function(e) {
-    var amount_received_coma01 = document.getElementById('amount_received').value
-    if (e.target.id == 'amount_received')
-    {
-        if (amount_received_coma01.substring(amount_received_coma01.length - 1) == ".") {
-            document.getElementById('amount_received').value = amount_received_coma01;
-        }
-        else {
-            amount_received_coma02 = amount_received_coma01.replaceAll(",", "");
-            var parts = amount_received_coma02.toString().split(".");
-            const numberPart = parts[0];
-            const decimalPart = parts[1];
-            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
-            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
-            document.getElementById('amount_received').value = m;
+    const el = document.getElementById('transaction_type');
+    el.addEventListener('input', vengence)
+    function vengence() {
+        console.log("Wassup")
+        const el1 = document.getElementById('transaction_type').value;
+        const box1 = document.getElementById('box1');
+        if (el1 == 'Resale') {
+            box1.style.display = 'block';
+        } else {
+            box1.style.display = 'none';
         }
     }
-    }
-    amount_received_coma.addEventListener('input', inputHandler06);
+    window.onload = vengence();
 
-    const agent_received_coma = document.getElementById('agent_received');
-    const inputHandler07 = function(e) {
-    var agent_received_coma01 = document.getElementById('agent_received').value
-    if (e.target.id == 'agent_received')
-    {
-        if (agent_received_coma01.substring(agent_received_coma01.length - 1) == ".") {
-            document.getElementById('agent_received').value = agent_received_coma01;
-        }
-        else {
-            agent_received_coma02 = agent_received_coma01.replaceAll(",", "");
-            var parts = agent_received_coma02.toString().split(".");
-            const numberPart = parts[0];
-            const decimalPart = parts[1];
-            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
-            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
-            document.getElementById('agent_received').value = m;
+    const el2 = document.getElementById('transaction_type');
+    el2.addEventListener('input', vengence1)
+    function vengence1() {
+        const el3 = document.getElementById('transaction_type').value;
+        const box2 = document.getElementById('box2');
+        if (el3 == 'Leased') {
+            box2.style.display = 'block';
+        } else {
+            box2.style.display = 'none';
         }
     }
-    }
-    agent_received_coma.addEventListener('input', inputHandler07);
-
+    window.onload = vengence1();
+    
+    console.log("Wassup")
 
 
 </script>

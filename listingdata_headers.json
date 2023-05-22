@@ -1,0 +1,50 @@
+{"headers":
+  [
+    {
+        "field": "state",
+        "checkbox": "true"
+    },
+    {
+        "field": "edit",
+        "title": "Options","sortable": "False"
+    },
+    {
+        "field": "refno",  
+        "title": "Ref No.", 
+        "sortable": "True"
+    },
+    {
+        "field": "status",  
+        "title": "Status"
+    },
+    {
+        "field": "location",  
+        "title": "Location"
+    },
+    {
+        "field": "sublocation",  
+        "title": "Community"
+    },
+    {
+        "field": "unit_no",  
+        "title": "Unit No."
+    },
+    {
+        "field": "owner_name",  
+        "title": "Owner Name"
+    },
+    {
+        "field": "owner_no",  
+        "title": "Owner No."
+    },
+    {
+        "field": "remarks",  
+        "title": "Remarks"
+    },
+    {
+        "field": "updated_date",  
+        "title": "Last Updated",
+        "sortable": "True"
+    }
+  ]
+}

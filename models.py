@@ -219,6 +219,11 @@ class Deals(db.Model):
     amount_eligible = db.Column(db.String(50))
     agent_received = db.Column(db.String(50))
     agent_pending = db.Column(db.String(50))
+    passport_seller = db.Column(db.String(500))
+    eid_seller = db.Column(db.String(500))
+    mou = db.Column(db.String(500))
+    tenancy_contract = db.Column(db.String(500))
+    other_documents = db.Column(db.String(2000))
 
 
 

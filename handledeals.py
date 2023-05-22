@@ -278,7 +278,7 @@ def add_deal_rent():
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent" , loc = "", radio_enable="disabled", old_eid = "", old_passport = "")
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent" , loc = "", radio_enable="disabled", mydiction = "")
 
     
 @handledeals.route('/add_deal/sale', methods = ['GET','POST'])
@@ -400,7 +400,7 @@ def add_deal_sale():
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale",loc = "", radio_enable="disabled", old_eid = "", old_passport = "")
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale",loc = "", radio_enable="disabled", mydiction = "")
 
     
 @handledeals.route('/add_deal/developer', methods = ['GET','POST'])
@@ -625,26 +625,74 @@ def add_closed_deal_rent(variable):
         db.session.refresh(newdeal)
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
 
+        #Documents inidiviually tried
         try:
             passport01 = secure_filename(form.passport.data.filename)
-            emi = secure_filename(form.emi_id.data.filename)
             directory = UPLOAD_FOLDER+'/'+newdeal.refno
             if not os.path.isdir(directory):
                 os.mkdir(directory)
             form.passport.data.save(os.path.join(directory, passport01))
             newdeal.passport = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport01)
+        except:
+            newdeal.passport = ""
+
+        try:
+            emi = secure_filename(form.emi_id.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
             form.emi_id.data.save(os.path.join(directory, emi))
             newdeal.eid = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi)
         except:
-            newdeal.passport = ""
             newdeal.eid = ""
+
+        try:
+            emi_seller02 = secure_filename(form.emi_id_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.emi_id_seller.data.save(os.path.join(directory, emi_seller02))
+            newdeal.eid_seller = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi_seller02)
+        except:
+            newdeal.eid_seller = ""
+
+        try:
+            passport02 = secure_filename(form.passport_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.passport_seller.data.save(os.path.join(directory, passport02))
+            newdeal.passport_seller = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport02)
+        except:
+            newdeal.passport_seller = ""
+
+        try:
+            mou1 = secure_filename(form.mou.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.mou.data.save(os.path.join(directory, mou1))
+            newdeal.mou = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+mou1)
+        except:
+            newdeal.mou = ""
+
+        try:
+            tenancy_contract01 = secure_filename(form.tenancy_contract.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.tenancy_contract.data.save(os.path.join(directory, tenancy_contract01))
+            newdeal.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+tenancy_contract01)
+        except:
+            newdeal.tenancy_contract = ""
+        #Documents end
 
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent", building = "", loc = "" , radio_enable="disabled", old_eid = "", old_passport = "")
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent", building = "", loc = "" , radio_enable="disabled", mydiction = "")
 
     
 @handledeals.route('/add_deal/sale/<variable>', methods = ['GET','POST'])
@@ -754,24 +802,72 @@ def add_closed_deal_sale(variable):
         db.session.refresh(newdeal)
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
 
+        #Documents inidiviually tried
         try:
             passport01 = secure_filename(form.passport.data.filename)
-            emi = secure_filename(form.emi_id.data.filename)
             directory = UPLOAD_FOLDER+'/'+newdeal.refno
             if not os.path.isdir(directory):
                 os.mkdir(directory)
             form.passport.data.save(os.path.join(directory, passport01))
             newdeal.passport = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport01)
+        except:
+            newdeal.passport = ""
+
+        try:
+            emi = secure_filename(form.emi_id.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
             form.emi_id.data.save(os.path.join(directory, emi))
             newdeal.eid = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi)
         except:
-            newdeal.passport = ""
             newdeal.eid = ""
+
+        try:
+            emi_seller02 = secure_filename(form.emi_id_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.emi_id_seller.data.save(os.path.join(directory, emi_seller02))
+            newdeal.eid_seller = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi_seller02)
+        except:
+            newdeal.eid_seller = ""
+
+        try:
+            passport02 = secure_filename(form.passport_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.passport_seller.data.save(os.path.join(directory, passport02))
+            newdeal.passport_seller = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport02)
+        except:
+            newdeal.passport_seller = ""
+
+        try:
+            mou1 = secure_filename(form.mou.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.mou.data.save(os.path.join(directory, mou1))
+            newdeal.mou = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+mou1)
+        except:
+            newdeal.mou = ""
+
+        try:
+            tenancy_contract01 = secure_filename(form.tenancy_contract.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.tenancy_contract.data.save(os.path.join(directory, tenancy_contract01))
+            newdeal.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+tenancy_contract01)
+        except:
+            newdeal.tenancy_contract = ""
+        #Documents end
 
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", old_eid = "", old_passport = "" )
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "" )
 
 
 @handledeals.route('/add_deal/developer/<variable>', methods = ['GET','POST'])
@@ -890,27 +986,74 @@ def add_closed_deal_developer(variable):
         db.session.commit()
         db.session.refresh(newdeal)
         newdeal.refno = 'UNI-D-'+str(newdeal.id)
-
+        #Documents inidiviually tried
         try:
             passport01 = secure_filename(form.passport.data.filename)
-            emi = secure_filename(form.emi_id.data.filename)
             directory = UPLOAD_FOLDER+'/'+newdeal.refno
             if not os.path.isdir(directory):
                 os.mkdir(directory)
             form.passport.data.save(os.path.join(directory, passport01))
             newdeal.passport = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport01)
+        except:
+            newdeal.passport = ""
+
+        try:
+            emi = secure_filename(form.emi_id.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
             form.emi_id.data.save(os.path.join(directory, emi))
             newdeal.eid = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi)
         except:
-            newdeal.passport = ""
             newdeal.eid = ""
+
+        try:
+            emi_seller02 = secure_filename(form.emi_id_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.emi_id_seller.data.save(os.path.join(directory, emi_seller02))
+            newdeal.eid_seller = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+emi_seller02)
+        except:
+            newdeal.eid_seller = ""
+
+        try:
+            passport02 = secure_filename(form.passport_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.passport_seller.data.save(os.path.join(directory, passport02))
+            newdeal.passport_seller = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+passport02)
+        except:
+            newdeal.passport_seller = ""
+
+        try:
+            mou1 = secure_filename(form.mou.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.mou.data.save(os.path.join(directory, mou1))
+            newdeal.mou = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+mou1)
+        except:
+            newdeal.mou = ""
+
+        try:
+            tenancy_contract01 = secure_filename(form.tenancy_contract.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newdeal.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.tenancy_contract.data.save(os.path.join(directory, tenancy_contract01))
+            newdeal.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+tenancy_contract01)
+        except:
+            newdeal.tenancy_contract = ""
+        #Documents end
 
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", old_eid = "", old_passport = "", type = "developer" )
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "", type = "developer" )
 
 
 
@@ -929,8 +1072,15 @@ def edit_deal(variable):
         form.unit_location.data = list(mydict.keys())[list(mydict.values()).index(edit.unit_location)]
     except:
         form.unit_location.data = ""
-    old_eid = edit.eid
-    old_passport = edit.passport
+    mydict01 ={
+        "old_eid" : edit.eid,
+        "old_passport" : edit.passport,
+        "old_eid1" : edit.eid_seller,
+        "old_passport1" : edit.passport_seller,
+        "old_mou" : edit.mou,
+        "old_tenancy_contract" : edit.tenancy_contract
+    }
+    mydict02 = json.dumps(mydict01)
     purpose = edit.type.lower()
     if edit.project == None:
         type01 = ''
@@ -945,18 +1095,68 @@ def edit_deal(variable):
             edit.unit_location = mydict[new]
         except:
             edit.unit_location = ""
+        #Documents inidiviually tried
         try:
             passport01 = secure_filename(form.passport.data.filename)
-            emi = secure_filename(form.emi_id.data.filename)
             directory = UPLOAD_FOLDER+'/'+edit.refno
             if not os.path.isdir(directory):
                 os.mkdir(directory)
             form.passport.data.save(os.path.join(directory, passport01))
             edit.passport = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+passport01)
+        except:
+            pass
+
+        try:
+            emi = secure_filename(form.emi_id.data.filename)
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
             form.emi_id.data.save(os.path.join(directory, emi))
             edit.eid = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+emi)
         except:
             pass
+
+        try:
+            emi_seller02 = secure_filename(form.emi_id_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.emi_id_seller.data.save(os.path.join(directory, emi_seller02))
+            edit.eid_seller = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+emi_seller02)
+        except:
+            pass
+
+        try:
+            passport02 = secure_filename(form.passport_seller.data.filename)
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.passport_seller.data.save(os.path.join(directory, passport02))
+            edit.passport_seller = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+passport02)
+        except:
+            pass
+
+        try:
+            mou1 = secure_filename(form.mou.data.filename)
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.mou.data.save(os.path.join(directory, mou1))
+            edit.mou = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+mou1)
+        except:
+            pass
+
+        try:
+            tenancy_contract01 = secure_filename(form.tenancy_contract.data.filename)
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.tenancy_contract.data.save(os.path.join(directory, tenancy_contract01))
+            edit.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+tenancy_contract01)
+        except:
+            pass
+        #Documents end
+        
         if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.project == '':
             print("Lesssgooo")
             update_listing(edit.listing_ref, edit.contact_buyer, edit.contact_buyer_name, edit.contact_buyer_number, edit.contact_buyer_email, edit.transaction_type)
@@ -966,7 +1166,7 @@ def edit_deal(variable):
         db.session.commit()
         logs(current_user.username,'deal no','Edited Deal')
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", old_eid = old_eid, old_passport = old_passport, purpose = purpose, type=type01)
+    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", mydiction = mydict02, purpose = purpose, type=type01)
 
 @handledeals.route('/delete_deal/<variable>', methods = ['GET','POST'])
 @login_required

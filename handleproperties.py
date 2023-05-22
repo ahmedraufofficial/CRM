@@ -3,8 +3,8 @@ from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import exc
 from sqlalchemy.sql.elements import Null
-from models import Properties, Contacts, User
-from forms import AddPropertyForm
+from models import Properties, Contacts, User, Listingdata
+from forms import AddPropertyForm, Addlistingdata
 import json
 import os 
 from werkzeug.utils import secure_filename
@@ -990,6 +990,48 @@ def locationid(community, location, access_token): #generating location ID
         community = 'Amaya Towers'
     else:
         pass
+    if community[:13] == 'Hydra Village':
+        community = 'Zone 7'
+        location = "Hydra Village"
+    else:
+        pass
+    if community[:15] == 'Hydra Avenue C6':
+        community = 'Hydra Avenue Towers'
+    else:
+        pass
+    if community[:5] == 'Mag 5':
+        community = 'MAG 5'
+    else:
+        pass
+    if community[:15] == 'Hydra Avenue C4':
+        community = 'Hydra Avenue Towers'
+    else:
+        pass
+    if community[:13] == 'Sigma Tower 1':
+        community = 'Sigma Towers'
+    else:
+        pass
+    if community[:26] == 'Fairmont Marina Residences':
+        location = 'The Marina'
+    else:
+        pass
+    if community[:14] == 'Seef Al Jubail':
+        community = 'Al Jubail Island'
+    else:
+        pass
+    if community == 'Marina Bay-City Of Lights':
+        community = 'City Of Lights'
+        location = "Al Reem Island"
+    else:
+        pass
+    if community == 'Al Maha 2':
+        community = 'Al Maha'
+    else:
+        pass
+    if community == 'Bloom Gardens':
+        location = 'Al Salam Street'
+    else:
+        pass
     community = community.replace(" ","_")
     community = community.replace("'","")
     location = location
@@ -1261,9 +1303,9 @@ def testing_loc():
     h = open('sublocation.json')
     h1 = json.load(h)
     for i in f2[0]:
-        if f2[0][i] == 'Al Reem Island':
+        if f2[0][i] == 'Salam Street':
             for j in h1[i[1:]]:
-                if h1[i[1:]][j] == 'Amaya Tower 2':
+                if h1[i[1:]][j] == 'Bloom Gardens':
                     print(h1[i[1:]][j])
                     x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
                     print(x)
@@ -1412,3 +1454,148 @@ def bigboytesting():
             print(w)
     print(x)
     return ('ok')
+
+#Listing Data Upload Scenes
+
+@handleproperties.route('/listing_data_upload',methods = ['GET','POST'])
+@login_required
+def upload_listing():
+    uploaded_file = request.files['file']
+    filepath = os.path.join(FILE_UPLOADS, uploaded_file.filename)
+    uploaded_file.save(filepath)
+    with open(filepath) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        print(csv_reader)
+        for row in csv_reader:
+            if line_count == 0:
+                print("Lesssgooo with count = 0")
+                line_count += 1
+            elif row[0] != '':
+                print("Now count is greater than 0")
+                print("Property Checking")    
+                fa = db.session.query(Properties).filter(and_(Properties.locationtext == row[2], Properties.building == row[3], Properties.unit == row[4])).first()
+                fb = db.session.query(Listingdata).filter(and_(Listingdata.location == row[2], Listingdata.sublocation == row[3], Listingdata.unit_no == row[4])).first()
+                if not (fa) and not (fb):
+                    type01 = row[9]
+                    status = row[0]
+                    city = row[1]
+                    location = row[2]
+                    sublocation = row[3]
+                    unit_no = row[4]
+                    owner_name = row[5]
+                    owner_no = row[6]
+                    owner_email = row[7] 
+                    if row[8] != '':
+                        remarks = row[8]
+                    else:
+                        remarks = '-'
+                    created_by = current_user.username
+                    updated_date = datetime.now()+timedelta(hours=4)
+                    created_date = datetime.now()+timedelta(hours=4)
+                    newlisting = Listingdata(created_date=created_date,updated_date=updated_date,status=status,unit_no=unit_no,city=city,location=location,sublocation=sublocation,owner_name=owner_name,owner_email=owner_email,owner_no=owner_no,created_by=created_by,remarks=remarks)
+                    db.session.add(newlisting)
+                    db.session.commit()
+                    print("Listing Added")
+                    db.session.refresh(newlisting)
+                    if (type01 == "Sale"):
+                        newlisting.refno = 'LD-S-'+str(newlisting.id)
+                    else:
+                        newlisting.refno = 'LD-R-'+str(newlisting.id)
+                    db.session.commit()                    
+                line_count += 1
+                print("Check marin jaani")
+                print(line_count)
+        print(f'Processed {line_count} lines.')
+    return jsonify(success=True) 
+
+@handleproperties.route('/listings',methods = ['GET','POST'])
+@login_required
+def display_listings():
+    if current_user.listing == False:
+        return abort(404)
+    data = []
+    if current_user.is_admin == True or current_user.listing == True:
+        for r in db.session.query(Listingdata).all():
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            #for k in ['reason', 'updated_date', 'designation']: new.pop(k)
+            edit_btn = '<a href="/edit_listingdata/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+            delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            data.append(new)
+    f = open('listingdata_headers.json')
+    columns = json.load(f)
+    columns = columns["headers"]
+    all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
+    return render_template('listing_data.html', data = data , columns = columns, user = current_user.username, all_users = all_users)
+
+@handleproperties.route('/add_listingdata', methods = ['GET','POST'])
+@login_required
+def add_listings(): 
+    form = Addlistingdata()
+    w = open('abudhabi.json')
+    mydict = json.load(w)
+    newie = form.location.data
+    if request.method == 'POST': 
+        if form.type.data == 'Sale':
+            type01 = 'Sale'
+        else:
+            type01 = 'Rent'
+        status = form.status.data
+        city = form.city.data
+        try:
+            location = mydict[newie]
+        except:
+            location = ""
+        sublocation = form.sublocation.data
+        unit_no = form.unit_no.data
+        owner_name = form.owner_name.data
+        owner_no = form.owner_no.data
+        owner_email = form.owner_email.data
+        remarks = form.remarks.data
+        created_date = datetime.now()+timedelta(hours=4)
+        updated_date = datetime.now()+timedelta(hours=4)
+        created_by = current_user.username
+        newlisting = Listingdata(created_date=created_date,updated_date=updated_date,status=status,unit_no=unit_no,city=city,location=location,sublocation=sublocation,owner_name=owner_name,owner_email=owner_email,owner_no=owner_no,created_by=created_by,remarks=remarks)
+        db.session.add(newlisting)
+        db.session.commit()
+        db.session.refresh(newlisting)
+        if (type01 == "Sale"):
+            newlisting.refno = 'LD-S-'+str(newlisting.id)
+        else:
+            newlisting.refno = 'LD-R-'+str(newlisting.id)
+        db.session.commit()
+        return redirect(url_for('handleproperties.display_listings'))
+    return render_template('add_listing.html', form=form, user = current_user.username)
+
+@handleproperties.route('/edit_listingdata/<variable>', methods = ['GET','POST'])
+@login_required
+def edit_listings(variable):
+    edit = db.session.query(Listingdata).filter_by(refno=variable).first()
+    form = Addlistingdata(obj = edit)
+    w = open('abudhabi.json')
+    mydict = json.load(w)
+    new = form.location.data
+    try:
+        form.location.data = list(mydict.keys())[list(mydict.values()).index(edit.location)]
+    except:
+        form.location.data = ""
+    if request.method == 'POST':
+        form.populate_obj(edit)
+        edit.updated_date = datetime.now()+timedelta(hours=4)
+        try:
+            edit.location = mydict[new]
+        except:
+            edit.location = ""
+        db.session.commit()
+        return redirect(url_for('handleproperties.display_listings'))
+    return render_template('add_listing.html', form=form, user = current_user.username, building = edit.sublocation)
+
+@handleproperties.route('/delete_listing/<variable>', methods = ['GET','POST'])
+@login_required
+def delete_listing(variable):
+    delete = db.session.query(Listingdata).filter_by(refno=variable).first()
+    db.session.delete(delete)
+    db.session.commit()
+    return redirect(url_for('handleproperties.display_listings'))

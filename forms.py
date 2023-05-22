@@ -216,6 +216,11 @@ class AddDealForm(FlaskForm):
     amount_eligible = StringField('Agent Eligible', render_kw={"style":"pointer-events: none;"})
     agent_received = StringField('Agent Received')
     agent_pending = StringField('Agent Pending', render_kw={"style":"pointer-events: none;"})
+    emi_id_seller = FileField("EID *", render_kw={'class':'upload'})
+    passport_seller = FileField("Passport *", render_kw={'class':'upload'})
+    mou = FileField("MOU *", render_kw={'class':'upload'})
+    tenancy_contract = FileField("Tenancy Contract *", render_kw={'class':'upload'})
+    other_documents = FileField("Other Documents *", render_kw={'class':'upload'})
 
 
     buyer_type = SelectField(u'Buyer Type',choices = [('Investor','Investor'),('End User','End User')])
