@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note,lead_email, deploy_message
+from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message
 from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
@@ -227,17 +227,22 @@ def add_lead_buyer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
+        logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
+        notes('UNI-L-' + str(newlead.id))
+        assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
+
         if (sendSMS == "1"):
             if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
                 get_agent = db.session.query(User).filter_by(username = agent).first()
-                deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+                try:
+                    etisy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+                except:
+                    pass
             else:
                 pass
         else:
             pass
-        logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
-        notes('UNI-L-' + str(newlead.id))
-        assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
+        
         if property_requirements != "":
             update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
         lead_email(current_user.email, 'UNI-L-' + str(newlead.id))
@@ -294,17 +299,22 @@ def add_lead_developer():
         db.session.refresh(newlead)
         newlead.refno = 'UNI-L-'+str(newlead.id)
         db.session.commit()
+        logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
+        notes('UNI-L-' + str(newlead.id))
+        assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
+        
         if (sendSMS == "1"):
             if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
                 get_agent = db.session.query(User).filter_by(username = agent).first()
-                deploy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+                try:
+                    etisy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+                except:
+                    pass
             else:
                 pass
         else:
             pass
-        logs(current_user.username,'UNI-L-'+str(newlead.id),'Added')
-        notes('UNI-L-' + str(newlead.id))
-        assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status)
+        
         if property_requirements != "":
             update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
         return redirect(url_for('handleleads.display_leads'))

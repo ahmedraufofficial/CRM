@@ -5,11 +5,12 @@ from datetime import datetime, timedelta
 import random
 import easyimap
 import smtplib
-from twilio.rest import Client
-from twilio.base.exceptions import TwilioRestException
+import requests
+#from twilio.rest import Client
+#from twilio.base.exceptions import TwilioRestException
 
-account_sid = ""
-auth_token = ""
+#account_sid = ""
+#auth_token = ""
 
 
 USERS_FOLDER = os.getcwd() + '/static/userdata'
@@ -509,44 +510,107 @@ def assign_viewing(current,lead_id,lead,lists):
         post_reminders(username,date,end_date,time,time,"Viewing assigned for "+lead)
         
 
-def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
-    client = Client(account_sid, auth_token)
+#def deploy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
+#    client = Client(account_sid, auth_token)
+
+#    if(int(str(agentno)[:2]) == 97):
+#        e1 = "+"+str(agentno)
+#        e2 = "0"+str(agentno)[3:]
+#    elif(int(str(agentno)[:1]) == 5):
+#        e1 = "+971"+str(agentno)
+#        e2 = "0"+str(agentno)
+#    else:
+#        e1 = "+"+str(agentno)
+#        e2 = e1
+#
+#   if(int(str(contactno)[:2]) == 97):
+#        d1 = "+"+str(contactno)
+#        d2 = "0"+str(contactno)[3:]
+#    elif(int(str(contactno)[:1]) == 5):
+#        d1 = "+971"+str(contactno)
+#        d2 = "0"+str(contactno)
+#    else:
+#        d1 = "+"+str(contactno)
+#        d2 = d1
+#        e2 = e1
+#
+#    try:
+#        message1 = client.messages.create(
+#            to=d1,
+#            from_="+16266693482",
+#            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+e2+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
+#            )
+#    except TwilioRestException as err:
+#        pass
+#    try:
+#        message2 = client.messages.create(
+#            to=e1,
+#            from_="+16266693482",
+#            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+d2+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
+#            )
+#    except TwilioRestException as err:
+#        pass
+
+def etisy_message(agentname,contactname,agentno,contactno,refno,location,building,leadtype):
+    url = "https://smartmessaging.etisalat.ae:5676/login/user"
+    payload = json.dumps({
+        "username": "",
+        "password": ""
+        })
+    headers = {
+        'Content-Type': 'application/json'
+        }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    x = json.loads(response.text)
 
     if(int(str(agentno)[:2]) == 97):
-        e1 = "+"+str(agentno)
+        e1 = str(agentno)
         e2 = "0"+str(agentno)[3:]
     elif(int(str(agentno)[:1]) == 5):
-        e1 = "+971"+str(agentno)
+        e1 = "971"+str(agentno)
         e2 = "0"+str(agentno)
+    elif(int(str(agentno)[:1]) == 0):
+        e1 = "971"+str(agentno[1:])
+        e2 = str(agentno)
     else:
         e1 = "+"+str(agentno)
         e2 = e1
-
+        
     if(int(str(contactno)[:2]) == 97):
-        d1 = "+"+str(contactno)
+        d1 = str(contactno)
         d2 = "0"+str(contactno)[3:]
     elif(int(str(contactno)[:1]) == 5):
-        d1 = "+971"+str(contactno)
+        d1 = "971"+str(contactno)
         d2 = "0"+str(contactno)
+    elif(int(str(contactno)[:1]) == 0):
+        d1 = "971"+str(contactno[1:])
+        d2 = str(contactno)
     else:
         d1 = "+"+str(contactno)
         d2 = d1
         e2 = e1
+    body1="Thank you for choosing UHPAE. Our agent "+str(agentname).upper()+" will contact you shortly. Agent contact No. "+e2+"." 
+    body2="Dear Agent, Please contact your lead "+str(contactname)+" on "+d2+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
+    launch_that_message(number=d1, message=body1, token=x['token'])
+    launch_that_message(number=e1, message=body2, token=x['token'])
+    return("Wassup")
 
-    try:
-        message1 = client.messages.create(
-            to=d1,
-            from_="+16266693482",
-            body="Dear Client, Please contact our Agent. "+str(agentname).upper()+" on "+e2+" regarding the property in "+str(building)+", "+str(location)+". Your Ref no. is: "+refno+"."
-            )
-    except TwilioRestException as err:
-        pass
-    try:
-        message2 = client.messages.create(
-            to=e1,
-            from_="+16266693482",
-            body="Dear Agent, Please contact your lead "+str(contactname)+" on "+d2+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
-            )
-    except TwilioRestException as err:
-        pass
+def launch_that_message(number, message, token):
+    url = "https://smartmessaging.etisalat.ae:5676/campaigns/submissions/sms/nb/"
+    payload = json.dumps({
+    "msgCategory": "4.6",
+    "contentType": "3.1",
+    "senderAddr": "AD-UHP",
+    "dndCategory": "Campaign",
+    "priority": 1,
+    "recipient": number,
+    "msg": message
+    })
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+token
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text)
+
     
