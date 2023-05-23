@@ -591,9 +591,9 @@ def etisy_message(agentname,contactname,agentno,contactno,refno,location,buildin
         e2 = e1
     body1="Thank you for choosing UHPAE. Our agent "+str(agentname).upper()+" will contact you shortly. Agent contact No. "+e2+"." 
     body2="Dear Agent, Please contact your lead "+str(contactname)+" on "+d2+" regarding the property for "+leadtype+" in "+str(building)+", "+str(location)+". The Ref no. is: "+refno
-    launch_that_message(number=d1, message=body1, token=x['token'])
-    launch_that_message(number=e1, message=body2, token=x['token'])
-    return("Wassup")
+    #launch_that_message(number=d1, message=body1, token=x['token'])
+    #launch_that_message(number=e1, message=body2, token=x['token'])
+    return(response)
 
 def launch_that_message(number, message, token):
     url = "https://smartmessaging.etisalat.ae:5676/campaigns/submissions/sms/nb/"
@@ -613,4 +613,16 @@ def launch_that_message(number, message, token):
     response = requests.request("POST", url, headers=headers, data=payload)
     print(response.text)
 
+def etisy_message01():
+    url = "https://smartmessaging.etisalat.ae:5676/login/user"
+    payload = json.dumps({
+        "username": "",
+        "password": ""
+        })
+    headers = {
+        'Content-Type': 'application/json'
+        }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    x = json.loads(response.text)
     
+    return(x)    
