@@ -6,6 +6,7 @@ import random
 import easyimap
 import smtplib
 import requests
+from requests.adapters import HTTPAdapter, Retry
 #from twilio.rest import Client
 #from twilio.base.exceptions import TwilioRestException
 
@@ -614,6 +615,11 @@ def launch_that_message(number, message, token):
     print(response.text)
 
 def etisy_message01():
+    session = requests.Session()
+    retry = Retry(connect=3, backoff_factor=0.5)
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
     url = "https://smartmessaging.etisalat.ae:5676/login/user"
     payload = json.dumps({
         "username": "",
@@ -622,7 +628,7 @@ def etisy_message01():
     headers = {
         'Content-Type': 'application/json'
         }
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = session.request("POST", url, headers=headers, data=payload)
     x = json.loads(response.text)
     
     return(x)    
