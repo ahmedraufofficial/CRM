@@ -480,12 +480,12 @@ def marketing_leads():
         notes('UNI-L-' + str(newlead.id))
     return "ok"
 
-
-@handleleads.route('/check_wassup_etisy')
-@login_required
-def check_wassup_etisy():
-    wassup = etisy_message01()
-    return (wassup)
+# For testing purposes
+#@handleleads.route('/check_wassup_etisy')
+#@login_required
+#def check_wassup_etisy():
+#    wassup = etisy_message01()
+#    return (wassup)
 
     
 
