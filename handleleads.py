@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message, etisy_message01
+from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message
 from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
