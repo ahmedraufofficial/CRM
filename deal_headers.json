@@ -15,13 +15,13 @@
       "sortable": "True"
     },
     {
-      "field": "status",
-      "title": "STATUS",
+      "field": "agent_1",
+      "title": "Agent",
       "sortable": "True"
     },
     {
-      "field": "sub_status",
-      "title": "SUB STATUS",
+      "field": "status",
+      "title": "STATUS",
       "sortable": "True"
     },
     {
@@ -85,8 +85,8 @@
       "sortable": "False"
     },
     {
-      "field": "created_date",
-      "title": "Created",
+      "field": "actual_deal_date",
+      "title": "Completion Date",
       "sortable": "False"
     },
     {

@@ -97,10 +97,11 @@ def display_deals():
             else:
                 comm_status = '<label class="btn si3" style="width:100% !important; background-color: #293645 !important; padding: 7% !important">Commission Pending</label>'
 
-            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
+            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
             edit_btn = '<a href="/edit_deal/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
             new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+transfer+"</div>"
             new["edit01"] = "<div style='display:flex;'>"+comm_status+"</div>"
+            new["actual_deal_date"] = new["actual_deal_date"][:10]
             data.append(new)
 
     elif current_user.sale == True or current_user.listing == True:
@@ -127,7 +128,7 @@ def display_deals():
             else:
                 transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 2% !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
 
-            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','actual_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
+            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','commission_agent_1','agent_2','commission_agent_2','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
             if current_user.sale == True and new['project'] == "":
                 new['contact_seller_name'] = '-'
             else:
@@ -148,6 +149,7 @@ def display_deals():
                 edit_btn = ""
             new["edit"] = "<div style='display:flex;'>"+edit_btn+transfer+"</div>"
             new["edit01"] = "<div style='display:flex;'>"+comm_status+"</div>"
+            new["actual_deal_date"] = new["actual_deal_date"][:10]
             data.append(new)
 
     f = open('deal_headers.json')
@@ -1061,7 +1063,7 @@ def add_closed_deal_developer(variable):
 @handledeals.route('/edit_deal/<variable>', methods = ['GET','POST'])
 @login_required
 def edit_deal(variable):
-    if current_user.deal == False or current_user.edit == False:
+    if current_user.deal == False:
         return abort(404) 
     edit = db.session.query(Deals).filter_by(refno=variable).first()
     form = AddDealForm(obj = edit)
