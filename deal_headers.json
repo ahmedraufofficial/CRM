@@ -15,43 +15,18 @@
       "sortable": "True"
     },
     {
-      "field": "agent_1",
-      "title": "Agent",
-      "sortable": "True"
-    },
-    {
-      "field": "status",
-      "title": "STATUS",
-      "sortable": "True"
-    },
-    {
       "field": "lead_ref",
       "title": "Lead Ref No.",
       "sortable": "True"
     },
     {
-      "field": "contact_buyer_name",
-      "title": "Buyer/Tenant",
-      "sortable": "True"
+      "field": "actual_deal_date",
+      "title": "Completion Date",
+      "sortable": "False"
     },
     {
-      "field": "listing_ref",
-      "title": "Listing Ref No.",
-      "sortable": "True"
-    },
-    {
-      "field": "contact_seller_name",
-      "title": "Seller/Landlord",
-      "sortable": "True"
-    },
-    {
-      "field": "deal_price",
-      "title": "Deal Price",
-      "sortable": "True"
-    },
-    {
-      "field": "gross_commission",
-      "title": "Commission",
+      "field": "unit_no",
+      "title": "Unit No.",
       "sortable": "True"
     },
     {
@@ -65,8 +40,33 @@
       "sortable": "True"
     },
     {
-      "field": "unit_no",
-      "title": "Unit No.",
+      "field": "deal_price",
+      "title": "Deal Price",
+      "sortable": "True"
+    },
+    {
+      "field": "commission_agent_1",
+      "title": "Commission (%)",
+      "sortable": "True"
+    },
+    {
+      "field": "gross_commission",
+      "title": "Commission (AED)",
+      "sortable": "True"
+    },
+    {
+      "field": "agent_1",
+      "title": "Agent",
+      "sortable": "True"
+    },
+    {
+      "field": "contact_buyer_name",
+      "title": "Buyer/Tenant",
+      "sortable": "True"
+    },
+    {
+      "field": "contact_seller_name",
+      "title": "Seller/Landlord",
       "sortable": "True"
     },
     {
@@ -82,11 +82,6 @@
     {
       "field": "admin_approval",
       "title": "Admin Approval",
-      "sortable": "False"
-    },
-    {
-      "field": "actual_deal_date",
-      "title": "Completion Date",
       "sortable": "False"
     },
     {
