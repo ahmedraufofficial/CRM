@@ -274,6 +274,11 @@ class Deals(db.Model):
     unit_price = db.Column(db.String(50))
     percentage = db.Column(db.String(50))
     amount = db.Column(db.String(50))
+    amount_received = db.Column(db.String(50))
+    agent_pers_comm = db.Column(db.String(50))
+    amount_eligible = db.Column(db.String(50))
+    agent_received = db.Column(db.String(50))
+    agent_pending = db.Column(db.String(50))
 
 
 
@@ -326,6 +331,7 @@ admin.add_view(Controller(Properties, db.session))
 admin.add_view(Controller(Leads, db.session))
 admin.add_view(Controller(Deals, db.session))
 admin.add_view(Controller(Contacts, db.session))
+admin.add_view(Controller(Exitform, db.session))
 admin.add_view(UserView(User, db.session))
 
 
@@ -906,6 +912,196 @@ def recover_notes_properties():
                 add_user_list('engy', i.refno)
     return('ok')
 
+#@app.route('/admin-profiles')
+#@login_required
+#def admins_dash():
+#    deals = []
+#    exits = []
+#    leaves =[]
+#    for r in db.session.query(Deals).filter((Deals.agent_1 == "baraayasser")):
+#        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+#        new = row2dict(r)
+#        for k in ['contact_buyer_number','contact_buyer_name','contact_buyer','listing_ref','created_by','type','id','transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','agent_2','commission_agent_2','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques', 'contact_buyer_email','contact_seller','contact_seller_name','contact_seller_number','contact_seller_email', 'status','sub_status','hot_lead','deal_type','agent_1','bank_representative_name','bank_representative_mobile','referral_date','pre_approval_loan','down_payment_available','down_payment','number_cheque_payment','cheque_payment_type','move_in_date','client_referred_bank','loan_amount','project','floor_no','plot_size','unit_price','percentage','amount']: new.pop(k)
+#        new['actual_deal_date'] = new['actual_deal_date'][:10]
+#        deals.append(new)
+#    for r in db.session.query(Exitform).filter((Exitform.created_by == "baraayasser")):
+#        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+#        new1 = row2dict(r)
+#        for k in ['name', 'designation', 'department', 'date_to','time_from','time_to','manager_approval','hr_acknowledge','hr_approval','remarks','extra01','created_by','created_date','updated_date', 'viewing_lead']: new1.pop(k)
+#        new1['date_from'] = new1['date_from'][:10]
+#        exits.append(new1)
+#    for r in db.session.query(Leaveform).filter((Exitform.created_by == "baraayasser")):
+#        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+#        new2 = row2dict(r)
+#        for k in ['name', 'designation', 'department','employee_no','joining_date','reason','no_of_days','leave_balance','manager_ack_date','manager_approval','hr_ack_date','hr_approval','remarks','created_by','created_date','updated_date']: new2.pop(k)
+#        new2['date_from'] = new2['date_from'][:10]
+#        new2['date_to'] = new2['date_to'][:10]
+#        print(new2)
+#        leaves.append(new2)
+#    f = open('mini_deals.json')
+#    columns = json.load(f)
+#    columns1 = columns["headers_deal"]
+#    columns2 = columns["headers_exits"]
+#    columns3 = columns["headers_leaves"]
+#    return render_template('admins_dash.html', user = current_user, data = deals, col = columns1, data1 = exits, col1 = columns2, data2 = leaves, col2 = columns3)
+
+
+@app.route('/post_website')
+@login_required
+def post_website():
+    ref_no = "UNI-S-4674"
+    #prop = db.session.query(Properties).filter(Properties.refno == ref_no)
+    #for i in prop:
+    #    check_prop = i.refno
+    conn = sqlite3.connect('main2.db')
+    connection = conn.cursor()
+    cursor = connection.execute('select * from properties')
+    x=1
+    for i in cursor:
+        if i[0] == ref_no:
+            x = 0
+        else:
+            pass
+    if x == 1:
+        m = commit_website(ref_no)
+    else:
+        m = "Property already exists on website"
+    return(m)
+
+@app.route('/pf_to_website')
+@login_required
+def pf_to_webssite():
+    prop = db.session.query(Properties).filter(and_(Properties.property_finder != None, Properties.status == "Available"))
+    check_prop = []
+    for i in prop:
+        check_prop.append(i.refno)
+    conn = sqlite3.connect('/home/ezzataljbour/public_html/VPS_website/main2.db')
+    connection = conn.cursor()
+    cursor = connection.execute('select * from properties')
+    lol = []
+    l = 0
+    for i in cursor:
+        lol.append(i)
+    new_commits = []
+    for i in range(0, len(check_prop)):
+        x = 0
+        for j in range(0, len(lol)):
+            if check_prop[i] == lol[j][0]:
+                x = 1
+                break
+            else:
+                pass
+        if x == 0:
+            l+=1
+            new_commits.append(check_prop[i])
+        else:
+            pass
+    for z in new_commits:
+       m = commit_website(z)
+    return(str(l))
+
+def commit_website(ref_no):
+    conn2 = sqlite3.connect('/home/ezzataljbour/public_html/VPS_website/main2.db')
+    c = conn2.cursor()
+    conn2.commit()
+    prop = db.session.query(Properties).filter(Properties.refno == ref_no)
+    for i in prop:
+        try:
+            all_p = "https://www.crm.uhpae.com"+i.photos.split('|')[0]
+        except:
+            continue
+        try:
+            all_p_2 = []
+            for j in i.photos.split('|'):
+                all_p_2.append("https://www.crm.uhpae.com"+j) 
+                all_p_3 = "|".join(all_p_2)
+        except:
+            continue
+        try:
+            all_f = []
+            for j in i.floorplan.split('|'):
+                all_f.append("https://www.crm.uhpae.com"+j) 
+                all_f_2 = "|".join(all_f)
+        except:
+            continue
+        try:
+            all_m = []
+            for j in i.masterplan.split('|'):
+                all_m.append("https://www.crm.uhpae.com"+j) 
+                all_m_2 = "|".join(all_m)
+        except:
+            continue
+        try:
+            size = str(int(i.size))
+        except:
+            size = 0
+        if i.photos.split('|')[0] == "":
+            print("Cannot post this property due to missing images")
+        else:
+            if i.video_url != None and i.video_url != "":
+                res = i.video_url.split("=")
+                embeddedUrl = "https://www.youtube.com/embed/"+res[1]
+            else:
+                print("New Property Addition")
+                embeddedUrl = ""
+                c.execute("INSERT INTO properties VALUES (:ref_no, :title, :contract, :property, :price,:location,:area,:beds,:baths,:size,:type,:units,:description,:image, :city, :state, :images, :agent, :agent_email, :agent_phone, :balcony, :basement_parking,:wardrobes,:central_air_condition,:central_heating ,:community_view,:covered_parking,:maids_room,:satellite_or_cable,:gymnasium ,:shared_pool,:furnished,:fitted_kitchen,:maintainence,:washing_room,:model,:tag)",
+                          {"ref_no" :i.refno,
+                           "title" : i.title,
+                            "contract" : 'residential',
+                            "property" : i.building,
+                            "price" : str(i.price),
+                            "location"  : i.locationtext + ", " + i.building,
+                            "area"  :  i.locationtext,
+                            "beds"  :  i.bedrooms,
+                            "baths" :  i.bathrooms,
+                            "size"  :  size,
+                            "type"  :  i.subtype,
+                            "units" :  i.type,
+                            "description" : "",
+                            "image" : all_p,
+                            "city": i.city,
+                            "state":  i.status,
+                            "images": all_p_3,
+                            "agent" : all_m_2, #masterplan
+                            "agent_email" : embeddedUrl, #youtube video sent as agent email 
+                            "agent_phone" : all_f_2, #floorplan
+                            "balcony" : i.privateamenities,
+                            "basement_parking" : i.commercialamenities,
+                            "wardrobes" : "",
+                            "central_air_condition" : "",
+                            "central_heating": "",
+                            "community_view": "",
+                            "covered_parking": "",
+                            "maids_room": "",
+                            "satellite_or_cable": "",
+                            "gymnasium": "",
+                            "shared_pool": "",
+                            "furnished": i.furnished,
+                            "fitted_kitchen": "",
+                            "maintainence": "",
+                            "washing_room": "",
+                            "model": "Contact to Find",
+                            "tag":i.featured
+                            }
+                            )
+                conn2.commit()
+                ref_no = i.refno
+                description = str(i.description)
+                description = description.replace('<web_remarks>','<div class = "container">')
+                description = description.replace('</web_remarks>','</div>')
+                description = description.replace('</br>','<br>')
+                c.execute("INSERT INTO dproperties VALUES (:ref_no,:description)",
+                        {"ref_no" :ref_no,
+                        "description" : description
+                        }
+                        )
+                conn2.commit()
+                conn2.close()
+        i.portal = 0
+        db.session.commit()
+    return("Property successfully posted on Website")
+                
+                
 @app.route('/neutral_photos') #lesssgooo
 @login_required
 def neutral_photos():
