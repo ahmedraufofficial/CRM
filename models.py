@@ -224,6 +224,9 @@ class Deals(db.Model):
     mou = db.Column(db.String(500))
     tenancy_contract = db.Column(db.String(500))
     other_documents = db.Column(db.String(2000))
+    txn_no = db.Column(db.String(500))
+    txn_date = db.Column(db.String(500))
+    txn_amount = db.Column(db.String(500))
 
 
 
@@ -298,6 +301,7 @@ class Leaveform(db.Model):
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)
     created_by = db.Column(db.String(50))
+    docs = db.Column(db.String(100))
 
 class Listingdata(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -310,6 +314,31 @@ class Listingdata(db.Model):
     owner_no = db.Column(db.String(50))
     owner_email = db.Column(db.String(100))
     status = db.Column(db.String(50))
+    remarks = db.Column(db.String(1000))
+    created_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)
+    created_by = db.Column(db.String(50))
+
+class Advanceform(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    refno = db.Column(db.String(50))
+    name = db.Column(db.String(50))
+    designation = db.Column(db.String(50))
+    department = db.Column(db.String(50))
+    employee_no = db.Column(db.String(50))
+    request_date = db.Column(db.DateTime)
+    com_from = db.Column(db.String(50))
+    amount_requested = db.Column(db.String(50))
+    salary_month = db.Column(db.String(50))
+    reason = db.Column(db.String(1000))
+    tl_ack =  db.Column(db.DateTime)
+    tl_approval = db.Column(db.String(50))
+    manager_ack =  db.Column(db.DateTime)
+    manager_approval = db.Column(db.String(50))
+    ceo_ack =  db.Column(db.DateTime)
+    ceo_approval = db.Column(db.String(50))
+    account_ack =  db.Column(db.DateTime)
+    account_approval = db.Column(db.String(50))
     remarks = db.Column(db.String(1000))
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)

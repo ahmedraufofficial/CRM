@@ -220,7 +220,6 @@ class AddDealForm(FlaskForm):
     passport_seller = FileField("Passport *", render_kw={'class':'upload'})
     mou = FileField("MOU *", render_kw={'class':'upload'})
     tenancy_contract = FileField("Tenancy Contract *", render_kw={'class':'upload'})
-    other_documents = FileField("Other Documents *", render_kw={'class':'upload'})
 
 
     buyer_type = SelectField(u'Buyer Type',choices = [('Investor','Investor'),('End User','End User')])
@@ -253,6 +252,10 @@ class AddDealForm(FlaskForm):
     amount = IntegerField('Amount')
     pre_approval_loan = SelectField(u'Pre Approval Available *',[validators.DataRequired()],choices = [('Yes','Yes'),('No','No')])
     loan_amount = IntegerField('Loan amount *', [validators.DataRequired()])
+    txn_no = StringField('Transaction Number')
+    txn_date = DateField('Date', format='%Y-%m-%d')
+    txn_amount = StringField('Amount')
+    other_documents = MultipleFileField('Other Documents')
 
 
 class AddFile(FlaskForm):
@@ -287,7 +290,7 @@ class AddEmployeeForm(FlaskForm):
 class AddExitformentry(FlaskForm):
     name = StringField('Name *', [validators.DataRequired()])
     designation = StringField('Designation *', [validators.DataRequired()])
-    department = SelectField(u'Department *', [validators.DataRequired()], choices = [('',''),('Listing', 'Listing'),('Marketing', 'Marketing'),('Sales', 'Sales')])
+    department = SelectField(u'Department *', [validators.DataRequired()], choices = [('',''),('Listing', 'Listing'),('Marketing', 'Marketing'),('Sales', 'Sales'), ('Management','Management')])
     date_from = DateField('From Date', [validators.DataRequired()], format='%Y-%m-%d')
     date_to = DateField('To Date', format='%Y-%m-%d')
     time_from = TimeField('From Time', [validators.DataRequired()], format='%H:%M')
@@ -302,7 +305,7 @@ class AddExitformentry(FlaskForm):
 class AddLeaveformentry(FlaskForm):
     name = StringField('Name *', [validators.DataRequired()])
     designation = StringField('Designation *', [validators.DataRequired()])
-    department = SelectField(u'Department *', [validators.DataRequired()], choices = [('',''),('Listing', 'Listing'),('Marketing', 'Marketing'),('Sales', 'Sales')])
+    department = SelectField(u'Department *', [validators.DataRequired()], choices = [('',''),('Listing', 'Listing'),('Marketing', 'Marketing'),('Sales', 'Sales'),('Management','Management')])
     employee_no = StringField('Employee No.')
     joining_date = DateField('Joining Date', format='%Y-%m-%d')
     leave_type = SelectField(u'Type of Leave', [validators.DataRequired()], choices = [('',''),('Annual', 'Annual'),('Sick', 'Sick'),('Emergency', 'Emergency'),('Without Pay', 'Without Pay'),('Others', 'Others')])
@@ -328,4 +331,23 @@ class Addlistingdata(FlaskForm):
     owner_email= StringField('Owner Email')
     remarks = StringField('Remarks')
     type = SelectField(u'type',choices = [('', ''),('Sale', 'Sale'),('Rent', 'Rent')])
-    
+
+class Addadvanceform(FlaskForm):
+    name = StringField('Name *', [validators.DataRequired()])
+    designation = StringField('Designation *', [validators.DataRequired()])
+    department = SelectField(u'Department *', [validators.DataRequired()], choices = [('',''),('Listing', 'Listing'),('Marketing', 'Marketing'),('Sales', 'Sales')])
+    employee_no = StringField('Employee No.')
+    request_date = DateField('Request Date *', [validators.DataRequired()], format='%Y-%m-%d')
+    com_from = SelectField(u'Advance From *', [validators.DataRequired()], choices = [('',''),('Commission', 'Commission'),('Salary', 'Salary')])
+    amount_requested = StringField('Amount Requested *', [validators.DataRequired()])
+    salary_month = SelectField(u'Salary Month', [validators.DataRequired()], choices = [('',''),('January', 'January'),('February', 'February'),('March', 'March'),('April', 'April'),('May', 'May'),('June', 'June'),('July', 'July'),('August', 'August'),('September', 'September'),('October', 'October'),('November', 'November'),('December', 'December')])
+    reason = StringField('Reason')
+    tl_ack = DateField('Team Leader Acknowledge', format='%Y-%m-%d')
+    tl_approval = SelectField(u'Team Leader Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
+    manager_ack = DateField('Manager Acknowledge', format='%Y-%m-%d')
+    manager_approval = SelectField(u'Manager Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
+    ceo_ack = DateField('CEO Acknowledge', format='%Y-%m-%d')
+    ceo_approval = SelectField(u'CEO Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
+    account_ack = DateField('Accounts Acknowledge', format='%Y-%m-%d')
+    account_approval = SelectField(u'Accounts Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
+    remarks = StringField('Remarks')

@@ -1,0 +1,148 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+    .column{
+           background-color: (255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           padding-top: 10px;
+           margin: 5px;
+           margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 14pt;
+        font-family: 'Oswald';
+    }
+      </style>
+    
+
+<section>
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+<div class="container" >
+<form method="POST" enctype="multipart/form-data">
+    <dl>
+        <div class="row">
+            <div class="col column">
+                <h4>Cash Advance Request Form</h4>
+                {{ wtf.form_field(form.name) }}
+                {{ wtf.form_field(form.designation) }}
+                {{ wtf.form_field(form.department) }}
+                {{ wtf.form_field(form.employee_no) }}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Request Date
+                    </div>
+                    <div class="col">
+                        {{ form.request_date }}
+                    </div>
+                    <div class="col">
+                        {{ wtf.form_field(form.com_from) }}
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row" style="margin-bottom: 9px;">
+                        <div class="col" style="font-size: 15px;">
+                            {{ wtf.form_field(form.amount_requested) }}
+                        </div>
+                        <div class="col">
+                            {{ wtf.form_field(form.salary_month) }}
+                        </div>
+                    </div>
+                </div>
+                {{ wtf.form_field(form.reason) }}
+
+                {% if current_user.is_admin == True or current_user.team_lead == True %}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Team Leader Acknowledge Date
+                    </div>
+                    <div class="col">
+                        {{ form.tl_ack }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.tl_approval) }}
+                {% endif %}
+
+                {% if current_user.is_admin == True or current_user.job_title == 'Manager' %}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Manager Acknowledge Date
+                    </div>
+                    <div class="col">
+                        {{ form.manager_ack }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.manager_approval) }}
+                {% endif %}
+
+                {% if current_user.is_admin == True %}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        CEO Acknowledge Date
+                    </div>
+                    <div class="col">
+                        {{ form.ceo_ack }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.ceo_approval) }}
+                {% endif %}
+
+                {% if current_user.is_admin == True or current_user.job_title == 'Accountant' %}
+                <div class="row" style="margin-bottom: 9px;">
+                    <div class="col" style="font-size: 15px;">
+                        Accountant Acknowledge Date
+                    </div>
+                    <div class="col">
+                        {{ form.account_ack }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.account_approval) }}
+                {{ wtf.form_field(form.remarks) }}
+                {% endif %}
+            </div>
+        </div>
+    </dl>
+  <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
+  <input id="sub" class="btn btn-primary" value="Submit" type="submit" value="Submit">
+</form>
+</div>
+
+<br></div>
+</section>
+<script>
+    const amouont_request = document.getElementById('amount_requested');
+    const inputHandler01 = function(e) {
+    var amount_request1 = document.getElementById('amount_requested').value
+    if (e.target.id == 'amount_requested')
+    {
+        if (amount_request1.substring(amount_request1.length - 1) == ".") {
+            document.getElementById('amount_requested').value = amount_request1;
+        }
+        else {
+            amount_request2 = amount_request1.replaceAll(",", "");
+            var parts = amount_request2.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('amount_requested').value = m;
+        }
+    }
+    }
+    amouont_request.addEventListener('input', inputHandler01);
+
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+

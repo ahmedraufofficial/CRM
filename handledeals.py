@@ -532,6 +532,7 @@ def add_closed_deal_rent(variable):
     form.contact_buyer_email.data = lead.contact_email
     form.source.data = lead.source
     if request.method == 'POST': 
+        files_filenames = []
         type = "Rent"
         deal_type = "Primary"
         transaction_type = form.transaction_type.data
@@ -687,6 +688,20 @@ def add_closed_deal_rent(variable):
             newdeal.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+tenancy_contract01)
         except:
             newdeal.tenancy_contract = ""
+
+        try:
+            for filex in form.other_documents.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/'+newdeal.refno
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files_filenames.append('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+file_filename)
+            newdeal.other_documents = '|'.join(files_filenames)
+            db.session.commit()
+        except:
+             newdeal.other_documents = ''
+             db.session.commit()
         #Documents end
 
         db.session.commit()
@@ -694,7 +709,7 @@ def add_closed_deal_rent(variable):
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent", building = "", loc = "" , radio_enable="disabled", mydiction = "")
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent", building = "", loc = "" , radio_enable="disabled", mydiction = "", myhistory="", old_documents = "")
 
     
 @handledeals.route('/add_deal/sale/<variable>', methods = ['GET','POST'])
@@ -714,6 +729,7 @@ def add_closed_deal_sale(variable):
     mydict = json.load(w)
     newie = form.unit_location.data
     if request.method == 'POST': 
+        files_filenames = []
         type = "Sale"
         deal_type = "Primary"
         transaction_type = form.transaction_type.data
@@ -864,12 +880,26 @@ def add_closed_deal_sale(variable):
             newdeal.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+tenancy_contract01)
         except:
             newdeal.tenancy_contract = ""
+
+        try:
+            for filex in form.other_documents.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/'+newdeal.refno
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files_filenames.append('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+file_filename)
+            newdeal.other_documents = '|'.join(files_filenames)
+            db.session.commit()
+        except:
+             newdeal.other_documents = ''
+             db.session.commit()
         #Documents end
 
         db.session.commit()
         logs(current_user.username,'UNI-D-'+str(newdeal.id),'Added Deal')
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "" )
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "", myhistory="", old_documents = "" )
 
 
 @handledeals.route('/add_deal/developer/<variable>', methods = ['GET','POST'])
@@ -889,6 +919,7 @@ def add_closed_deal_developer(variable):
     mydict = json.load(w)
     newie = form.unit_location.data
     if request.method == 'POST': 
+        files_filenames = []
         type = "Sale"
         deal_type = "Primary"
         transaction_type = form.transaction_type.data
@@ -1048,6 +1079,20 @@ def add_closed_deal_developer(variable):
             newdeal.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+tenancy_contract01)
         except:
             newdeal.tenancy_contract = ""
+
+        try:
+            for filex in form.other_documents.data:
+                file_filename = secure_filename(filex.filename)
+                directory = UPLOAD_FOLDER+'/'+newdeal.refno
+                if not os.path.isdir(directory):
+                    os.mkdir(directory)
+                filex.save(os.path.join(directory, file_filename))
+                files_filenames.append('/static/uploads'+'/UNI-D-'+str(newdeal.id)+"/"+file_filename)
+            newdeal.other_documents = '|'.join(files_filenames)
+            db.session.commit()
+        except:
+             newdeal.other_documents = ''
+             db.session.commit()
         #Documents end
 
         db.session.commit()
@@ -1055,7 +1100,7 @@ def add_closed_deal_developer(variable):
         #update_listing(newdeal.listing_ref, contact_buyer,contact_buyer_name,contact_buyer_number,contact_buyer_email,transaction_type)
         #update_lead(lead_ref,status,sub_status,current_user.username)
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "", type = "developer" )
+    return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "", type = "developer", myhistory="", old_documents = "")
 
 
 
@@ -1084,13 +1129,44 @@ def edit_deal(variable):
     }
     mydict02 = json.dumps(mydict01)
     purpose = edit.type.lower()
+    #print(purpose)
+    #print(edit.tenancy_start_date)
+    #if purpose == 'rent':
+    #    try:
+    #        edit.tenancy_start_date = datetime.strptime(edit.tenancy_start_date, '%Y-%m-%d')
+    #    except:
+    #        edit.tenancy_start_date = None
+    #    try:
+    #        edit.tenancy_renewal_date = datetime.strptime(edit.tenancy_renewal_date, '%Y-%m-%d')
+    #    except:
+    #        edit.tenancy_renewal_date = None
+    #else:
+    #    pass
+    #print(edit.tenancy_start_date)
     if edit.project == None:
         type01 = ''
     elif edit.project == '':
         type01=''
     else:
         type01='developer'
+    myhistory1 ={
+        "history_no" : edit.txn_no,
+        "history_amount" : edit.txn_amount,
+        "history_date" : edit.txn_date
+    }
+    myhistory2 = json.dumps(myhistory1)
+    if edit.txn_no != None:
+        check = "Second"
+        txn_no_array = edit.txn_no.split('|')
+        txn_no = edit.txn_no
+        txn_amount = edit.txn_amount
+        txn_date = edit.txn_date
+    else:
+        check = "First"
+        pass
+    old_documents = edit.other_documents
     if request.method == 'POST':
+        files_filenames = []
         form.populate_obj(edit)
         edit.updated_date = datetime.now()+timedelta(hours=4)
         try:
@@ -1157,8 +1233,40 @@ def edit_deal(variable):
             edit.tenancy_contract = ('/static/uploads'+'/UNI-D-'+str(edit.id)+"/"+tenancy_contract01)
         except:
             pass
+
+        for filex in form.other_documents.data: # these are the new photos uploaded 
+            file_filename = secure_filename(filex.filename) # checking for valid file name 
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if file_filename == '': 
+                break # gawddamn yahan pe tou scene hi khatam hoo geya 
+            filex.save(os.path.join(directory, file_filename)) # directory mei saved 
+            files_filenames.append('/static/uploads'+'/UNI-D-'+str(edit.id)+'/'+file_filename) # new pictures are now saved in an array 
+        z = '|'.join(files_filenames)    # new pictures saved in the "|" format
+        if old_documents == None and file_filename != '':
+            edit.other_documents = z # only new pictures being added 
+        elif file_filename != '':
+            edit.other_documents = old_documents+'|'+z # new pictures added with the new ones here 
+        else:
+            edit.other_documents = old_documents
+
         #Documents end
         
+        if edit.txn_no != "" and check == "Second":
+            if edit.txn_no != txn_no_array[-1]:
+                edit.txn_no = txn_no+"|"+edit.txn_no
+                edit.txn_amount = txn_amount+"|"+edit.txn_amount
+                edit.txn_date = txn_date+"|"+str(edit.txn_date)[:10]
+        elif edit.txn_no != "" and check == "First":
+            edit.txn_no = edit.txn_no
+            edit.txn_amount = edit.txn_amount
+            edit.txn_date = str(edit.txn_date)[:10]
+        elif edit.txn_no == "" and check == "First":
+            pass
+        elif edit.txn_no == "" and check == "Second":
+            edit.txn_no = txn_no
+            edit.txn_amount = txn_amount
+            edit.txn_date = txn_date
+
         if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.project == '':
             print("Lesssgooo")
             update_listing(edit.listing_ref, edit.contact_buyer, edit.contact_buyer_name, edit.contact_buyer_number, edit.contact_buyer_email, edit.transaction_type)
@@ -1168,7 +1276,7 @@ def edit_deal(variable):
         db.session.commit()
         logs(current_user.username,'deal no','Edited Deal')
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", mydiction = mydict02, purpose = purpose, type=type01)
+    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", mydiction = mydict02, purpose = purpose, type=type01, myhistory=myhistory2 , old_documents = old_documents)
 
 @handledeals.route('/delete_deal/<variable>', methods = ['GET','POST'])
 @login_required

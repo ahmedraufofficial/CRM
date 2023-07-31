@@ -1,10 +1,10 @@
-from forms import AddEmployeeForm, AddUserForm, AddExitformentry, AddLeaveformentry
+from forms import AddEmployeeForm, AddUserForm, AddExitformentry, AddLeaveformentry, Addadvanceform
 from operator import methodcaller
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
 from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
-from models import Employees, User, Exitform, Leaveform
+from models import Employees, User, Exitform, Leaveform, Advanceform
 import json
 import os 
 from werkzeug.security import generate_password_hash
@@ -414,5 +414,149 @@ def delete_leaveform(variable):
     db.session.delete(delete)
     db.session.commit()
     return redirect(url_for('handleemployees.display_leaveforms'))
-    
-    
+
+
+#Advance Request FORMS
+
+@handleemployees.route('/human_resource/advance_forms',methods = ['GET','POST'])
+@login_required
+def display_advanceforms():
+    if current_user.listing == False and current_user.sale == False:
+        return abort(404)
+    data = []
+    if current_user.is_admin == True or current_user.job_title == "Accountant":
+        for r in db.session.query(Advanceform).all():
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason', 'updated_date', 'designation']: new.pop(k)
+            edit_btn = '<a href="/edit_advanceform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+            delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            new['request_date'] = new['request_date'][:10]
+            data.append(new)
+    elif current_user.job_title == "Manager":
+        for r in db.session.query(Advanceform).all():
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason']: new.pop(k)
+            if new['ceo_approval'] == "Pending":
+                edit_btn = '<a href="/edit_advanceform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = "Request Closed"
+                delete_btn = ''
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            new['request_date'] = new['request_date'][:10]
+            data.append(new)
+    elif current_user.team_lead == True:
+        for r in db.session.query(Advanceform).filter(Advanceform.created_by == current_user.username):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason']: new.pop(k)
+            if new['manager_approval'] == "Pending":
+                edit_btn = '<a href="/edit_advanceform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = "Request Closed"
+                delete_btn = ''
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            new['request_date'] = new['request_date'][:10]
+            data.append(new)
+        for i in current_user.team_members.split(','):
+            for r in db.session.query(Advanceform).filter(Advanceform.created_by == i):
+                row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+                new = row2dict(r)
+                for k in ['reason']: new.pop(k)
+                if new['manager_approval'] == "Pending":
+                    edit_btn = '<a href="/edit_advanceform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                    delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+                else:
+                    edit_btn = "Request Closed"
+                    delete_btn = ''
+                new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+                new['request_date'] = new['request_date'][:10]
+                data.append(new)
+    elif current_user.sale == True or current_user.listing == True or current_user.department == "Marketing":
+        for r in db.session.query(Advanceform).filter(Advanceform.created_by == current_user.username):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason']: new.pop(k)
+            if new['tl_approval'] == "Pending":
+                edit_btn = '<a href="/edit_advanceform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+            else:
+                edit_btn = "Request Closed"
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
+            new['request_date'] = new['request_date'][:10]
+            data.append(new)
+    f = open('advanceform_headers.json')
+    columns = json.load(f)
+    columns = columns["headers"]
+    all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
+    return render_template('advance_forms.html', data = data , columns = columns, user = current_user.username, all_users = all_users)
+
+@handleemployees.route('/add_advanceform', methods = ['GET','POST'])
+@login_required
+def add_advance_form(): 
+    form = Addadvanceform()
+    if request.method == 'POST': 
+        name = form.name.data
+        designation = form.designation.data
+        department = form.department.data
+        employee_no = form.employee_no.data
+        request_date = form.request_date.data
+        com_from = form.com_from.data
+        amount_requested = form.amount_requested.data
+        salary_month = form.salary_month.data
+        reason = form.reason.data
+
+        tl_ack = form.tl_ack.data
+        if form.tl_approval.data != None:
+            tl_approval = form.tl_approval.data
+        else:
+            tl_approval = 'Pending'
+
+        manager_ack = form.manager_ack.data
+        if form.manager_approval.data != None:
+            manager_approval = form.manager_approval.data
+        else:
+            manager_approval = 'Pending'
+
+        ceo_ack = form.ceo_ack.data
+        if form.ceo_approval.data != None:
+            ceo_approval = form.ceo_approval.data
+        else:
+            ceo_approval = 'Pending'
+
+        account_ack = form.account_ack.data
+        if form.account_approval.data != None:
+            account_approval = form.account_approval.data
+        else:
+            account_approval = 'Pending'
+
+        remarks = form.remarks.data
+        created_date = datetime.now()+timedelta(hours=4)
+        updated_date = datetime.now()+timedelta(hours=4)
+        created_by = current_user.username
+        newadvanceform = Advanceform(name=name,designation=designation,department=department,request_date=request_date,amount_requested=amount_requested,salary_month=salary_month,reason=reason,remarks=remarks,created_date=created_date,updated_date=updated_date,created_by=created_by,manager_ack=manager_ack,manager_approval=manager_approval,employee_no=employee_no,tl_ack=tl_ack,tl_approval=tl_approval,ceo_ack=ceo_ack,ceo_approval=ceo_approval,account_ack=account_ack,account_approval=account_approval,com_from=com_from)
+
+        db.session.add(newadvanceform)
+        db.session.commit()
+        db.session.refresh(newadvanceform)
+        newadvanceform.refno = 'CAR-F-'+str(newadvanceform.id)
+        db.session.commit()
+
+        return redirect(url_for('handleemployees.display_advanceforms'))
+    return render_template('add_advanceform.html', form=form, user = current_user.username)
+
+
+@handleemployees.route('/edit_advanceform/<variable>', methods = ['GET','POST'])
+@login_required
+def edit_advanceform(variable):
+    edit = db.session.query(Advanceform).filter_by(refno=variable).first()
+    form = Addadvanceform(obj = edit)
+    if request.method == 'POST':
+        form.populate_obj(edit)
+        edit.updated_date = datetime.now()+timedelta(hours=4)
+        db.session.commit()
+        return redirect(url_for('handleemployees.display_advanceforms'))
+    return render_template('add_advanceform.html', form=form, user = current_user.username)

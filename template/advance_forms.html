@@ -1,0 +1,219 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>
+.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+}
+</style>
+<title>Lighthouse - Exit Forms</title>
+<section>
+    <!--Delete Modal-->
+    <div class="modal" id="deleteModal01" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title oswald">Confirm deletion!</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+                  <a id="delete">Delete</a>
+                </div>
+      
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!--Modal Ends-->
+  <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+    <br>
+    <div class="container parrot" style="text-align: center; margin: 5px;">
+        <div class="row">
+          <div class="child" style="width: auto; margin-left: 1%;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Status</h6>
+        <select name="status_" id="status_" class="filter_add02">
+                <option selected="selected" value="">Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Approve">Approve</option>
+                <option value="Disapprove">Disapprove</option>
+        </select>
+        <select name="listing_users" id="listing_users" class="filter_add02" >
+        <option selected="selected" value="">Users</option>
+        {% for users in all_users %}
+            <option value="{{users.username}}">{{users.username}}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="child" style="width: auto">
+        <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+        <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+        <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+    </div>
+    </div>
+    <div class="row">
+            <div class="col">
+              <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+              <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 5px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+            </div>
+          </div>
+      </div>
+    <div class="container-fluid">
+      <div id="toolbar">
+        <!--
+        {% if current_user.export == True %}
+        <button onclick="get_check('deals')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+        
+        <select name="listing_users" id="listing_users" class="filter_add02" >
+            <option selected="selected" value="">Users</option>
+            {% for users in all_users %}
+                <option value="{{users.username}}">{{users.username}}</option>
+            {% endfor %}
+            </select>
+        <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+        <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Deals</button>
+        Delete Modal-->
+    </div>
+    
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable oswald"
+        data-toggle="true"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="750"
+        data-page-size="25"
+        data-page-list="[25, 50, 100, 200, All]">
+      </table>
+    </div>
+      <div class="container-fluid">
+        <a href="/add_advanceform" class="btn btn-primary" style="padding: 5px !important;">New Advance Form</a>
+        </div>
+    </br>
+</div>
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+    function delete_(x){
+        document.getElementById("delete").href="/delete_exitform/"+x;
+    };
+    $(window).on('load',(function(){
+      
+    var columns = {{columns|tojson}};
+    var data = {{data|tojson}};
+    console.log(data)
+    console.log(columns)
+      
+
+    $(function() {
+        $('#table').bootstrapTable({ 
+          data: data,
+          columns: columns,
+        });
+        $('#filter_search').click(function () {
+        
+        var test = data
+        var z = $("#status_").val()
+        var u = $("#listing_users").val()
+        var x = $("#propdate").val()
+        var y = $("#propdate2").val()
+        
+        var grepFunc;
+        var grepFunc2;
+        var grepFunc3;
+        var grepFunc4;
+
+        grepFunc = function(item){
+              return item.hr_approval == z;
+          }
+
+        grepFunc2 = function(item){
+              return item.created_by == u;
+          }
+
+        grepFunc3 = function(item){
+              return item.created_date.slice(0,10) >= x;
+          }
+
+        grepFunc4 = function(item){
+              return item.created_date.slice(0,10) <= y;
+          }
+
+        if (z != "")
+        {test = $.grep(test, grepFunc)}
+
+        if (u != "")
+        {test = $.grep(test, grepFunc2)}
+
+        if (x != "")
+        {test = $.grep(test, grepFunc3)}
+
+        if (y != "")
+        {test = $.grep(test, grepFunc4)}
+
+          $('#table').bootstrapTable('load', test);
+        })
+        
+        $('#filter_reset').click(function () {
+        $('#table').bootstrapTable('load', data)
+        $("#status_").val("");
+        $("#propdate").val("");
+        $("#propdate2").val("");
+        })
+      });
+    }));
+  </script>
+    <style type='text/css'>
+      .row-index {
+        width: 50px;
+        display: inline-block;
+      }
+      body {
+    overflow-x: hidden;
+  }
+    </style>
+{% endblock %}

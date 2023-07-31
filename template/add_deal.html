@@ -1,4 +1,9 @@
 {% extends "base.html" %} 
+<head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
 {% import "bootstrap/wtf.html" as wtf %} 
 {% block content %}
 <style type='text/css'>
@@ -9,6 +14,7 @@
            padding-top: 10px;
            margin: 5px;
            margin-top: 20px;
+           border-radius: 12px;
     }
     h4{
         letter-spacing: 1px;
@@ -17,7 +23,11 @@
         font-size: 14pt;
         font-family: 'Oswald';
     }
-      </style>
+    .entry:not(:first-of-type)
+    {
+        margin-top: 10px;
+    }
+</style>
     
 
 <section>
@@ -218,7 +228,33 @@
                     <div id="doc06" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
                 </div>
             </div>
-            
+        </div>
+        <div class="row">
+            <div class="col column" style="padding-bottom: 25px;">
+                <h4>Payment History</h4>
+                {% if current_user.is_admin == True %}
+                <div class="container" style="margin-bottom: 5px;">
+                    <div class="row">
+                        <div class="col" style="width: 170px;">
+                            <input type="text" id="txn_no" name="txn_no" style="width: 150px;" placeholder="Transaction No." value>
+                        </div>
+                        <div class="col">
+                            <input type="text" id="txn_amount" name="txn_amount" style="width: 150px;" placeholder="Transaction Amount" value>
+                        </div>
+                        <div class="col">
+                            <input type="date" id="txn_date" name="txn_date" value>
+                        </div>
+                    </div>
+                </div>  
+                {% endif %}    
+                <div id="history"></div>
+            </div>
+            <div class="col column" style="padding-bottom: 25px;">
+                <h4>Other Documents</h4>
+                {{ form.other_documents.label(class="control-label") }}
+                {{ form.other_documents(class="form-control-file", style="border: 1px solid black; border-radius: 12px; margin: 3px; font-size:15px; background-color:#293645; color: white; width: 200px") }}
+                <div id="others" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+            </div>
         </div>
     </dl>
   <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
@@ -766,6 +802,8 @@
     window.onload = get_passport_seller();
     window.onload = get_mou();
     window.onload = get_tenancy_contract();
+    window.onload = get_payment_history();
+    window.onload = get_others();
 
     
     function get_eid() {
@@ -887,6 +925,51 @@
         }
     }
 
+    function get_payment_history() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            m = {{myhistory|tojson}}
+            h = JSON.parse(m)
+            if (h.history_no != null ) {
+                a=h.history_no.split("|")
+                b=h.history_amount.split("|")
+                c=h.history_date.split("|")
+                data = "<div class='container'>"
+                for (i=0;i<a.length;i++){
+                    data += "<div class='row'><div class='col' style='width: 170px;'><input type='text' style='width: 150px;' value="+a[i]+"></div><div class='col'><input type='text' style='width: 150px;' value="+b[i]+"></div><div class='col'><input type='text' style='width: 150px;' value="+c[i]+"></div></div>"
+                }
+                data+="</div>"
+                document.getElementById("history").innerHTML = data;
+            }
+            
+        }
+        else {
+            console.log("No History")
+        }
+    }
+
+    function get_others() {
+        check = {{radio_enable|tojson}}
+        if (check == "enabled"){
+            h = {{old_documents|tojson}}
+            console.log(h)
+            if (h != null ) {
+                a=h.split('|')
+                imagedata = "<div class='row'>"
+                for(i = 0; i<a.length ; i++){
+                    imagedata += '<a href="'+a[i]+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a[i]+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
+                }
+                imagedata += "</div>"
+                document.getElementById("others").innerHTML = imagedata;
+
+            }
+            
+        }
+        else {
+            console.log("No Wassup")
+        }
+    }
+
 
     const deal_price_coma = document.getElementById('deal_price');
     const inputHandler05 = function(e) {
@@ -959,7 +1042,6 @@
         let agent_p_com_float = parseFloat(agent_p_com)
         if (e.target.id == 'amount_received' || e.target.id == 'agent_received' || e.target.id == 'agent_pers_comm') 
         {
-            console.log("Wassup")
             document.getElementById('agent_pending').value = (((total_commission*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
             document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
         }
@@ -1030,7 +1112,6 @@
     const el = document.getElementById('transaction_type');
     el.addEventListener('input', vengence)
     function vengence() {
-        console.log("Wassup")
         const el1 = document.getElementById('transaction_type').value;
         const box1 = document.getElementById('box1');
         if (el1 == 'Resale') {
