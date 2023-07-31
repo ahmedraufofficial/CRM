@@ -390,22 +390,43 @@ def add_leave_form():
         db.session.commit()
         db.session.refresh(newleaveform)
         newleaveform.refno = 'L-F-'+str(newleaveform.id)
+
+        try:
+            document = secure_filename(form.docs.data.filename)
+            directory = UPLOAD_FOLDER+'/'+newleaveform.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.docs.data.save(os.path.join(directory, document))
+            newleaveform.docs = ('/static/uploads02'+'/L-F-'+str(newleaveform.id)+"/"+document)
+        except:
+            newleaveform.docs = ""
+
         db.session.commit()
 
         return redirect(url_for('handleemployees.display_leaveforms'))
-    return render_template('add_leaveform.html', form=form, user = current_user.username)
+    return render_template('add_leaveform.html', form=form, user = current_user.username, radio_enable = 'disabled', old_docs = '')
 
 @handleemployees.route('/edit_leaveform/<variable>', methods = ['GET','POST'])
 @login_required
 def edit_leaveform(variable):
     edit = db.session.query(Leaveform).filter_by(refno=variable).first()
     form = AddLeaveformentry(obj = edit)
+    old_docs = edit.docs
     if request.method == 'POST':
         form.populate_obj(edit)
         edit.updated_date = datetime.now()+timedelta(hours=4)
+        try:
+            document = secure_filename(form.docs.data.filename)
+            directory = UPLOAD_FOLDER+'/'+edit.refno
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.docs.data.save(os.path.join(directory, document))
+            edit.docs = ('/static/uploads02'+'/L-F-'+str(edit.id)+"/"+document)
+        except:
+            pass
         db.session.commit()
         return redirect(url_for('handleemployees.display_leaveforms'))
-    return render_template('add_leaveform.html', form=form, user = current_user.username)
+    return render_template('add_leaveform.html', form=form, user = current_user.username, radio_enable = 'enabled', old_docs = old_docs)
 
 @handleemployees.route('/delete_leaveform/<variable>', methods = ['GET','POST'])
 @login_required

@@ -319,6 +319,7 @@ class AddLeaveformentry(FlaskForm):
     hr_ack_date = DateField('HR Acknowledge', format='%Y-%m-%d')
     hr_approval = SelectField(u'HR Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
     remarks = StringField('Remarks')
+    docs = FileField("Upload Document", render_kw={'class':'upload'})
 
 class Addlistingdata(FlaskForm):
     status = SelectField(u'Status',choices = [('Pending', 'Pending'),('Available', 'Available'),('Not Interested', 'Not Interested'),('Call Later', 'Call Later')])
