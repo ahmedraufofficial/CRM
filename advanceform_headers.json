@@ -1,0 +1,62 @@
+{"headers":
+  [
+    {
+        "field": "state",
+        "checkbox": "true"
+    },
+    {
+        "field": "edit",
+        "title": "Options","sortable": "False"
+    },
+    {
+        "field": "refno",  
+        "title": "Ref No.", 
+        "sortable": "True"
+    },
+    {
+        "field": "name",  
+        "title": "Name"
+    },
+    {
+        "field": "department",  
+        "title": "Department"
+    },
+    {
+        "field": "request_date",  
+        "title": "Request Date"
+    },
+    {
+        "field": "amount_requested",  
+        "title": "Amount Requested"
+    },
+    {
+        "field": "salary_month",  
+        "title": "Salary Month"
+    },
+    {
+        "field": "tl_approval",  
+        "title": "Team Leader Approval"
+    },
+    {
+        "field": "manager_approval",  
+        "title": "Manager Approval"
+    },
+    {
+        "field": "ceo_approval",  
+        "title": "CEO Approval"
+    },
+    {
+        "field": "account_approval",  
+        "title": "Accounts Approval"
+    },
+    {
+        "field": "remarks",  
+        "title": "Remarks"
+    },
+    {
+        "field": "created_date",  
+        "title": "Created Date",
+        "sortable": "True"
+    }
+  ]
+}
