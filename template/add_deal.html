@@ -792,7 +792,6 @@
         })
     };
 
-
     window.onload = get_properties();
     window.onload = get_leads();
     window.onload = get_user();
@@ -805,13 +804,13 @@
     window.onload = get_payment_history();
     window.onload = get_others();
 
-    
+
     function get_eid() {
         check = {{radio_enable|tojson}}
         if (check == "enabled"){
             m = {{mydiction|tojson}}
             h = JSON.parse(m)
-            if (h.old_eid != null ) {
+            if (h.old_eid != null && h.old_eid != '') {
                 a=h.old_eid
                 imagedata = "<div class='row'>"
                 imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
@@ -831,7 +830,7 @@
         if (check == "enabled"){
             m = {{mydiction|tojson}}
             h = JSON.parse(m)
-            if (h.old_passport != null ) {
+            if (h.old_passport != null && h.old_passport != '' ) {
                 a=h.old_passport
                 imagedata = "<div class='row'>"
                 imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
@@ -851,7 +850,7 @@
         if (check == "enabled"){
             m = {{mydiction|tojson}}
             h = JSON.parse(m)
-            if (h.old_eid1 != null ) {
+            if (h.old_eid1 != null && h.old_eid1 != '' ) {
                 a=h.old_eid1
                 imagedata = "<div class='row'>"
                 imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
@@ -871,7 +870,7 @@
         if (check == "enabled"){
             m = {{mydiction|tojson}}
             h = JSON.parse(m)
-            if (h.old_passport1 != null ) {
+            if (h.old_passport1 != null && h.old_passport1 != '') {
                 a=h.old_passport1
                 imagedata = "<div class='row'>"
                 imagedata += '<a href="'+a+'" style="text-align: center;" download><div class="container" style="width: 90px; height: 80px; overflow: hidden; float: left;"><iframe src="'+a+'" style="width: 90px; height: 50px; border: 1px solid white;"></iframe><h6 style="font-size: 15px;">'+"Download"+'</h6></div></a>'
@@ -930,7 +929,7 @@
         if (check == "enabled"){
             m = {{myhistory|tojson}}
             h = JSON.parse(m)
-            if (h.history_no != null ) {
+            if (h.history_no != null && h.history_no != '') {
                 a=h.history_no.split("|")
                 b=h.history_amount.split("|")
                 c=h.history_date.split("|")
@@ -952,7 +951,6 @@
         check = {{radio_enable|tojson}}
         if (check == "enabled"){
             h = {{old_documents|tojson}}
-            console.log(h)
             if (h != null ) {
                 a=h.split('|')
                 imagedata = "<div class='row'>"
