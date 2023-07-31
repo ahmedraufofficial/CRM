@@ -560,3 +560,11 @@ def edit_advanceform(variable):
         db.session.commit()
         return redirect(url_for('handleemployees.display_advanceforms'))
     return render_template('add_advanceform.html', form=form, user = current_user.username)
+
+@handleemployees.route('/delete_advanceform/<variable>', methods = ['GET','POST'])
+@login_required
+def delete_advanceform(variable):
+    delete = db.session.query(Advanceform).filter_by(refno=variable).first()
+    db.session.delete(delete)
+    db.session.commit()
+    return redirect(url_for('handleemployees.display_advanceforms'))
