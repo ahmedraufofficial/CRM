@@ -256,6 +256,7 @@ class AddDealForm(FlaskForm):
     txn_date = DateField('Date', format='%Y-%m-%d')
     txn_amount = StringField('Amount')
     other_documents = MultipleFileField('Other Documents')
+    clear_history = RadioField('Clear History',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
 
 
 class AddFile(FlaskForm):

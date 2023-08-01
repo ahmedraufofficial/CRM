@@ -1266,7 +1266,12 @@ def edit_deal(variable):
             edit.txn_no = txn_no
             edit.txn_amount = txn_amount
             edit.txn_date = txn_date
-
+        if edit.clear_history == "0":
+            pass
+        else:
+            edit.txn_no = None
+            edit.txn_amount = None
+            edit.txn_date = None
         if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.project == '':
             print("Lesssgooo")
             update_listing(edit.listing_ref, edit.contact_buyer, edit.contact_buyer_name, edit.contact_buyer_number, edit.contact_buyer_email, edit.transaction_type)

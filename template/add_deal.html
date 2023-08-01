@@ -247,7 +247,19 @@
                     </div>
                 </div>  
                 {% endif %}    
-                <div id="history"></div>
+                <div id="history" style="padding-bottom: 25px;"></div>
+                {% if current_user.is_admin == True and radio_enable == 'enabled' %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <h6 style="float: right;">Clear History</h6>
+                        </div>
+                        <div class="col">
+                            {{ wtf.form_field(form.clear_history) }} 
+                        </div>
+                    </div>
+                </div>
+                {% endif %} 
             </div>
             <div class="col column" style="padding-bottom: 25px;">
                 <h4>Other Documents</h4>
@@ -935,7 +947,7 @@
                 c=h.history_date.split("|")
                 data = "<div class='container'>"
                 for (i=0;i<a.length;i++){
-                    data += "<div class='row'><div class='col' style='width: 170px;'><input type='text' style='width: 150px;' value="+a[i]+"></div><div class='col'><input type='text' style='width: 150px;' value="+b[i]+"></div><div class='col'><input type='text' style='width: 150px;' value="+c[i]+"></div></div>"
+                    data += "<div class='row'><div class='col' style='width: 170px;'><input type='text' style='width: 150px;' readonly value="+a[i]+"></div><div class='col'><input type='text' style='width: 150px;' readonly value="+b[i]+"></div><div class='col'><input type='text' style='width: 150px;' readonly value="+c[i]+"></div></div>"
                 }
                 data+="</div>"
                 document.getElementById("history").innerHTML = data;
