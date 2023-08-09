@@ -1044,16 +1044,26 @@
         const inputHandler03 = function(e) {
         var t_comm = document.getElementById('gross_commission').value.replaceAll(',','')
         let total_commission = parseFloat(t_comm)
+        var t_comm1 = document.getElementById('total_commission').value.replaceAll(',','')
+        let total_commission1 = parseFloat(t_comm1)
         var bag_received = document.getElementById('amount_received').value.replaceAll(',','')
         let bag_received_float = parseFloat(bag_received)
         var bag_given = document.getElementById('agent_received').value.replaceAll(',','')
         let bag_given_float = parseFloat(bag_given)
         var agent_p_com = document.getElementById('agent_pers_comm').value.replaceAll(',','')
         let agent_p_com_float = parseFloat(agent_p_com)
+        var check_tax = document.getElementById('include_vat').value
         if (e.target.id == 'amount_received' || e.target.id == 'agent_received' || e.target.id == 'agent_pers_comm') 
         {
-            document.getElementById('agent_pending').value = (((total_commission*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
-            document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+            if (check_tax == 'yes') {
+                document.getElementById('agent_pending').value = (((total_commission1*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+            }
+            else {
+                document.getElementById('agent_pending').value = (((total_commission*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+                document.getElementById('amount_eligible').value = (((bag_received_float*(agent_p_com_float/100))-bag_given_float).toLocaleString(undefined, {minimumFractionDigits: 2}))
+            }
+            
         }
         }
         commissioning.addEventListener('input', inputHandler03);
