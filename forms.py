@@ -266,7 +266,7 @@ class AddFile(FlaskForm):
 
 class AddEmployeeForm(FlaskForm):
     Status = SelectField(u'Status',choices = [('Active', 'Active'), ('Cancel', 'Cancel')])
-    Employee_Status = StringField('Employee Status')
+    Employee_Status = SelectField(u'Employee Status',choices = [('',''),('Training', 'Training'), ('Probation', 'Probation'), ('Permanent', 'Permanent'), ('Notice Period', 'Notice Period'), ('Resigned', 'Resigned'), ('Terminated', 'Terminated')])
     Employee_ID = StringField('Employee ID')
     Name = StringField('Name')
     Position = StringField('Position')
@@ -276,10 +276,10 @@ class AddEmployeeForm(FlaskForm):
     Date_of_Joining = DateField('Date of Joining', format='%Y-%m-%d')
     Emirates_ID = StringField('Emirates ID')
     Card_No = StringField('Card No')
-    Emirates_Card_Expiry = DateField('Emirates Card Expiry', format='%Y-%m-%d')
-    Mobile_No = StringField('Mobile No')
-    MOL_Personal_No = StringField('MOL Personal No')
-    Labor_Card_No = StringField('Labor Card No')
+    Emirates_Card_Expiry = DateField('Emirates ID Expiry', format='%Y-%m-%d')
+    Mobile_No = StringField('Company Mobile No.')
+    MOL_Personal_No = StringField('MOL Personal Number')
+    Labor_Card_No = StringField('Labor Card Number')
     Labor_Card_Expiry = DateField('Labor Card Expiry', format='%Y-%m-%d')
     Insurance_No = StringField('Insurance No')
     Insurance_Effective_Date = DateField('Insurance Effective Date', format='%Y-%m-%d')
@@ -287,6 +287,12 @@ class AddEmployeeForm(FlaskForm):
     Date_of_Submission = DateField('Date of Submission', format='%Y-%m-%d')
     Residence_Expiry = DateField('Residence Expiry', format='%Y-%m-%d')
     Remarks = StringField('Remarks')
+    pers_no= StringField('Personal Mobile No.')
+    company_email= StringField('Company Email')
+    salary= StringField('Salary')
+    slab= StringField('Salary Slab')
+    crm_username= StringField('CRM Username')
+    profile_photo = FileField("Upload Photo", render_kw={'class':'upload'})
 
 class AddExitformentry(FlaskForm):
     name = StringField('Name *', [validators.DataRequired()])

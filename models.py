@@ -257,6 +257,14 @@ class Employees(db.Model):
     Residence_Expiry = db.Column(db.DateTime)
     Remarks = db.Column(db.String(100))
     created_by = db.Column(db.String(100))
+    pers_no = db.Column(db.String(100))
+    company_email = db.Column(db.String(100))
+    salary = db.Column(db.String(100))
+    slab = db.Column(db.String(100))
+    crm_username = db.Column(db.String(100))
+    profile_photo = db.Column(db.String(500))
+    created_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)
 
 class Exitform(db.Model):
     id = db.Column(db.Integer, primary_key=True)

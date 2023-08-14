@@ -33,74 +33,46 @@ handleemployees = Blueprint('handleemployees', __name__, template_folder='templa
 @handleemployees.route('/human_resource/employees',methods = ['GET','POST'])
 @login_required
 def display_employees():  
-    sesh = db.session.query(Employees).filter_by(crm_username="ahmed")
-    for i in sesh:
-        x = i.Remarks
-        y = i.Employee_ID
-        z = i.documents
-    form = AddEmployeeForm() 
-
-    if request.method == 'POST':
-        files_filenames = []
-        try:
-            for filex in form.documents.data:
-                file_filename = secure_filename(filex.filename)
-                directory = UPLOAD_FOLDER+'/E-'+str(y)
-                if not os.path.isdir(directory):
-                    os.mkdir(directory)
-                filex.save(os.path.join(directory, file_filename))
-                files_filenames.append('/static/uploads02'+'/E-'+str(y)+"/"+file_filename)
-            sesh = db.session.query(Employees).filter_by(crm_username="ahmed")
-            for i in sesh:
-                i.documents =  '|'.join(files_filenames)
-            db.session.commit()
-            print("Lesssgooo")
-        except:
-            print("Nahhhh")
-        return redirect(url_for('handleemployees.display_employees'))
-
-    if current_user.sale == False:
+    if current_user.hr == False:
         return abort(404)
     data = []
     existing_users = []
-    for a in db.session.query(User).all():
-        existing_users.append(a.username)
+    #for a in db.session.query(User).all():
+    #    existing_users.append(a.username)
     if current_user.viewall == True:
         for r in db.session.query(Employees).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             if current_user.edit == True:
-                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#detailsModal" onclick="view_details('+"'UNI-E-"+new['Employee_ID']+"'"+')">Details</button>'
+                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si"><i class="bi bi-pen"></i></button></a><a href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si"><i class="bi bi-trash"></i></button></a>'+'<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#detailsModal" onclick="view_details('+"'UNI-E-"+new['Employee_ID']+"'"+')"><i class="bi bi-card-list"></i></button>'
             else:
                 edit_btn = ''
-            
-            if r.Name in existing_users:
-                account = ""
-            else:
-                account = '<a href="/add_employee_account/'+str(new['id'])+'"><button  class="btn btn-info si">Sign Up</button></a>'
-
-            new["edit"] = "<div style='display:flex;'>"+edit_btn+account+"</div>"
+            new['Date_of_Joining'] = new['Date_of_Joining'][:10]
+    #        if r.Name in existing_users:
+    #            account = ""
+    #        else:
+    #            account = '<a href="/add_employee_account/'+str(new['id'])+'"><button  class="btn btn-info si">Sign Up</button></a>'
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
             data.append(new)
     else:
         for r in db.session.query(Employees).filter(Employees.created_by == current_user.username):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             if current_user.edit == True:
-                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a  href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'
+                edit_btn =  '<a href="/edit_employee/'+str(new['id'])+'"><button  class="btn btn-primary si"><i class="bi bi-pen"></i></button></a><a  href="/delete_employee/'+str(new['id'])+'"><button class="btn btn-danger si"><i class="bi bi-trash"></i></button></a>'
             else:
                 edit_btn = ''
-            if r.Name in existing_users:
-                account = ""
-            else:
-                account = '<a href="/add_employee_account/'+str(new['id'])+'"><button  class="btn btn-info si">Sign Up</button></a>'
-
-            new["edit"] = "<div style='display:flex;'>"+edit_btn+account+"</div>"
+            new['Date_of_Joining'] = new['Date_of_Joining'][:10]
+    #        if r.Name in existing_users:
+    #            account = ""
+    #        else:
+    #            account = '<a href="/add_employee_account/'+str(new['id'])+'"><button  class="btn btn-info si">Sign Up</button></a>'
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
             data.append(new)
-
     f = open('employee_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    return render_template('employees.html', data = data , columns = columns, user=current_user, line_manager = x, form=form, documents = z)
+    return render_template('employees.html', data = data , columns = columns, user=current_user)
 
 
 
@@ -111,17 +83,17 @@ def add_employee():
         return abort(404)  
     form = AddEmployeeForm()
     if request.method == 'POST':
-        Status = form.Status.data
+        #Status = form.Status.data
         Employee_Status = form.Employee_Status.data
         Employee_ID = form.Employee_ID.data
         Name = form.Name.data
         Position = form.Position.data
         Nationality = form.Nationality.data
-        UID = form.UID.data
+        #UID = form.UID.data
         Date_of_Birth = form.Date_of_Birth.data
         Date_of_Joining = form.Date_of_Joining.data
         Emirates_ID = form.Emirates_ID.data
-        Card_No = form.Card_No.data
+        #Card_No = form.Card_No.data
         Emirates_Card_Expiry = form.Emirates_Card_Expiry.data
         Mobile_No = form.Mobile_No.data
         MOL_Personal_No = form.MOL_Personal_No.data
@@ -133,16 +105,35 @@ def add_employee():
         Date_of_Submission = form.Date_of_Submission.data
         Residence_Expiry = form.Residence_Expiry.data
         Remarks = form.Remarks.data
-        crm_usrname = form.crm_username.data
-        documents = form.documents.data
+        crm_username = form.crm_username.data
+        pers_no = form.pers_no.data
+        company_email = form.company_email.data
+        salary = form.salary.data
+        slab = form.slab.data
         created_by = current_user.username
-        employee = Employees(created_by = created_by, Status = Status,  Employee_Status = Employee_Status,  Employee_ID = Employee_ID,  Name = Name,  Position = Position,  Nationality = Nationality,  UID = UID,  Date_of_Birth = Date_of_Birth,  Date_of_Joining = Date_of_Joining,  Emirates_ID = Emirates_ID,  Card_No = Card_No,  Emirates_Card_Expiry = Emirates_Card_Expiry,  Mobile_No = Mobile_No,  MOL_Personal_No = MOL_Personal_No,  Labor_Card_No = Labor_Card_No,  Labor_Card_Expiry = Labor_Card_Expiry,  Insurance_No = Insurance_No,  Insurance_Effective_Date = Insurance_Effective_Date,  Insurance_Expiry_Date = Insurance_Expiry_Date,  Date_of_Submission = Date_of_Submission,  Residence_Expiry = Residence_Expiry,  Remarks = Remarks, crm_usrname = crm_usrname, documents = documents)
+        created_date = datetime.now()+timedelta(hours=4)
+        updated_date = datetime.now()+timedelta(hours=4)
+        employee = Employees(created_by = created_by,  Employee_Status = Employee_Status,  Employee_ID = Employee_ID,  Name = Name,  Position = Position,  Nationality = Nationality,  Date_of_Birth = Date_of_Birth,  Date_of_Joining = Date_of_Joining,  Emirates_ID = Emirates_ID,  Emirates_Card_Expiry = Emirates_Card_Expiry,  Mobile_No = Mobile_No,  MOL_Personal_No = MOL_Personal_No,  Labor_Card_No = Labor_Card_No,  Labor_Card_Expiry = Labor_Card_Expiry,  Insurance_No = Insurance_No,  Insurance_Effective_Date = Insurance_Effective_Date,  Insurance_Expiry_Date = Insurance_Expiry_Date,  Date_of_Submission = Date_of_Submission,  Residence_Expiry = Residence_Expiry,  Remarks = Remarks, crm_username = crm_username, pers_no = pers_no, company_email = company_email, salary = salary, slab = slab, created_date = created_date, updated_date = updated_date)
         db.session.add(employee)
+        db.session.commit()
+        db.session.refresh(employee)
+        employee_no = "E-"+Employee_ID
+
+        try:
+            document = secure_filename(form.profile_photo.data.filename)
+            directory = UPLOAD_FOLDER+'/'+employee_no
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.profile_photo.data.save(os.path.join(directory, document))
+            employee.profile_photo = ('/static/uploads02'+'/'+employee_no+"/"+document)
+        except:
+            employee.profile_photo = ""
+
         db.session.commit()
         additional_details('UNI-E-' + str(Employee_ID))
         print("here")
         return redirect(url_for('handleemployees.display_employees'))
-    return render_template('add_employee.html', form=form, user = current_user.username)
+    return render_template('add_employee.html', form=form, user = current_user.username, radio_enable = 'disabled', old_pics = '')
    
 @handleemployees.route('/edit_employee/<var>', methods = ['GET','POST'])
 @login_required
@@ -151,11 +142,23 @@ def edit_employee(var):
         return abort(404) 
     edit = db.session.query(Employees).filter_by(id = var).first()
     form = AddEmployeeForm(obj = edit)
+    old_pics = edit.profile_photo
     if request.method == 'POST':
         form.populate_obj(edit)
+        edit.updated_date = datetime.now()+timedelta(hours=4)
+        employee_no = "E-"+edit.Employee_ID
+        try:
+            document = secure_filename(form.profile_photo.data.filename)
+            directory = UPLOAD_FOLDER+'/'+employee_no
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
+            form.profile_photo.data.save(os.path.join(directory, document))
+            edit.profile_photo = ('/static/uploads02'+'/'+employee_no+"/"+document)
+        except:
+            pass
         db.session.commit()
         return redirect(url_for('handleemployees.display_employees'))
-    return render_template('add_employee.html',form=form, radio_enable = 'enabled')
+    return render_template('add_employee.html',form=form, radio_enable = 'enabled', old_pics = old_pics)
 
 
 @handleemployees.route('/add_employee_account/<var>', methods = ['GET','POST'])
