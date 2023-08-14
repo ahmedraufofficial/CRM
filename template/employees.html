@@ -1,11 +1,19 @@
 {% extends "base.html" %} 
 
 {% block content %}
+<style>
+  .suiii {
+    background-color: rgb(56, 117, 202);
+    color: white;
+    border: 1px solid transparent !important;
+    padding: 5px !important;
+    font-size: 11px !important;
+  }
+</style>
 <title>Lighthouse - HR</title>
-<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover;min-height: 100vh; max-height: 100%;">
-  <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.5);">
+<section>
+  <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0);">
 <br>
-
     <div class="container-fluid" style="padding: 10px;">
       <br/>
       <div id="toolbar">
@@ -33,13 +41,13 @@
 
     <div class="container-fluid">
     <a href="/add_employee" class="btn btn-primary">Add Employee</a>
+    <!--
     <a href="/cloudstorage/hr" class="btn btn-info">Access Storage</a>
+    -->
     </div>
     <br>
     </div>
-    </section>
 
-    
 <!--details Modal-->
 <div class="modal" id="detailsModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -81,13 +89,13 @@
           <div class="row justify-content-center">
             <div class="col-11">
               <input type="hidden" id="list_id">
-              <div class="row">
+              <div class="row" style="margin-top: 10px;">
               <div class="col">
-               <p style="color: white;">Detail</p> 
+               <h6 style="color: rgb(0, 0, 0);">Detail</h6> 
               <input class="form-control" type="text" id="detail">
               </div>
               <div class="col">
-                <p style="color: white;">Value</p> 
+                <h6 style="color: rgb(0, 0, 0);">Value</h6> 
                 <input class="form-control" type="text" id="value">
               </div>
 
@@ -106,7 +114,7 @@
     </div>
   </div>
 </div>
-
+</section>
 
 
 
@@ -117,6 +125,7 @@
 
 {% block scripts %}
 <script type='text/javascript'>
+
 
 function view_details(x){
   fetch('/all_notes/'+x).then(function(response){
@@ -144,9 +153,6 @@ function post_detail(){
             })
         })
       };
-
-
-
 
 $(window).on('load',(function(){      
     var columns = {{columns|tojson}};

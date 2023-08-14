@@ -2,70 +2,132 @@
 {% import "bootstrap/wtf.html" as wtf %} 
 {% block content %}
 <style type='text/css'>
-
-    .column{
-           background-color: rgba(0, 0, 0, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
--webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
--moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
-padding-top: 10px;
-        margin: 5px;
-        margin-top: 20px;
+.column{
+    background-color: (255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+    -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+    -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+    padding-top: 10px;
+    margin: 5px;
+    margin-top: 20px;
+    border-radius: 12px;
+}
+h4{
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #f5f0e1;
+    font-size: 14pt;
+    font-family: 'Oswald';
     }
-    h4{
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: #f5f0e1;
-        font-size: 14pt;
-        font-family: 'Oswald';
-    }
+.control-label {
+    font-size: 11px;
+}
 </style>
     
-<section style="background-image: url(/static/images/all_bg.jpg); background-repeat: no-repeat;background-attachment: fixed;background-size: cover; height: 100%;">
-    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.8);">
+<section>
+    <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
 <div class="container">
   
 <form method="POST" enctype="multipart/form-data">
   <dl>
 
     <div class="row">
-        <div class="col">
+        <div class="col column">
+            <!--
             {{ wtf.form_field(form.Status) }}
+            -->
             {{ wtf.form_field(form.Employee_Status) }}
             {{ wtf.form_field(form.Employee_ID) }}
             {{ wtf.form_field(form.Name) }}
             {{ wtf.form_field(form.Position) }}
             {{ wtf.form_field(form.Nationality) }}
+            <!--
             {{ wtf.form_field(form.UID) }}
-            {{ form.Date_of_Birth.label(class="control-label") }}            
-            {{ form.Date_of_Birth }}
+            -->
+            <div class="row">
+                <div class="col">
+                    {{ form.Date_of_Birth.label(class="control-label", style="margin-right: 25px") }}            
+                    {{ form.Date_of_Birth }}
+                </div>
+                <div class="col">
+                    {{ form.Date_of_Joining.label(class="control-label", style="margin-right: 25px") }}    
+                    {{ form.Date_of_Joining }}
+                </div>
+            </div>
             <div style="margin-top: 10px;"></div>
-            {{ form.Date_of_Joining.label(class="control-label") }}    
-            {{ form.Date_of_Joining }}
-            <div style="margin-top: 10px;"></div>
-            {{ wtf.form_field(form.Emirates_ID) }}
+            <!--
             {{ wtf.form_field(form.Card_No) }}
-            {{ form.Emirates_Card_Expiry.label(class="control-label") }}    
-            {{ form.Emirates_Card_Expiry }}
-            <div style="margin-top: 10px;"></div>
-            {{ wtf.form_field(form.Mobile_No) }}
+            -->
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.Mobile_No) }}
+                </div>
+                <div class="col">
+                    {{ wtf.form_field(form.pers_no) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.company_email) }}
+                </div>
+                <div class="col">
+                    {{ wtf.form_field(form.crm_username) }}
+                </div>
+            </div>
+            {{ wtf.form_field(form.profile_photo) }}
+            <div id="pic1" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
+        </div>
+        <div class="col column">
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.Emirates_ID) }}
+                </div>
+                <div class="col">
+                    {{ form.Emirates_Card_Expiry.label(class="control-label", style="margin-right: 25px") }}    
+                    {{ form.Emirates_Card_Expiry }}
+                </div>
+            </div>
             {{ wtf.form_field(form.MOL_Personal_No) }}
-            {{ wtf.form_field(form.Labor_Card_No) }}
-            {{ form.Labor_Card_Expiry.label(class="control-label") }}  
-            {{ form.Labor_Card_Expiry }}
             <div style="margin-top: 10px;"></div>
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.Labor_Card_No) }}
+                </div>
+                <div class="col">
+                    {{ form.Labor_Card_Expiry.label(class="control-label", style="margin-right: 25px") }}  
+                    {{ form.Labor_Card_Expiry }}
+                </div>
+            </div>
             {{ wtf.form_field(form.Insurance_No) }}
-            {{ form.Insurance_Effective_Date.label(class="control-label") }}  
-            {{ form.Insurance_Effective_Date }}
+            <div class="row">
+                <div class="col">
+                    {{ form.Insurance_Effective_Date.label(class="control-label", style="margin-right: 25px") }}  
+                    {{ form.Insurance_Effective_Date }}
+                </div>
+                <div class="col">
+                    {{ form.Insurance_Expiry_Date.label(class="control-label", style="margin-right: 25px") }}  
+                    {{ form.Insurance_Expiry_Date }}
+                </div>
+            </div>
+            <div style="margin-top: 15px;"></div>
+            <div class="row">
+                <div class="col">
+                    {{ form.Date_of_Submission.label(class="control-label", style="margin-right: 25px") }}  
+                    {{ form.Date_of_Submission }}
+                </div>
+                <div class="col">
+                    {{ form.Residence_Expiry.label(class="control-label", style="margin-right: 25px") }}  
+                    {{ form.Residence_Expiry }}
+                </div>
+            </div>
             <div style="margin-top: 10px;"></div>
-            {{ form.Insurance_Expiry_Date.label(class="control-label") }}  
-            {{ form.Insurance_Expiry_Date }}
-            <div style="margin-top: 10px;"></div>
-            {{ form.Date_of_Submission.label(class="control-label") }}  
-            {{ form.Date_of_Submission }}
-            <div style="margin-top: 10px;"></div>
-            {{ form.Residence_Expiry.label(class="control-label") }}  
-            {{ form.Residence_Expiry }}
-            <div style="margin-top: 10px;"></div>
+            <div class="row">
+                <div class="col">
+                    {{ wtf.form_field(form.salary) }}
+                </div>
+                <div class="col">
+                    {{ wtf.form_field(form.slab) }}
+                </div>
+            </div>
             {{ wtf.form_field(form.Remarks) }}
         </div>
     </div>
@@ -77,6 +139,30 @@ padding-top: 10px;
 </div>
 <br></div>
 </section>
+<script>
+
+window.onload = get_pics();
+
+function get_pics() {
+    check = {{radio_enable|tojson}}
+    if (check == "enabled"){
+        m = {{old_pics|tojson}}
+        console.log(m)
+        if (m != null && m != '') {
+            imagedata = "<div>"
+            imagedata += '<a href="'+m+'" style="text-align: center;" download><div class="container" style="width: auto; overflow: hidden; float: left;"><div class="item"><img style="width: 90px; border-radius: 20%;" src="' + m + '"><h6 style="font-size: 15px;">'+'</h6></div></a>'
+            imagedata += "</div>"
+            document.getElementById("pic1").innerHTML = imagedata;
+
+        }
+        
+    }
+    else {
+        console.log("No Pics")
+    }
+}
+
+</script>
 
  
 {% endblock %}
