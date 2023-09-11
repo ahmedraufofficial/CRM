@@ -424,6 +424,16 @@ def reassign_lastupdated():
         db.session.commit()
     return "ok"
 
+@handleleads.route('/reassign_new_agents') #lesssgooo
+@login_required
+def reassign_new_agents():
+    all_leads = db.session.query(Leads).filter(Leads.agent == 'worodjaber')
+    for i in all_leads:
+        i.agent = 'dalia'
+        i.lastupdated = datetime.now()+timedelta(hours=4)
+        db.session.commit()
+    return "ok"
+
 @handleleads.route('/marketing_leads',methods = ['GET','POST'])
 @login_required
 def marketing_leads():
