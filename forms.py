@@ -226,8 +226,8 @@ class AddDealForm(FlaskForm):
     
     
     
-    tenancy_start_date = DateField('Tenancy Start Date', format='%Y-%m-%d')
-    tenancy_renewal_date = DateField('Tenancy Renewal Date', format='%Y-%m-%d')
+    tenancy_start_date = StringField('Tenancy Start Date')
+    tenancy_renewal_date = StringField('Tenancy Renewal Date')
     cheques = SelectField(u'Cheques',choices = [('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6')])
 
     
