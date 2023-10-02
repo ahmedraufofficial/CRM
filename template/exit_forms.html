@@ -68,10 +68,16 @@
           <div class="child" style="width: auto; margin-left: 1%;">
             <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Status</h6>
         <select name="status_" id="status_" class="filter_add02">
-                <option selected="selected" value="">Status</option>
+                <option selected="selected" value="">HR</option>
                 <option value="Pending">Pending</option>
                 <option value="Approve">Approve</option>
                 <option value="Disapprove">Disapprove</option>
+        </select>
+        <select name="status_02" id="status_02" class="filter_add02">
+          <option selected="selected" value="">Manager</option>
+          <option value="Pending">Pending</option>
+          <option value="Approve">Approve</option>
+          <option value="Disapprove">Disapprove</option>
         </select>
         <select name="listing_users" id="listing_users" class="filter_add02" >
         <option selected="selected" value="">Users</option>
@@ -161,11 +167,13 @@
         var u = $("#listing_users").val()
         var x = $("#propdate").val()
         var y = $("#propdate2").val()
+        var w = $("#status_02").val()
         
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
         var grepFunc4;
+        var grepFunc5;
 
         grepFunc = function(item){
               return item.hr_approval == z;
@@ -182,6 +190,10 @@
         grepFunc4 = function(item){
               return item.created_date.slice(0,10) <= y;
           }
+        
+        grepFunc5 = function(item){
+              return item.manager_approval == w;
+          }
 
         if (z != "")
         {test = $.grep(test, grepFunc)}
@@ -195,6 +207,9 @@
         if (y != "")
         {test = $.grep(test, grepFunc4)}
 
+        if (w != "")
+        {test = $.grep(test, grepFunc5)}
+
           $('#table').bootstrapTable('load', test);
         })
         
@@ -203,6 +218,7 @@
         $("#status_").val("");
         $("#propdate").val("");
         $("#propdate2").val("");
+        $("#status_02").val("");
         })
       });
     }));
