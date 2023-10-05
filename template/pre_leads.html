@@ -1,0 +1,802 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+}
+  </style>
+<title>Lighthouse - Leads</title>
+<section>
+  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+<!--note Modal-->
+<div class="modal" id="notesModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Notes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <div id="notetoolbar">
+                <h5>NOTES</h5>
+              </div>
+                <table id="notetable"        
+                data-toggle="true"
+                data-toolbar="#notetoolbar"
+                class="oswald"
+                data-search="true"
+                data-show-columns="true"
+                data-pagination="true"
+                data-height="350"
+                style="font-size: 10pt;">
+                  <thead>
+                      <tr>
+                          <th data-field="date">DATE</th>
+                          <th data-field="time">TIME</th>
+                          <th data-field="user">USER</th>
+                          <th data-field="comment">COMMENT</th>
+                          <th data-field="status">STATUS</th>
+                          <th data-field="substatus">SUB STATUS</th>
+                      </tr>
+                  </thead>
+              </table>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <input type="hidden" id="list_id">
+              <input type="hidden" id="status_note" value="Open">
+              <div class="row">
+                <div class="col">
+              <input class="form-control" type="text" id="comment">
+              </div>
+              <div class="col">
+              <select class="form-control" id="sub_status_note" name="sub_status_note">
+                <option value='Follow up'>Follow up</option>
+                <option value='Flag'>Flag</option>
+                <option value='Not yet contacted'>Not yet contacted</option>
+                <option value='Called no reply'>Called no reply</option>
+                <option value='Offer made'>Offer made</option>
+                <option value='Viewing arranged'>Viewing arranged</option>
+                <option value='Viewing Done'>Viewing Done</option>
+                <option value='Interested'>Interested</option>
+                <option value='Interested to meet'>Interested to meet</option>
+                <option value='Not interested'>Not interested</option>
+                <option value='Needs time'>Needs time</option>
+                <option value='Client not reachable'>Client not reachable</option>
+              </select>
+              </div>    
+            </div>
+              
+              <button onclick="post_lead_note()" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">Post</button>
+              <button id="close_lead" onclick="close_lead('close')" class="btn" style="margin-top: 20px;background-color: #dc3545; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Close Lead</button>
+              <button id="open_lead" onclick="close_lead('open')" class="btn" style="margin-top: 20px;background-color: #56b300; border: hidden; border-radius: 0px; color: white; margin-bottom: 20px;">Open Lead</button>
+              <div id="closelead">
+        
+              </div>
+        
+            </div>
+          </div>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Delete Modal-->
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Confirm deletion!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+            <a id="delete">Delete</a>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Reassign Modal-->
+<div class="modal" id="reassignModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Reassign User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="align-items: center; margin-left: auto; margin-right: auto;">
+
+        <select name="sale_users" id="sale_users" class="filter_add" style="width: 150px;">
+          <option selected="selected" value="None">Users</option>
+          {% for users in all_sale_users %}
+          <option value="{{users.username}}">{{users.username}}</option>
+          {% endfor %}
+        </select>
+        <h6 id="reassign_lead"></h6>
+        <button type="button" class="btn-secondary si2" style="margin-left: auto; margin-left: auto;" onclick="pre_assign()"><i class="bi bi-forward-fill"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="container-fluid" style="padding: 10px;">
+      <div class="container parrot" style="text-align: center;">
+        <div class="row">
+<!--
+          <div style="width: 14.5%; height: 10%; height:30px; margin-left: 1%; margin-right: 0.5%; margin-top: 0.8%;">
+            <input style="width: 100%; height: 10%; height:30px; margin-left: 1%; margin-right: 0.5%;" type="text" name="searchbar" id="searchbar" class="filter_add05" placeholder="Search" aria-label="searchbar">
+          </div>
+-->
+<!--
+          <div class="child" style="width: auto; margin-left: 1%;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Availablility</h6>
+        <select name="filteration" id="filteration" class="filter_add02">
+                <option selected="selected" value="">Filter</option>
+                {% if current_user.viewall == True %}
+                <option value="all_data">All Leads</option>
+                {% endif %}
+                <option value="flag">Flag</option>
+                <option value="user_data">My Leads</option>
+                <option value="active">Active</option>
+                <option value="lead_pool">In-active</option>
+                <option value="referral">Referral Leads</option>
+                {% if current_user.team_lead == True %}
+                <option value="get_team">Team Leads</option>
+                {% endif %}
+        </select>
+        <select name="listing_users" id="listing_users" class="filter_add02" >
+        <option selected="selected" value="">Users</option>
+        {% for users in all_sale_users %}
+            <option value="{{users.username}}">{{users.username}}</option>
+        {% endfor %}
+        </select>
+        <select name="purpose_category" id="purpose_category" class="filter_add02">
+          <option selected="selected" value="">Purpose</option>
+          <option value="Buy">Buy</option>
+          <option value="Rent">Rent</option>
+      </select>
+    
+          </div>
+-->
+          <div class="child" style="margin-right: 5px;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/product-description.png"/><span><h6 style="text-align: left;">Description</h6>
+          <select name="beds_category" id="beds_category" class="filter_add02">
+            <option selected="selected" value="">Beds</option>
+            <option value="ST">Studio</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <select name="subtype_category" id="subtype_category" class="filter_add02">
+            <option selected="selected" value=''>Type</option>
+            <option value='Villa'>Villa</option>
+            <option value='Apartment'>Apartment</option>
+            <option value='Loft Apartment'>Loft Apartment</option>
+            <option value='Residential Floor'>Residential Floor</option>
+            <option value='Residential Plot'>Residential Plot</option>
+            <option value='Townhouse'>Townhouse</option>
+            <option value='Residential Building'>Residential Building</option>
+            <option value='Penthouse'>Penthouse</option>
+            <option value='Villa Compound'>Villa Compound</option>
+            <option value='Hotel Apartment'>Hotel Apartment</option>
+            <option value='Office'>Office</option>
+            <option value='Land'>Land</option>
+            <option value='Other'>Other</option>
+          </select>
+        </div>
+            <div class="child" style="width: auto; margin-left: 5px; margin-right: 5px;">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/location-pointer.png"/><span><h6 style="text-align: left;">Area</h6>
+            <select name="location_category" id="location_category" class="filter_add02">
+              <option selected="selected" value=''>Location</option>
+              <option value='Abu Dhabi Gate City'>Abu Dhabi Gate City</option>
+              <option value='Abu Dhabi Island'>Abu Dhabi Island</option>
+              <option value='AbuDhabi-Al Ain (Highway)'>AbuDhabi-Al Ain (Highway)</option>
+              <option value='Airport Road'>Airport Road</option>
+              <option value='Al Ajban'>Al Ajban</option>
+              <option value='Al Aman'>Al Aman</option>
+              <option value='Al Aryam'>Al Aryam</option>
+              <option value='Al Badaa'>Al Badaa</option>
+              <option value='Al Bahia'>Al Bahia</option>
+              <option value='Al Baraha'>Al Baraha</option>
+              <option value='Al Barza'>Al Barza</option>
+              <option value='Al Bateen'>Al Bateen</option>
+              <option value='Al Bateen Al Ain'>Al Bateen Al Ain</option>
+              <option value='Al Danah'>Al Danah</option>
+              <option value='Al Dhafrah'>Al Dhafrah</option>
+              <option value='Al Fahid Island'>Al Fahid Island</option>
+              <option value='Al Falah City'>Al Falah City</option>
+              <option value='Al Faya'>Al Faya</option>
+              <option value='Al Ghadeer'>Al Ghadeer</option>
+              <option value='Al Gurm West'>Al Gurm West</option>
+              <option value='Al Hosn'>Al Hosn</option>
+              <option value='Al Hudayriat Island'>Al Hudayriat Island</option>
+              <option value='Al Ittihad Road'>Al Ittihad Road</option>
+              <option value='Al Jubail Island'>Al Jubail Island</option>
+              <option value='Al Jubail Island'>Al Jurf Island</option>
+              <option value='Al Karamah'>Al Karamah</option>
+              <option value='Al Khaleej Al Arabi Street'>Al Khaleej Al Arabi Street</option>
+              <option value='Al Khalidiya'>Al Khalidiya</option>
+              <option value='Al Khatim'>Al Khatim</option>
+              <option value='Al Khazna'>Al Khazna</option>
+              <option value='Al Khubeirah'>Al Khubeirah</option>
+              <option value='Al Maffraq'>Al Maffraq</option>
+              <option value='Al Maha'>Al Maha</option>
+              <option value='Al Maharba'>Al Maharba</option>
+              <option value='Al Manaseer'>Al Manaseer</option>
+              <option value='Al Manhal'>Al Manhal</option>
+              <option value='Al Maqtaa'>Al Maqtaa</option>
+              <option value='Al Marina'>Al Marina</option>
+              <option value='Al Markaz'>Al Markaz</option>
+              <option value='Al Markaziyah'>Al Markaziyah</option>
+              <option value='Al Maryah Island'>Al Maryah Island</option>
+              <option value='Al Mina'>Al Mina</option>
+              <option value='Al Mirfa'>Al Mirfa</option>
+              <option value='Al Muneera'>Al Muneera</option>
+              <option value='Al Muntazah'>Al Muntazah</option>
+              <option value='Al Mushrif'>Al Mushrif</option>
+              <option value='Al Nahda Abu Dhabi'>Al Nahda Abu Dhabi</option>
+              <option value='Al Nahyan'>Al Nahyan</option>
+              <option value='Al Nahyan Camp'>Al Nahyan Camp</option>
+              <option value='Al Najda Street'>Al Najda Street</option>
+              <option value='Al Nasr Street'>Al Nasr Street</option>
+              <option value='Al Qurm'>Al Qurm</option>
+              <option value='Al Raha'>Al Raha</option>
+              <option value='Al Raha Beach'>Al Raha Beach</option>
+              <option value='Al Raha Gardens'>Al Raha Gardens</option>
+              <option value='Al Raha Golf Gardens'>Al Raha Golf Gardens</option>
+              <option value='Al Rahba'>Al Rahba</option>
+              <option value='Al Rawdah'>Al Rawdah</option>
+              <option value='Al Reef'>Al Reef</option>
+              <option value='Al Reef Villas'>Al Reef Villas</option>
+              <option value='Al Reem Island'>Al Reem Island</option>
+              <option value='Al Rehhan'>Al Rehhan</option>
+              <option value='Al Rideem'>Al Rideem</option>
+              <option value='Al Ruwais'>Al Ruwais</option>
+              <option value='Al Safarat District'>Al Safarat District</option>
+              <option value='Al Samha'>Al Samha</option>
+              <option value='Al Shahama'>Al Shahama</option>
+              <option value='Al Shamkha'>Al Shamkha</option>
+              <option value='Al Shamkha South'>Al Shamkha South</option>
+              <option value='Al Shawamekh'>Al Shawamekh</option>
+              <option value='Al Sila'>Al Sila</option>
+              <option value='Al Sowwah'>Al Sowwah</option>
+              <option value='Al Taweelah'>Al Taweelah</option>
+              <option value='Al Tibbiya'>Al Tibbiya</option>
+              <option value='AL Wahda'>AL Wahda</option>
+              <option value='Al Wathba'>Al Wathba</option>
+              <option value='Al Zaab'>Al Zaab</option>
+              <option value='Al Zahraa'>Al Zahraa</option>
+              <option value='Arabian Village'>Arabian Village</option>
+              <option value='Bain Al Jessrain'>Bain Al Jessrain</option>
+              <option value='Baniyas'>Baniyas</option>
+              <option value='Between Two Bridges'>Between Two Bridges</option>
+              <option value='Building Materials City'>Building Materials City</option>
+              <option value='Capital Centre'>Capital Centre</option>
+              <option value='City Downtown'>City Downtown</option>
+              <option value='Corniche'>Corniche</option>
+              <option value='Corniche Area'>Corniche Area</option>
+              <option value='Corniche Road'>Corniche Road</option>
+              <option value='Danet Abu Dhabi'>Danet Abu Dhabi</option>
+              <option value='Defence Street'>Defence Street</option>
+              <option value='Delma Street'>Delma Street</option>
+              <option value='Desert Village'>Desert Village</option>
+              <option value='Eastern Road'>Eastern Road</option>
+              <option value='Electra Street'>Electra Street</option>
+              <option value='Firdous Street'>Firdous Street</option>
+              <option value='Ghantoot'>Ghantoot</option>
+              <option value='Ghiyathi'>Ghiyathi</option>
+              <option value='Grand Mosque District'>Grand Mosque District</option>
+              <option value='Hamdan Street'>Hamdan Street</option>
+              <option value='Happiness Island'>Happiness Island</option>
+              <option value='Happiness Island'>Happiness Island</option>
+              <option value='Hydra Village'>Hydra Village</option>
+              <option value='Jawazat Street'>Jawazat Street</option>
+              <option value='Khalidia'>Khalidia</option>
+              <option value='Khalifa City (all)'>Khalifa City (all)</option>
+              <option value='Khalifa City A'>Khalifa City A</option>
+              <option value='Khalifa City B'>Khalifa City B</option>
+              <option value='Khalifa City C'>Khalifa City C</option>
+              <option value='Khalifa Park'>Khalifa Park</option>
+              <option value='Khalifa Street'>Khalifa Street</option>
+              <option value='Liwa'>Liwa</option>
+              <option value='Liwa Street'>Liwa Street</option>
+              <option value='Lulu Island'>Lulu Island</option>
+              <option value='Madinat Al Riyad'>Madinat Al Riyad</option>
+              <option value='Madinat Zayed'>Madinat Zayed</option>
+              <option value='Madinat Zayed (Western Region)'>Madinat Zayed (Western Region)</option>
+              <option value='Mafraq Industrial Area'>Mafraq Industrial Area</option>
+              <option value='Marina Village'>Marina Village</option>
+              <option value='Masdar City'>Masdar City</option>
+              <option value='Mbz'>Mbz</option>
+              <option value='Mina Zayed'>Mina Zayed</option>
+              <option value='Mohamed Bin Zayed City'>Mohamed Bin Zayed City</option>
+              <option value='Muroor Area'>Muroor Area</option>
+              <option value='Musaffah Industrial Area'>Musaffah Industrial Area</option>
+              <option value='Mussafah'>Mussafah</option>
+              <option value='Nareel Island'>Nareel Island</option>
+              <option value='New Al Marfa'>New Al Marfa</option>
+              <option value='New Khalifa City'>New Khalifa City</option>
+              <option value='Nurai Island'>Nurai Island</option>
+              <option value='Officers Club Area'>Officers Club Area</option>
+              <option value='Ramhan Island'>Ramhan Island</option>
+              <option value='Saadiyat Island'>Saadiyat Island</option>
+              <option value='Salam Street'>Salam Street</option>
+              <option value='Sas Al Nakhl'>Sas Al Nakhl</option>
+              <option value='Shakhbout City'>Shakhbout City</option>
+              <option value='Sheikh Zayed Bin Sultan St.'>Sheikh Zayed Bin Sultan St.</option>
+              <option value='Tourist Club Area'>Tourist Club Area</option>
+              <option value='World Trade Center'>World Trade Center</option>
+              <option value='Yas Island'>Yas Island</option>
+              <option value='Zayed City'>Zayed City</option>
+              <option value='Zayed Military City'>Zayed Military City</option>
+              <option value='Zayed Sports City'>Zayed Sports City</option>
+            </select>
+            <select name="community_category" id="community_category" class="filter_add02">
+              <option selected="selected" value="">Community</option>
+            </select>
+          </div>
+            <div class="child" style="width: auto; margin-left: 5px;">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+            </div>
+          </div>
+    
+          <div class="row" style="margin-left: auto; margin-right: auto;">
+            <div class="col" style="margin-left: auto; margin-right: auto;">
+              <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+              <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+            </div>
+          </div>
+      </div>
+
+
+
+
+
+
+<!--
+      <div id="toolbar">
+        {% if current_user.export == True %}
+        <button onclick="get_check('leads')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+        {% if current_user.viewall == True %}
+        <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+        {% endif %}
+        <button class="btn btn-danger" id="flag"><i class="bi bi-flag"></i></button>
+        <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
+        <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
+        <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
+        <button id="referral" class="btn btn-warning" style="margin-left: 10px; color: white;">Referral Leads</button>
+        {% if current_user.team_lead == True %}
+        <button id="get_team" style="margin-left: 10px;"  class="btn btn-primary">Team Leads</button>
+        {% endif %}
+        <select name="lead_status" style="margin-left: 10px; padding-top: 5px !important; padding-bottom: 4px !important;" class="btn btn-info" id="lead_status">
+          <option value="">Sub Status</option>
+          <option value="Successful">Successful</option>
+          <option value="Follow up">Follow Up</option>
+          <option value="In progress">In progress</option>
+          <option value="Interested">Interested</option>
+          <option value="Viewing arranged">Viewing arranged</option>
+          <option value="Offer Made">Offer Made</option>
+          <option value="Unsuccessful">Unsuccessful</option>
+        </select>
+      </div>
+-->
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable oswald"
+        data-sort-name="lastupdated"
+        data-sort-order="desc"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-pagination="true"
+        data-height="750"
+        data-page-size="100"
+        data-page-list="[25, 50, 100, 200, All]">
+      </table>
+    </div>
+<!--
+    <div class="container-fluid">
+    <a href="/add_lead_buyer" class="btn btn-primary">Add Buyer Lead</a>
+    <a href="/add_lead_developer" class="btn btn-warning" style="color: white;">Add Developer Lead</a>
+    </div>
+    -->
+
+    </div>
+    </section>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+  function delete_(x){
+    document.getElementById("delete").href="/delete_lead/"+x;
+  };
+  function pre_assign_lead(x){
+    document.getElementById("reassign_lead").value=x;
+  };
+  function pre_assign(){
+    var u = $("#sale_users").val()
+    fetch('/pre_assign_lead_execute/'+document.getElementById("reassign_lead").value+'/'+u).then(function(response){
+            response.json().then(function(){
+              location.reload();
+            }
+            )})
+  };
+</script>
+
+<script type='text/javascript'>
+var type = document.getElementById('type')
+var contact = document.getElementById('contact')
+var contact_name = document.getElementById('contact_name')
+var contact_number = document.getElementById('contact_number')
+var contact_email = document.getElementById('contact_email')
+var nationality = document.getElementById('nationality')
+var purpose = document.getElementById('purpose')
+var time_to_contact = document.getElementById('time_to_contact')
+var agent = document.getElementById('agent')
+var refno = document.getElementById('refno')
+var enquiry_date = document.getElementById('enquiry_date')
+var lead_type = document.getElementById('lead_type')
+var propertyamenities = document.getElementById('propertyamenities')
+/*var created_by = document.getElementById('created_by')*/
+var status = document.getElementById('status')
+var sub_status = document.getElementById('sub_status')
+var property_requirements = document.getElementById('property_requirements')
+var locationtext = document.getElementById('locationtext')
+var building = document.getElementById('building')
+var subtype = document.getElementById('subtype')
+var min_beds = document.getElementById('min_beds')
+var max_beds = document.getElementById('max_beds')
+var min_price = document.getElementById('min_price')
+var max_price = document.getElementById('max_price')
+var unit = document.getElementById('unit')
+var plot = document.getElementById('plot')
+var street = document.getElementById('street')
+var size = document.getElementById('size')
+
+
+$("#location_category").change(function(){
+    get_location();
+    });
+
+    function get_location(){
+        var comm = $("#location_category").val();
+        fetch('/property/' + comm).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">Community</option>';
+                for (let location of data.locations){
+
+               
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    
+                }
+                document.getElementById('community_category').innerHTML = optionHTML;
+            })
+        })
+        
+    }
+
+
+function view_note(x){
+  fetch('/all_notes/'+x).then(function(response){
+    response.json().then(function(data){
+      $('#display').hide();
+      $('#list_id').val(x)
+      $('#notes').show()
+      $('#open_lead').hide();
+      var jsonData = data.notes
+      $(function () {
+                $('#notetable').bootstrapTable('destroy')
+                $('#notetable').bootstrapTable({data: jsonData});
+                document.getElementById('comment').value = ''
+                });
+    })
+  })
+}
+
+function post_lead_note(){
+      var list_id = document.getElementById('list_id').value;
+      var com = document.getElementById('comment').value;
+      if (com == ""){
+        com = "-"
+      }
+      var status = document.getElementById('status_note').value;
+      var substatus = document.getElementById('sub_status_note').value;
+      if (substatus == "Successful"){
+        $('#closelead').append("<a class='btn btn-warning' href='/add_deal/sale/"+list_id+"'>Move to Deal Sale Page</a> <a class='btn btn-warning' href='/add_deal/rent/"+list_id+"'>Move to Deal Rent Page</a> <a class='btn btn-warning' href='/add_deal/developer/"+list_id+"'>Move to Deal Developer Sale Page</a>")
+      
+      }
+      else{
+      fetch('/post_lead_note/'+list_id+'/'+com+'/'+status+'/'+substatus).then(function(response){
+            response.json().then(function(){
+              view_note(list_id)
+              
+            })
+        })
+      }
+      };
+
+function close_lead(x){
+  if (x=='close'){
+  document.getElementById('status_note').value = 'Closed'
+  var sel = document.getElementById('sub_status_note')
+  sel.innerHTML = '';
+  let optionHTML = '';
+    optionHTML += '<option value="Successful">Successful</option>';
+    optionHTML += '<option value="Unsuccessful">Unsuccessful</option>';
+    sel.innerHTML = optionHTML;
+    $('#close_lead').hide();
+    $('#open_lead').show();
+  }
+  else {
+    document.getElementById('status_note').value = 'Closed'
+    var sel = document.getElementById('sub_status_note')
+    sel.innerHTML = '';
+    let optionHTML = '';
+    optionHTML += "<option value='Follow up'>Follow up</option>"
+    optionHTML += "<option value='Not yet contacted'>Not yet contacted</option>"
+    optionHTML += "<option value='Called no reply'>Called no reply</option>"
+    optionHTML += "<option value='Offer made'>Offer made</option>"
+    optionHTML += "<option value='Viewing arranged'>Viewing arranged</option>"
+    optionHTML += "<option value='Viewing Done'>Viewing Done</option>"
+    optionHTML += "<option value='Interested'>Interested</option>"
+    optionHTML += "<option value='Interested to meet'>Interested to meet</option>"
+    optionHTML += "<option value='Not interested'>Not interested</option>"
+    optionHTML += "<option value='Needs time'>Needs time</option>"
+    optionHTML += "<option value='Client not reachable'>Client not reachable</option>"
+    sel.innerHTML = optionHTML;
+    $('#close_lead').show();
+    $('#open_lead').hide();
+  }
+  }
+
+$(window).on('load',(function(){
+  $('#display').hide();
+  $('#notes').hide();      
+  var columns = {{columns|tojson}};
+  var data = {{data|tojson}};
+  data.reverse()
+      $(function() {
+        $('#table').bootstrapTable({                    
+          data: data,
+          columns: columns,
+        });
+
+        $('#filter_search').click(function () {
+        
+        var test = data
+        var b = $("#beds_category").val();
+        var t = $("#subtype_category").val();
+        var l = $("#location_category").val();
+        var c = $("#community_category").val();
+        var x = $("#propdate").val()
+        var y = $("#propdate2").val()
+        //var z = $("#searchbar").val()
+        var grepFunc;
+        var grepFunc2;
+        var grepFunc3;
+        var grepFunc4;
+        var grepFunc5;
+        var grepFunc6;
+        var grepFunc7;
+        var grepFunc8;
+        var grepFunc9;
+        var grepFunc10;
+        //var grepFunc11;
+        var grepFunc12;
+        var grepFunc13;
+        var grepFunc14;
+
+        grepFunc = function(item){
+              return item.min_beds == b;
+          }
+
+        grepFunc2 = function(item){
+              return item.subtype == t;
+          }
+
+        grepFunc3 = function(item){
+              return item.locationtext == l;
+          }
+        
+        grepFunc4 = function(item){
+              return item.building == c;
+          }
+        
+        grepFunc9 = function(item){
+              return item.created_date.slice(0,10) >= x;
+          }
+
+        grepFunc10 = function(item){
+              return item.created_date.slice(0,10) <= y;
+          }
+
+        //grepFunc11 = function(item){
+        //      return item.agent == z;
+        //  }
+        
+        if (b != "")
+        {test = $.grep(test, grepFunc)}
+
+        if (t != "")
+        {test = $.grep(test, grepFunc2)}
+
+        if (l != "")
+        {test = $.grep(test, grepFunc3)}
+
+        if (c != "")
+        {test = $.grep(test, grepFunc4)}
+
+        if (x != "")
+        {test = $.grep(test, grepFunc9)}
+
+        if (y != "")
+        {test = $.grep(test, grepFunc10)}
+
+        //if (z != "")
+        //{test = $.grep(test, grepFunc11)}
+
+          $('#table').bootstrapTable('load', test);
+        })
+        
+        $('#filter_reset').click(function () {
+        $('#table').bootstrapTable('load', data)
+        $("#beds_category").val("");
+        $("#subtype_category").val("");
+        $("#location_category").val("");
+        $("#community_category").val("");
+        $("#propdate").val("");
+        $("#propdate2").val("");
+        //$("#searchbar").val("");
+        })
+
+        $('#user_data').click(function () { //For My Contacts option if required later on 
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.assign_to == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+
+
+        //var grepFunc;
+        //           grepFunc = function (item) {
+        //              if ("{{current_user.team_members}}" == "QC") {
+        //                return item.status == 'Open';
+        //              }
+        //              return item.agent == '{{user}}' && item.status == 'Open';
+        //            };
+        //            $('#table').bootstrapTable('load', $.grep(data, grepFunc));   
+        $('#lead_status').change(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.sub_status == $('#lead_status').val() 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#user_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.agent == '{{user}}' && item.status == 'Open';
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#all_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#lead_pool').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.status == 'Closed'
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });  
+        $('#active').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.status == 'Open'
+                            };                           
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });  
+        $('#referral').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.created_by == '{{user}}'
+                            };                           
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                }); 
+        $('#flag').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.sub_status == 'Flag'
+                            };    
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#get_team').click(function () {
+                  var grepFunc;
+                          grepFunc = function (item) {
+                            if (("{{current_user.team_members}}").includes(item.agent))
+                            { return item }
+                            else if (("{{current_user.team_members}}").includes(item.created_by))
+                            { return item }
+                          };    
+                  $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });               
+      });
+    }));
+  </script>
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}</style>
+{% endblock %}

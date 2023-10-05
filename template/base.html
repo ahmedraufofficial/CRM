@@ -54,7 +54,9 @@
                 <div class="dropdown-content">
                   <a href="/leads">Agency Leads</a>
                   <a href="/add_lead_buyer">Add Buyer</a>
-                  <a href="/add_lead_developer">Add Developer</a>
+                  {% if current_user.is_admin == True %}
+                  <a href="/pre-leads">Pre-Leads</a>
+                  {% endif %}
 
                 </div>
               </div>

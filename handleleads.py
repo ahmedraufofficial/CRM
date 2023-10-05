@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message
+from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message, update_lead_note
 from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
@@ -40,7 +40,7 @@ def display_leads():
         return abort(404)
     data = []
     if current_user.team_members == "QC" and current_user.sale == True and current_user.is_admin == False:
-        for r in db.session.query(Leads).all():
+        for r in db.session.query(Leads).filter(Leads.street == '1'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             if new['sub_status'] != "Flag":
@@ -57,11 +57,12 @@ def display_leads():
         all_lead_users = db.session.query(User).filter_by(sale = True).all()
         return render_template('leads.html', data = data , columns = columns, user=current_user.username,all_lead_users=all_lead_users)
     if current_user.viewall == True and current_user.is_admin == True:
-        for r in db.session.query(Leads).all():
+        for r in db.session.query(Leads).filter(Leads.street == '1'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             if current_user.edit == True:
                 edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+                reassign_btn  = '<a href="/pre_assign_lead/'+str(new['refno'])+'"><button class="btn-secondary si2" style="color:white;"><i class="bi bi-arrow-down-left-square-fill"></i></button></a>'
             else:
                 edit_btn = ''
             if new['sub_status'] != "Flag":
@@ -75,10 +76,10 @@ def display_leads():
                 followup = ""
                 followupBG = ""
             #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+reassign_btn+"</div>"
             data.append(new)
     elif current_user.viewall == True and current_user.team_lead == True:
-        for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
+        for r in db.session.query(Leads).filter(and_(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)), Leads.street == '1'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             if current_user.edit == True:
@@ -99,7 +100,7 @@ def display_leads():
             new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
             data.append(new)
         for i in current_user.team_members.split(','):
-            for r in db.session.query(Leads).filter(or_(Leads.created_by == i,Leads.agent == i)):
+            for r in db.session.query(Leads).filter(and_(or_(Leads.created_by == i,Leads.agent == i)), Leads.street == '1'):
                 row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
                 new = row2dict(r)
                 if current_user.edit == True:
@@ -120,7 +121,7 @@ def display_leads():
                 new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
                 data.append(new)
     else:
-        for r in db.session.query(Leads).filter(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)):
+        for r in db.session.query(Leads).filter(and_(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)), Leads.street == '1'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
@@ -216,7 +217,7 @@ def add_lead_buyer():
         max_price = form.max_price.data
         unit = form.unit.data
         plot = form.plot.data
-        street = form.street.data
+        street = '0'
         size = form.size.data
         lead_type = form.lead_type.data
         created_date = datetime.now()+timedelta(hours=4)
@@ -247,7 +248,7 @@ def add_lead_buyer():
             update_note(current_user.username,property_requirements, "Added"+" UNI-L-"+str(newlead.id)+" lead for viewing")
         lead_email(current_user.email, 'UNI-L-' + str(newlead.id))
 
-        return redirect(url_for('handleleads.display_leads'))
+        return redirect(url_for('handleleads.display_pre_leads'))
     return render_template('add_lead_buyer.html', form=form, user = current_user.username, all_sale_users = all_sale_users)
 
 @handleleads.route('/add_lead_developer/', methods = ['GET','POST'])
@@ -497,5 +498,68 @@ def marketing_leads():
 #    wassup = etisy_message01()
 #    return (wassup)
 
-    
+# Pre-Assign Module
+
+@handleleads.route('/set_street_to_1') #Starting Pre-Assign Module 
+@login_required
+def reassign_street():
+    all_leads = db.session.query(Leads)
+    for i in all_leads:
+        i.street = "1"
+    db.session.commit()
+    return 'ok'
+
+@handleleads.route('/pre_assign_lead/<x>') #For Duplicates from the main leads page
+@login_required
+def reassign_btn_response(x):
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    edit = db.session.query(Leads).filter_by(refno=x).first()
+    edit.street = '0'
+    edit.status = 'Open'
+    edit.sub_status = 'Follow up'
+    db.session.commit()
+    return redirect(url_for('handleleads.display_leads'))
+
+
+@handleleads.route('/pre-leads',methods = ['GET','POST'])
+@login_required
+def display_pre_leads():   
+    if current_user.is_admin == False:
+        return abort(404)
+    data = []
+    if current_user.viewall == True and current_user.is_admin == True:
+        for r in db.session.query(Leads).filter(Leads.street == '0'):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            new['created_date'] = new['created_date'][:16]
+            new['lastupdated'] = new['lastupdated'][:16]
+            edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            if new['sub_status'] == "Follow up":
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
+            else:
+                followupBG = ""
+            reassign_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="pre_assign_lead('+"'"+new['refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>'
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+reassign_btn+"</div>"
+            data.append(new)
+    else:
+        return abort(404)
+    f = open('pre_leads_headers.json')
+    columns = json.load(f)
+    columns = columns["headers"]
+    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    return render_template('pre_leads.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
+
+@handleleads.route('/pre_assign_lead_execute/<x>/<y>') #For Duplicates from the main leads page
+@login_required
+def reassign_btn_execute(x, y):
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    edit = db.session.query(Leads).filter_by(refno=x).first()
+    edit.street = '1'
+    edit.agent = y
+    edit.lastupdated = datetime.now()+timedelta(hours=4)
+    db.session.commit()
+    update_lead_note('Admin',x, "Lead assigned to "+y, edit.status, edit.sub_status)
+    return jsonify(success=True)
 

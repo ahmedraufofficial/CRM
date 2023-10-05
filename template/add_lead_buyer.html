@@ -229,9 +229,11 @@ padding-top: 10px;
         <div class="col">
             {{ wtf.form_field(form.plot) }}
         </div>
+        <!--
         <div class="col">
             {{ wtf.form_field(form.street) }}
         </div>
+        -->
         <div class="col">
             {{ wtf.form_field(form.size) }}
         </div>
@@ -311,7 +313,7 @@ padding-top: 10px;
     function get_user(){
         fetch('/all_users').then(function(response){
             response.json().then(function(data){
-                let optionHTML = '';
+                let optionHTML = '<option value="'+''+'">'+''+'</option>';
                 
                 for (let users of data.all_users){
                     if ( users.sale == true ){

@@ -1,0 +1,78 @@
+{"headers":
+  [
+    {
+      "field": "state",
+      "checkbox": "true"
+    },
+    {
+     "field": "edit",
+     "title": "Options",
+     "sortable": "False"
+   },
+    {
+      "field": "refno",  
+      "title": "Ref No.", 
+      "sortable": "True"
+    },
+    {
+      "field": "contact_name",
+      "title": "Contact",
+      "sortable": "True"
+    },
+    {
+      "field": "contact_number",
+      "title": "Number",
+      "sortable": "True"
+    },
+    {
+      "field": "agent",
+      "title": "Agent",
+      "sortable": "True"
+    },
+    {
+      "field": "created_date",
+      "title": "Created Date",
+      "sortable": "True"
+    },
+    {
+      "field": "lastupdated",
+      "title": "Last Updated",
+      "sortable": "True"
+    },
+    {
+      "field": "lead_type",
+      "title": "Type",
+      "sortable": "True"
+    },
+    {
+      "field": "locationtext",
+      "title": "Location",
+      "sortable": "True"
+    },
+    {
+      "field": "building",
+      "title": "Community",
+      "sortable": "True"
+    },
+    {
+      "field": "min_beds",
+      "title": "Beds",
+      "sortable": "True"
+    },
+    {
+        "field": "source",
+        "title": "Source",
+        "sortable": "True"
+    },
+    {
+      "field": "status",
+      "title": "Status",
+      "sortable": "True"
+    },
+    {
+      "field": "sub_status",
+      "title": "Sub Status",
+      "sortable": "True"
+    }
+  ]
+}
