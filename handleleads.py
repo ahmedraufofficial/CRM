@@ -560,6 +560,15 @@ def reassign_btn_execute(x, y):
     edit.agent = y
     edit.lastupdated = datetime.now()+timedelta(hours=4)
     db.session.commit()
-    update_lead_note('Admin',x, "Lead assigned to "+y, edit.status, edit.sub_status)
+    message = "Lead assigned to "+y
+    if edit.locationtext != '':
+        message += ' in '+edit.locationtext
+    else:
+        pass
+    if edit.building != '':
+        message += ', '+edit.building
+    else:
+        pass
+    update_lead_note('Admin',x, message, edit.status, edit.sub_status)
     return jsonify(success=True)
 
