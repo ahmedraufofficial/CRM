@@ -350,6 +350,19 @@ def edit_lead(markettype,var):
         except:
             edit.locationtext = ""
         db.session.commit()
+
+        if (edit.sendSMS == "1"):
+            if (edit.agent!= "" or edit.agent!= None or edit.contact_name!= "" or edit.contact_name!= None):
+                get_agent = db.session.query(User).filter_by(username = edit.agent).first()
+                try:
+                    etisy_message(edit.agent,edit.contact_name,get_agent.number,edit.contact_number, edit.refno, edit.locationtext, edit.building, edit.lead_type)
+                except:
+                    pass
+            else:
+                pass
+        else:
+            pass
+
         logs(current_user.username,edit.refno,'Edited')
         return redirect(url_for('handleleads.display_leads'))
     if edit.propertyamenities  != None:
@@ -560,6 +573,14 @@ def reassign_btn_execute(x, y):
     edit.agent = y
     edit.lastupdated = datetime.now()+timedelta(hours=4)
     db.session.commit()
+    if (edit.contact_name!= "" or edit.contact_name!= None):
+        get_agent = db.session.query(User).filter_by(username = edit.agent).first()
+        try:
+            etisy_message(edit.agent,edit.contact_name,get_agent.number,edit.contact_number, edit.refno, edit.locationtext, edit.building, edit.lead_type)
+        except:
+            pass
+    else:
+        pass
     message = "Lead assigned to "+y
     if edit.locationtext != '':
         message += ' in '+edit.locationtext
