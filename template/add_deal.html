@@ -1143,18 +1143,23 @@
         console.log("New Deal")
     }
 
-    const down_pay_percentage = document.getElementById('percentage');
-    const inputHandler04 = function(e) {
-    var down_pay_percentage01 = document.getElementById('percentage').value
-    let down_pay_percentage01_float = parseFloat(down_pay_percentage01)
-    if (e.target.id == 'percentage')
+    p1 = {{purpose|tojson}}
+    if (p1 != 'rent')
     {
-        let deal_price01 = document.getElementById('deal_price').value.replaceAll(',','')
-        let float_price = parseFloat(deal_price01)
-        document.getElementById('down_payment').value = (((down_pay_percentage01_float/100) * float_price).toLocaleString(undefined, {minimumFractionDigits: 2}))
+        const down_pay_percentage = document.getElementById('percentage');
+        const inputHandler04 = function(e) {
+        var down_pay_percentage01 = document.getElementById('percentage').value
+        let down_pay_percentage01_float = parseFloat(down_pay_percentage01)
+        if (e.target.id == 'percentage')
+        {
+            let deal_price01 = document.getElementById('deal_price').value.replaceAll(',','')
+            let float_price = parseFloat(deal_price01)
+            document.getElementById('down_payment').value = (((down_pay_percentage01_float/100) * float_price).toLocaleString(undefined, {minimumFractionDigits: 2}))
+        }
+        }
+        down_pay_percentage.addEventListener('input', inputHandler04);
     }
-    }
-    down_pay_percentage.addEventListener('input', inputHandler04);
+    
 
     const el = document.getElementById('transaction_type');
     el.addEventListener('input', vengence)
