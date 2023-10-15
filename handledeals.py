@@ -26,19 +26,51 @@ db = SQLAlchemy()
 
 handledeals = Blueprint('handledeals', __name__, template_folder='templates')
 
-@handledeals.route('/update_listing/<ref>/<con>/<con_name>/<con_number>/<con_email>/<transaction_type>',methods = ['GET','POST'])
+@handledeals.route('/update_listing/<buyer_deets>/<property_deets>',methods = ['GET','POST'])
 @login_required
-def update_listing(ref,con,con_name,con_number,con_email,transaction_type):
-    if ref != None:    
-        property = db.session.query(Properties).filter_by(refno=ref).first()
-        if transaction_type == "Leased":
-            property.tenant = con+" | "+con_name+" | "+str(con_number)
-        else:
-            property.owner = con
-            property.owner_name = con_name
-            property.owner_contact = con_number
-            property.owner_email = con_email
+def update_listing(buyer_deets, property_deets):
+    fa = db.session.query(Properties).filter(and_(Properties.locationtext == property_deets[4], Properties.building == property_deets[5], Properties.unit == property_deets[1])).first()
+    if not (fa):
+        status = 'Pending'
+        unit = property_deets[1]
+        subtype = property_deets[2]
+        city = 'Abu Dhabi'
+        locationtext = property_deets[4]
+        building = property_deets[5]
+        bedrooms = property_deets[3]
+        bathrooms = 0
+        price = str(property_deets[0].replace(',',''))
+        assign_to = 'salwa.a'
+        owner = buyer_deets[0]
+        owner_name = buyer_deets[1]
+        owner_email = buyer_deets[3]
+        owner_contact = buyer_deets[2]
+        source = 'Agent'
+        created_by = 'Admin-Deals'
+        type = 'Sale'
+        lastupdated = datetime.now()+timedelta(hours=4)
+        created_at = datetime.now()+timedelta(hours=4)
+        newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,price=price,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,source=source,created_by=created_by,owner=owner,type=type,bathrooms=bathrooms)
+        db.session.add(newproperty)
         db.session.commit()
+        db.session.refresh(newproperty)
+        if (type == "Sale"):
+            newproperty.refno = 'UNI-S-'+str(newproperty.id)
+        else:
+            newproperty.refno = 'UNI-R-'+str(newproperty.id)
+        db.session.commit() 
+        notes('UNI-S-' + str(newproperty.id))   
+        update_note('Admin','UNI-S-' + str(newproperty.id),'Property generated from closed deals and the owner is an '+property_deets[6])
+    elif fa.owner_name != buyer_deets[1]:
+        update_note('Admin',fa.refno,'New owner generated from closed deals and the owner is an '+property_deets[6]+'. Previous owner: '+fa.owner_name)
+        fa.owner = buyer_deets[0]
+        fa.owner_name = buyer_deets[1]
+        fa.owner_contact = buyer_deets[2]
+        fa.owner_email = buyer_deets[3]
+        fa.lastupdated = datetime.now()+timedelta(hours=4)
+        db.session.commit()
+    else:
+        pass
     return redirect(url_for('handledeals.display_deals'))
 
 def update_lead(lead_ref,status,sub_status,user):
@@ -584,6 +616,10 @@ def add_closed_deal_rent(variable):
         contact_buyer_number = form.contact_buyer_number.data
         contact_buyer_email = form.contact_buyer_email.data
         agent_2 = form.agent_2.data
+        post_status = form.post_status.data
+        kickback_status = form.kickback_status.data
+        kickback_percentage = form.kickback_percentage.data
+        kickback_amount = form.kickback_amount.data
 
         if form.sm_approval.data != None:
             sm_approval = form.sm_approval.data
@@ -604,7 +640,7 @@ def add_closed_deal_rent(variable):
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage)    
         #listing
         elif current_user.listing == True and current_user.sale == False:
             contact_seller = form.contact_seller.data
@@ -774,6 +810,10 @@ def add_closed_deal_sale(variable):
         contact_buyer_number = form.contact_buyer_number.data
         contact_buyer_email = form.contact_buyer_email.data
         agent_2 = form.agent_2.data
+        post_status = form.post_status.data
+        kickback_status = form.kickback_status.data
+        kickback_percentage = form.kickback_percentage.data
+        kickback_amount = form.kickback_amount.data
 
         if form.sm_approval.data != None:
             sm_approval = form.sm_approval.data
@@ -796,7 +836,7 @@ def add_closed_deal_sale(variable):
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage)    
         #listing
         elif current_user.listing == True and current_user.sale == False:
             contact_seller = form.contact_seller.data
@@ -974,6 +1014,10 @@ def add_closed_deal_developer(variable):
         contact_buyer_number = form.contact_buyer_number.data
         contact_buyer_email = form.contact_buyer_email.data
         #agent_2 = form.agent_2.data
+        post_status = form.post_status.data
+        kickback_status = form.kickback_status.data
+        kickback_percentage = form.kickback_percentage.data
+        kickback_amount = form.kickback_amount.data
 
         if form.sm_approval.data != None:
             sm_approval = form.sm_approval.data
@@ -994,7 +1038,7 @@ def add_closed_deal_developer(variable):
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage)    
         #listing
         #elif current_user.listing == True and current_user.sale == False:
             #contact_seller = form.contact_seller.data
@@ -1129,20 +1173,6 @@ def edit_deal(variable):
     }
     mydict02 = json.dumps(mydict01)
     purpose = edit.type.lower()
-    #print(purpose)
-    #print(edit.tenancy_start_date)
-    #if purpose == 'rent':
-    #    try:
-    #        edit.tenancy_start_date = datetime.strptime(edit.tenancy_start_date, '%Y-%m-%d')
-    #    except:
-    #        edit.tenancy_start_date = None
-    #    try:
-    #        edit.tenancy_renewal_date = datetime.strptime(edit.tenancy_renewal_date, '%Y-%m-%d')
-    #    except:
-    #        edit.tenancy_renewal_date = None
-    #else:
-    #    pass
-    #print(edit.tenancy_start_date)
     if edit.project == None:
         type01 = ''
     elif edit.project == '':
@@ -1272,10 +1302,11 @@ def edit_deal(variable):
             edit.txn_no = None
             edit.txn_amount = None
             edit.txn_date = None
-        if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.project == '':
-            print("Lesssgooo")
-            update_listing(edit.listing_ref, edit.contact_buyer, edit.contact_buyer_name, edit.contact_buyer_number, edit.contact_buyer_email, edit.transaction_type)
-            update_lead(edit.lead_ref,edit.status,edit.sub_status,current_user.username) 
+        if edit.sm_approval == "Approve" and edit.lm_approval == "Approve" and edit.admin_approval == "Approve" and edit.type == "Sale":
+            buyer_deets = [edit.contact_buyer, edit.contact_buyer_name, edit.contact_buyer_number, edit.contact_buyer_email]
+            property_deets = [edit.deal_price, edit.unit_no, edit.unit_category, edit.unit_beds, edit.unit_location, edit.unit_sub_location, edit.post_status]
+            update_listing(buyer_deets, property_deets)
+            #update_lead(edit.lead_ref,edit.status,edit.sub_status,current_user.username) 
         else:
             pass
         db.session.commit()

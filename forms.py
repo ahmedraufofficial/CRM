@@ -257,6 +257,10 @@ class AddDealForm(FlaskForm):
     txn_amount = StringField('Amount')
     other_documents = MultipleFileField('Other Documents')
     clear_history = RadioField('Clear History',[validators.DataRequired()], choices=[(0,'No'),(1,'Yes')], default=0)
+    post_status = SelectField(u'Post Status *', [validators.DataRequired()], choices = [('', ''), ('End-User', 'End-User'), ('Investor', 'Investor')])
+    kickback_percentage = StringField('Kickback (%)')
+    kickback_amount = StringField('Kickback Amount')
+    kickback_status = SelectField(u'Kickback Status',choices = [('', ''), ('Yes', 'Yes'), ('No', 'No')])
 
 
 class AddFile(FlaskForm):

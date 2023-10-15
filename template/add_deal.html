@@ -37,7 +37,12 @@
     <dl>
         <div class="row">
             <div class="col column">
+                {% if purpose == "rent" %}
+                <h4>TENANT CONTACT DETAILS</h4>
+                {% endif %} 
+                {% if purpose == "sale" %}
                 <h4>BUYER CONTACT DETAILS</h4>
+                {% endif %} 
                 <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
                 {{ wtf.form_field(form.contact_buyer) }}
                 {{ wtf.form_field(form.contact_buyer_name) }}
@@ -107,11 +112,21 @@
                         {{ form.actual_deal_date }}
                     </div>
                 </div>
-                
+
+                {{ wtf.form_field(form.kickback_status) }}
+                <div id="box3">
+                    {{ wtf.form_field(form.kickback_percentage) }}
+                    {{ wtf.form_field(form.kickback_amount) }}
+                </div>
             </div>
             <div class="col column">
                 {% if current_user.listing == True and type != "developer" %}
+                {% if purpose == "rent" %}
+                <h4>OWNER/LESSOR CONTACT DETAILS</h4>
+                {% endif %} 
+                {% if purpose == "sale" %}
                 <h4>SELLER CONTACT DETAILS</h4>
+                {% endif %} 
                 <a data-toggle="modal" href="#myContactModal2" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
                 {{ wtf.form_field(form.contact_seller) }}
                 {{ wtf.form_field(form.contact_seller_name) }}
@@ -137,6 +152,7 @@
                 {{ wtf.form_field(form.unit_type) }}
                 {{ wtf.form_field(form.agent_2) }}
                 {{ wtf.form_field(form.commission_agent_2) }}
+                {{ wtf.form_field(form.post_status) }} 
 
                 
                 
@@ -199,7 +215,12 @@
                 {% endif %}
             </div>
             <div class="col column">
-                <h4>Buyer Documents</h4>
+                {% if purpose == "rent" %}
+                <h4>TENANT DOCUMENTS</h4>
+                {% endif %} 
+                {% if purpose == "sale" %}
+                <h4>BUYER DOCUMENTS</h4>
+                {% endif %} 
                 {{ wtf.form_field(form.emi_id) }} 
                 <div id="doc01" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
                 {{ wtf.form_field(form.passport) }} 
@@ -209,7 +230,12 @@
                 {{ wtf.form_field(form.developer_doc) }}
                 {% endif %}
                  -->
-                <h4 style="margin-top: 7%;">Seller Documents</h4>
+                {% if purpose == "rent" %}
+                <h4>OWNER/LESSOR DOCUMENTS</h4>
+                {% endif %} 
+                {% if purpose == "sale" %}
+                <h4>SELLER DOCUMENTS</h4>
+                {% endif %} 
                 {{ wtf.form_field(form.emi_id_seller) }} 
                 <div id="doc03" style="padding-left: 25px; margin: 3px; margin-bottom: 7px;"></div>
                 {{ wtf.form_field(form.passport_seller) }} 
@@ -525,6 +551,7 @@
         fetch('/community/' + location).then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';
+                building = building.replace("&#39;","'")
                 for (let location of data.locations){
                     if (location[0] == building)
                     {
@@ -1154,6 +1181,19 @@
         }
     }
     window.onload = vengence1();
+
+    const el4 = document.getElementById('kickback_status');
+    el4.addEventListener('input', vengence2)
+    function vengence2() {
+        const el5 = document.getElementById('kickback_status').value;
+        const box3 = document.getElementById('box3');
+        if (el5 == 'Yes') {
+            box3.style.display = 'block';
+        } else {
+            box3.style.display = 'none';
+        }
+    }
+    window.onload = vengence2();
     
     console.log("Wassup")
 

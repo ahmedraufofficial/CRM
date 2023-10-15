@@ -227,6 +227,10 @@ class Deals(db.Model):
     txn_no = db.Column(db.String(500))
     txn_date = db.Column(db.String(500))
     txn_amount = db.Column(db.String(500))
+    post_status = db.Column(db.String(100))
+    kickback_percentage = db.Column(db.String(100))
+    kickback_amount = db.Column(db.String(100))
+    kickback_status = db.Column(db.String(100))
 
 
 
