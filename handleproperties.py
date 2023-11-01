@@ -848,7 +848,7 @@ def cleaning_photos_hardcore(refno):
 def pf_uhp():
     l = db.session.query(Properties)
     for m in l:
-        if m.property_finder!=None:
+        if m.property_finder!=None and m.status == "Available":
             m.portal = 0
         else:
             pass
@@ -904,7 +904,7 @@ def uploadFiles():
                     locationtext = row[4]
                     building = row[5]
                     bedrooms = row[6]
-                    #size = row[7]
+                    size = row[7]
                     price = row[8]
                     description = row[9]
                     assign_to = row[10]
@@ -928,7 +928,7 @@ def uploadFiles():
                     type = row[28]
                     lastupdated = datetime.now()+timedelta(hours=4)
                     created_at = datetime.now()+timedelta(hours=4)
-                    newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,price=price,description=description,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,plot=plot,bathrooms=bathrooms,street=street,source=source,furnished=furnished,title=title,commission=commission,deposit=deposit,created_by=created_by,completion_status=completion_status,parking=parking,owner=owner,type=type)
+                    newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,price=price,description=description,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,plot=plot,bathrooms=bathrooms,street=street,source=source,furnished=furnished,title=title,commission=commission,deposit=deposit,created_by=created_by,completion_status=completion_status,parking=parking,owner=owner,type=type, size=size)
                     db.session.add(newproperty)
                     db.session.commit()
                     print("PROPERTY ADDED")
@@ -949,20 +949,20 @@ def uploadFiles():
 #Property Finder API Integration
 
 def propertyfinder01(): #generating token
-    url = "https://api-v2.mycrm.com/token"
-    payload = json.dumps({
-        "grant_type": "password",
-        "domain": "",
-        "username": "",
-        "password": "",
-        "scope": "offline"
-        })
-    headers = {
-        'Content-Type': 'application/json'
-        }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    x = json.loads(response.text)
-    return (x["access_token"])
+    #url = "https://api-v2.mycrm.com/token"
+    #payload = json.dumps({
+    #    "grant_type": "",
+    #    "domain": "",
+    #    "username": "",
+    #    "password": "",
+    #    "scope": ""
+    #    })
+    #headers = {
+    #    'Content-Type': 'application/json'
+    #    }
+    #response = requests.request("POST", url, headers=headers, data=payload)
+    #x = json.loads(response.text)
+    return ('') #only through NANO in terminal
 
 
 def locationid(community, location, access_token): #generating location ID
@@ -1030,6 +1030,86 @@ def locationid(community, location, access_token): #generating location ID
         pass
     if community == 'Bloom Gardens':
         location = 'Al Salam Street'
+    else:
+        pass
+    if community == 'Faya At Bloom Gardens':
+        location = 'Al Salam Street'
+    else:
+        pass
+    if community == 'Al Rahba 1':
+        community = 'Al Rahba'
+        location = "Al Raha Beach"
+    else:
+        pass
+    if community == 'Al Rahba 2':
+        community = 'Al Rahba'
+        location = "Al Raha Beach"
+    else:
+        pass
+    if community == 'Al Zeina - Residential Tower A':
+        community = 'Building A'
+        location = "Al Raha Beach"
+    else:
+        pass
+    if community == 'Pixel Reem Island':
+        community = 'Pixel'
+        location = "Al Reem Island"
+    else:
+        pass
+    if community == 'Louvre Residence':
+        community = 'Louvre Abu Dhabi Residences'
+    else:
+        pass
+    if location == 'Madinat Al Riyad':
+        community = ''
+    else:
+        pass
+    if community == 'Soho Square Residences':
+        community = 'Soho Square'
+    else:
+        pass
+    if community[:15] == 'Hydra Avenue C5':
+        community = 'Hydra Avenue Towers'
+    else:
+        pass
+    if community == 'Marina Heights 1':
+        community = 'Marina Heights'
+    else:
+        pass
+    if community == 'Al Ghadeer Community':
+        community = 'Al Ghadeer'
+    else:
+        pass
+    if community == 'Burj Mohammed Bin Rashid At WTC':
+        location = 'Corniche Road'
+    else:
+        pass
+    if community == 'Khalifa City A':
+        location = 'Khalifa City'
+    else:
+        pass
+    if community == 'Fay Alreeman 2':
+        community = 'Fay Al Reeman II'
+    else:
+        pass
+    if community[:11] == 'Sigma Tower':
+        community = 'Sigma Towers'
+    else:
+        pass
+    if community[:4] == 'Zone' and location == 'Mohamed Bin Zayed City':
+        community = 'Mohamed Bin Zayed Centre'
+    else:
+        pass
+    if community == 'Nudra Villas':
+        community = 'Nudra'
+    else:
+        pass
+    if community == 'St Regis':
+        community = 'St. Regis'
+    else:
+        pass
+    if community == 'Al Gurm Resort':
+        location = 'Al Gurm'
     else:
         pass
     community = community.replace(" ","_")
@@ -1112,7 +1192,7 @@ def propertyfinder03(refno):
     payload = json.dumps({
         "property": {
             "draft": False,
-            "user": 77167,
+            "user": 161161,
             "bathrooms": w["bathrooms"], 
             "bedrooms": w["bedrooms"],
             "project_status": w['completion_status'],
@@ -1303,9 +1383,9 @@ def testing_loc():
     h = open('sublocation.json')
     h1 = json.load(h)
     for i in f2[0]:
-        if f2[0][i] == 'Salam Street':
-            for j in h1[i[1:]]:
-                if h1[i[1:]][j] == 'Bloom Gardens':
+        if f2[0][i] == 'Al Gurm West':
+           for j in h1[i[1:]]:
+                if h1[i[1:]][j] == 'Al Gurm Resort':
                     print(h1[i[1:]][j])
                     x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
                     print(x)
@@ -1436,21 +1516,21 @@ def bigboytesting():
     lesssgooo = db.session.query(Properties)
     a=[]
     for i in lesssgooo:
-        a.append({'location':i.locationtext, 'Community':i.building, 'Unit':i.unit, 'Refno': i.refno})
+        a.append({'location':i.locationtext, 'Community':i.building, 'Unit':i.unit, 'Refno': i.refno, 'Type':i.type})
     b = a
     x=0
     for i in range(len(a)):
         dub = 0
         w=[]
         for j in range(len(b)):
-            if a[i]['location'] == b[j]['location'] and a[i]['Community'] == b[j]['Community'] and a[i]['Unit'] == b[j]['Unit'] and b[j]['location'] != 'locationtext':
+            if a[i]['location'] == b[j]['location'] and a[i]['Community'] == b[j]['Community'] and a[i]['Unit'] == b[j]['Unit'] and b[j]['location'] != 'locationtext' and a[i]['Type'] == b[j]['Type']:
                 dub+=1
                 if dub > 1:
                     w.append({b[j]['Refno']})
                     b[j]={'location':'locationtext', 'Community':'building', 'Unit':'unit'}
                     x+=1
         if dub > 1:
-            w.append({a[i]['Refno']})
+            w.append({a[i]['Refno'], a[i]['location'], a[i]['Community']})
             print(w)
     print(x)
     return ('ok')
