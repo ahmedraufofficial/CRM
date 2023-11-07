@@ -10,6 +10,7 @@ import os
 import csv
 from sqlalchemy import or_
 from datetime import datetime, timedelta
+from flask_cors import cross_origin
 
 
 a = os.getcwd()
@@ -59,6 +60,7 @@ def display_contacts():
     return render_template('contacts.html', data = data , columns = columns)
 
 @handlecontacts.route('/fetch_contacts',methods = ['GET','POST'])
+@cross_origin(origins=["https://www.crm.uhpae.com/contacts"])
 @login_required
 def fetch_contacts():
     data1={}
