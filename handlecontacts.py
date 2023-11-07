@@ -1,5 +1,5 @@
 from operator import ge
-from flask import Blueprint, render_template, request, redirect, url_for,jsonify,abort
+from flask import Blueprint, render_template, request, redirect, url_for,jsonify,abort, make_response
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from models import Contacts
@@ -74,7 +74,9 @@ def fetch_contacts():
         x+=1
     data2=data[::-1]
     data1 = {"rows":data2, "total":x, 'Access-Control-Allow-Origin': '*'}
-    return(data1)
+    response = make_response(data1)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return(response)
 
 @handlecontacts.route('/add_contact', methods = ['GET','POST'])
 @login_required
