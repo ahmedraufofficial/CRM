@@ -45,12 +45,12 @@ def display_contacts():
     if current_user.contact == False:
         return abort(404)
     data = []
-    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True, current_user.listing == True)):
-        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-        new = row2dict(r)
-        for k in []: new.pop(k)
-        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contact/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
-        data.append(new)
+    #for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True, current_user.listing == True)):
+    #    row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+    #    new = row2dict(r)
+    #    for k in []: new.pop(k)
+    #    new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contact/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
+    #    data.append(new)
     #with open('contacts.json', 'w') as fout:
     #    json.dump(data , fout)
     f = open('contacts_headers.json')
@@ -58,6 +58,23 @@ def display_contacts():
     columns = columns["headers"]
     return render_template('contacts.html', data = data , columns = columns)
 
+@handlecontacts.route('/fetch_contacts',methods = ['GET','POST'])
+@login_required
+def fetch_contacts():
+    data1={}
+    data = []
+    x=0
+    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True, current_user.listing == True)):
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        for k in ['alternate_number','comment','contact_type','created_by','date_of_birth','language','gender','nationality','religion','role','source','title']: new.pop(k)
+        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contact/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
+        new["id"] = x
+        data.append(new)
+        x+=1
+    data2=data[::-1]
+    data1 = {"rows":data2, "total":x}
+    return(data1)
 
 @handlecontacts.route('/add_contact', methods = ['GET','POST'])
 @login_required
