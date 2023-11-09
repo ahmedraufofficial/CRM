@@ -10,7 +10,12 @@ import os
 import csv
 from sqlalchemy import or_
 from datetime import datetime, timedelta
+from flask_httpauth import HTTPTokenAuth
 
+auth = HTTPTokenAuth(scheme='Bearer')
+tokens = {
+    ''
+}
 
 a = os.getcwd()
 UPLOAD_FOLDER = os.path.join(a+'/static', 'uploads')
@@ -38,7 +43,11 @@ def new_value():
     write_json(new_data)
 
 
-        
+@auth.verify_token
+def verify_token(token):
+    if token in tokens:
+        return token
+    
 @handlecontacts.route('/contacts',methods = ['GET','POST'])
 @login_required
 def display_contacts():
@@ -58,8 +67,13 @@ def display_contacts():
     columns = columns["headers"]
     return render_template('contacts.html', data = data , columns = columns)
 
-@handlecontacts.route('/fetch_contacts',methods = ['GET','POST'])
+@handlecontacts.route('/fetch_token',methods = ['GET','POST'])
 @login_required
+def fetch_token():
+    return(jsonify(''))
+
+@handlecontacts.route('/fetch_contacts',methods = ['GET','POST'])
+@auth.login_required
 def fetch_contacts():
     data1={}
     data = []
@@ -73,7 +87,7 @@ def fetch_contacts():
         data.append(new)
         x+=1
     data2=data[::-1]
-    data1 = {"rows":data2, "total":x}
+    data1 = {"total":x, "totalNotFiltered":x, "rows":data2}
     return(data1)
 
 @handlecontacts.route('/add_contact', methods = ['GET','POST'])

@@ -85,7 +85,7 @@
         data-height="500"
         data-page-size="25"
         data-side-pagnition="server"
-        data-url="https://crm.uhpae.com/fetch_contacts"
+        data-ajax="ajaxRequest"
         data-page-list="[25, 50, 100, 200, 1000, All]">
       </table>
     </div>
@@ -123,6 +123,31 @@
 </script>
 
 <script type='text/javascript'>
+
+function ajaxRequest(params) {
+    fetch('/fetch_token').then(function(response){
+      response.json().then(function(data){
+        token = data
+        var headers = {
+          'Authorization': 'Bearer '+token
+        };
+        var url = 'https://www.crm.uhpae.com/fetch_contacts';
+        $.ajax({
+          url: url,
+          method: 'GET',
+          headers: headers,
+          data: params.data,
+          success: function (res) {
+            params.success(res);
+          },
+          error: function (error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+      })
+    })
+  }
+
     $(window).on('load',(function(){
       
     var columns = {{columns|tojson}};
