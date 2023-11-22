@@ -1743,6 +1743,7 @@ def push_to_prop_now(refno,bedrooms,price,size,subtype,completion_status):
         newproperty.refno = 'UNI-S-'+str(newproperty.id)
         b = newproperty.refno
         db.session.commit() 
+        notes('UNI-S-'+str(newproperty.id))
     c = update_listing_magic(refno, b)
     return jsonify('ok')
 
