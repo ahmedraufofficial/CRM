@@ -1112,6 +1112,14 @@ def locationid(community, location, access_token): #generating location ID
         location = 'Al Gurm'
     else:
         pass
+    if community == 'Bloom Living':
+        location = 'Khalifa City'
+    else:
+        pass
+    if community == 'Aldhay at Bloom Gardens':
+        location = 'Al Salam Street'
+    else:
+        pass
     community = community.replace(" ","_")
     community = community.replace("'","")
     location = location
@@ -1296,7 +1304,7 @@ def image_token(data, access_token):
             imagetoken.append({"image":{"token":y, "order":dub}})
             dub+=1
         except:
-            print("Not Happening")   
+            print("Not Happening")
     return(imagetoken)
 
 def amenities(amen):
@@ -1383,9 +1391,9 @@ def testing_loc():
     h = open('sublocation.json')
     h1 = json.load(h)
     for i in f2[0]:
-        if f2[0][i] == 'Al Gurm West':
+        if f2[0][i] == 'Salam Street':
            for j in h1[i[1:]]:
-                if h1[i[1:]][j] == 'Al Gurm Resort':
+                if h1[i[1:]][j] == 'Aldhay at Bloom Gardens':
                     print(h1[i[1:]][j])
                     x=locationid(community=h1[i[1:]][j], location=f2[0][i], access_token=access_token)
                     print(x)
@@ -1602,7 +1610,11 @@ def display_listings():
             #for k in ['reason', 'updated_date', 'designation']: new.pop(k)
             edit_btn = '<a href="/edit_listingdata/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
             delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
-            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            if new['status'] == 'Pending':
+                reassign007 = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#PropModal"  onclick="list_to_prop('+"'"+new['refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>'
+            else: 
+                reassign007 = ''
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+reassign007+"</div>"
             data.append(new)
     f = open('listingdata_headers.json')
     columns = json.load(f)
@@ -1679,3 +1691,82 @@ def delete_listing(variable):
     db.session.delete(delete)
     db.session.commit()
     return redirect(url_for('handleproperties.display_listings'))
+
+#Listing-Properties Integration
+
+@handleproperties.route('/push_to_prop_now/<refno>/<bedrooms>/<price>/<size>/<subtype>/<completion_status>', methods = ['GET','POST'])
+@login_required
+def push_to_prop_now(refno,bedrooms,price,size,subtype,completion_status):
+    a = fetch_listing_data(refno)
+    num_check = a[1].replace(" ", "").replace("+","")[3:]
+    i = db.session.query(Contacts).filter(Contacts.number.endswith(num_check)).first()
+    if (i):
+        owner = i.refno
+        a[0] = i.first_name + i.last_name
+        a[2] = i.email
+        a[1] = a[1].replace(" ", "").replace("+","")
+    else: 
+        first_name = a[0].split(" ")[0]
+        if len(a[0].split(" ")) > 1: 
+            last_name = ' '.join(a[0].split(" ")[1:])
+        else: 
+            last_name = ''
+        number = a[1]
+        email = a[2]
+        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to=current_user.username, role='Landlord')
+        db.session.add(newcontact)
+        db.session.commit()
+        db.session.refresh(newcontact)
+        newcontact.refno = 'UNI-O-'+str(newcontact.id)
+        owner = 'UNI-O-'+str(newcontact.id)
+        db.session.commit()
+    fa = db.session.query(Properties).filter(and_(Properties.locationtext == a[4], Properties.building == a[5], Properties.unit == a[3])).first()
+    if not (fa):
+        status = 'Available'
+        unit = a[3]
+        city = 'Abu Dhabi'
+        locationtext = a[4]
+        building = a[5]
+        assign_to = current_user.username
+        owner_name = a[0]
+        owner_email = a[2] 
+        owner_contact = a[1]
+        source = 'Cold Call'
+        created_by = current_user.username
+        type = 'Sale'
+        lastupdated = datetime.now()+timedelta(hours=4)
+        created_at = datetime.now()+timedelta(hours=4)
+        newproperty = Properties(created_at=created_at,lastupdated=lastupdated,status=status,unit=unit,subtype=subtype,city=city,locationtext=locationtext,building=building,bedrooms=bedrooms,price=price,assign_to=assign_to,owner_name=owner_name,owner_email=owner_email,owner_contact=owner_contact,source=source,created_by=created_by,completion_status=completion_status,owner=owner,type=type, size=size)
+        db.session.add(newproperty)
+        db.session.commit()
+        db.session.refresh(newproperty)
+        newproperty.refno = 'UNI-S-'+str(newproperty.id)
+        b = newproperty.refno
+        db.session.commit() 
+    c = update_listing_magic(refno, b)
+    return jsonify('ok')
+
+def fetch_listing_data(refno):
+    with db.session.begin(subtransactions=True):
+        current_listing = db.session.query(Listingdata).filter_by(refno=refno).first()
+        if current_listing is not None:
+            owner_name = current_listing.owner_name
+            owner_contact = current_listing.owner_no
+            owner_email = current_listing.owner_email
+            unit_no = current_listing.unit_no
+            location = current_listing.location
+            community = current_listing.sublocation
+            a = [owner_name, owner_contact, owner_email, unit_no, location, community]
+            return (a)
+        else:
+            return None
+
+def update_listing_magic(refno_listing, refno_prop):
+    current_listing = db.session.query(Listingdata).filter_by(refno=refno_listing).first()
+    if current_listing is not None:
+        current_listing.status = 'Available'
+        current_listing.remarks = 'Property is available with Ref-No.'+refno_prop
+        db.session.commit()
+        return jsonify('ok')
+    else:
+        return jsonify('Listing data not found for refno: {}'.format(refno_listing)), 404

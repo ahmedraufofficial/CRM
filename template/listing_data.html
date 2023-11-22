@@ -38,6 +38,7 @@
 </style>
 <title>Lighthouse - Listing Data</title>
 <section>
+
     <!--Delete Modal-->
     <div class="modal" id="deleteModal01" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
@@ -61,6 +62,80 @@
         </div>
     </div>
     <!--Modal Ends-->
+
+
+    <!--Listing to Properties Modal-->
+    <div class="modal" id="PropModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title oswald">New Property</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="align-items: center; margin-left: auto; margin-right: auto;">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <label for="bedrooms" style="font-size: small;">Bedrooms*</label><br>
+                  <select name="bedrooms" id="bedrooms" class="filter_add" style="width: 150px;">
+                    <option selected="selected" value="None"></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="subtype" style="font-size: small;">Type*</label><br>
+                  <select name="subtype" id="subtype" class="filter_add" style="width: 150px;">
+                    <option selected="selected" value="None"></option>
+                    <option value="Villa">Villa</option>
+                    <option value="Apartment">Apartment</option>
+                    <option value="Townhouse">Townhouse</option>
+                    <option value="Land">Land</option>
+                    <option value="Office">Office</option>
+                    <option value="Penthouse">Penthouse</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="completion_status" style="font-size: small;">Status*</label><br>
+                  <select name="completion_status" id="completion_status" class="filter_add" style="width: 150px;">
+                    <option selected="selected" value="None"></option>
+                    <option value="completed">Ready Primary</option>
+                    <option value="off_plan_primary">Off-Plan Primary</option>
+                    <option value="completed">Ready Secondary</option>
+                    <option value="off_plan">Off-Plan Secondary</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row" style="margin-top: 15px;">
+                <div class="col">
+                  <label for="price" style="font-size: small;">Price*</label><br>
+                  <input type="text" id="price" name="price" style="width: 150px;">
+                </div>
+                <div class="col">
+                  <label for="size" style="font-size: small;">Size*</label><br>
+                  <input type="text" id="size" name="size" style="width: 150px;">
+                </div>
+                <div class="col">
+                  <h6 id="reassign_prop"></h6>
+                  <button type="button" class="btn-secondary si2" style="width: 100% !important;" onclick="push_prop()"><i class="bi bi-forward-fill"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!--Modal Ends-->
+
+  
   <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
     <br>
     <div class="container parrot" style="text-align: center; margin: 5px;">
@@ -303,13 +378,26 @@
     function delete_(x){
         document.getElementById("delete").href="/delete_listing/"+x;
     };
+    function list_to_prop(x){
+      document.getElementById("reassign_prop").value=x;
+    };
+    function push_prop(){
+      const bedrooms = document.getElementById("bedrooms").value
+      const price = document.getElementById("price").value
+      const size = document.getElementById("size").value
+      const subtype= document.getElementById("subtype").value
+      const completion_status = document.getElementById("completion_status").value
+      fetch('/push_to_prop_now/'+document.getElementById("reassign_prop").value+'/'+bedrooms+'/'+price+'/'+size+'/'+subtype+'/'+completion_status).then(function(response){
+            response.json().then(function(data){
+              location.reload();
+            }
+            )})
+          };
     
     $(window).on('load',(function(){
       
     var columns = {{columns|tojson}};
     var data = {{data|tojson}};
-    console.log(data)
-    console.log(columns)
       
 
     $(function() {
