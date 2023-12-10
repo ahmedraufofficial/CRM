@@ -962,7 +962,7 @@ def propertyfinder01(): #generating token
     #    }
     #response = requests.request("POST", url, headers=headers, data=payload)
     #x = json.loads(response.text)
-    return ('') #only through NANO in terminal
+    return ('paste here') #only through NANO in terminal
 
 
 def locationid(community, location, access_token): #generating location ID
