@@ -27,7 +27,6 @@
   }
   
   .parrot {
-    display: inline-block;
     border: 1px solid #293645;
     padding: 5px;
     vertical-align: middle;
@@ -63,30 +62,30 @@
 <!--Modal Ends-->
   <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
     <br>
-    <div class="container parrot" style="text-align: center; margin: 5px;">
+    <div class="container parrot" style="text-align: center; margin: 5px; width: 50%">
       <div class="row">
-        <div class="child" style="width: auto; margin-left: 1%;">
+        <div class="child" style="width: auto; margin-left: 2%;">
           <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Status</h6>
-      <select name="status_" id="status_" class="filter_add02">
+            <select name="status_" id="status_" class="filter_add02">
               <option selected="selected" value="">Status</option>
               <option value="Pending">Pending</option>
               <option value="Approve">Approve</option>
               <option value="Disapprove">Disapprove</option>
-      </select>
-      <select name="listing_users" id="listing_users" class="filter_add02" >
-      <option selected="selected" value="">Users</option>
-      {% for users in all_users %}
-          <option value="{{users.username}}">{{users.username}}</option>
-      {% endfor %}
-      </select>
-  </div>
-  <div class="child" style="width: auto">
-      <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
-      <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
-      <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
-  </div>
-  </div>
-  <div class="row">
+            </select>
+            <select name="listing_users" id="listing_users" class="filter_add02" >
+              <option selected="selected" value="">Users</option>
+              {% for users in all_users %}
+              <option value="{{users.username}}">{{users.username}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="child" style="width: auto;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+          </div>
+        </div>
+        <div class="row">
           <div class="col">
             <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
             <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 5px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
@@ -96,16 +95,18 @@
 
     <div class="container-fluid">
       <br/>
-      <!--Old Toolbar
+      {% if current_user.is_admin == True %}
       <div id="toolbar">
         {% if current_user.export == True %}
         <button onclick="get_check('deals')" class="btn btn-primary">Export</button>
         {% endif %}
         <a id="download" href="">Download</a>
+      <!--
         <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
         <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Deals</button>
+      -->
       </div>
-    -->
+      {% endif %} 
       <table
         id="table"
         data-toggle="true"
