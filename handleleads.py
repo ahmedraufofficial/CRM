@@ -19,6 +19,8 @@ from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
 
+FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
+
 path = os.getcwd()
 UPLOAD_FOLDER = os.path.join(path, 'uploads')
 if not os.path.isdir(UPLOAD_FOLDER):
@@ -593,3 +595,101 @@ def reassign_btn_execute(x, y):
     update_lead_note('Admin',x, message, edit.status, edit.sub_status)
     return jsonify(success=True)
 
+# Uploading Bulk Leads Module
+
+@handleleads.route('/upload/leads-bulk')
+def upload_leads():
+    return render_template('upload_leads.html')
+
+@handleleads.route('/uploadleads',methods = ['GET','POST'])
+@login_required
+def uploadleads():
+    uploaded_file = request.files['file']
+    filepath = os.path.join(FILE_UPLOADS, uploaded_file.filename)
+    uploaded_file.save(filepath)
+    results = {}
+    with open(filepath) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("Lesssgooo with count = 0")
+                line_count += 1
+                results['Started'] = 'Positive'
+            elif row[0] != '' and row[0] != 'contact_name':
+                try:
+                    num_check = row[1].replace(" ", "").replace("+","")[3:]
+                    i = db.session.query(Contacts).filter(Contacts.number.endswith(num_check)).first()
+                    if (i):
+                        results[row[0]] = 'DUPLICATE'
+                    else: 
+                        first_name = row[0].split(" ")[0]
+                        if len(row[0].split(" ")) > 1: 
+                            last_name = ' '.join(row[0].split(" ")[1:])
+                        else: 
+                            last_name = ''
+                        number = row[1].replace(" ", "").replace("+","")
+                        email = row[2]
+                        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10])
+                        db.session.add(newcontact)
+                        db.session.commit()
+                        db.session.refresh(newcontact)
+                        newcontact.refno = 'UNI-O-'+str(newcontact.id)
+                        db.session.commit()
+                        contact = 'UNI-O-'+str(newcontact.id)
+                        contact_name = row[0]
+                        contact_number = row[1].replace(" ", "").replace("+","")
+                        contact_email = row[2]
+                        role = row[3]
+                        agent = row[4]
+                        lead_type = row[5]
+                        locationtext = row[6]
+                        building = row[7]
+                        subtype = row[8]
+                        min_beds = row[9]
+                        source = row[10]
+                        lastupdated = datetime.now()+timedelta(hours=4)
+                        created_date = datetime.now()+timedelta(hours=4)
+                        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,agent = agent,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in')
+                        db.session.add(newlead)
+                        db.session.commit()
+                        db.session.refresh(newlead)
+                        newlead.refno = 'UNI-L-'+str(newlead.id)
+                        db.session.commit() 
+                        notes('UNI-L-' + str(newlead.id))
+                        assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status) 
+                        if (row[11] == "Yes"):
+                            if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
+                                get_agent = db.session.query(User).filter_by(username = agent).first()
+                                try:
+                                    etisy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+                                except:
+                                    pass
+                            else:
+                                pass
+                        else:
+                            pass
+                        message = "Lead assigned to "+agent
+                        if locationtext != '':
+                            message += ' in '+locationtext
+                        else:
+                            pass
+                        if building != '':
+                            message += ', '+building
+                        else:
+                            pass
+                        try:
+                            update_lead_note('Admin', newlead.refno, message, 'Open', 'In progress')
+                        except:
+                            pass
+                        results[row[0]] = 'Successfully Added'
+                except:
+                    results[row[0]] = 'Error adding this Lead'
+                line_count += 1
+                print(line_count)
+            else:
+                break
+        print(f'Processed {line_count} lines.')
+        results['Batch'] = 'Completely Processed'
+        response_data = json.dumps(results, default=lambda x: str(x), indent=2)
+    return response_data, 200, {'Content-Type': 'application/json'}
