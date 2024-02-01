@@ -1,0 +1,20 @@
+{
+    "notes": [
+        {
+            "date": "04/01/2024",
+            "time": "20:12:18",
+            "user": "ADMIN",
+            "comment": "This is a NEW CLIENT.",
+            "status": "In Progress",
+            "substatus": "mgmt"
+        },
+        {
+            "date": "04/01/2024",
+            "time": "21:02:08",
+            "user": "ahmed",
+            "comment": "WHAYYY!!!",
+            "status": "Completed",
+            "substatus": "agncy"
+        }
+    ]
+}

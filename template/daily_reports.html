@@ -1,0 +1,363 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>
+  .child {
+    display: inline-block;
+    border: 1px solid #293645;
+    padding: 5px;
+    vertical-align: middle;
+    margin-right: 1px;
+    border-radius: 12px;
+    background-color: rgba(41, 54, 69, 1);
+    color: white;
+  
+  }
+  .child01 {
+    display: inline-block;
+    border: 1px solid #293645;
+    padding: 5px;
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-right: 1px;
+    border-radius: 12px;
+    background-color: rgb(255, 255, 255);
+    color: white;
+  }
+  .parrot {
+    border: 1px solid #293645;
+    padding: 5px;
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-right: 1px;
+    border-radius: 12px;
+  }
+  .estylish_button {
+    width: auto;
+    background-color: #293645;
+    color: white;
+    border-radius: 12px;
+    border: 1px solid #293645;
+    font-size: small;
+    font-weight: 300;
+  }
+  </style>
+<title>Lighthouse - Daily Reports</title>
+<section>
+  <!--note Modal-->
+<div class="modal" id="notesModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+          <div class="row justify-content-center">
+            <div class="col-12">
+
+                <table id="notetable"        
+                data-toggle="true"
+                data-toolbar="#notetoolbar"
+                class="oswald"
+                data-pagination="true"
+                data-height="350"
+                style="font-size: 10pt;">
+                  <thead>
+                      <tr>
+                          <th data-field="date">Date</th>
+                          <th data-field="time">Time</th>
+                          <th data-field="user">User</th>
+                          <th data-field="comment">Comment</th>
+                          <th data-field="status">Status Update</th>
+                          <th data-field="substatus">Sub Status</th>
+                      </tr>
+                  </thead>
+              </table>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-11">
+              <input type="hidden" id="list_id">
+              <div class="row">
+              <div class="col">
+              <input class="form-control" type="text" id="comment">
+              </div>
+              <div class="col">
+              <select class="form-control" id="status_note" name="status_note">
+                <option value=''>Status</option>
+                <option value='Follow Up'>Follow Up</option>
+                <option value='Request'>Request</option>
+                <option value='Completed'>Completed</option>
+              </select>
+              </div>
+              {% if current_user.is_admin == True or current_user.team_lead == True%}
+              <div class="col">
+                <select class="form-control" id="sub_status_note" name="sub_status_note">
+                  <option value=''></option>
+                  <option value='agncy'>agncy</option>
+                  <option value='mgmt'>mgmt</option>
+                </select>
+              </div>   
+              {% endif %}     
+            </div>
+              
+              <button onclick="post_report()" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px; width: 55px;">Post</button>
+              <div id="reinforcements"></div>
+            </div>
+          </div>
+          </div>
+          
+      </div>
+    </div>
+  </div>
+</div>
+ <!--note Modal ends-->
+
+<!--Delete Modal-->
+  <div class="modal" id="deleteModal01" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title oswald">Confirm deletion!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container unselectable oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+              <a id="delete">Delete</a>
+            </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
+<!--Delete Modal Ends-->
+  <div style="min-height: 100vh; max-height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+    <br>
+    <div class="container parrot" style="text-align: center; margin: 5px; width: 50%">
+      <div class="row">
+        <div class="child" style="width: auto; margin-left: 2%;">
+          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Action Status</h6>
+            <select name="status_" id="status_" class="filter_add02">
+              <option selected="selected" value="">Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Approve">Acknowledged</option>
+              <option value="Disapprove">Request for Assign.</option>
+            </select>
+            <select name="team_leaders" id="team_leaders" class="filter_add02" >
+                <option selected="selected" value="">Team Lead</option>
+                {% for users in team_leader %}
+                <option value="{{users.username}}">{{users.username}}</option>
+                {% endfor %}
+            </select>
+            <select name="listing_users" id="listing_users" class="filter_add02" >
+              <option selected="selected" value="">Users</option>
+              {% for users in all_users %}
+              <option value="{{users.username}}">{{users.username}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="child" style="width: auto;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+            <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 5px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+          </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+      <br/>
+      <!--
+      {% if current_user.is_admin == True %}
+      <div id="toolbar">
+        {% if current_user.export == True %}
+        <button onclick="get_check('deals')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+      
+        <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+        <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Deals</button>
+      
+      </div>
+      
+      {% endif %} 
+      -->
+      <div id="toolbar">
+        <a href="/add_new_report"><button class="estylish_button" style="margin-left: 10px; color: white;"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg>Add Report
+        </button></a>
+      </div>
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable oswald"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-show-columns="true"
+        data-pagination="true"
+        data-height="750"
+        data-page-size="25"
+        data-page-list="[25, 50, 100, 200, All]">
+      </table>
+    </div>
+    </br>
+</div>
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+    function delete_(x){
+        document.getElementById("delete").href="/delete_deal/"+x;
+    };
+
+function view_report(x){
+  fetch('/getem_report/'+x).then(function(response){
+    response.json().then(function(data){
+      $('#list_id').val(x)
+      $('#notes').show()
+      var jsonData = data.notes
+      $(function () {
+                $('#notetable').bootstrapTable('destroy')
+                $('#notetable').bootstrapTable({data: jsonData});
+                document.getElementById('comment').value = ''
+                });
+    })
+  })
+}
+
+function post_report(){
+      var list_id = document.getElementById('list_id').value;
+      var com = document.getElementById('comment').value;
+      if (com == ""){
+        com = "-"
+      }
+      var status = document.getElementById('status_note').value;
+      if (status == ""){
+        status = "-"
+      }
+      try {
+        var substatus = document.getElementById('sub_status_note').value;
+        if (substatus == ""){
+          substatus = "agncy"
+        }
+      }
+      catch {
+        substatus = "agncy"
+      }
+      fetch('/update_report/'+list_id+'/'+com+'/'+status+'/'+substatus).then(function(response){
+            response.json().then(function(){
+              view_report(list_id)
+            })
+        })
+      };
+
+
+    $(window).on('load',(function(){
+      
+    var columns = {{columns|tojson}};
+    var data = {{data|tojson}};
+    console.log(data)
+    console.log(columns)
+      
+
+    $(function() {
+        $('#table').bootstrapTable({ 
+          data: data.reverse(),
+          columns: columns,
+        });
+        $('#filter_search').click(function () {
+        
+        var test = data
+        var z = $("#status_").val()
+        var u = $("#listing_users").val()
+        var x = $("#propdate").val()
+        var y = $("#propdate2").val()
+        
+        var grepFunc;
+        var grepFunc2;
+        var grepFunc3;
+        var grepFunc4;
+
+        grepFunc = function(item){
+              return item.admin_approval == z;
+          }
+
+        grepFunc2 = function(item){
+              return item.created_by == u;
+          }
+
+        grepFunc3 = function(item){
+              return item.created_date.slice(0,10) >= x;
+          }
+
+        grepFunc4 = function(item){
+              return item.created_date.slice(0,10) <= y;
+          }
+
+        if (z != "")
+        {test = $.grep(test, grepFunc)}
+
+        if (u != "")
+        {test = $.grep(test, grepFunc2)}
+
+        if (x != "")
+        {test = $.grep(test, grepFunc3)}
+
+        if (y != "")
+        {test = $.grep(test, grepFunc4)}
+
+          $('#table').bootstrapTable('load', test);
+        })
+        
+        $('#filter_reset').click(function () {
+        $('#table').bootstrapTable('load', data)
+        $("#status_").val("");
+        $("#propdate").val("");
+        $("#propdate2").val("");
+        })
+
+        $('#user_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                              return item.agent_1 == '{{user}}' 
+                     };
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+        $('#all_data').click(function () {
+                    var grepFunc;
+                            grepFunc = function (item) {
+                                return true;
+                            };
+                            
+                    $('#table').bootstrapTable('load', $.grep(data, grepFunc));
+                });
+      });
+    }));
+  </script>
+    <style type='text/css'>
+      .row-index {
+        width: 50px;
+        display: inline-block;
+      }
+      body {
+    overflow-x: hidden;
+  }
+    </style>
+{% endblock %}

@@ -1,0 +1,49 @@
+{
+    "logs": [
+        {
+            "date": "23/01/2023",
+            "time": "18:27:58",
+            "ref": "ruba",
+            "task": "Created"
+        },
+        {
+            "date": "11/04/2023",
+            "time": "06:19:54",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "12/04/2023",
+            "time": "08:23:21",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "12/04/2023",
+            "time": "08:23:29",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "12/04/2023",
+            "time": "08:23:56",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "13/04/2023",
+            "time": "04:51:16",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        },
+        {
+            "date": "13/04/2023",
+            "time": "04:51:31",
+            "ref": "deal no",
+            "task": "Edited Deal"
+        }
+    ],
+    "reminders": [],
+    "lead": {},
+    "list": {}
+}

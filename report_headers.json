@@ -1,0 +1,63 @@
+{"headers":
+  [
+    {
+      "field": "state",
+      "checkbox": "true"
+    },
+    {
+     "field": "action",
+     "title": "Options",
+     "sortable": "False"
+   },
+    {
+      "field": "refno",  
+      "title": "Ref No.", 
+      "sortable": "True"
+    },
+    {
+      "field": "client_name",
+      "title": "Contact",
+      "sortable": "True"
+    },
+    {
+      "field": "client_number",
+      "title": "Number",
+      "sortable": "True"
+    },
+    {
+      "field": "created_by",
+      "title": "Agent",
+      "sortable": "True"
+    },
+    {
+      "field": "created_date",
+      "title": "Created Date",
+      "sortable": "True"
+    },
+    {
+      "field": "updated_date",
+      "title": "Last Updated",
+      "sortable": "True"
+    },
+    {
+      "field": "location",
+      "title": "Location",
+      "sortable": "True"
+    },
+    {
+      "field": "community",
+      "title": "Community",
+      "sortable": "True"
+    },
+    {
+      "field": "bedroom",
+      "title": "Beds",
+      "sortable": "True"
+    },
+    {
+      "field": "status",
+      "title": "Status",
+      "sortable": "True"
+    }
+  ]
+}

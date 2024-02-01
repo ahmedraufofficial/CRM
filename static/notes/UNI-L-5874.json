@@ -1,0 +1,20 @@
+{
+    "notes": [
+        {
+            "date": "12/04/2023",
+            "time": "06:10:36",
+            "user": "baraayasser",
+            "comment": "In lead pool",
+            "status": "Open",
+            "substatus": "In progress"
+        },
+        {
+            "date": "12/04/2023",
+            "time": "08:32:12",
+            "user": "ahmed",
+            "comment": "In lead pool",
+            "status": "Closed",
+            "substatus": "Successful"
+        }
+    ]
+}

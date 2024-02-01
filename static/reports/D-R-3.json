@@ -1,0 +1,52 @@
+{
+    "notes": [
+        {
+            "date": "08/01/2024",
+            "time": "14:17:10",
+            "user": "ADMIN",
+            "comment": "This is a NEW CLIENT.",
+            "status": "In Progress",
+            "substatus": "mgmt"
+        },
+        {
+            "date": "08/01/2024",
+            "time": "14:23:54",
+            "user": "baraayasser",
+            "comment": "This mans got a lotta money, you know the vibes",
+            "status": "-",
+            "substatus": "agncy"
+        },
+        {
+            "date": "08/01/2024",
+            "time": "14:24:30",
+            "user": "baraayasser",
+            "comment": "He is willing to go for YAS ISLAND, SUIIIIIII",
+            "status": "Follow Up",
+            "substatus": "agncy"
+        },
+        {
+            "date": "08/01/2024",
+            "time": "14:25:16",
+            "user": "ahmed",
+            "comment": "Sales manager to look into the matter",
+            "status": "Follow Up",
+            "substatus": "mgmt"
+        },
+        {
+            "date": "08/01/2024",
+            "time": "14:25:38",
+            "user": "ahmed",
+            "comment": "Wait till the management decides on what to do",
+            "status": "Follow Up",
+            "substatus": "agncy"
+        },
+        {
+            "date": "08/01/2024",
+            "time": "14:26:20",
+            "user": "ahmed",
+            "comment": "Heavy request vibes hoo gayi hain",
+            "status": "Request",
+            "substatus": "mgmt"
+        }
+    ]
+}

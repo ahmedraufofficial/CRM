@@ -1,0 +1,28 @@
+{
+    "notes": [
+        {
+            "date": "04/01/2024",
+            "time": "20:12:43",
+            "user": "ADMIN",
+            "comment": "This client already exists as a LEAD under ramzi. Reference Number: UNI-L-9642",
+            "status": "In Progress",
+            "substatus": "mgmt"
+        },
+        {
+            "date": "04/01/2024",
+            "time": "21:01:04",
+            "user": "ahmed",
+            "comment": "Wassup",
+            "status": "-",
+            "substatus": "agncy"
+        },
+        {
+            "date": "04/01/2024",
+            "time": "21:01:15",
+            "user": "ahmed",
+            "comment": "Let' see",
+            "status": "Request",
+            "substatus": "mgmt"
+        }
+    ]
+}

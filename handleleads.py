@@ -641,7 +641,7 @@ def uploadleads():
                         contact_number = row[1].replace(" ", "").replace("+","")
                         contact_email = row[2]
                         role = row[3]
-                        agent = row[4]
+                        agent = row[4].replace(" ", "")
                         lead_type = row[5]
                         locationtext = row[6]
                         building = row[7]

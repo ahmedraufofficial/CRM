@@ -1,0 +1,95 @@
+{"headers_deal":
+  [ 
+    {
+        "field": "refno",  
+        "title": "REF NO"
+    },
+    {
+        "field": "actual_deal_date",
+        "title": "Deal Date"
+    },
+    {
+        "field": "unit_location",
+        "title": "COMMUNITY"
+    },
+    {
+        "field": "unit_sub_location",
+        "title": "LOCATION"
+    },
+    {
+        "field": "unit_no",
+        "title": "Unit No."
+    },
+    {
+      "field": "deal_price",
+      "title": "Deal Price"
+    },
+    {
+        "field": "commission_agent_1",
+        "title": "Rate"
+      },
+    {
+      "field": "gross_commission",
+      "title": "Commission"
+    },
+    {
+        "field": "amount_received",
+        "title": "Paid"
+    },
+    {
+        "field": "agent_pers_comm",
+        "title": "Agent (%)"
+    },
+    {
+        "field": "agent_pending",
+        "title": "Pending Commission"
+    },
+    {
+      "field": "amount_eligible",
+      "title": "Eligible Commission"
+    },
+    {
+        "field": "agent_received",
+        "title": "Paid Agent"
+    }
+  ],
+  "headers_exits":
+  [ 
+    {
+      "field": "refno",  
+      "title": "REF NO", 
+      "sortable": "True"
+    },
+    {
+      "field": "date_from",  
+      "title": "Date", 
+      "sortable": "True"
+    },
+    {
+      "field": "reason",  
+      "title": "Purpose"
+    }
+  ],
+  "headers_leaves":
+  [ 
+    {
+      "field": "refno",  
+      "title": "REF NO", 
+      "sortable": "True"
+    },
+    {
+      "field": "date_from",  
+      "title": "From", 
+      "sortable": "True"
+    },
+    {
+      "field": "date_to",  
+      "title": "To", 
+      "sortable": "True"
+    },
+    {
+      "field": "leave_type",  
+      "title": "Leave Type"
+    }
+  ]
+}

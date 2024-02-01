@@ -1,0 +1,92 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+    .column{
+           background-color: (255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+           padding-top: 10px;
+           margin: 5px;
+           margin-top: 20px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 14pt;
+        font-family: 'Oswald';
+    }
+      </style>
+    
+
+<section>
+<div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+<div class="container" >
+<form method="POST" enctype="multipart/form-data">
+    <dl>
+        <div class="row">
+            <div class="col column">
+                <h4>Daily Report</h4>
+                {{ wtf.form_field(form.client_number) }}
+                <div id="result"></div>
+                {{ wtf.form_field(form.client_name) }}
+                {{ wtf.form_field(form.client_email) }}
+                <div class="row">
+                    <div class="col">
+                        {{ wtf.form_field(form.locationtext) }}
+                    </div>    
+                    <div class="col">
+                        {{ wtf.form_field(form.building) }}
+                    </div>
+                    <div class="col">
+                        {{ wtf.form_field(form.bedrooms) }}
+                    </div>
+                </div>
+                {{ wtf.form_field(form.team_lead) }}
+                {{ wtf.form_field(form.remarks) }}
+            </div>
+        </div>
+    </dl>
+  <!--label onclick="update()" class="btn btn-primary" >Submit</label>-->
+  <input id="sub" class="btn btn-primary" value="Submit" type="submit" value="Submit">
+</form>
+</div>
+<br></div>
+</section>
+
+<script>
+    let location_select = document.getElementById('building');
+    $("#locationtext").change(function(){
+    get_location();
+    });
+    var building = '{{ building }}'
+    function get_location(){
+        var location = $("#locationtext").val();
+        fetch('/community/' + location).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let location of data.locations){
+                    if (location[0] == building)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_select.innerHTML = optionHTML;
+            })
+        })
+    }
+
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+
