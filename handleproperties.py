@@ -24,6 +24,7 @@ import csv
 import time
 
 FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
+NOTES = os.getcwd() + '/static/notes'
 
 a = os.getcwd()
 UPLOAD_FOLDER = os.path.join(a+'/static', 'uploads')
@@ -946,6 +947,63 @@ def uploadFiles():
         print(f'Processed {line_count} lines.')
     return jsonify(success=True)
 
+#Deletion of properties in bulk
+
+@handleproperties.route('/upload-delete',methods = ['GET','POST'])
+@login_required
+def delete_entire_prop_bulk():
+    results = {}
+    uploaded_file = request.files['file']
+    filepath = os.path.join(FILE_UPLOADS, uploaded_file.filename)
+    uploaded_file.save(filepath)
+    with open(filepath) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        for row in csv_reader:
+            a = []
+            delete = db.session.query(Properties).filter_by(refno=row[0]).first()
+            if delete:
+                db.session.delete(delete)
+                a.append('DB Deleted')
+            else:
+                a.append('DB non-existent')
+            try:
+                files = glob.glob(NOTES+'/'+row[0]+'.json')
+                if files:
+                    for f in files:
+                        os.remove(f)
+                        a.append('Notes Deleted')
+                else:
+                    a.append('Notes non-existent')
+            except Exception as error:
+                a.append('ERROR NOTES: '+str(error))
+                pass
+            try:
+                z = delete_entire_prop(row[0])
+                a.append(z)
+            except:
+                a.append('ERROR PHOTOS')
+                pass
+            results[row[0]] = a
+        db.session.commit()
+    return results
+
+@login_required
+def delete_entire_prop(refno):
+    if len(refno) < 15:
+        files = glob.glob(UPLOAD_FOLDER+'/'+refno+'/*')
+    else:
+        files = glob.glob(os.path.join(refno, '*'))
+    for f in files:
+        if os.path.isfile(f):
+            os.remove(f)
+        elif os.path.isdir(f):
+            try:
+                os.rmdir(f)
+            except OSError:
+                delete_entire_prop(f)
+                os.rmdir(f)
+    return 'Pictures Cleared'
+
 #Property Finder API Integration
 
 def propertyfinder01(): #generating token
@@ -1517,7 +1575,7 @@ def bulk_update_loop(refno, access_token):
 #    x = json.loads(response.text)
 #    return(x)
 
-@handleproperties.route('/bigboytesting',methods = ['GET','POST']) #to checkd duplicate properties
+@handleproperties.route('/bigboytesting',methods = ['GET','POST']) #to check duplicate properties
 @login_required
 def bigboytesting():
     print("lets start")
