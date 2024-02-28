@@ -76,20 +76,26 @@ def fetch_token():
 @auth.login_required
 def fetch_contacts(user):
     voltage_user = db.session.query(User).filter_by(username = user).first()
-    data1={}
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
     data = []
-    x=0
-    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == voltage_user.username,Contacts.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True)):
+    query = db.session.query(Contacts).filter(or_(Contacts.created_by == voltage_user.username,Contacts.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True))
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Contacts.__table__.columns]
+        query = query.filter(or_(*conditions))
+    z = query.count()
+    for r in query.order_by(Contacts.id.desc()).offset(offset).limit(limit):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in ['alternate_number','comment','contact_type','created_by','date_of_birth','language','gender','nationality','religion','role','source','title']: new.pop(k)
         new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contact/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
-        new["id"] = x
+        new["id"] = total_records
         data.append(new)
-        x+=1
-    data2=data[::-1]
-    data1 = {"total":x, "totalNotFiltered":x, "rows":data2}
-    return(data1)
+        total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+    return(response_data)
 
 @handlecontacts.route('/add_contact', methods = ['GET','POST'])
 @login_required
