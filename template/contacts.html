@@ -131,7 +131,8 @@ function ajaxRequest(params) {
         var headers = {
           'Authorization': 'Bearer '+token
         };
-        var url = 'https://www.crm.uhpae.com/fetch_contacts';
+        user = {{current_user.username|tojson}};
+        var url = 'https://crm.uhpae.com/fetch_contacts/'+user;
         $.ajax({
           url: url,
           method: 'GET',

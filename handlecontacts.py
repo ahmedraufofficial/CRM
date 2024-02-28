@@ -2,7 +2,7 @@ from operator import ge
 from flask import Blueprint, render_template, request, redirect, url_for,jsonify,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
-from models import Contacts
+from models import Contacts, User
 from forms import AddContactForm
 import json
 from functions import logs
@@ -72,13 +72,14 @@ def display_contacts():
 def fetch_token():
     return(jsonify(''))
 
-@handlecontacts.route('/fetch_contacts',methods = ['GET','POST'])
+@handlecontacts.route('/fetch_contacts/<user>',methods = ['GET','POST'])
 @auth.login_required
-def fetch_contacts():
+def fetch_contacts(user):
+    voltage_user = db.session.query(User).filter_by(username = user).first()
     data1={}
     data = []
     x=0
-    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True, current_user.listing == True)):
+    for r in db.session.query(Contacts).filter(or_(Contacts.created_by == voltage_user.username,Contacts.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True)):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in ['alternate_number','comment','contact_type','created_by','date_of_birth','language','gender','nationality','religion','role','source','title']: new.pop(k)
