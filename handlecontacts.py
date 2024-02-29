@@ -8,7 +8,7 @@ import json
 from functions import logs
 import os 
 import csv
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from datetime import datetime, timedelta
 from flask_httpauth import HTTPTokenAuth
 
@@ -79,12 +79,21 @@ def fetch_contacts(user):
     search = request.args.get('search')
     offset = int(request.args.get('offset'))
     limit = int(request.args.get('limit'))
+    role = request.args.get('role')
+    agent = request.args.get('agent')
     total_records = 0
     data = []
     query = db.session.query(Contacts).filter(or_(Contacts.created_by == voltage_user.username,Contacts.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True))
     if search:
         conditions = [column.ilike(f"%{search}%") for column in Contacts.__table__.columns]
         query = query.filter(or_(*conditions))
+    if role or agent:
+        filters = []
+        if role:
+            filters.append(Contacts.role == role)
+        if agent:
+            filters.append(Contacts.assign_to == agent)
+        query = query.filter(and_(*filters))
     z = query.count()
     for r in query.order_by(Contacts.id.desc()).offset(offset).limit(limit):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
