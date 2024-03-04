@@ -22,6 +22,12 @@ import sqlite3
 import os
 import csv
 import time
+from flask_httpauth import HTTPTokenAuth
+
+auth = HTTPTokenAuth(scheme='Bearer')
+tokens = {
+    ''
+}
 
 FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
 NOTES = os.getcwd() + '/static/notes'
@@ -111,33 +117,57 @@ def dubbizlexml():
     a.write("template/dubizzle.xml")
     print("added")
     
+@auth.verify_token
+def verify_token(token):
+    if token in tokens:
+        return token
 
-
-
-
-
-@handleproperties.route('/properties',methods = ['GET','POST'])
+@handleproperties.route('/fetch_listing_token',methods = ['GET','POST'])
 @login_required
-def display_properties():
-    if current_user.listing == False and current_user.sale == False:
-        return abort(404)
+def fetch_listing_token():
+    return(jsonify(''))
+
+@handleproperties.route('/fetch_listings/<user>',methods = ['GET','POST'])
+@auth.login_required
+def fetch_listings(user):
+    voltage_user = db.session.query(User).filter_by(username = user).first()
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
     data = []
-    if current_user.viewall == True and current_user.listing == True:
-        for r in db.session.query(Properties).all():
+    query = db.session.query(Properties)
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Properties.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['bedrooms', 'status', 'subtype', 'locationtext', 'building', 'type', 'assign_to', 'propdate', 'propdate2', 'view', 'portal', 'property_finder'] if key in filters_01}
+        for key, value in filters.items():
+            if key == 'propdate':
+                conditions.append(Properties.lastupdated >= value)
+            elif key == 'propdate2':
+                conditions.append(Properties.lastupdated <= value)
+            elif key == 'portal':
+                conditions.append(getattr(Properties, key) != 'Not Promoted')
+            elif key == 'property_finder':
+                conditions.append(getattr(Properties, key) != 'None')
+            else:
+                conditions.append(getattr(Properties, key) == value)
+        query = query.filter(and_(*conditions))
+
+    if voltage_user.viewall == True and voltage_user.listing == True:
+        z = query.count()
+        for r in query.order_by(Properties.id.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
-            if current_user.edit == True:
-                if r.created_by == current_user.username or r.assign_to == current_user.username or current_user.is_admin == True or current_user.team_members == "LA":
-                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><img style="width:10%;" src="/static/images/edit.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Edit</small></a>'
-                else:
-                    edit_btn = ''
+            new = row2dict(r)  
+            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)  
+            if voltage_user.edit == True:
+                edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><img style="width:10%;" src="/static/images/edit.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Edit</small></a>'
             else:
                 edit_btn = ''
-            if new["assign_to"] == current_user.username or new["created_by"] == current_user.username or current_user.is_admin == True or current_user.team_members == "LA" or current_user.listing == True:
-                pass
-            else:
-                new["owner_contact"] = "*"
             if new["portal"] == "0":
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
                 new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
@@ -163,54 +193,14 @@ def display_properties():
                 stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
             new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
             data.append(new)
-    elif current_user.viewall == False and current_user.listing == True:
-        for r in db.session.query(Properties).filter(or_(Properties.created_by == current_user.username,Properties.assign_to == current_user.username)):
-            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
-            if current_user.edit == True:
-                if r.created_by == current_user.username or r.assign_to == current_user.username:
-                    edit_btn = '<a href="/edit_property/'+str(new['refno'])+'">Edit</a>'
-                else:
-                    edit_btn = ''
-            else:
-                edit_btn = ''
-            if new["portal"] == "0":
-                website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
-                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
-            else:
-                new["portal"] = "Not Promoted"
-            if new['property_finder'] != 'None':
-                link = new['property_finder'].split('|')
-                if new["portal"] == "Not Promoted":
-                    new["portal"] = '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px;"></a>'
-                else:
-                    new["portal"] += '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px; margin-left:15px"></a>'                
-            else:
-                pass
-            view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
-            note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
-            startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small><</a>'
-            stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small><</a>'
-            if new['property_finder'] == 'None':
-                startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
-                stoppf = ''
-            else:
-                startpf = '<a onclick="update_that_property('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Update</small></a>'
-                stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
-            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
-            data.append(new)
-    elif current_user.team_members == "QC" and current_user.listing == False:
-        for r in db.session.query(Properties).all():
-            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
-            new["edit"] = '<button class="btn btn-warning si" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</button>'+"</div>"
-            data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
     elif current_user.sale == True and current_user.listing == False:
-        for r in db.session.query(Properties).all():
+        z = query.count()
+        for r in query.order_by(Properties.id.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
+            new = row2dict(r) 
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
             if new["portal"] == "0":
                 website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
@@ -229,6 +219,16 @@ def display_properties():
             note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
             new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+view_btn+note_btn+"</div></div>"
             data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
+
+@handleproperties.route('/properties',methods = ['GET','POST'])
+@login_required
+def display_properties():
+    if current_user.listing == False and current_user.sale == False:
+        return abort(404)
+    data = []
     f = open('property_headers.json')
     columns = json.load(f)
     columns = columns["headers"]

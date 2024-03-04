@@ -441,10 +441,7 @@
 -->
   <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
     <div class="row">
-      <div style="width: 14.5%; height: 10%; height:30px; margin-left: 1%; margin-right: 0.5%; margin-top: 0.8%;">
-        <input style="width: 100%; height: 10%; height:30px; margin-left: 1%; margin-right: 0.5%;" type="text" name="searchbar" id="searchbar" class="filter_add05" placeholder="Search" aria-label="searchbar">
-      </div>
-      <div class="child" style="margin-left: 0px;">
+      <div class="child" style="margin-left: 1%;">
         <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/product-description.png"/><span><h6 style="text-align: left;">Description</h6>
       <select name="beds_category" id="beds_category" class="filter_add02">
         <option selected="selected" value="">Beds</option>
@@ -669,12 +666,7 @@
           <option value="Double View">Double View</option>
         </select>
       </div>
-        <div class="child">
-          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/different-currencies.png"/><span><h6 style="text-align: left;">Price</h6>
-          <input type="text" name="minprice" id="minprice" class="filter_add02" placeholder="Min. Price" aria-label="minprice">
-          <input type="text" name="maxprice" id="maxprice" class="filter_add02" placeholder="Max. Price" aria-label="maxprice">
-        </div>
-        <div class="child" style="margin-left: 1%;">
+        <div class="child" style="width: auto;">
           <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/global.png"/><span><h6 style="text-align: left;">Promotions</h6>
         <select name="uhp" id="uhp" class="filter_add02">
           <option selected="selected" value="">UHP</option>
@@ -686,15 +678,10 @@
         </select>
         <button onclick="get_check01('properties')" style="background-color: #293645; color: white; margin-right: 5px; margin-top: 7px; border: 1px solid white !important;" class="filter_add">Bulk Update</button>
       </div>
-        <div class="child" style="width: auto; margin-top: 0.25%; margin-left: 1%;">
+        <div class="child" style="width: auto;">
           <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
           <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
           <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
-        </div>
-        <div class="child" style="width: auto; margin-top: 0.25%;">
-          <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/real-estate-agent.png"/><span><h6 style="text-align: left;">Owner Details</h6>
-          <input type="text" name="ownname" id="ownname" class="filter_add02" placeholder="Name" aria-label="ownname">
-          <input type="text" name="ownnumber" id="ownnumber" class="filter_add02" placeholder="Number" aria-label="ownnumber">
         </div>
       </div>
 
@@ -702,7 +689,7 @@
         <div class="col">
           <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
           <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
-          
+          <input type="hidden" id="filter" name="filter" value="OFF">
         </div>
       </div>
     </div>
@@ -719,8 +706,10 @@
           data-search="true"
           data-pagination="true"
           data-height="700"
-          data-page-size="100"
-          data-page-list="[25, 50, 100, 200, All]">
+          data-page-size="50"
+          data-side-pagination="server"
+          data-ajax="ajaxRequest"
+          data-page-list="[25, 50, 100, 200]">
           </table>
         </div>
       </div>
@@ -894,6 +883,74 @@ function view_property(x){
         })
     };
 
+    function ajaxRequest(params) {
+      fetch('/fetch_listing_token').then(function(response){
+        response.json().then(function(data){
+          token = data
+          var headers = {
+            'Authorization': 'Bearer '+token
+          };
+          user = {{current_user.username|tojson}};
+          //filters are added in the query accordingly
+          if ($("#filter").val() == 'ON') {
+            params.data['filter'] = $("#filter").val()
+            if ($("#status_category").val() != '') {
+              params.data['status'] = $("#status_category").val()
+            }
+            if ($("#beds_category").val() != '') {
+              params.data['bedrooms'] = $("#beds_category").val()
+            }
+            if ($("#subtype_category").val() != '') {
+              params.data['subtype'] = $("#subtype_category").val()
+            }
+            if ($("#location_category").val() != '') {
+              params.data['locationtext'] = $("#location_category").val()
+            }
+            if ($("#community_category").val() != '') {
+              params.data['building'] = $("#community_category").val()
+            }
+            if ($("#purpose_category").val() != '') {
+              params.data['type'] = $("#purpose_category").val()
+            }
+            if ($("#listing_users").val() != '') {
+              params.data['assign_to'] = $("#listing_users").val()
+            }
+            if ($("#propdate").val() != '') {
+              params.data['propdate'] = $("#propdate").val()
+            }
+            if ($("#propdate2").val() != '') {
+              params.data['propdate2'] = $("#propdate2").val()
+            }
+            if ($("#view_cat").val() != '') {
+              params.data['view'] = $("#view_cat").val()
+            }
+            if ($("#uhp").val() != '') {
+              params.data['portal'] = $("#uhp").val()
+            }
+            if ($("#prop_find").val() != '') {
+              params.data['property_finder'] = $("#prop_find").val()
+            }
+          }
+          
+
+
+          var url = 'http://localhost:5000/fetch_listings/'+user;
+          $.ajax({
+            url: url,
+            method: 'GET',
+            headers: headers,
+            data: params.data,
+            success: function (res) {
+              params.success(res);
+            },
+            error: function (error) {
+              console.error('Error fetching data:', error);
+            }
+          });
+        })
+      })
+    }
+
     $(window).on('load',(function(){
       $('#display').hide();
       $('#notes').hide();
@@ -907,189 +964,27 @@ function view_property(x){
           data: data.reverse(),
           columns: columns,
         });
-      
-      
-
 
         $('#filter_search').click(function () {
-        
-        var test = data
-        var s = $("#status_category").val();
-        var b = $("#beds_category").val();
-        var t = $("#subtype_category").val();
-        var l = $("#location_category").val();
-        var c = $("#community_category").val();
-        var p = $("#purpose_category").val()
-        var u = $("#listing_users").val()
-        var v = $("#minprice").val()
-        var w = $("#maxprice").val()
-        var x = $("#propdate").val()
-        var y = $("#propdate2").val()
-        var e = $("#ownname").val()
-        var r = $("#ownnumber").val()
-        var z = $("#searchbar").val()
-        var s1 = $("#view_cat").val()
-        var s2 = $("#uhp").val()
-        var s3 = $("#prop_find").val()
-        var grepFunc;
-        var grepFunc2;
-        var grepFunc3;
-        var grepFunc4;
-        var grepFunc5;
-        var grepFunc6;
-        var grepFunc7;
-        var grepFunc8;
-        var grepFunc9;
-        var grepFunc10;
-        var grepFunc11;
-        var grepFunc12;
-        var grepFunc13;
-        var grepFunc14;
-        var grepFunc15;
-        var grepFunc16;
-        var grepFunc17;
-
-
-        grepFunc = function(item){
-              return item.status == s;
-          }
-
-        grepFunc2 = function(item){
-              return item.bedrooms == b;
-          }
-
-        grepFunc3 = function(item){
-              return item.subtype == t;
-          }
-        
-        grepFunc4 = function(item){
-              return item.locationtext == l;
-          }
-        
-        grepFunc5 = function(item){
-              return item.building == c;
-          }
-        
-        grepFunc6 = function(item){
-              return item.type == p;
-          }
-
-        grepFunc7 = function(item){
-              return item.assign_to == u;
-          }
-        
-        grepFunc8 = function(item){
-              return parseInt(item.price) >= parseInt(v);
-            }
-        
-        grepFunc9 = function(item){
-              return pars/startpromotion/eInt(item.price) <= parseInt(w);
-          }
-
-        grepFunc10 = function(item){
-              return item.created_at.slice(0,10) >= x;
-          }
-
-        grepFunc11 = function(item){
-              return item.created_at.slice(0,10) <= y;
-          }
-        
-        grepFunc12 = function(item){
-              return item.owner_name == e;
-          }
-
-        grepFunc13 = function(item){
-              return item.owner_contact == r;
-          }
-
-        grepFunc14 = function(item){
-              return (item.refno == z || item.owner_contact == z);
-        }
-
-        grepFunc15 = function(item){
-              return item.view == s1;
-        }
-
-        grepFunc16 = function(item){
-              return item.portal != "Not Promoted";         
-        }
-
-        grepFunc17 = function(item){
-              return item.property_finder != 'None';         
-        }
-        
-        if (s != "")
-        {test = $.grep(test, grepFunc)}
-
-        if (b != "")
-        {test = $.grep(test, grepFunc2)}
-
-        if (t != "")
-        {test = $.grep(test, grepFunc3)}
-
-        if (l != "")
-        {test = $.grep(test, grepFunc4)}
-
-        if (c != "")
-        {test = $.grep(test, grepFunc5)}
-        
-        if (p != "")
-        {test = $.grep(test, grepFunc6)}
-
-        if (u != "")
-        {test = $.grep(test, grepFunc7)}
-
-        if (v != "")
-        {test = $.grep(test, grepFunc8)}
-
-        if (w != "")
-        {test = $.grep(test, grepFunc9)}
-
-        if (x != "")
-        {test = $.grep(test, grepFunc10)}
-
-        if (y != "")
-        {test = $.grep(test, grepFunc11)}
-
-        if (e != "")
-        {test = $.grep(test, grepFunc12)}
-
-        if (r != "")
-        {test = $.grep(test, grepFunc13)}
-
-        if (z != "")
-        {test = $.grep(test, grepFunc14)}
-
-        if (s1 != "")
-        {test = $.grep(test, grepFunc15)}
-
-        if (s2 != "")
-        {test = $.grep(test, grepFunc16)}
-
-        if (s3 != "")
-        {test = $.grep(test, grepFunc17)}
-
-          $('#table').bootstrapTable('load', test);
+          $("#filter").val("ON")
+          $('#table').bootstrapTable('refresh');
         })
         
         $('#filter_reset').click(function () {
-        $('#table').bootstrapTable('load', data)
+        $("#filter").val("OFF")
         $("#status_category").val("");
         $("#beds_category").val("");
         $("#subtype_category").val("");
         $("#location_category").val("");
         $("#community_category").val("");
         $("#purpose_category").val("");
-        $("#minprice").val("");
-        $("#maxprice").val("");
         $("#propdate").val("");
         $("#propdate2").val("");
-        $("#ownname").val("");
-        $("#ownnumber").val("");
-        $("#searchbar").val("");
         $("#view_cat").val("");
         $("#uhp").val("");
         $("#prop_find").val("");
+        $("#listing_users").val("");
+        $('#table').bootstrapTable('refresh');
         })
 
  
