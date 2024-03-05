@@ -18,6 +18,12 @@ from functions import assign_lead, logs, notes, update_note,lead_email, etisy_me
 from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
+from flask_httpauth import HTTPTokenAuth
+
+auth = HTTPTokenAuth(scheme='Bearer')
+tokens = {
+    ''
+}
 
 FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
 
@@ -33,120 +39,130 @@ db = SQLAlchemy()
 
 handleleads = Blueprint('handleleads', __name__, template_folder='templates')
 
+@auth.verify_token
+def verify_token(token):
+    if token in tokens:
+        return token
 
+@handleleads.route('/fetch_leads_token',methods = ['GET','POST'])
+@login_required
+def fetch_leads_token():
+    return(jsonify(''))
 
+@handleleads.route('/fetch_leads/<user>',methods = ['GET','POST'])
+@auth.login_required
+def fetch_leads(user):
+    voltage_user = db.session.query(User).filter_by(username = user).first()
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
+    data = []
+    query = db.session.query(Leads).filter(Leads.street == '1')
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Leads.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['min_beds', 'lead_type', 'subtype', 'locationtext', 'building', 'agent', 'propdate', 'propdate2'] if key in filters_01}
+        for key, value in filters.items():
+            if key == 'propdate':
+                conditions.append(Leads.lastupdated >= value)
+            elif key == 'propdate2':
+                value_as_datetime = datetime.strptime(value, '%Y-%m-%d')
+                value_as_datetime += timedelta(days=1)
+                value = value_as_datetime.strftime('%Y-%m-%d')
+                conditions.append(Leads.lastupdated <= value)
+            else:
+                conditions.append(getattr(Leads, key) == value)
+        query = query.filter(and_(*conditions))
+    
+    if voltage_user.is_admin == True:
+        z = query.count()
+        for r in query.order_by(Leads.id.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            reassign_btn  = '<a href="/pre_assign_lead/'+str(new['refno'])+'"><button class="btn-secondary si2" style="color:white;"><i class="bi bi-arrow-down-left-square-fill"></i></button></a>'
+            if new['sub_status'] != "Flag":
+                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
+            else:
+                flag = ''
+            if new['agent'] == voltage_user.username and new['sub_status'] == "In progress":
+                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
+            else:
+                followup = ""
+                followupBG = ""
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+reassign_btn+"</div>"
+            data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
+    elif voltage_user.team_lead == True:
+        query_team = query.filter(or_(Leads.created_by == voltage_user.username,Leads.agent == voltage_user.username))
+        for i in voltage_user.team_members.split(','):
+            query2 = query.filter(or_(Leads.created_by == i,Leads.agent == i))
+            query_team = query_team.union(query2)
+        z = query_team.count()
+        for r in query_team.order_by(Leads.id.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            if voltage_user.edit == True:
+                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = ''
+            if new['sub_status'] != "Flag":
+                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
+            else:
+                flag = ''
+            if new['agent'] == voltage_user.username and new['sub_status'] == "In progress":
+                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
+            else:
+                followup = ""
+                followupBG = ""
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
+            data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
+    else:
+        query = query.filter(or_(Leads.created_by == voltage_user.username,Leads.agent == voltage_user.username))
+        z = query.count()
+        for r in query.order_by(Leads.id.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            if voltage_user.edit == True:
+                if r.created_by == voltage_user.username or r.agent == voltage_user.username:
+                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+                else:
+                    edit_btn = ''
+            else:
+                edit_btn = ''
+            if new['sub_status'] != "Flag":
+                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
+            else:
+                flag = ''
+            if new['agent'] == voltage_user.username and new['sub_status'] == "In progress":
+                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
+                followupBG = 'background-color:#138496;background-color:rgba(19, 132, 150,0.7);border-radius:20px;'
+            else:
+                followupBG = ""
+                followup = ""
+            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
+            data.append(new)
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
+    
 @handleleads.route('/leads',methods = ['GET','POST'])
 @login_required
 def display_leads():   
     if current_user.sale == False:
         return abort(404)
     data = []
-    if current_user.team_members == "QC" and current_user.sale == True and current_user.is_admin == False:
-        for r in db.session.query(Leads).filter(Leads.street == '1'):
-            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            if new['sub_status'] != "Flag":
-                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
-            else:
-                flag = ''
-            #for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)
-            new["edit"] = '<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+'<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="reassign_lead('+"'"+new['refno']+"'"+')">R</button></div>'
-            
-            data.append(new)
-        f = open('lead_headers.json')
-        columns = json.load(f)
-        columns = columns["headers"]
-        all_lead_users = db.session.query(User).filter_by(sale = True).all()
-        return render_template('leads.html', data = data , columns = columns, user=current_user.username,all_lead_users=all_lead_users)
-    if current_user.viewall == True and current_user.is_admin == True:
-        for r in db.session.query(Leads).filter(Leads.street == '1'):
-            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            if current_user.edit == True:
-                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
-                reassign_btn  = '<a href="/pre_assign_lead/'+str(new['refno'])+'"><button class="btn-secondary si2" style="color:white;"><i class="bi bi-arrow-down-left-square-fill"></i></button></a>'
-            else:
-                edit_btn = ''
-            if new['sub_status'] != "Flag":
-                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
-            else:
-                flag = ''
-            if new['agent'] == current_user.username and new['sub_status'] == "In progress":
-                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
-                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
-            else:
-                followup = ""
-                followupBG = ""
-            #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+reassign_btn+"</div>"
-            data.append(new)
-    elif current_user.viewall == True and current_user.team_lead == True:
-        for r in db.session.query(Leads).filter(and_(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)), Leads.street == '1'):
-            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            if current_user.edit == True:
-                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
-            else:
-                edit_btn = ''
-            if new['sub_status'] != "Flag":
-                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
-            else:
-                flag = ''
-            if new['agent'] == current_user.username and new['sub_status'] == "In progress":
-                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
-                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
-            else:
-                followup = ""
-                followupBG = ""
-            #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
-            data.append(new)
-        for i in current_user.team_members.split(','):
-            for r in db.session.query(Leads).filter(and_(or_(Leads.created_by == i,Leads.agent == i)), Leads.street == '1'):
-                row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-                new = row2dict(r)
-                if current_user.edit == True:
-                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
-                else:
-                    edit_btn = ''
-                if new['sub_status'] != "Flag":
-                    flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
-                else:
-                    flag = ''
-                if new['agent'] == current_user.username and new['sub_status'] == "In progress":
-                    followup = ""
-                    followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
-                else:
-                    followup = ""
-                    followupBG = ""
-                #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-                new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
-                data.append(new)
-    else:
-        for r in db.session.query(Leads).filter(and_(or_(Leads.created_by == current_user.username,Leads.agent == current_user.username)), Leads.street == '1'):
-            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-            new = row2dict(r)
-            #for k in ['photos','commercialtype','title','description','unit','plot','street','sizeunits','price','rentpriceterm','pricecurrency','totalclosingfee','annualcommunityfee','lastupdated','contactemail','contactnumber','locationtext','furnished','propertyamenities','commercialamenities','geopoint','bathrooms','price_on_application','rentispaid','permit_number','view360','video_url','completion_status','source','owner']: new.pop(k)
-            if current_user.edit == True:
-                if r.created_by == current_user.username or r.agent == current_user.username:
-                    edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
-                else:
-                    edit_btn = ''
-            else:
-                edit_btn = ''
-            if new['sub_status'] != "Flag":
-                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
-            else:
-                flag = ''
-            if new['agent'] == current_user.username and new['sub_status'] == "In progress":
-                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
-                followupBG = 'background-color:#138496;background-color:rgba(19, 132, 150,0.7);border-radius:20px;'
-            else:
-                followupBG = ""
-                followup = ""
-            #viewing = '<button onclick="request_viewing('+"'"+new['refno']+"'"+')" class="btn-success si2" style="color:white;"><i class="bi bi-eye"></i></button>'
-            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
-            data.append(new)
     f = open('lead_headers.json')
     columns = json.load(f)
     columns = columns["headers"]

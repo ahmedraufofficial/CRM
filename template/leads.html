@@ -546,20 +546,10 @@
               <option selected="selected" value="">Community</option>
             </select>
           </div>
-            <div class="child">
-              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/different-currencies.png"/><span><h6 style="text-align: left;">Price</h6>
-              <input type="text" name="minprice" id="minprice" class="filter_add02" placeholder="Min. Price" aria-label="minprice">
-              <input type="text" name="maxprice" id="maxprice" class="filter_add02" placeholder="Max. Price" aria-label="maxprice">
-            </div>
             <div class="child" style="width: auto">
               <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
               <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
               <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
-            </div>
-            <div class="child" style="width: auto;">
-              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/real-estate-agent.png"/><span><h6 style="text-align: left;">Contact Details</h6>
-              <input type="text" name="ownname" id="ownname" class="filter_add02" placeholder="Name" aria-label="ownname">
-              <input type="text" name="ownnumber" id="ownnumber" class="filter_add02" placeholder="Number" aria-label="ownnumber">
             </div>
           </div>
     
@@ -567,6 +557,7 @@
             <div class="col">
               <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
               <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+              <input type="hidden" id="filter" name="filter" value="OFF">
             </div>
           </div>
       </div>
@@ -614,9 +605,11 @@
         data-toolbar="#toolbar"
         data-search="true"
         data-pagination="true"
-        data-height="750"
-        data-page-size="100"
-        data-page-list="[25, 50, 100, 200, All]">
+        data-height="700"
+        data-page-size="30"
+        data-side-pagination="server"
+        data-ajax="ajaxRequest"
+        data-page-list="[25, 50, 100, 200]">
       </table>
     </div>
 <!--
@@ -652,6 +645,29 @@
 </script>
 
 <script type='text/javascript'>
+
+$("#location_category").change(function(){
+    get_location();
+    });
+
+    function get_location(){
+        var comm = $("#location_category").val();
+        fetch('/property/' + comm).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">Community</option>';
+                for (let location of data.locations){
+
+               
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    
+                }
+                document.getElementById('community_category').innerHTML = optionHTML;
+            })
+        })
+        
+    }
+
 var type = document.getElementById('type')
 var contact = document.getElementById('contact')
 var contact_name = document.getElementById('contact_name')
@@ -819,6 +835,62 @@ function view_leads(x){
           })
         })
       }
+    
+function ajaxRequest(params) {
+  fetch('/fetch_leads_token').then(function(response){
+    response.json().then(function(data){
+      token = data
+      var headers = {
+        'Authorization': 'Bearer '+token
+      };
+      user = {{current_user.username|tojson}};
+      //filters are added in the query accordingly
+      if ($("#filter").val() == 'ON') {
+        params.data['filter'] = $("#filter").val()
+        if ($("#beds_category").val() != '') {
+          params.data['min_beds'] = $("#beds_category").val()
+        }
+        if ($("#location_category").val() != '') {
+          params.data['locationtext'] = $("#location_category").val()
+        }
+        if ($("#subtype_category").val() != '') {
+          params.data['subtype'] = $("#subtype_category").val()
+        }
+        if ($("#community_category").val() != '') {
+          params.data['building'] = $("#community_category").val()
+        }
+        if ($("#purpose_category").val() != '') {
+          params.data['lead_type'] = $("#purpose_category").val()
+        }
+        if ($("#listing_users").val() != '') {
+          params.data['agent'] = $("#listing_users").val()
+        }
+        if ($("#propdate").val() != '') {
+          params.data['propdate'] = $("#propdate").val()
+        }
+        if ($("#propdate2").val() != '') {
+          params.data['propdate2'] = $("#propdate2").val()
+        }
+        if ($("#filteration").val() != '') {
+          params.data['filters'] = $("#filteration").val()
+        }
+      }
+      var url = 'https://crm.uhpae.com/fetch_leads/'+user;
+      $.ajax({
+        url: url,
+        method: 'GET',
+        headers: headers,
+        data: params.data,
+        success: function (res) {
+          params.success(res);
+        },
+        error: function (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    })
+  })
+}      
 
 
 $(window).on('load',(function(){
@@ -826,7 +898,7 @@ $(window).on('load',(function(){
   $('#notes').hide();      
   var columns = {{columns|tojson}};
   var data = {{data|tojson}};
-  data.reverse()
+
       $(function() {
         $('#table').bootstrapTable({                    
           data: data,
@@ -834,183 +906,21 @@ $(window).on('load',(function(){
         });
 
         $('#filter_search').click(function () {
-        
-        var test = data
-        var b = $("#beds_category").val();
-        var t = $("#subtype_category").val();
-        var l = $("#location_category").val();
-        var c = $("#community_category").val();
-        var p = $("#purpose_category").val()
-        var u = $("#listing_users").val()
-        var v = $("#minprice").val()
-        var w = $("#maxprice").val()
-        var x = $("#propdate").val()
-        var y = $("#propdate2").val()
-        var s = $("#filteration").val()
-        var o1 = $("#ownname").val()
-        var o2 = $("#ownnumber").val()
-        //var z = $("#searchbar").val()
-        var grepFunc;
-        var grepFunc2;
-        var grepFunc3;
-        var grepFunc4;
-        var grepFunc5;
-        var grepFunc6;
-        var grepFunc7;
-        var grepFunc8;
-        var grepFunc9;
-        var grepFunc10;
-        //var grepFunc11;
-        var grepFunc12;
-        var grepFunc13;
-        var grepFunc14;
-
-        grepFunc = function(item){
-              return item.min_beds == b;
-          }
-
-        grepFunc2 = function(item){
-              return item.subtype == t;
-          }
-
-        grepFunc3 = function(item){
-              return item.locationtext == l;
-          }
-        
-        grepFunc4 = function(item){
-              return item.building == c;
-          }
-        
-        grepFunc5 = function(item){
-              return item.lead_type == p;
-          }
-        
-        grepFunc6 = function(item){
-              return item.agent == u;
-          }
-
-        grepFunc7 = function(item){
-              return parseInt(item.min_price) >= parseInt(v);
-          }
-        
-        grepFunc8 = function(item){
-              return parseInt(item.max_price) <= parseInt(w);
-            }
-        
-        grepFunc9 = function(item){
-              return item.created_date.slice(0,10) >= x;
-          }
-
-        grepFunc10 = function(item){
-              return item.created_date.slice(0,10) <= y;
-          }
-
-        //grepFunc11 = function(item){
-        //      return item.agent == z;
-        //  }
-
-        grepFunc12 = function(item){
-              if (s == "all_data")
-              {
-                return true;
-              }
-              if (s == "flag")
-              {
-                return item.sub_status == 'Flag'
-              }
-              if (s == "user_data")
-              {
-                return item.agent == '{{user}}' && item.status == 'Open';
-              }
-              if (s == "active")
-              {
-                return item.status == 'Open'
-              }
-              if (s == "lead_pool")
-              {
-                return item.status == 'Closed';
-              }
-              if (s == "referral")
-              {
-                return item.created_by == '{{user}}'
-              }
-              if (s == "get_team")
-              {
-                if (("{{current_user.team_members}}").includes(item.agent))
-                { return item }
-                else if (("{{current_user.team_members}}").includes(item.created_by))
-                { return item }
-              }
-          }
-        
-        grepFunc13 = function(item){
-              return item.contact_name == o1;
-          }
-
-        grepFunc14 = function(item){
-              return item.contact_number == o2;
-          }
-
-        if (b != "")
-        {test = $.grep(test, grepFunc)}
-
-        if (t != "")
-        {test = $.grep(test, grepFunc2)}
-
-        if (l != "")
-        {test = $.grep(test, grepFunc3)}
-
-        if (c != "")
-        {test = $.grep(test, grepFunc4)}
-        
-        if (p != "")
-        {test = $.grep(test, grepFunc5)}
-
-        if (u != "")
-        {test = $.grep(test, grepFunc6)}
-
-        if (v != "")
-        {test = $.grep(test, grepFunc7)}
-
-        if (w != "")
-        {test = $.grep(test, grepFunc8)}
-
-        if (x != "")
-        {test = $.grep(test, grepFunc9)}
-
-        if (y != "")
-        {test = $.grep(test, grepFunc10)}
-
-        //if (z != "")
-        //{test = $.grep(test, grepFunc11)}
-
-        if (s != "")
-        {test = $.grep(test, grepFunc12)}
-
-        if (o1 != "")
-        {test = $.grep(test, grepFunc13)}
-
-        if (o2 != "")
-        {test = $.grep(test, grepFunc14)}
-
-
-          $('#table').bootstrapTable('load', test);
+          $("#filter").val("ON")
+          $('#table').bootstrapTable('refresh');
         })
         
         $('#filter_reset').click(function () {
-        $('#table').bootstrapTable('load', data)
-        $("#beds_category").val("");
-        $("#subtype_category").val("");
-        $("#location_category").val("");
-        $("#community_category").val("");
-        $("#purpose_category").val("");
-        $("#minprice").val("");
-        $("#maxprice").val("");
-        $("#propdate").val("");
-        $("#propdate2").val("");
-        $("#ownname").val("");
-        $("#ownnumber").val("");
-        //$("#searchbar").val("");
+          $("#filter").val("OFF")
+          $("#beds_category").val("");
+          $("#subtype_category").val("");
+          $("#location_category").val("");
+          $("#community_category").val("");
+          $("#purpose_category").val("");
+          $("#propdate").val("");
+          $("#propdate2").val("");
+          $("#filteration").val("")
+          $('#table').bootstrapTable('refresh');
         })
 
         $('#user_data').click(function () { //For My Contacts option if required later on 
