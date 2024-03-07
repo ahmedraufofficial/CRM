@@ -872,7 +872,7 @@ function ajaxRequest(params) {
           params.data['propdate2'] = $("#propdate2").val()
         }
         if ($("#filteration").val() != '') {
-          params.data['filters'] = $("#filteration").val()
+          params.data['status'] = $("#filteration").val()
         }
       }
       var url = 'https://crm.uhpae.com/fetch_leads/'+user;

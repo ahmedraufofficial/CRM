@@ -66,7 +66,7 @@ def fetch_leads(user):
     if request.args.get('filter') == 'ON':
         conditions = []
         filters_01 = {key: request.args.get(key) for key in request.args}
-        filters = {key: filters_01[key] for key in ['min_beds', 'lead_type', 'subtype', 'locationtext', 'building', 'agent', 'propdate', 'propdate2'] if key in filters_01}
+        filters = {key: filters_01[key] for key in ['min_beds', 'lead_type', 'subtype', 'locationtext', 'building', 'agent', 'propdate', 'propdate2', 'status'] if key in filters_01}
         for key, value in filters.items():
             if key == 'propdate':
                 conditions.append(Leads.lastupdated >= value)
@@ -75,6 +75,8 @@ def fetch_leads(user):
                 value_as_datetime += timedelta(days=1)
                 value = value_as_datetime.strftime('%Y-%m-%d')
                 conditions.append(Leads.lastupdated <= value)
+            elif key == 'status':
+                conditions.append(getattr(Leads, key) == 'Open')
             else:
                 conditions.append(getattr(Leads, key) == value)
         query = query.filter(and_(*conditions))
