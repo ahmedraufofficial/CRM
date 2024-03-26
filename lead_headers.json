@@ -65,16 +65,6 @@
       "sortable": "True"
     },
     {
-      "field": "min_price",
-      "title": "Min Price",
-      "sortable": "True"
-    },
-    {
-      "field": "max_price",
-      "title": "Max Price",
-      "sortable": "True"
-    },
-    {
       "field": "status",
       "title": "Status",
       "sortable": "True"
