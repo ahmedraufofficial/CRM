@@ -66,7 +66,7 @@ def fetch_leads(user):
     if request.args.get('filter') == 'ON':
         conditions = []
         filters_01 = {key: request.args.get(key) for key in request.args}
-        filters = {key: filters_01[key] for key in ['min_beds', 'lead_type', 'subtype', 'locationtext', 'building', 'agent', 'propdate', 'propdate2', 'status'] if key in filters_01}
+        filters = {key: filters_01[key] for key in ['min_beds', 'lead_type', 'subtype', 'locationtext', 'building', 'agent', 'propdate', 'propdate2', 'status', 'source'] if key in filters_01}
         for key, value in filters.items():
             if key == 'propdate':
                 conditions.append(Leads.lastupdated >= value)
@@ -137,6 +137,8 @@ def fetch_leads(user):
         for r in query.order_by(Leads.id.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
+            new['created_date'] = '-'
+            new['source'] = '-'
             if voltage_user.edit == True:
                 if r.created_by == voltage_user.username or r.agent == voltage_user.username:
                     edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
