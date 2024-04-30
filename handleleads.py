@@ -83,7 +83,7 @@ def fetch_leads(user):
     
     if voltage_user.is_admin == True:
         z = query.count()
-        for r in query.order_by(Leads.id.desc()).offset(offset).limit(limit):
+        for r in query.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
@@ -109,7 +109,7 @@ def fetch_leads(user):
             query2 = query.filter(or_(Leads.created_by == i,Leads.agent == i))
             query_team = query_team.union(query2)
         z = query_team.count()
-        for r in query_team.order_by(Leads.id.desc()).offset(offset).limit(limit):
+        for r in query_team.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             if voltage_user.edit == True:
@@ -134,7 +134,7 @@ def fetch_leads(user):
     else:
         query = query.filter(or_(Leads.created_by == voltage_user.username,Leads.agent == voltage_user.username))
         z = query.count()
-        for r in query.order_by(Leads.id.desc()).offset(offset).limit(limit):
+        for r in query.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             new['created_date'] = '-'
