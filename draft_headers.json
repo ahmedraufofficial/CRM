@@ -1,0 +1,134 @@
+{"headers":
+  [
+    {
+     "field": "edit",
+     "title": "Options",
+     "sortable": "False",
+     "width": "1500px" 
+    },
+    {
+      "field": "name",  
+      "title": "Client Name"
+    },
+    {
+        "field": "number",  
+        "title": "Client Number"
+    },
+    {
+        "field": "role",  
+        "title": "Client Role"
+    },
+    {
+        "field": "location",  
+        "title": "Location"
+    },
+    {
+        "field": "community",  
+        "title": "Community"
+    },
+    {
+        "field": "source",  
+        "title": "Source"
+    },
+    {
+        "field": "lead_refno",  
+        "title": "Lead No."
+    },
+    {
+        "field": "status",  
+        "title": "Status"
+    },
+    {
+        "field": "draft_status",  
+        "title": "Draft"
+    },
+    {
+        "field": "draft_location",  
+        "title": "Interested Location"
+    },
+    {
+        "field": "draft_community",  
+        "title": "Interested Community"
+    },
+    {
+        "field": "draft_type",  
+        "title": "Interested Type"
+    },
+    {
+        "field": "created_date",  
+        "title": "Created Date"
+    },
+    {
+        "field": "last_updated",  
+        "title": "Updated Date"
+    }
+  ],
+  "headers_call_center":
+  [
+    {
+     "field": "edit",
+     "title": "Options",
+     "sortable": "False"
+    },
+    {
+      "field": "name",  
+      "title": "Client Name"
+    },
+    {
+        "field": "number",  
+        "title": "Client Number"
+    },
+    {
+        "field": "role",  
+        "title": "Client Role"
+    },
+    {
+        "field": "location",  
+        "title": "Location"
+    },
+    {
+        "field": "community",  
+        "title": "Community"
+    },
+    {
+        "field": "source",  
+        "title": "Source"
+    },
+    {
+        "field": "lead_refno",  
+        "title": "Lead No."
+    },
+    {
+        "field": "assign_to",  
+        "title": "Assigned to"
+    },
+    {
+        "field": "status",  
+        "title": "Agent Status"
+    },
+    {
+        "field": "update_location",  
+        "title": "Interested Location"
+    },
+    {
+        "field": "update_community",  
+        "title": "Interested Community"
+    },
+    {
+        "field": "update_type",  
+        "title": "Interested Type"
+    },
+    {
+        "field": "comment",  
+        "title": "Comment"
+    },
+    {
+        "field": "activated_date",  
+        "title": "Activated Date"
+    },
+    {
+        "field": "updated_date",  
+        "title": "Updated Date"
+    }
+  ]
+}

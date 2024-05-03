@@ -363,3 +363,12 @@ class Addadvanceform(FlaskForm):
     account_ack = DateField('Accounts Acknowledge', format='%Y-%m-%d')
     account_approval = SelectField(u'Accounts Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
     remarks = StringField('Remarks')
+
+class Draftsusers(FlaskForm):
+    name = StringField('Name')
+    number = StringField('Number')
+    status = SelectField(u'Status *', [validators.DataRequired()], choices = [('', ''),('Interested', 'Interested'),('Call Later', 'Call Later'), ('No Answer', 'No Answer'), ('Do Not Call', 'Do Not Call')])
+    update_location = SelectField(u'Location',choices = communities)
+    update_community = SelectField(u'Community',choices = [])
+    update_type = SelectField(u'Type',choices = [('', ''),('Villa', 'Villa'), ('Apartment', 'Apartment'),('Loft Apartment', 'Loft Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
+    comment = StringField('Comment')

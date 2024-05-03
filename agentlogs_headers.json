@@ -1,0 +1,36 @@
+{"headers":
+  [
+    {
+      "field": "user",  
+      "title": "User"
+    },
+    {
+        "field": "type",  
+        "title": "Type"
+    },
+    {
+        "field": "client_name",  
+        "title": "Client Name"
+    },
+    {
+        "field": "client_number",  
+        "title": "Client Number"
+    },
+    {
+        "field": "status",  
+        "title": "Status"
+    },
+    {
+        "field": "details",  
+        "title": "Details"
+    },
+    {
+        "field": "created_date",  
+        "title": "Created Date"
+    },
+    {
+        "field": "updated_date",  
+        "title": "Updated Date"
+    }
+  ]
+}

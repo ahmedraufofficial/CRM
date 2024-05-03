@@ -22,6 +22,8 @@ from handleleads import handleleads
 from handledeals import handledeals
 from handlestorage import handlestorage
 from handleemployees import handleemployees
+from handledrafts import handledrafts
+from handlelogs import handlelogs
 from portals import portals
 from models import *
 import json
@@ -125,9 +127,18 @@ app.register_blueprint(handleleads)
 app.register_blueprint(handledeals)
 app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
+app.register_blueprint(handledrafts)
+app.register_blueprint(handlelogs)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
+app.config['SQLALCHEMY_DATABASE_URI_SECOND'] = 'sqlite:///'+os.getcwd()+'/draft_db.db'
+app.config['SQLALCHEMY_DATABASE_URI_THIRD'] = 'sqlite:///'+os.getcwd()+'/agent_logs.db'
+app.config['SQLALCHEMY_BINDS'] = {
+    'primary': app.config['SQLALCHEMY_DATABASE_URI'],
+    'second': app.config['SQLALCHEMY_DATABASE_URI_SECOND'],
+    'third': app.config['SQLALCHEMY_DATABASE_URI_THIRD']
+}
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
