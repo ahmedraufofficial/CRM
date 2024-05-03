@@ -19,6 +19,7 @@ from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
 from flask_httpauth import HTTPTokenAuth
+from handlelogs import lead_update_log
 
 auth = HTTPTokenAuth(scheme='Bearer')
 tokens = {
@@ -550,6 +551,10 @@ def reassign_btn_response(x):
     if current_user.sale == False or current_user.edit == False:
         return abort(404) 
     edit = db.session.query(Leads).filter_by(refno=x).first()
+    try:
+        x = lead_update_log(edit.agent, edit.contact_name, edit.contact_number, 'Lead Lost', edit.refno+' is reassigned')
+    except:
+        pass
     edit.street = '0'
     edit.status = 'Open'
     edit.sub_status = 'Follow up'
