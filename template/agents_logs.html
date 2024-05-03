@@ -1,0 +1,338 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 25px;
+}
+
+.t-design {
+    border-collapse: separate; 
+}
+
+.t-content {
+    padding: 10px;
+    text-align: center;
+    border: 0px solid #ddd;
+    font-size: 13px !important;
+}
+
+.t-th {
+    background-color: rgba(41, 54, 69, 1);
+    color: white;
+    width:300px;
+}
+
+.t-tr {
+    background-color: rgb(185, 209, 235);
+    color: rgb(0, 0, 0);
+}
+
+.input-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        width: 200px;
+}
+
+.input-container input[type="text"] {
+  flex: 1;
+  padding: 5px;
+  border: none;
+  outline: none;
+  height: 30px !important;
+  font-size: medium;
+}
+
+.input-container button {
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer;
+  height: 30px;
+  margin-left: 5px;
+}
+
+/* Style for number-only input */
+input[type="text"].number-input::-webkit-inner-spin-button,
+input[type="text"].number-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="text"].number-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.table th {
+        width: 2000px; /* Set the width as needed */
+    }
+</style>
+<title>Lighthouse - Logs</title>
+<section>
+  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+    <div class="container-fluid" style="padding: 10px;">
+      <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
+        <div class="row">
+          <div class="child" style="width: auto; margin-left: 1%;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Filters</h6>
+        <select name="agent_user" id="agent_user" class="filter_add02">
+          <option selected="selected" value="">Users</option>
+          {% for users in all_sale_users %}
+          <option value="{{users.username}}">{{users.username}}</option>
+          {% endfor %}
+        </select>
+        <select name="type" id="type" class="filter_add02">
+            <option selected="selected" value="">Type</option>
+            <option value="Drafts">Drafts</option>
+            <option value="Lead">Lead</option>
+          </select>
+        <select name="status" id="status" class="filter_add02">
+          <option selected="selected" value="">Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Interested">Interested</option>
+          <option value="Call Later">Call Later</option>
+          <option value="No Answer">No Answer</option>
+          <option value="Do Not Call">Do Not Call</option>
+          <option value="Lead Lost">Lead Lost</option>
+      </select>
+          </div>
+            <div class="child" style="width: auto">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+            </div>
+            <div class="child" style="width: auto; color: black; background-color: rgb(189, 235, 189); padding: 7px !important; border: 0px">
+                <h6 style="text-align: left;">Interested Clients</h6>
+                <h6 style="text-align: left; text-align: center;" name="interested_clients" id="interested_clients"></h6>
+            </div>
+            <div class="child" style="width: auto; color: black; background-color: rgb(174, 212, 230); padding: 7px !important; border: 0px">
+                <h6 style="text-align: left;">No Answer</h6>
+                <h6 style="text-align: left; text-align: center;" name="no_answer" id="no_answer"></h6>
+            </div>
+            <div class="child" style="width: auto; color: black; background-color: rgb(233, 176, 176); padding: 7px !important; border: 0px">
+                <h6 style="text-align: left;">Leads Lost</h6>
+                <h6 style="text-align: left; text-align: center;" name="lead_lost" id="lead_lost"></h6>
+            </div>
+          </div>
+    
+          <div class="row">
+            <div class="col">
+              <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+              <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+              <input type="hidden" id="filter" name="filter" value="OFF">
+            </div>
+          </div>
+      </div>
+
+
+
+
+
+
+<!--
+      <div id="toolbar">
+        {% if current_user.export == True %}
+        <button onclick="get_check('leads')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+        {% if current_user.viewall == True %}
+        <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+        {% endif %}
+        <button class="btn btn-danger" id="flag"><i class="bi bi-flag"></i></button>
+        <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
+        <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
+        <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
+        <button id="referral" class="btn btn-warning" style="margin-left: 10px; color: white;">Referral Leads</button>
+        {% if current_user.team_lead == True %}
+        <button id="get_team" style="margin-left: 10px;"  class="btn btn-primary">Team Leads</button>
+        {% endif %}
+        <select name="lead_status" style="margin-left: 10px; padding-top: 5px !important; padding-bottom: 4px !important;" class="btn btn-info" id="lead_status">
+          <option value="">Sub Status</option>
+          <option value="Successful">Successful</option>
+          <option value="Follow up">Follow Up</option>
+          <option value="In progress">In progress</option>
+          <option value="Interested">Interested</option>
+          <option value="Viewing arranged">Viewing arranged</option>
+          <option value="Offer Made">Offer Made</option>
+          <option value="Unsuccessful">Unsuccessful</option>
+        </select>
+      </div>
+-->
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable oswald"
+        data-sort-name="lastupdated"
+        data-sort-order="desc"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-pagination="true"
+        data-height="700"
+        data-page-size="30"
+        data-side-pagination="server"
+        data-ajax="ajaxRequest"
+        data-page-list="[25, 50, 100, 200]">
+      </table>
+    </div>
+<!--
+    <div class="container-fluid">
+    <a href="/add_lead_buyer" class="btn btn-primary">Add Buyer Lead</a>
+    <a href="/add_lead_developer" class="btn btn-warning" style="color: white;">Add Developer Lead</a>
+    </div>
+    -->
+  <div id="toolbar">
+    <button class="btn btn-primary" style="color:white; padding: 5px !important;" data-toggle="modal" data-target="#activateModal" onclick="activate_drafts()">Activate Drafts</button>
+  </div>
+
+    </div>
+    </section>
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+$("#location_category").change(function(){
+    get_location();
+    });
+
+    function get_location(){
+        var comm = $("#location_category").val();
+        fetch('/property/' + comm).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">Community</option>';
+                for (let location of data.locations){
+
+               
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    
+                }
+                document.getElementById('community_category').innerHTML = optionHTML;
+            })
+        })
+        
+    }
+
+function ajaxRequest(params) {
+  fetch('/fetch_logs_token').then(function(response){
+    response.json().then(function(data){
+      token = data
+      var headers = {
+        'Authorization': 'Bearer '+token
+      };
+      //filters are added in the query accordingly
+      if ($("#filter").val() == 'ON') {
+        params.data['filter'] = $("#filter").val()
+        if ($("#agent_user").val() != '') {
+          params.data['user'] = $("#agent_user").val()
+        }
+        if ($("#status").val() != '') {
+          params.data['status'] = $("#status").val()
+        }
+        if ($("#type").val() != '') {
+          params.data['type'] = $("#type").val()
+        }
+        if ($("#propdate").val() != '') {
+          params.data['propdate'] = $("#propdate").val()
+        }
+        if ($("#propdate2").val() != '') {
+          params.data['propdate2'] = $("#propdate2").val()
+        }
+      }
+      var url = 'http://localhost:5000/fetch_logs';
+      $.ajax({
+        url: url,
+        method: 'GET',
+        headers: headers,
+        data: params.data,
+        success: function (res) {
+          params.success(res);
+          document.getElementById('interested_clients').innerHTML = res['interested_clients'];
+          document.getElementById('no_answer').innerHTML = res['no_answer'];
+          document.getElementById('lead_lost').innerHTML = res['lead_lost'];
+        },
+        error: function (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    })
+  })
+}      
+
+
+$(window).on('load',(function(){
+  $("#filter").val("ON")
+  $('#display').hide();
+  $('#notes').hide();      
+  var columns = {{columns|tojson}};
+  var data = {{data|tojson}};
+
+      $(function() {
+        $('#table').bootstrapTable({                    
+          data: data,
+          columns: columns,
+        });
+
+        $('#filter_search').click(function () {
+          $("#filter").val("ON")
+          $('#table').bootstrapTable('refresh');
+        })
+        
+        $('#filter_reset').click(function () {
+          $("#filter").val("OFF")
+          $("#type").val("");
+          $("#status").val("");
+          $("#propdate").val("");
+          $("#propdate2").val("");
+          $('#table').bootstrapTable('refresh');
+        })              
+      });
+    }));
+
+</script>
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}</style>
+{% endblock %}

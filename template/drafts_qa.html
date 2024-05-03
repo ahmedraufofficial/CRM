@@ -1,0 +1,620 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 25px;
+}
+
+.t-design {
+    border-collapse: separate; 
+}
+
+.t-content {
+    padding: 10px;
+    text-align: center;
+    border: 0px solid #ddd;
+    font-size: 13px !important;
+}
+
+.t-th {
+    background-color: rgba(41, 54, 69, 1);
+    color: white;
+    width:300px;
+}
+
+.t-tr {
+    background-color: rgb(185, 209, 235);
+    color: rgb(0, 0, 0);
+}
+
+.input-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        width: 400px;
+}
+
+.input-container input[type="text"] {
+  flex: 1;
+  padding: 5px;
+  border: none;
+  outline: none;
+  height: 30px !important;
+  font-size: medium;
+  width: 50px !important;
+  margin-left: 2px;
+}
+
+.wassup {
+  padding: 5px;
+  border: none;
+  outline: none;
+  height: 30px !important;
+  font-size: medium;
+  width: 150px;
+  background-color: white;
+}
+
+.input-container button {
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 3px;
+  cursor: pointer;
+  height: 30px;
+  margin-left: 5px;
+}
+
+/* Style for number-only input */
+input[type="text"].number-input::-webkit-inner-spin-button,
+input[type="text"].number-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="text"].number-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+</style>
+<title>Lighthouse - Drafts QA</title>
+<section>
+
+
+<!--Activate Modal-->
+
+<div class="modal" id="activateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Activate Drafts</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="align-items: center; margin-left: auto; margin-right: auto;">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div id="tableContainer"></div>
+            </div>
+            <div class="col">
+              <h1 style="font-size: medium; float: left; font-weight:500;">Important Note: Please refer to the table and enter a number for draft activation.</h1>
+              <div class="input-container">
+                <select name="assignment_user" id="assignment_user" class="wassup" >
+                  <option selected="selected" value="">Users</option>
+                  {% for users in all_sale_users %}
+                  <option value="{{users.username}}">{{users.username}}</option>
+                  {% endfor %}
+                </select>
+                <input class="form-control number-input" type="text" id="assignment_number" name="assignment_number" pattern="[0-9]*" inputmode="numeric" placeholder="Enter a number">
+                <button onclick="assignment_execution()">Activate</button>
+              </div>
+              <h1 style="font-size: medium; float: left; font-weight:500; margin-top: 10px; color: green;" id="assignment_message"></h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal End -->
+
+
+  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+    <div class="container-fluid" style="padding: 10px;">
+      <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
+        <div class="row">
+          <div class="child" style="width: auto; margin-left: 1%;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Availablility</h6>
+        <select name="status" id="status" class="filter_add02">
+          <option selected="selected" value="">Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Assigned">Assigned</option>
+          <option value="Interested">Interested</option>
+          <option value="Call Later">Call Later</option>
+          <option value="No Answer">No Answer</option>
+          <option value="Do Not Call">Do Not Call</option>
+      </select>
+      <select name="source" id="source" class="filter_add02">
+        <option selected="selected" value="">Source</option>
+        <option value="Raw">Raw</option>
+        <option value="Lead">Lead</option>
+      </select>
+          </div>
+            <div class="child" style="width: auto;">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/location-pointer.png"/><span><h6 style="text-align: left;">Area</h6>
+            <select name="location_category" id="location_category" class="filter_add02">
+              <option selected="selected" value=''>Location</option>
+              <option value='Abu Dhabi Gate City'>Abu Dhabi Gate City</option>
+              <option value='Abu Dhabi Island'>Abu Dhabi Island</option>
+              <option value='AbuDhabi-Al Ain (Highway)'>AbuDhabi-Al Ain (Highway)</option>
+              <option value='Airport Road'>Airport Road</option>
+              <option value='Al Ajban'>Al Ajban</option>
+              <option value='Al Aman'>Al Aman</option>
+              <option value='Al Aryam'>Al Aryam</option>
+              <option value='Al Badaa'>Al Badaa</option>
+              <option value='Al Bahia'>Al Bahia</option>
+              <option value='Al Baraha'>Al Baraha</option>
+              <option value='Al Barza'>Al Barza</option>
+              <option value='Al Bateen'>Al Bateen</option>
+              <option value='Al Bateen Al Ain'>Al Bateen Al Ain</option>
+              <option value='Al Danah'>Al Danah</option>
+              <option value='Al Dhafrah'>Al Dhafrah</option>
+              <option value='Al Fahid Island'>Al Fahid Island</option>
+              <option value='Al Falah City'>Al Falah City</option>
+              <option value='Al Faya'>Al Faya</option>
+              <option value='Al Ghadeer'>Al Ghadeer</option>
+              <option value='Al Gurm West'>Al Gurm West</option>
+              <option value='Al Hosn'>Al Hosn</option>
+              <option value='Al Hudayriat Island'>Al Hudayriat Island</option>
+              <option value='Al Ittihad Road'>Al Ittihad Road</option>
+              <option value='Al Jubail Island'>Al Jubail Island</option>
+              <option value='Al Jubail Island'>Al Jurf Island</option>
+              <option value='Al Karamah'>Al Karamah</option>
+              <option value='Al Khaleej Al Arabi Street'>Al Khaleej Al Arabi Street</option>
+              <option value='Al Khalidiya'>Al Khalidiya</option>
+              <option value='Al Khatim'>Al Khatim</option>
+              <option value='Al Khazna'>Al Khazna</option>
+              <option value='Al Khubeirah'>Al Khubeirah</option>
+              <option value='Al Maffraq'>Al Maffraq</option>
+              <option value='Al Maha'>Al Maha</option>
+              <option value='Al Maharba'>Al Maharba</option>
+              <option value='Al Manaseer'>Al Manaseer</option>
+              <option value='Al Manhal'>Al Manhal</option>
+              <option value='Al Maqtaa'>Al Maqtaa</option>
+              <option value='Al Marina'>Al Marina</option>
+              <option value='Al Markaz'>Al Markaz</option>
+              <option value='Al Markaziyah'>Al Markaziyah</option>
+              <option value='Al Maryah Island'>Al Maryah Island</option>
+              <option value='Al Mina'>Al Mina</option>
+              <option value='Al Mirfa'>Al Mirfa</option>
+              <option value='Al Muneera'>Al Muneera</option>
+              <option value='Al Muntazah'>Al Muntazah</option>
+              <option value='Al Mushrif'>Al Mushrif</option>
+              <option value='Al Nahda Abu Dhabi'>Al Nahda Abu Dhabi</option>
+              <option value='Al Nahyan'>Al Nahyan</option>
+              <option value='Al Nahyan Camp'>Al Nahyan Camp</option>
+              <option value='Al Najda Street'>Al Najda Street</option>
+              <option value='Al Nasr Street'>Al Nasr Street</option>
+              <option value='Al Qurm'>Al Qurm</option>
+              <option value='Al Raha'>Al Raha</option>
+              <option value='Al Raha Beach'>Al Raha Beach</option>
+              <option value='Al Raha Gardens'>Al Raha Gardens</option>
+              <option value='Al Raha Golf Gardens'>Al Raha Golf Gardens</option>
+              <option value='Al Rahba'>Al Rahba</option>
+              <option value='Al Rawdah'>Al Rawdah</option>
+              <option value='Al Reef'>Al Reef</option>
+              <option value='Al Reef Villas'>Al Reef Villas</option>
+              <option value='Al Reem Island'>Al Reem Island</option>
+              <option value='Al Rehhan'>Al Rehhan</option>
+              <option value='Al Rideem'>Al Rideem</option>
+              <option value='Al Ruwais'>Al Ruwais</option>
+              <option value='Al Safarat District'>Al Safarat District</option>
+              <option value='Al Samha'>Al Samha</option>
+              <option value='Al Shahama'>Al Shahama</option>
+              <option value='Al Shamkha'>Al Shamkha</option>
+              <option value='Al Shamkha South'>Al Shamkha South</option>
+              <option value='Al Shawamekh'>Al Shawamekh</option>
+              <option value='Al Sila'>Al Sila</option>
+              <option value='Al Sowwah'>Al Sowwah</option>
+              <option value='Al Taweelah'>Al Taweelah</option>
+              <option value='Al Tibbiya'>Al Tibbiya</option>
+              <option value='AL Wahda'>AL Wahda</option>
+              <option value='Al Wathba'>Al Wathba</option>
+              <option value='Al Zaab'>Al Zaab</option>
+              <option value='Al Zahraa'>Al Zahraa</option>
+              <option value='Arabian Village'>Arabian Village</option>
+              <option value='Bain Al Jessrain'>Bain Al Jessrain</option>
+              <option value='Baniyas'>Baniyas</option>
+              <option value='Between Two Bridges'>Between Two Bridges</option>
+              <option value='Building Materials City'>Building Materials City</option>
+              <option value='Capital Centre'>Capital Centre</option>
+              <option value='City Downtown'>City Downtown</option>
+              <option value='Corniche'>Corniche</option>
+              <option value='Corniche Area'>Corniche Area</option>
+              <option value='Corniche Road'>Corniche Road</option>
+              <option value='Danet Abu Dhabi'>Danet Abu Dhabi</option>
+              <option value='Defence Street'>Defence Street</option>
+              <option value='Delma Street'>Delma Street</option>
+              <option value='Desert Village'>Desert Village</option>
+              <option value='Eastern Road'>Eastern Road</option>
+              <option value='Electra Street'>Electra Street</option>
+              <option value='Firdous Street'>Firdous Street</option>
+              <option value='Ghantoot'>Ghantoot</option>
+              <option value='Ghiyathi'>Ghiyathi</option>
+              <option value='Grand Mosque District'>Grand Mosque District</option>
+              <option value='Hamdan Street'>Hamdan Street</option>
+              <option value='Happiness Island'>Happiness Island</option>
+              <option value='Happiness Island'>Happiness Island</option>
+              <option value='Hydra Village'>Hydra Village</option>
+              <option value='Jawazat Street'>Jawazat Street</option>
+              <option value='Khalidia'>Khalidia</option>
+              <option value='Khalifa City (all)'>Khalifa City (all)</option>
+              <option value='Khalifa City A'>Khalifa City A</option>
+              <option value='Khalifa City B'>Khalifa City B</option>
+              <option value='Khalifa City C'>Khalifa City C</option>
+              <option value='Khalifa Park'>Khalifa Park</option>
+              <option value='Khalifa Street'>Khalifa Street</option>
+              <option value='Liwa'>Liwa</option>
+              <option value='Liwa Street'>Liwa Street</option>
+              <option value='Lulu Island'>Lulu Island</option>
+              <option value='Madinat Al Riyad'>Madinat Al Riyad</option>
+              <option value='Madinat Zayed'>Madinat Zayed</option>
+              <option value='Madinat Zayed (Western Region)'>Madinat Zayed (Western Region)</option>
+              <option value='Mafraq Industrial Area'>Mafraq Industrial Area</option>
+              <option value='Marina Village'>Marina Village</option>
+              <option value='Masdar City'>Masdar City</option>
+              <option value='Mbz'>Mbz</option>
+              <option value='Mina Zayed'>Mina Zayed</option>
+              <option value='Mohamed Bin Zayed City'>Mohamed Bin Zayed City</option>
+              <option value='Muroor Area'>Muroor Area</option>
+              <option value='Musaffah Industrial Area'>Musaffah Industrial Area</option>
+              <option value='Mussafah'>Mussafah</option>
+              <option value='Nareel Island'>Nareel Island</option>
+              <option value='New Al Marfa'>New Al Marfa</option>
+              <option value='New Khalifa City'>New Khalifa City</option>
+              <option value='Nurai Island'>Nurai Island</option>
+              <option value='Officers Club Area'>Officers Club Area</option>
+              <option value='Ramhan Island'>Ramhan Island</option>
+              <option value='Saadiyat Island'>Saadiyat Island</option>
+              <option value='Salam Street'>Salam Street</option>
+              <option value='Sas Al Nakhl'>Sas Al Nakhl</option>
+              <option value='Shakhbout City'>Shakhbout City</option>
+              <option value='Sheikh Zayed Bin Sultan St.'>Sheikh Zayed Bin Sultan St.</option>
+              <option value='Tourist Club Area'>Tourist Club Area</option>
+              <option value='World Trade Center'>World Trade Center</option>
+              <option value='Yas Island'>Yas Island</option>
+              <option value='Zayed City'>Zayed City</option>
+              <option value='Zayed Military City'>Zayed Military City</option>
+              <option value='Zayed Sports City'>Zayed Sports City</option>
+            </select>
+            <select name="community_category" id="community_category" class="filter_add02">
+              <option selected="selected" value="">Community</option>
+            </select>
+            <select name="role" id="role" class="filter_add02">
+              <option selected="selected" value="">Role</option>
+              <option value="Buyer">Buyer</option>
+              <option value="Owner">Owner</option>
+            </select>
+          </div>
+            <div class="child" style="width: auto">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+            </div>
+          </div>
+    
+          <div class="row">
+            <div class="col">
+              <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+              <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+              <input type="hidden" id="filter" name="filter" value="OFF">
+            </div>
+          </div>
+      </div>
+
+
+
+
+
+
+<!--
+      <div id="toolbar">
+        {% if current_user.export == True %}
+        <button onclick="get_check('leads')" class="btn btn-primary">Export</button>
+        {% endif %}
+        <a id="download" href="">Download</a>
+        {% if current_user.viewall == True %}
+        <button id="all_data" class="btn btn-danger" style="margin-left: 10px; color: white;">All</button>
+        {% endif %}
+        <button class="btn btn-danger" id="flag"><i class="bi bi-flag"></i></button>
+        <button id="user_data" class="btn btn-warning" style="margin-left: 10px; color: white;">My Leads</button>
+        <button id="active" class="btn btn-success" style="margin-left: 10px; color: white;">Active</button>
+        <button id="lead_pool" class="btn btn-info" style="margin-left: 10px; color: white;">Lead Pool (Closed)</button>
+        <button id="referral" class="btn btn-warning" style="margin-left: 10px; color: white;">Referral Leads</button>
+        {% if current_user.team_lead == True %}
+        <button id="get_team" style="margin-left: 10px;"  class="btn btn-primary">Team Leads</button>
+        {% endif %}
+        <select name="lead_status" style="margin-left: 10px; padding-top: 5px !important; padding-bottom: 4px !important;" class="btn btn-info" id="lead_status">
+          <option value="">Sub Status</option>
+          <option value="Successful">Successful</option>
+          <option value="Follow up">Follow Up</option>
+          <option value="In progress">In progress</option>
+          <option value="Interested">Interested</option>
+          <option value="Viewing arranged">Viewing arranged</option>
+          <option value="Offer Made">Offer Made</option>
+          <option value="Unsuccessful">Unsuccessful</option>
+        </select>
+      </div>
+-->
+      <table
+        id="table"
+        data-toggle="true"
+        class="unselectable oswald"
+        data-sort-name="lastupdated"
+        data-sort-order="desc"
+        data-toolbar="#toolbar"
+        data-search="true"
+        data-pagination="true"
+        data-height="700"
+        data-page-size="30"
+        data-side-pagination="server"
+        data-ajax="ajaxRequest"
+        data-page-list="[25, 50, 100, 200]">
+      </table>
+    </div>
+<!--
+    <div class="container-fluid">
+    <a href="/add_lead_buyer" class="btn btn-primary">Add Buyer Lead</a>
+    <a href="/add_lead_developer" class="btn btn-warning" style="color: white;">Add Developer Lead</a>
+    </div>
+    -->
+  <div id="toolbar">
+    <button class="btn btn-primary" style="color:white; padding: 5px !important;" data-toggle="modal" data-target="#activateModal" onclick="assign_drafts()">Assign Drafts</button>
+  </div>
+
+    </div>
+    </section>
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+$("#location_category").change(function(){
+    get_location();
+    });
+
+    function get_location(){
+        var comm = $("#location_category").val();
+        fetch('/property/' + comm).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">Community</option>';
+                for (let location of data.locations){
+
+               
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    
+                }
+                document.getElementById('community_category').innerHTML = optionHTML;
+            })
+        })
+        
+    }
+
+function ajaxRequest(params) {
+  fetch('/fetch_drafts_token').then(function(response){
+    response.json().then(function(data){
+      token = data
+      var headers = {
+        'Authorization': 'Bearer '+token
+      };
+      //filters are added in the query accordingly
+      if ($("#filter").val() == 'ON') {
+        params.data['filter'] = $("#filter").val()
+        if ($("#location_category").val() != '') {
+          params.data['location'] = $("#location_category").val()
+        }
+        if ($("#status").val() != '') {
+          params.data['status'] = $("#status").val()
+        }
+        if ($("#community_category").val() != '') {
+          params.data['community'] = $("#community_category").val()
+        }
+        if ($("#role").val() != '') {
+          params.data['role'] = $("#role").val()
+        }
+        if ($("#propdate").val() != '') {
+          params.data['propdate'] = $("#propdate").val()
+        }
+        if ($("#propdate2").val() != '') {
+          params.data['propdate2'] = $("#propdate2").val()
+        }
+        if ($("#source").val() != '') {
+          params.data['source'] = $("#source").val()
+        }
+      }
+      var url = 'http://localhost:5000/fetch_active_drafts';
+      $.ajax({
+        url: url,
+        method: 'GET',
+        headers: headers,
+        data: params.data,
+        success: function (res) {
+          params.success(res);
+        },
+        error: function (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    })
+  })
+}      
+
+
+$(window).on('load',(function(){
+  $('#display').hide();
+  $('#notes').hide();      
+  var columns = {{columns|tojson}};
+  var data = {{data|tojson}};
+
+      $(function() {
+        $('#table').bootstrapTable({                    
+          data: data,
+          columns: columns,
+        });
+
+        $('#filter_search').click(function () {
+          $("#filter").val("ON")
+          $('#table').bootstrapTable('refresh');
+        })
+        
+        $('#filter_reset').click(function () {
+          $("#filter").val("OFF")
+          $("#status").val("");
+          $("#location_category").val("");
+          $("#community_category").val("");
+          $("#role").val("");
+          $("#propdate").val("");
+          $("#propdate2").val("");
+          $("#source").val("");
+          $('#table').bootstrapTable('refresh');
+        })              
+      });
+    }));
+    
+    var filters = {};
+
+function assign_drafts() {
+  filters['status'] = 'Pending';
+  if ($("#filter").val() == 'ON') {
+    if ($("#location_category").val() != '') {
+      filters['location'] = $("#location_category").val();
+    }
+    if ($("#status").val() != '') {
+      filters['status'] = $("#status").val();
+    }
+    if ($("#community_category").val() != '') {
+      filters['community'] = $("#community_category").val();
+    }
+    if ($("#role").val() != '') {
+      filters['role'] = $("#role").val();
+    }
+    if ($("#source").val() != '') {
+      filters['source'] = $("#source").val();
+    }
+    if ($("#propdate").val() != '') {
+      filters['propdate'] = $("#propdate").val()
+    }
+    if ($("#propdate2").val() != '') {
+      filters['propdate2'] = $("#propdate2").val()
+    }
+  }
+
+  fetch('/assignment_initiated', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(filters)
+  }).then(function(response) {
+    response.json().then(function(data) {
+      let tableHtml = '<table class="t-design" border="1"><tr><th class="t-content t-th">Filter</th><th class="t-content t-th">Value</th></tr>';
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            tableHtml += `<tr><td class="t-content t-tr">${key}</td><td class="t-content t-tr">${data[key]}</td></tr>`;
+          }
+        }
+        tableHtml += '</table>';
+        document.getElementById('tableContainer').innerHTML = tableHtml;
+    });
+  }).catch(function(error) {
+    console.error('Error:', error);
+  });
+};
+
+function assignment_execution() {
+  let assignmentNumberInput = document.getElementById('assignment_number').value;
+  let assignmentUserInput = document.getElementById('assignment_user').value;
+  filters['assignment_number'] = assignmentNumberInput;
+  filters['assignment_user'] = assignmentUserInput;
+  fetch('/assignment_execute', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(filters)
+  }).then(function(response) {
+    response.json().then(function(data) {
+      document.getElementById('assignment_message').innerHTML = data;
+      location.reload(); 
+    });
+  }).catch(function(error) {
+    console.error('Error:', error);
+  });
+};
+
+function draft_action_(x,y){
+  var action ={}
+  action['refno'] = y
+  action['task'] = x
+  fetch('/new_draft_lead', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(action)
+  }).then(function(response) {
+    response.json().then(function(data) {
+      location.reload();
+    });
+  })
+};
+
+</script>
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}</style>
+{% endblock %}

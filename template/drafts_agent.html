@@ -1,0 +1,90 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+
+    .column{
+           background-color: rgba(255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+padding-top: 10px;
+        margin: 5px;
+        margin-top: 20px;
+        border-radius: 12px;
+    }
+    h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 14pt;
+        font-family: 'Oswald';
+    }
+</style>
+
+
+<section>
+<div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+<div class="container">
+
+
+<form method="POST" enctype="multipart/form-data">
+    <dl>
+        <div class="row">
+            <div class="col column">
+                <h4>Lead Details</h4>
+                {{ wtf.form_field(form.name) }}
+                {{ wtf.form_field(form.number) }}
+                {{ wtf.form_field(form.status) }}
+                {{ wtf.form_field(form.update_location) }}
+                {{ wtf.form_field(form.update_community) }}
+                {{ wtf.form_field(form.update_type) }}
+                {{ wtf.form_field(form.comment) }}
+            </div>
+        </div>
+    </dl>
+    <p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;" type="submit" value="Submit">
+</form>
+</div>
+<br></div>
+</section>
+
+<script>
+    let location_select = document.getElementById('update_community');
+    $("#update_location").change(function(){
+    get_location();
+    });
+    var building = '{{ update_community }}'
+    function get_location(){
+        var location = $("#update_location").val();
+        fetch('/community/' + location).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                for (let location of data.locations){
+                    if (location[0] == building)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_select.innerHTML = optionHTML;
+            })
+        })
+        
+    }
+    let sub_status = document.getElementById('sub_status');
+    window.onload = get_location();
+
+
+
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+

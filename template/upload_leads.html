@@ -4,8 +4,14 @@
         <title>Upload Leads</title>
     </head>
     <body>
-        <h1>For Leads</h1>
+        <h1>For LEADS</h1>
         <form method="POST" action="/uploadleads" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <input type="submit" value="Submit">
+        </form>
+
+        <h1>For BULK DRAFTS</h1>
+        <form method="POST" action="/upload_drafts" enctype="multipart/form-data">
             <input type="file" name="file">
             <input type="submit" value="Submit">
         </form>
