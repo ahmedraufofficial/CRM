@@ -470,7 +470,7 @@ function ajaxRequest(params) {
           params.data['source'] = $("#source").val()
         }
       }
-      var url = 'http://localhost:5000/fetch_active_drafts';
+      var url = 'https://crm.uhpae.com/fetch_active_drafts';
       $.ajax({
         url: url,
         method: 'GET',
