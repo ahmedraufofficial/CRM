@@ -6,14 +6,13 @@ from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
-from models import Leads, Maindraft, User, Activedraft, Agentlogs
+from models import Leads, User, Agentlogs, Leadlogs
 import json
 import os 
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
-from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message, update_lead_note
 from sqlalchemy import or_,and_, bindparam
 import csv
 from datetime import datetime, timedelta
@@ -46,7 +45,7 @@ def assign_new_draft(user, client_name, client_number):
     session.add(newlog)
     session.commit()
     session.refresh(newlog)
-    newlog.refno = 'LOG-'+str(newlog.id)
+    newlog.refno = 'LOG-D-'+str(newlog.id)
     session.commit()
     session.close()
 
@@ -60,17 +59,44 @@ def edit_draft_agent(user, client_number, status, details):
     session.commit()
     session.close()
 
-def lead_update_log(user, client_name, client_number, status, details):
+def lead_update_log(user, client_name, client_number, status, source, details):
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
-    newlog = Agentlogs(user=user, client_name=client_name, client_number=client_number, type='Lead', status=status, details=details, created_date = datetime.now()+timedelta(hours=4))
+    newlog = Leadlogs(user=user, client_name=client_name, client_number=client_number, type='Lead', status=status, details=details, source=source, created_date = datetime.now()+timedelta(hours=4))
     session.add(newlog)
     session.commit()
     session.refresh(newlog)
-    newlog.refno = 'LOG-'+str(newlog.id)
+    newlog.refno = 'LOG-L-'+str(newlog.id)
     session.commit()
     session.close()
 
+def edit_lead_agent(user, client_number):
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Leadlogs).filter(and_(Leadlogs.client_number.endswith(client_number[-8:]), Leadlogs.user == user, Leadlogs.status == 'Assigned')).first()
+    if query:
+        query.status = 'Follow up'
+        query.updated_date = datetime.now()+timedelta(hours=4)
+        session.commit()
+        session.close()
+    else:
+        session.close()
+
+def edit_lead_callback(user, client_number, refno, source):
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Leadlogs).filter(and_(Leadlogs.client_number.endswith(client_number[-8:]), Leadlogs.user == user, Leadlogs.status == 'Assigned')).first()
+    if query:
+        query.status = 'Lead Lost'
+        query.source = 'No Action'
+        query.details = refno+' from source: '+source
+        query.updated_date = datetime.now()+timedelta(hours=4)
+        session.commit()
+        session.close()
+    else:
+        session.close()
+
+# logs drafts
 
 @handlelogs.route('/logs/agents',methods = ['GET','POST'])
 @login_required
@@ -136,5 +162,72 @@ def fetch_drafts():
         data.append(new)
         total_records += 1
     response_data = {"total": z, "totalNotFiltered": z, "rows": data, "interested_clients": interested_clients, "no_answer": no_answer, "lead_lost": lead_lost}
+    session.close()
+    return(response_data)
+
+# logs leads
+
+@handlelogs.route('/logs/leads',methods = ['GET','POST'])
+@login_required
+def display_leads_logs():   
+    if current_user.is_admin == False:
+        return abort(404)
+    data = []
+    f = open('agentlogs_headers.json')
+    columns = json.load(f)
+    columns = columns["lead_headers"]
+    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    return render_template('leads_logs.html', data = data , columns = columns, all_sale_users = all_sale_users)
+
+@handlelogs.route('/fetch_leads_logs',methods = ['GET','POST'])
+@auth.login_required
+def fetch_leads_logs():
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
+    data = []
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Leadlogs)
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Leadlogs.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['user', 'source', 'status', 'propdate', 'propdate2'] if key in filters_01}
+        for key, value in filters.items():
+            if key == 'propdate':
+                conditions.append(Leadlogs.created_date >= value)
+            elif key == 'propdate2':
+                value_as_datetime = datetime.strptime(value, '%Y-%m-%d')
+                value_as_datetime += timedelta(days=1)
+                value = value_as_datetime.strftime('%Y-%m-%d')
+                conditions.append(Leadlogs.created_date <= value)
+            else:
+                conditions.append(getattr(Leadlogs, key) == value)
+        query = query.filter(and_(*conditions))
+    
+    z = query.count()
+    assigned_leads = 0
+    no_action = 0
+    lead_lost = 0
+    for r in query:
+        if r.status == 'Assigned':
+            assigned_leads += 1
+        elif r.status == 'Lead Lost':
+            lead_lost += 1
+        else:
+            pass
+    for r in query.order_by(Leadlogs.id.desc()).offset(offset).limit(limit):
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        new['created_date'] = new['created_date'][:16]
+        new['updated_date'] = new['updated_date'][:16]
+        data.append(new)
+        total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data, "assigned_leads": assigned_leads, "lead_lost": lead_lost}
     session.close()
     return(response_data)

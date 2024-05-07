@@ -23,7 +23,7 @@ from handledeals import handledeals
 from handlestorage import handlestorage
 from handleemployees import handleemployees
 from handledrafts import handledrafts
-from handlelogs import handlelogs
+from handlelogs import handlelogs, edit_lead_agent
 from portals import portals
 from models import *
 import json
@@ -677,6 +677,10 @@ def post_lead_note(list_id,com,status,substatus):
     a.status = status
     
     db.session.commit()
+    try:
+        x = edit_lead_agent(current_user.username, a.contact_number)
+    except:
+        pass
     update_lead_note(current_user.username,list_id,com,status,substatus)
     update_user_note(current_user.username,list_id,status,substatus)
     return jsonify(success=True)

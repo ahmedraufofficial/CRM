@@ -19,7 +19,7 @@ from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
 from flask_httpauth import HTTPTokenAuth
-from handlelogs import lead_update_log
+from handlelogs import lead_update_log, edit_lead_callback
 
 auth = HTTPTokenAuth(scheme='Bearer')
 tokens = {
@@ -88,7 +88,8 @@ def fetch_leads(user):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
-            reassign_btn  = '<a href="/pre_assign_lead/'+str(new['refno'])+'"><button class="btn-secondary si2" style="color:white;"><i class="bi bi-arrow-down-left-square-fill"></i></button></a>'
+            reassign_btn  = '<a href="/pre_assign_lead/'+str(new['refno'])+'"><button class="btn-secondary si2" style="color:white;"><i class="bi bi-arrow-down-left-square-fill"></i></button></a>' #sends lead to pre leads
+            reassign_straight = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="assign_straight_initiate('+"'"+new['refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>' #directly re-assigns
             if new['sub_status'] != "Flag":
                 flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
             else:
@@ -99,7 +100,7 @@ def fetch_leads(user):
             else:
                 followup = ""
                 followupBG = ""
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+reassign_btn+"</div>"
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+reassign_btn+reassign_straight+"</div>"
             data.append(new)
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
@@ -127,7 +128,7 @@ def fetch_leads(user):
             else:
                 followup = ""
                 followupBG = ""
-            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+"</div>"
             data.append(new)
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
@@ -157,7 +158,7 @@ def fetch_leads(user):
             else:
                 followupBG = ""
                 followup = ""
-            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+followup+flag+"</div>"
+            new["edit"] = "<div style='display:flex; "+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+"</div>"
             data.append(new)
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
@@ -552,12 +553,12 @@ def reassign_btn_response(x):
         return abort(404) 
     edit = db.session.query(Leads).filter_by(refno=x).first()
     try:
-        x = lead_update_log(edit.agent, edit.contact_name, edit.contact_number, 'Lead Lost', edit.refno+' is reassigned')
+        x = lead_update_log(edit.agent, edit.contact_name, edit.contact_number, 'Lead Lost', 'Admin', edit.refno+' by Admin')
     except:
         pass
     edit.street = '0'
     edit.status = 'Open'
-    edit.sub_status = 'Follow up'
+    edit.sub_status = 'In progress'
     db.session.commit()
     return redirect(url_for('handleleads.display_leads'))
 
@@ -616,6 +617,10 @@ def reassign_btn_execute(x, y):
     if edit.building != '':
         message += ', '+edit.building
     else:
+        pass
+    try:
+        z = lead_update_log(edit.agent, edit.contact_name, edit.contact_number, 'Assigned', edit.source, 'via Pre-Leads')
+    except:
         pass
     update_lead_note('Admin',x, message, edit.status, edit.sub_status)
     return jsonify(success=True)
@@ -708,6 +713,10 @@ def uploadleads():
                         except:
                             pass
                         results[row[0]] = 'Successfully Added'
+                        try:
+                            first_time = lead_update_log(user=agent, client_name=contact_name, client_number=contact_number, status='Assigned', source=source, details='via Bulk-Leads')
+                        except:
+                            pass
                 except:
                     results[row[0]] = 'Error adding this Lead'
                 line_count += 1
@@ -718,3 +727,71 @@ def uploadleads():
         results['Batch'] = 'Completely Processed'
         response_data = json.dumps(results, default=lambda x: str(x), indent=2)
     return response_data, 200, {'Content-Type': 'application/json'}
+
+# Directly re assign Leads LESSSGOOO!!! SUIIIIIII
+
+@handleleads.route('/reassign_lead_straight/<x>/<y>/<z>')
+@login_required
+def reassign_straight_function(x, y, z):
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    edit = db.session.query(Leads).filter_by(refno=x).first()
+    previous_agent = edit.agent
+    edit.agent = y
+    edit.sub_status = 'In progress'
+    edit.lastupdated = datetime.now()+timedelta(hours=4)
+    db.session.commit()
+    if (edit.contact_name!= "" or edit.contact_name!= None):
+        get_agent = db.session.query(User).filter_by(username = edit.agent).first()
+        try:
+            etisy_message(edit.agent,edit.contact_name,get_agent.number,edit.contact_number, edit.refno, edit.locationtext, edit.building, edit.lead_type)
+        except:
+            pass
+    else:
+        pass
+    message = "Lead re-assigned to "+y
+    if edit.locationtext != '':
+        message += ' in '+edit.locationtext
+    else:
+        pass
+    if edit.building != '':
+        message += ', '+edit.building
+    else:
+        pass
+    update_lead_note('Admin',x, message, edit.status, edit.sub_status)
+    try:
+        first = lead_update_log(previous_agent, edit.contact_name, edit.contact_number, 'Lead Lost', z, edit.refno+' reassigned to '+y)
+        second = lead_update_log(y, edit.contact_name, edit.contact_number, 'Assigned', z, edit.refno+' reassigned from '+previous_agent)
+    except:
+        pass
+    return jsonify(success=True)
+
+# Call-Back Leads
+
+@handleleads.route('/call-back-leads-31602') #For Duplicates from the main leads page
+@login_required
+def call_back_season():
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    time_now = datetime.now()+timedelta(hours=4)
+    time_1 = time_now - timedelta(hours=2)
+    time_2 = time_now - timedelta(days=2)
+    conditions = []
+    conditions.append(Leads.lastupdated >= time_2)
+    time_1 += timedelta(days=1)
+    time_1 = time_1.strftime('%Y-%m-%d')
+    conditions.append(Leads.lastupdated <= time_1)
+    conditions.append(Leads.street == '1')
+    conditions.append(Leads.sub_status == 'In progress')
+    query = db.session.query(Leads).filter(and_(*conditions))
+    for r in query:
+        r.street = '0'
+        r.status = 'Open'
+        r.sub_status = 'In progress'
+        r.lastupdated = datetime.now()+timedelta(hours=4)
+        try:
+            lesgetit = edit_lead_callback(r.agent, r.contact_number, r.refno, r.source)
+        except:
+            pass
+    db.session.commit()
+    return jsonify(success=True)
