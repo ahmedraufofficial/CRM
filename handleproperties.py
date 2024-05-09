@@ -147,9 +147,9 @@ def fetch_listings(user):
         filters = {key: filters_01[key] for key in ['bedrooms', 'status', 'subtype', 'locationtext', 'building', 'type', 'assign_to', 'propdate', 'propdate2', 'view', 'portal', 'property_finder'] if key in filters_01}
         for key, value in filters.items():
             if key == 'propdate':
-                conditions.append(Properties.lastupdated >= value)
+                conditions.append(Properties.created_at >= value)
             elif key == 'propdate2':
-                conditions.append(Properties.lastupdated <= value)
+                conditions.append(Properties.created_at <= value)
             elif key == 'portal':
                 conditions.append(getattr(Properties, key) != 'Not Promoted')
             elif key == 'property_finder':
@@ -158,9 +158,18 @@ def fetch_listings(user):
                 conditions.append(getattr(Properties, key) == value)
         query = query.filter(and_(*conditions))
 
+    z = query.count()
+    sort = request.args.get('sort')
+    order = request.args.get('order')
+    if sort:
+        if order == 'asc':
+            sorting = getattr(Properties, sort).asc()
+        elif order == 'desc':
+            sorting = getattr(Properties, sort).desc()
+    else:
+        sorting = Properties.id.desc()
     if voltage_user.viewall == True and voltage_user.listing == True:
-        z = query.count()
-        for r in query.order_by(Properties.id.desc()).offset(offset).limit(limit):
+        for r in query.order_by(sorting).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)  
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)  
@@ -198,7 +207,7 @@ def fetch_listings(user):
         return(response_data)
     elif current_user.sale == True and current_user.listing == False:
         z = query.count()
-        for r in query.order_by(Properties.id.desc()).offset(offset).limit(limit):
+        for r in query.order_by(sorting).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r) 
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','unit','owner_contact','owner_name','owner_email','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)

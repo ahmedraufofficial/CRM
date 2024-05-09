@@ -6,48 +6,39 @@
     }  ,
     {
      "field": "edit",
-     "title": "OPTIONS",
-     "sortable": "False"
+     "title": "OPTIONS"
    },
    {
     "field": "portal",
-    "title": "Promotion",
-    "sortable": "False"
+    "title": "Promotion"
   },
     {
       "field": "refno",
-      "title": "REF NO", 
-      "sortable": "True"
+      "title": "REF NO"
     },
     {
       "field": "status",
-      "title": "STATUS",
-      "sortable": "True"
+      "title": "STATUS"
     },
     {
       "field": "assign_to",
-      "title": "ASSIGNED",
-      "sortable": "True"
+      "title": "ASSIGNED"
     },
     {
       "field": "type",
-      "title": "PURPOSE",
-      "sortable": "True"
+      "title": "PURPOSE"
     },
     {
       "field": "subtype",
-      "title": "TYPE",
-      "sortable": "True"
+      "title": "TYPE"
     },
     {
       "field": "locationtext",
-      "title": "COMMUNITY",
-      "sortable": "True"
+      "title": "COMMUNITY"
     },
     {
       "field": "building",
-      "title": "LOCATION",
-      "sortable": "True"
+      "title": "LOCATION"
     },
     {
       "field": "bedrooms",
@@ -56,13 +47,11 @@
     },
     {
       "field": "view",
-      "title": "VIEW",
-      "sortable": "True"
+      "title": "VIEW"
     },
     {
       "field": "unit",
-      "title": "UNIT",
-      "sortable": "True"
+      "title": "UNIT"
     },
     {
       "field": "price",
@@ -71,18 +60,15 @@
     },
     {
       "field": "size",
-      "title": "SIZE (SqFt)",
-      "sortable": "True"
+      "title": "SIZE (SqFt)"
     },
     {
       "field": "owner_name",
-      "title": "Name",
-      "sortable": "True"
+      "title": "Name"
     },
     {
       "field": "owner_contact",
-      "title": "Contact",
-      "sortable": "True"
+      "title": "Contact"
     },
     {
       "field": "lastupdated",
