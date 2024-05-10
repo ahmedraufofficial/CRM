@@ -54,27 +54,30 @@
       </div>
       <div class="modal-body">
        
-        <div class="container unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
+        <div class="container-fluid unselectable oswald" id="display" style="border-radius: 5px;background-color: transparent;border-color: black; color: #fff; font-family: 'Oswald';">
           <br>
         
-       
-
-          <div class="row">
-            <div class="col">
-              <div id="images" style="height: 210px; background-color: white;"></div>
-            </div>
-          </div>
           <table class="table" style="background-color: white;">
             <tbody>
+              <tr>
+                <td>
+                  <label class="label_head" style="font-size: 15px;">Owner  Reference-ID: </label>
+                  <label class="label_entry" id="owner" style="font-size: 15px;"></label>
+                </td>
+                <td>
+                  <label class="label_head" style="font-size: 15px;">Owner Name: </label>
+                  <label class="label_entry" id="owner_name" style="font-size: 15px;"></label>
+                </td>
+                <td>
+                  <label class="label_head" style="font-size: 15px;">Owner Email: </label>
+                  <label class="label_entry" id="owner_email" style="font-size: 15px;"></label>
+                </td>
+                <td>
+                  <label class="label_head" style="font-size: 15px;">Owner Contact: </label>
+                  <label class="label_entry" id="owner_contact" style="font-size: 15px;"></label>
+                </td>
+              </tr>
         <tr>
-          <td>
-            <label class="label_head">Status: </label>
-            <label class="label_entry" id="status"></label>
-          </td>
-          <td>
-            <label class="label_head">Emirates: </label>
-            <label class="label_entry" id="city"></label>
-          </td>
           <td>
             <label class="label_head">Type: </label>
             <label class="label_entry" id="type"></label>
@@ -83,8 +86,6 @@
             <label class="label_head">Subtype: </label>
             <label class="label_entry" id="subtype"></label>
           </td>
-        </tr>
-          <tr>
           <td>
             <label class="label_head">Price: </label>
             <label class="label_entry" id="price"></label>
@@ -93,20 +94,8 @@
             <label class="label_head">Build Area: </label>
             <label class="label_entry" id="size"></label>
           </td>
-          <td>
-            <label class="label_head">Commission: </label>
-            <label class="label_entry" id="commission"></label>
-          </td>
-          <td>
-            <label class="label_head">Deposit: </label>
-            <label class="label_entry" id="deposit"></label>
-          </td>
         </tr>
         <tr>
-          <td>
-            <label class="label_head">Plot Size: </label>
-              <label class="label_entry" id="plot_size"></label>
-            </td>
           <td>
             <label class="label_head">Baths: </label>
             <label class="label_entry" id="bathrooms"></label>
@@ -116,8 +105,12 @@
             <label class="label_entry" id="bedrooms"></label>
           </td>
           <td>
-            <label class="label_head">Permit No: </label>
-            <label class="label_entry" id="permit_number"></label>
+            <label class="label_head">Completion Status: </label>
+            <label class="label_entry" id="completion_status"></label>
+          </td>
+          <td>
+            <label class="label_head">Source: </label>
+            <label class="label_entry" id="source"></label>
           </td>
           </tr>
         <tr>
@@ -138,77 +131,7 @@
             <label class="label_entry" id="locationtext"></label>
           </td>
           </tr>
-        <tr>
-            <td class="label_head" colspan="4">
-              <label>Description: </label>
-              <label class="label_entry" id="description"></label>
-            </td>
         
-          </tr>
-        <tr>
-          <td>
-            <label class="label_head">Owner ID: </label>
-            <label class="label_entry" id="owner"></label>
-          </td>
-          <td>
-            <label class="label_head">Owner Name: </label>
-            <label class="label_entry" id="owner_name"></label>
-          </td>
-          <td>
-            <label class="label_head">Owner Email: </label>
-            <label class="label_entry" id="owner_email"></label>
-          </td>
-          <td>
-            <label class="label_head">Owner Contact: </label>
-            <label class="label_entry" id="owner_contact"></label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label class="label_head">Assign To: </label>
-            <label class="label_entry" id="assign_to"></label>
-          </td>
-          <td>
-            <label class="label_head">Source: </label>
-            <label class="label_entry" id="source"></label>
-          </td>
-          <td>
-            <label class="label_head">Expiry: </label>
-            <label class="label_entry" id="expiry_date"></label>
-          </td>
-          <td>
-            <label class="label_head">Featured: </label>
-            <label class="label_entry" id="featured"></label>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label class="label_head">Completion Status: </label>
-            <label class="label_entry" id="completion_status"></label>
-          </td>
-          <td>
-            <label class="label_head">Tenure: </label>
-            <label class="label_entry" id="tenure"></label>
-          </td>
-          <td>
-            <label class="label_head">Tenant: </label>
-            <label class="label_entry" id="tenant"></label>
-          </td>
-          <td>
-            <label class="label_head">Rent Price Term: </label>
-            <label class="label_entry" id="rentpriceterm"></label>
-          </td>
-        </tr>
-        <tr>
-          <td class="label_head" colspan="2">
-            <label>Parking: </label>
-            <label class="label_entry" id="parking"></label>
-          </td>
-          <td class="label_head" colspan="2">
-            <label>Furnished: </label>
-            <label class="label_entry" id="furnished"></label>
-          </td>
-          </tr>
         <tr>
           
         </tr>
@@ -851,12 +774,7 @@ function view_property(x){
             subtype.innerHTML = p[0].subtype;
             price.innerHTML = p[0].price;
             size.innerHTML = p[0].size;
-            commission.innerHTML = p[0].commission;
-            deposit.innerHTML = p[0].deposit;
-            assign_to.innerHTML = p[0].assign_to;
-            tenure.innerHTML = p[0].tenure;
             title.innerHTML = p[0].title;
-            description.innerHTML = p[0].description;
             unit.innerHTML = p[0].unit;
             owner.innerHTML = p[0].owner;
             owner_name.innerHTML = p[0].owner_name;
@@ -868,14 +786,6 @@ function view_property(x){
             bedrooms.innerHTML = p[0].bedrooms;
             building.innerHTML = p[0].building;
             locationtext.innerHTML = p[0].locationtext;
-            furnished.innerHTML = p[0].furnished;
-            expiry_date.innerHTML = p[0].expiry_date;
-            tenant.innerHTML = p[0].tenant;
-            parking.innerHTML = p[0].parking;
-            featured.innerHTML = p[0].featured;
-            permit_number.innerHTML = p[0].permit_number;
-            plot_size.innerHTML = p[0].plot_size;
-            rentpriceterm.innerHTML = p[0].rentpriceterm;
             completion_status.innerHTML = p[0].completion_status;
             $('#display').show();
             $("#owl-demo").owlCarousel();

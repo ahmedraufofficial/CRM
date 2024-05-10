@@ -63,14 +63,6 @@
       "title": "SIZE (SqFt)"
     },
     {
-      "field": "owner_name",
-      "title": "Name"
-    },
-    {
-      "field": "owner_contact",
-      "title": "Contact"
-    },
-    {
       "field": "lastupdated",
       "title": "Updated",
       "sortable": "True"
