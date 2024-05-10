@@ -205,6 +205,45 @@ def fetch_listings(user):
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
+    elif voltage_user.listing == True:
+        query = query.filter(Properties.assign_to == voltage_user.username)
+        z = query.count()
+        for r in query.order_by(sorting).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)  
+            for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)  
+            if voltage_user.edit == True:
+                edit_btn = '<a href="/edit_property/'+str(new['refno'])+'"><img style="width:10%;" src="/static/images/edit.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Edit</small></a>'
+            else:
+                edit_btn = ''
+            if new["portal"] == "0":
+                website = "https://uhpae.com/communities/"+new["locationtext"].replace(' ', '-')+"/"+new["building"].replace(' ', '-')+"/"+new["refno"].replace(' ', '-')
+                new["portal"] = '<a href='+website+'><img src="/static/images/logo_blue.png" alt="HTML tutorial" style="width:21px;"></a>'
+            else:
+                new["portal"] = "Not Promoted"
+            if new['property_finder'] != 'None':
+                link = new['property_finder'].split('|')
+                if new["portal"] == "Not Promoted":
+                    new["portal"] = '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px;"></a>'
+                else:
+                    new["portal"] += '<a href='+link[-1]+'><img src="/static/images/pf_logo.png" alt="HTML tutorial" style="width:21px; margin-left:15px"></a>'                
+            else:
+                pass
+            view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/eye.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">View</small></a>'
+            note_btn = '<a style="border-bottom: 0.5px solid black;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/notes.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Notes</small></a>'
+            startpromotion = '<a onclick="startpromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/global.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Website</small></a>'
+            stoppromotion = '<a style="border-bottom: 0.5px solid black;" onclick="stoppromotion('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            if new['property_finder'] == 'None':
+                startpf = '<a onclick="propertyfinder03('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">PF</small></a>'
+                stoppf = ''
+            else:
+                startpf = '<a onclick="update_that_property('+"'"+new['refno']+"'"+')"><img style="width:13%;" src="/static/images/pf_logo.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Update</small></a>'
+                stoppf = '<a onclick="stoppf('+"'"+new['refno']+"'"+')"><img style="width:10%;" src="/static/images/cross.png"/><span><small style="margin-left: 7px; font-size: 15px; color: black">Remove</small></a>'
+            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+edit_btn+view_btn+note_btn+startpromotion+stoppromotion+startpf+stoppf+"</div></div>"
+            data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
     elif current_user.sale == True and current_user.listing == False:
         z = query.count()
         for r in query.order_by(sorting).offset(offset).limit(limit):
@@ -226,7 +265,7 @@ def fetch_listings(user):
                 pass
             view_btn = '<a data-toggle="modal" data-target="#viewModal" onclick="view_property('+"'"+new['refno']+"'"+')">View</a>'
             note_btn = '<a data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')">Notes</a>'
-            new["edit"] ="<div class='dropdown'><button class='dropbtn' style='margin-top: 1px; font-size: 17px; width: 90px'><img style='width:12px; float: left; filter: invert(); margin-right: 1px; margin-left: 3px; margin-top: 7%;' src='/static/images/more.png'/><span>Action</button><div class='dropdown-content'>"+view_btn+note_btn+"</div></div>"
+            new["edit"] = '-'
             data.append(new)
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
