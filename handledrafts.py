@@ -471,7 +471,7 @@ def drafts_agent():
         except:
             pass
 
-        if edit.status == 'Call Later' or edit.status == 'No Answer' or edit.status == 'Do Not Call':
+        if edit.status == 'Call Later' or edit.status == 'No Answer' or edit.status == 'Do Not Call' or edit.status == 'Not Interested':
             actions = {
                 'refno': edit.refno,
                 'status': edit.status
