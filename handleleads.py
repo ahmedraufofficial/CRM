@@ -134,7 +134,7 @@ def fetch_leads(user):
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
     else:
-        query = query.filter(or_(Leads.created_by == voltage_user.username,Leads.agent == voltage_user.username))
+        query = query.filter(Leads.agent == voltage_user.username)
         z = query.count()
         for r in query.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -760,8 +760,8 @@ def reassign_straight_function(x, y, z):
         pass
     update_lead_note('Admin',x, message, edit.status, edit.sub_status)
     try:
-        first = lead_update_log(previous_agent, edit.contact_name, edit.contact_number, 'Lead Lost', z, edit.refno+' reassigned to '+y)
-        second = lead_update_log(y, edit.contact_name, edit.contact_number, 'Assigned', z, edit.refno+' reassigned from '+previous_agent)
+        first = lead_update_log(previous_agent, edit.contact_name, edit.contact_number, 'Lead Lost', z.replace("%20", " "), edit.refno+' reassigned to '+y)
+        second = lead_update_log(y, edit.contact_name, edit.contact_number, 'Assigned', z.replace("%20", " "), edit.refno+' reassigned from '+previous_agent)
     except:
         pass
     return jsonify(success=True)
@@ -790,7 +790,7 @@ def call_back_season():
         r.sub_status = 'In progress'
         r.lastupdated = datetime.now()+timedelta(hours=4)
         try:
-            lesgetit = edit_lead_callback(r.agent, r.contact_number, r.refno, r.source)
+            lesgetit = edit_lead_callback(r.agent, r.contact_number, r.source)
         except:
             pass
     db.session.commit()

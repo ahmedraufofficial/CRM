@@ -82,14 +82,14 @@ def edit_lead_agent(user, client_number):
     else:
         session.close()
 
-def edit_lead_callback(user, client_number, refno, source):
+def edit_lead_callback(user, client_number, source):
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
     query = session.query(Leadlogs).filter(and_(Leadlogs.client_number.endswith(client_number[-8:]), Leadlogs.user == user, Leadlogs.status == 'Assigned')).first()
     if query:
         query.status = 'Lead Lost'
         query.source = 'No Action'
-        query.details = refno+' from source: '+source
+        query.details += ' Lead lost of source: '+source
         query.updated_date = datetime.now()+timedelta(hours=4)
         session.commit()
         session.close()
@@ -226,8 +226,24 @@ def fetch_leads_logs():
         new = row2dict(r)
         new['created_date'] = new['created_date'][:16]
         new['updated_date'] = new['updated_date'][:16]
+        new['edit'] = '<button class="btn-secondary si2" style="color:white; height: 10px" data-toggle="modal" data-target="#deleteModal" onclick="delete_initiate_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
         data.append(new)
         total_records += 1
     response_data = {"total": z, "totalNotFiltered": z, "rows": data, "assigned_leads": assigned_leads, "lead_lost": lead_lost}
     session.close()
     return(response_data)
+
+# delete lead logs
+
+@handlelogs.route('/delete_leads_logs/<variable>', methods = ['GET','POST'])
+@login_required
+def delete_lead_log(variable):
+    if current_user.is_admin == False:
+        return abort(404)
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    delete = session.query(Leadlogs).filter_by(refno=variable).first()
+    session.delete(delete)
+    session.commit()
+    session.close()
+    return(jsonify('ok'))

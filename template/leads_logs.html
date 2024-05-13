@@ -46,6 +46,7 @@
 </style>
 <title>Lighthouse - Lead Logs</title>
 <section>
+   <!--Call Back Modal-->
     <div class="modal" id="callbackModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
           <div class="modal-content">
@@ -64,7 +65,27 @@
         </div>
       </div>
       
-      <!-- Modal End -->
+    <!-- Modal End -->
+
+  <!--Delete Modal-->
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Confirm deletion?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button class="special_button" onclick="deletion_execute()">Yes</button>
+        <h3 id="delete_log"></h3>
+      </div>
+    </div>
+  </div>
+</div>
+ <!-- Modal End -->
+
 
   <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
     <div class="container-fluid" style="padding: 10px;">
@@ -261,6 +282,19 @@ $(window).on('load',(function(){
             });
         })
         };
+    
+    function delete_initiate_(x){
+      document.getElementById("delete_log").val=x;
+      };
+
+    function deletion_execute(){
+      let refno = document.getElementById("delete_log").val;
+      fetch('/delete_leads_logs/'+refno).then(function(response) {
+            response.json().then(function(data) {
+              location.reload();
+              });
+        })
+    }
 </script>
 
   <style type='text/css'>

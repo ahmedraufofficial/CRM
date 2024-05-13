@@ -32,6 +32,10 @@
   "lead_headers":
   [
     {
+        "field": "edit",
+        "title": "Options"
+    },
+    {
       "field": "user",  
       "title": "User"
     },
