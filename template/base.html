@@ -44,6 +44,9 @@
                   <a href="/add_property/sale">Add Sale </a>
                   <a href="/add_property/rent">Add Rental </a>
                   <a href="/listings">Listings</a>
+                  {% if current_user.viewall == True and current_user.listing == True %}
+                  <a href="/properties/management">Re-Assign Users</a>
+                  {% endif %}
                 </div>
               </div>
             </li>
@@ -102,12 +105,23 @@
                   {% if current_user.is_admin == True %}
                   <a href="/drafts/admin">Admin</a>
                   <a href="/drafts/call-center">Call Center</a>
-                  <a href="/logs/leads">Logs</a>
                   {% endif %}
                   <a href="/drafts/agent">Active Drafts</a>
                 </div>
               </div>
             </li>
+            {% if current_user.is_admin == True %}
+            <div class="vl"></div>
+            <li class="nav-item">
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%; filter: invert();" src="/static/images/magnifier.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logs</small></button>
+                <div class="dropdown-content">
+                  <a href="/logs/leads">Logs Leads</a>
+                  <a href="/logs/agents">Logs Drafts</a>
+                </div>
+              </div>
+            </li>
+            {% endif %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">

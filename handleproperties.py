@@ -1877,3 +1877,25 @@ def update_listing_magic(refno_listing, refno_prop):
         return jsonify('ok')
     else:
         return jsonify('Listing data not found for refno: {}'.format(refno_listing)), 404
+
+# Re-assigning by manager
+
+@handleproperties.route('/properties/management', methods = ['GET','POST'])
+@login_required
+def reassign_manager():
+    return_message = ''
+    if request.method == 'POST':
+        location = request.form['location']
+        community = request.form['community']
+        user = request.form['user']
+        try:
+            props = db.session.query(Properties).filter(and_(Properties.locationtext == location, Properties.building == community, Properties.assign_to != user))
+            for i in props:
+                i.assign_to = user
+                i.lastupdated = datetime.now()+timedelta(hours=4)
+            db.session.commit()
+            return_message = 'Successfully updated'
+        except Exception as e:
+            return_message = 'Could NOT update '+e
+    all_listing_users = db.session.query(User).filter_by(listing = True).all()
+    return render_template('reassign_manager.html', all_listing_users = all_listing_users, return_message = return_message)

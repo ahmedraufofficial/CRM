@@ -1,0 +1,250 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    label {
+        font-weight: bold;
+        color: #000000;
+    }
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+    textarea {
+        height: 100px;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: 0px solid transparent !important;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+</style>
+    
+<section>
+<div style="height: 100%;width: 100%;">
+<div class="container" style="padding: 15px;">
+    <h1>Re-Assign</h1>
+    <form method="POST">
+        <label for="location">Location:</label>
+        <select id="location" name="location">
+            <option selected="selected" value=''>Location</option>
+              <option value='Abu Dhabi Gate City'>Abu Dhabi Gate City</option>
+              <option value='Abu Dhabi Island'>Abu Dhabi Island</option>
+              <option value='AbuDhabi-Al Ain (Highway)'>AbuDhabi-Al Ain (Highway)</option>
+              <option value='Airport Road'>Airport Road</option>
+              <option value='Al Ajban'>Al Ajban</option>
+              <option value='Al Aman'>Al Aman</option>
+              <option value='Al Aryam'>Al Aryam</option>
+              <option value='Al Badaa'>Al Badaa</option>
+              <option value='Al Bahia'>Al Bahia</option>
+              <option value='Al Baraha'>Al Baraha</option>
+              <option value='Al Barza'>Al Barza</option>
+              <option value='Al Bateen'>Al Bateen</option>
+              <option value='Al Bateen Al Ain'>Al Bateen Al Ain</option>
+              <option value='Al Danah'>Al Danah</option>
+              <option value='Al Dhafrah'>Al Dhafrah</option>
+              <option value='Al Fahid Island'>Al Fahid Island</option>
+              <option value='Al Falah City'>Al Falah City</option>
+              <option value='Al Faya'>Al Faya</option>
+              <option value='Al Ghadeer'>Al Ghadeer</option>
+              <option value='Al Gurm West'>Al Gurm West</option>
+              <option value='Al Hosn'>Al Hosn</option>
+              <option value='Al Hudayriat Island'>Al Hudayriat Island</option>
+              <option value='Al Ittihad Road'>Al Ittihad Road</option>
+              <option value='Al Jubail Island'>Al Jubail Island</option>
+              <option value='Al Jubail Island'>Al Jurf Island</option>
+              <option value='Al Karamah'>Al Karamah</option>
+              <option value='Al Khaleej Al Arabi Street'>Al Khaleej Al Arabi Street</option>
+              <option value='Al Khalidiya'>Al Khalidiya</option>
+              <option value='Al Khatim'>Al Khatim</option>
+              <option value='Al Khazna'>Al Khazna</option>
+              <option value='Al Khubeirah'>Al Khubeirah</option>
+              <option value='Al Maffraq'>Al Maffraq</option>
+              <option value='Al Maha'>Al Maha</option>
+              <option value='Al Maharba'>Al Maharba</option>
+              <option value='Al Manaseer'>Al Manaseer</option>
+              <option value='Al Manhal'>Al Manhal</option>
+              <option value='Al Maqtaa'>Al Maqtaa</option>
+              <option value='Al Marina'>Al Marina</option>
+              <option value='Al Markaz'>Al Markaz</option>
+              <option value='Al Markaziyah'>Al Markaziyah</option>
+              <option value='Al Maryah Island'>Al Maryah Island</option>
+              <option value='Al Mina'>Al Mina</option>
+              <option value='Al Mirfa'>Al Mirfa</option>
+              <option value='Al Muneera'>Al Muneera</option>
+              <option value='Al Muntazah'>Al Muntazah</option>
+              <option value='Al Mushrif'>Al Mushrif</option>
+              <option value='Al Nahda Abu Dhabi'>Al Nahda Abu Dhabi</option>
+              <option value='Al Nahyan'>Al Nahyan</option>
+              <option value='Al Nahyan Camp'>Al Nahyan Camp</option>
+              <option value='Al Najda Street'>Al Najda Street</option>
+              <option value='Al Nasr Street'>Al Nasr Street</option>
+              <option value='Al Qurm'>Al Qurm</option>
+              <option value='Al Raha'>Al Raha</option>
+              <option value='Al Raha Beach'>Al Raha Beach</option>
+              <option value='Al Raha Gardens'>Al Raha Gardens</option>
+              <option value='Al Raha Golf Gardens'>Al Raha Golf Gardens</option>
+              <option value='Al Rahba'>Al Rahba</option>
+              <option value='Al Rawdah'>Al Rawdah</option>
+              <option value='Al Reef'>Al Reef</option>
+              <option value='Al Reef Villas'>Al Reef Villas</option>
+              <option value='Al Reem Island'>Al Reem Island</option>
+              <option value='Al Rehhan'>Al Rehhan</option>
+              <option value='Al Rideem'>Al Rideem</option>
+              <option value='Al Ruwais'>Al Ruwais</option>
+              <option value='Al Safarat District'>Al Safarat District</option>
+              <option value='Al Samha'>Al Samha</option>
+              <option value='Al Shahama'>Al Shahama</option>
+              <option value='Al Shamkha'>Al Shamkha</option>
+              <option value='Al Shamkha South'>Al Shamkha South</option>
+              <option value='Al Shawamekh'>Al Shawamekh</option>
+              <option value='Al Sila'>Al Sila</option>
+              <option value='Al Sowwah'>Al Sowwah</option>
+              <option value='Al Taweelah'>Al Taweelah</option>
+              <option value='Al Tibbiya'>Al Tibbiya</option>
+              <option value='AL Wahda'>AL Wahda</option>
+              <option value='Al Wathba'>Al Wathba</option>
+              <option value='Al Zaab'>Al Zaab</option>
+              <option value='Al Zahraa'>Al Zahraa</option>
+              <option value='Arabian Village'>Arabian Village</option>
+              <option value='Bain Al Jessrain'>Bain Al Jessrain</option>
+              <option value='Baniyas'>Baniyas</option>
+              <option value='Between Two Bridges'>Between Two Bridges</option>
+              <option value='Building Materials City'>Building Materials City</option>
+              <option value='Capital Centre'>Capital Centre</option>
+              <option value='City Downtown'>City Downtown</option>
+              <option value='Corniche'>Corniche</option>
+              <option value='Corniche Area'>Corniche Area</option>
+              <option value='Corniche Road'>Corniche Road</option>
+              <option value='Danet Abu Dhabi'>Danet Abu Dhabi</option>
+              <option value='Defence Street'>Defence Street</option>
+              <option value='Delma Street'>Delma Street</option>
+              <option value='Desert Village'>Desert Village</option>
+              <option value='Eastern Road'>Eastern Road</option>
+              <option value='Electra Street'>Electra Street</option>
+              <option value='Firdous Street'>Firdous Street</option>
+              <option value='Ghantoot'>Ghantoot</option>
+              <option value='Ghiyathi'>Ghiyathi</option>
+              <option value='Grand Mosque District'>Grand Mosque District</option>
+              <option value='Hamdan Street'>Hamdan Street</option>
+              <option value='Happiness Island'>Happiness Island</option>
+              <option value='Happiness Island'>Happiness Island</option>
+              <option value='Hydra Village'>Hydra Village</option>
+              <option value='Jawazat Street'>Jawazat Street</option>
+              <option value='Khalidia'>Khalidia</option>
+              <option value='Khalifa City (all)'>Khalifa City (all)</option>
+              <option value='Khalifa City A'>Khalifa City A</option>
+              <option value='Khalifa City B'>Khalifa City B</option>
+              <option value='Khalifa City C'>Khalifa City C</option>
+              <option value='Khalifa Park'>Khalifa Park</option>
+              <option value='Khalifa Street'>Khalifa Street</option>
+              <option value='Liwa'>Liwa</option>
+              <option value='Liwa Street'>Liwa Street</option>
+              <option value='Lulu Island'>Lulu Island</option>
+              <option value='Madinat Al Riyad'>Madinat Al Riyad</option>
+              <option value='Madinat Zayed'>Madinat Zayed</option>
+              <option value='Madinat Zayed (Western Region)'>Madinat Zayed (Western Region)</option>
+              <option value='Mafraq Industrial Area'>Mafraq Industrial Area</option>
+              <option value='Marina Village'>Marina Village</option>
+              <option value='Masdar City'>Masdar City</option>
+              <option value='Mbz'>Mbz</option>
+              <option value='Mina Zayed'>Mina Zayed</option>
+              <option value='Mohamed Bin Zayed City'>Mohamed Bin Zayed City</option>
+              <option value='Muroor Area'>Muroor Area</option>
+              <option value='Musaffah Industrial Area'>Musaffah Industrial Area</option>
+              <option value='Mussafah'>Mussafah</option>
+              <option value='Nareel Island'>Nareel Island</option>
+              <option value='New Al Marfa'>New Al Marfa</option>
+              <option value='New Khalifa City'>New Khalifa City</option>
+              <option value='Nurai Island'>Nurai Island</option>
+              <option value='Officers Club Area'>Officers Club Area</option>
+              <option value='Ramhan Island'>Ramhan Island</option>
+              <option value='Saadiyat Island'>Saadiyat Island</option>
+              <option value='Salam Street'>Salam Street</option>
+              <option value='Sas Al Nakhl'>Sas Al Nakhl</option>
+              <option value='Shakhbout City'>Shakhbout City</option>
+              <option value='Sheikh Zayed Bin Sultan St.'>Sheikh Zayed Bin Sultan St.</option>
+              <option value='Tourist Club Area'>Tourist Club Area</option>
+              <option value='World Trade Center'>World Trade Center</option>
+              <option value='Yas Island'>Yas Island</option>
+              <option value='Zayed City'>Zayed City</option>
+              <option value='Zayed Military City'>Zayed Military City</option>
+              <option value='Zayed Sports City'>Zayed Sports City</option>
+        </select><br><br>
+        <label for="community">Community:</label>
+        <select id="community" name="community">
+            <option selected="selected" value="">Community</option>
+        </select><br><br>
+        <label for="user">User:</label>
+        <select id="user" name="user">
+            <option selected="selected" value="None">Users</option>
+            {% for users in all_listing_users %}
+            <option value="{{users.username}}">{{users.username}}</option>
+            {% endfor %}
+        </select><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    {% if return_message %}
+        <h3 style="color: #45a049; margin-top: 15px;">{{ return_message }}</h3>
+    {% endif %}
+</div>
+<br></div>
+</section>
+
+<script>
+    $("#location").change(function(){
+    get_location();
+    });
+    function get_location(){
+        var comm = $("#location").val();
+        fetch('/property/' + comm).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value="">Community</option>';
+                for (let location of data.locations){
+                    optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                }
+                document.getElementById('community').innerHTML = optionHTML;
+            })
+        })
+        
+    }
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+
