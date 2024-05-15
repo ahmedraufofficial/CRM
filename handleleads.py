@@ -739,6 +739,7 @@ def reassign_straight_function(x, y, z):
     previous_agent = edit.agent
     edit.agent = y
     edit.sub_status = 'In progress'
+    edit.source = z.replace("%20", " ")
     edit.lastupdated = datetime.now()+timedelta(hours=4)
     db.session.commit()
     if (edit.contact_name!= "" or edit.contact_name!= None):
@@ -760,6 +761,10 @@ def reassign_straight_function(x, y, z):
         pass
     update_lead_note('Admin',x, message, edit.status, edit.sub_status)
     try:
+        if z == 'Instagram' or z == 'Facebook' or z == 'TikTok' or z == 'Snapchat' or z == 'Messenger':
+            z = 'Social Media'
+        else:
+            pass
         first = lead_update_log(previous_agent, edit.contact_name, edit.contact_number, 'Lead Lost', z.replace("%20", " "), edit.refno+' reassigned to '+y)
         second = lead_update_log(y, edit.contact_name, edit.contact_number, 'Assigned', z.replace("%20", " "), edit.refno+' reassigned from '+previous_agent)
     except:
@@ -768,14 +773,18 @@ def reassign_straight_function(x, y, z):
 
 # Call-Back Leads
 
-@handleleads.route('/call-back-leads-31602') #For Duplicates from the main leads page
+@handleleads.route('/call-back-leads-31602', methods=['GET', 'POST'])
 @login_required
 def call_back_season():
     if current_user.sale == False or current_user.edit == False:
         return abort(404) 
+    data = request.get_json()
+    sources = data.get('sources').split(',')
     time_now = datetime.now()+timedelta(hours=4)
     time_1 = time_now - timedelta(hours=2)
     time_2 = time_now - timedelta(days=2)
+
+    #first set of AND conditions
     conditions = []
     conditions.append(Leads.lastupdated >= time_2)
     time_1 += timedelta(days=1)
@@ -784,6 +793,13 @@ def call_back_season():
     conditions.append(Leads.street == '1')
     conditions.append(Leads.sub_status == 'In progress')
     query = db.session.query(Leads).filter(and_(*conditions))
+
+    #second set of OR conditions
+    conditions2 = []
+    for m in sources:
+        conditions2.append(Leads.source == m)
+    query = query.filter(or_(*conditions2))
+
     for r in query:
         r.street = '0'
         r.status = 'Open'

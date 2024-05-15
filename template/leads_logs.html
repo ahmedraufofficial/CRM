@@ -51,14 +51,25 @@
         <div class="modal-dialog modal-sm" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title oswald">Are you sure you want to call back leads?</h5>
+              <h5 class="modal-title oswald">Please select the sources you want to call back?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body" style="align-items: center; margin-left: auto; margin-right: auto;">
               <div class="container">
-                <button class="special_button" onclick="callback_season_execute()">Yes</button>
+                <form id="multipleSelectionForm" method="POST">
+                  <label style="font-weight: 700;">Sources:</label><br>
+                  <label><input type="checkbox" name="sources[]" value="Facebook"> Facebook</label><br>
+                  <label><input type="checkbox" name="sources[]" value="Instagram"> Instagram</label><br>
+                  <label><input type="checkbox" name="sources[]" value="Snapchat"> Snapchat</label><br>
+                  <label><input type="checkbox" name="sources[]" value="Messenger"> Messenger</label><br>
+                  <label><input type="checkbox" name="sources[]" value="Property Finder"> Property Finder</label><br>
+                  <label><input type="checkbox" name="sources[]" value="Cold Call"> Cold Call</label><br><br>
+                  <!-- Hidden input field to store selected sources -->
+                  <input type="hidden" id="selectedSourcesInput" name="selected_sources" value="">
+                  <button type="button" onclick="callback_season_execute()">Call-Back</button>
+                </form>
               </div>
             </div>
           </div>
@@ -276,12 +287,19 @@ $(window).on('load',(function(){
     }));
     
     function callback_season_execute(){
-        fetch('/call-back-leads-31602').then(function(response) {
-            response.json().then(function(data) {
-                location.reload();
-            });
-        })
-        };
+      let sources = document.getElementById("selectedSourcesInput").value;
+      fetch('/call-back-leads-31602', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sources: sources }) // Convert sources to JSON and include it in the body
+      }).then(function(response) {
+        response.json().then(function(data) {
+          location.reload();
+        });
+      });
+    };
     
     function delete_initiate_(x){
       document.getElementById("delete_log").val=x;
@@ -295,6 +313,20 @@ $(window).on('load',(function(){
               });
         })
     }
+
+    function updateHiddenField() {
+            var checkedBoxes = document.querySelectorAll('input[name="sources[]"]:checked');
+            var selectedSources = Array.from(checkedBoxes).map(function(checkbox) {
+                return checkbox.value;
+            });
+            // Set the value of the hidden input field
+            document.getElementById('selectedSourcesInput').value = selectedSources.join(',');
+        }
+        
+    var checkboxes = document.querySelectorAll('input[name="sources[]"]');
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', updateHiddenField);
+      });
 </script>
 
   <style type='text/css'>
