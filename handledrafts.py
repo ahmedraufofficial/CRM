@@ -80,7 +80,7 @@ def fetch_drafts():
     if request.args.get('filter') == 'ON':
         conditions = []
         filters_01 = {key: request.args.get(key) for key in request.args}
-        filters = {key: filters_01[key] for key in ['draft_status', 'status', 'location', 'community', 'role', 'draft_location', 'draft_community', 'draft_type', 'propdate', 'propdate2', 'source'] if key in filters_01}
+        filters = {key: filters_01[key] for key in ['draft_status', 'status', 'location', 'community', 'type', 'role', 'draft_location', 'draft_community', 'draft_type', 'propdate', 'propdate2', 'source'] if key in filters_01}
         for key, value in filters.items():
             if key == 'propdate':
                 conditions.append(Maindraft.created_date >= value)
@@ -115,7 +115,7 @@ def activation_initiated():
     session = Session()
     query = session.query(Maindraft)
     conditions = []
-    valid_filter_keys = ['draft_status', 'status', 'location', 'community', 'role', 'draft_location', 'draft_community', 'draft_type', 'source' , 'propdate', 'propdate2']
+    valid_filter_keys = ['draft_status', 'status', 'location', 'community', 'type', 'role', 'draft_location', 'draft_community', 'draft_type', 'source' , 'propdate', 'propdate2']
     filtered_filters = {key: filters[key] for key in filters if key in valid_filter_keys}
     for key, value in filtered_filters.items():
             if key == 'propdate':
@@ -145,7 +145,7 @@ def activation_execute():
     session = Session()
     maindrafts_query = session.query(Maindraft)
     conditions = []
-    valid_filter_keys = ['draft_status', 'status', 'location', 'community', 'role', 'draft_location', 'draft_community', 'draft_type', 'source', 'propdate', 'propdate2']
+    valid_filter_keys = ['draft_status', 'status', 'location', 'community', 'type','role', 'draft_location', 'draft_community', 'draft_type', 'source', 'propdate', 'propdate2']
     filtered_filters = {key: filters[key] for key in filters if key in valid_filter_keys}
     for key, value in filtered_filters.items():
             if key == 'propdate':
@@ -161,7 +161,7 @@ def activation_execute():
 
     counter = 0
     for maindraft in maindrafts_query:
-        activedraft = Activedraft(refno=maindraft.refno, name=maindraft.name, number=maindraft.number, role=maindraft.role, location=maindraft.location, community=maindraft.community, status='Pending', source=maindraft.source, lead_refno=maindraft.lead_refno, activated_date=datetime.now()+timedelta(hours=4), updated_date=datetime.now()+timedelta(hours=4))
+        activedraft = Activedraft(refno=maindraft.refno, name=maindraft.name, number=maindraft.number, role=maindraft.role, location=maindraft.location, community=maindraft.community, type=maindraft.type, status='Pending', source=maindraft.source, lead_refno=maindraft.lead_refno, activated_date=datetime.now()+timedelta(hours=4), updated_date=datetime.now()+timedelta(hours=4))
         session.add(activedraft)
         maindraft.draft_status = 'Active'
         counter += 1
@@ -221,12 +221,13 @@ def upload_drafts():
                         role = row[2]
                         location = row[3]
                         community = row[4]
+                        type = row[5]
                         status = 'Pending'
                         draft_status = 'In-Active'
                         draft_location = '-'
                         draft_community = '-'
                         draft_type = '-'
-                        newdraft = Maindraft(name=name, number=number, role=role, location=location, community=community, status=status, draft_status=draft_status, draft_location=draft_location, draft_community=draft_community, draft_type=draft_type, created_date=created_date, last_updated=last_updated, source=source, lead_refno=lead_refno)
+                        newdraft = Maindraft(name=name, number=number, role=role, location=location, community=community, type=type, status=status, draft_status=draft_status, draft_location=draft_location, draft_community=draft_community, draft_type=draft_type, created_date=created_date, last_updated=last_updated, source=source, lead_refno=lead_refno)
                         session.add(newdraft)
                         session.commit()
                         session.refresh(newdraft)
@@ -279,7 +280,7 @@ def fetch_active_drafts():
     if request.args.get('filter') == 'ON':
         conditions = []
         filters_01 = {key: request.args.get(key) for key in request.args}
-        filters = {key: filters_01[key] for key in ['status', 'location', 'community', 'role', 'propdate', 'propdate2', 'source'] if key in filters_01}
+        filters = {key: filters_01[key] for key in ['status', 'location', 'community', 'type','role', 'propdate', 'propdate2', 'source'] if key in filters_01}
         for key, value in filters.items():
             if key == 'propdate':
                 conditions.append(Activedraft.updated_date >= value)
@@ -316,7 +317,7 @@ def assignment_initiated():
     session = Session()
     query = session.query(Activedraft)
     conditions = []
-    valid_filter_keys = ['status', 'location', 'community', 'role', 'source' , 'propdate', 'propdate2']
+    valid_filter_keys = ['status', 'location', 'community', 'type', 'role', 'source' , 'propdate', 'propdate2']
     filtered_filters = {key: filters[key] for key in filters if key in valid_filter_keys}
     for key, value in filtered_filters.items():
             if key == 'propdate':
@@ -346,7 +347,7 @@ def assignment_execute():
     session = Session()
     activedrafts_query = session.query(Activedraft)
     conditions = []
-    valid_filter_keys = ['status', 'location', 'community', 'role', 'draft_location', 'draft_community', 'draft_type', 'source', 'propdate', 'propdate2']
+    valid_filter_keys = ['status', 'location', 'community', 'type', 'role', 'draft_location', 'draft_community', 'draft_type', 'source', 'propdate', 'propdate2']
     filtered_filters = {key: filters[key] for key in filters if key in valid_filter_keys}
     for key, value in filtered_filters.items():
             if key == 'propdate':

@@ -327,6 +327,22 @@ input[type="text"].number-input {
             <select name="community_category" id="community_category" class="filter_add02">
               <option selected="selected" value="">Community</option>
             </select>
+            <select name="type" id="type" class="filter_add02">
+              <option selected="selected" value=''>Type</option>
+              <option value='Villa'>Villa</option>
+              <option value='Apartment'>Apartment</option>
+              <option value='Loft Apartment'>Loft Apartment</option>
+              <option value='Residential Floor'>Residential Floor</option>
+              <option value='Residential Plot'>Residential Plot</option>
+              <option value='Townhouse'>Townhouse</option>
+              <option value='Residential Building'>Residential Building</option>
+              <option value='Penthouse'>Penthouse</option>
+              <option value='Villa Compound'>Villa Compound</option>
+              <option value='Hotel Apartment'>Hotel Apartment</option>
+              <option value='Office'>Office</option>
+              <option value='Land'>Land</option>
+              <option value='Other'>Other</option>
+            </select>
             <select name="role" id="role" class="filter_add02">
               <option selected="selected" value="">Role</option>
               <option value="Buyer">Buyer</option>
@@ -457,6 +473,9 @@ function ajaxRequest(params) {
         if ($("#community_category").val() != '') {
           params.data['community'] = $("#community_category").val()
         }
+        if ($("#type").val() != '') {
+          params.data['type'] = $("#type").val()
+        }
         if ($("#role").val() != '') {
           params.data['role'] = $("#role").val()
         }
@@ -510,6 +529,7 @@ $(window).on('load',(function(){
           $("#status").val("");
           $("#location_category").val("");
           $("#community_category").val("");
+          $("#type").val("");
           $("#role").val("");
           $("#propdate").val("");
           $("#propdate2").val("");
@@ -532,6 +552,9 @@ function assign_drafts() {
     }
     if ($("#community_category").val() != '') {
       filters['community'] = $("#community_category").val();
+    }
+    if ($("#type").val() != '') {
+      filters['type'] = $("#type").val()
     }
     if ($("#role").val() != '') {
       filters['role'] = $("#role").val();
