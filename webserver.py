@@ -19,10 +19,12 @@ import sqlite3
 from handlecontacts import handlecontacts
 from handleproperties import handleproperties
 from handleleads import handleleads
+from handleleadsdxb import handleleadsdxb
 from handledeals import handledeals
 from handlestorage import handlestorage
 from handleemployees import handleemployees
 from handledrafts import handledrafts
+#from handleadmin import handleadmin
 from handlelogs import handlelogs, edit_lead_agent
 from portals import portals
 from models import *
@@ -124,20 +126,24 @@ app.logger.addHandler(file_handler)
 app.register_blueprint(handlecontacts)
 app.register_blueprint(handleproperties)
 app.register_blueprint(handleleads)
+app.register_blueprint(handleleadsdxb)
 app.register_blueprint(handledeals)
 app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
 app.register_blueprint(handledrafts)
 app.register_blueprint(handlelogs)
+#app.register_blueprint(handleadmin)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
 app.config['SQLALCHEMY_DATABASE_URI_SECOND'] = 'sqlite:///'+os.getcwd()+'/draft_db.db'
 app.config['SQLALCHEMY_DATABASE_URI_THIRD'] = 'sqlite:///'+os.getcwd()+'/agent_logs.db'
+app.config['SQLALCHEMY_DATABASE_URI_FOURTH'] = 'sqlite:///'+os.getcwd()+'/dxb_db.db'
 app.config['SQLALCHEMY_BINDS'] = {
     'primary': app.config['SQLALCHEMY_DATABASE_URI'],
     'second': app.config['SQLALCHEMY_DATABASE_URI_SECOND'],
-    'third': app.config['SQLALCHEMY_DATABASE_URI_THIRD']
+    'third': app.config['SQLALCHEMY_DATABASE_URI_THIRD'],
+    'fourth': app.config['SQLALCHEMY_DATABASE_URI_FOURTH'],
 }
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -180,6 +186,9 @@ class User(UserMixin, db.Model):
     export = db.Column(db.Boolean, default=False)
     schedule = db.Column(db.Boolean, default=False)
     team_lead = db.Column(db.Boolean, default=False)
+    abudhabi = db.Column(db.Boolean, default=False)
+    dubai = db.Column(db.Boolean, default=False)
+    qa = db.Column(db.Boolean, default=False)
     team_members = db.Column(db.String(200))
 
 class Leads(db.Model):
@@ -527,7 +536,7 @@ def view_properties(variable):
             propertyObj['photos'] = a
     except:
         a=[]
-    if propertyObj["assign_to"] == current_user.username or propertyObj["created_by"] == current_user.username:
+    if propertyObj["assign_to"] == current_user.username or propertyObj["created_by"] == current_user.username or current_user.is_admin == True or current_user.viewall == True:
         pass
     else:
         propertyObj["owner_contact"] = "*"

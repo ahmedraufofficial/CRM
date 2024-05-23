@@ -22,6 +22,10 @@
         "title": "Department"
     },
     {
+        "field": "branch",  
+        "title": "Branch"
+    },
+    {
         "field": "leave_type",  
         "title": "Leave Type"
     },

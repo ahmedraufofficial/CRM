@@ -36,6 +36,7 @@
         <div class="vl" style="margin-top: 0.5%;"></div>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
+            {% if current_user.abudhabi == True %}
             <li class="nav-item">
               <div class="dropdown">
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/apartment.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Properties</small></button>
@@ -50,21 +51,28 @@
                 </div>
               </div>
             </li>
+            {% endif %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Leads</small></button>
                 <div class="dropdown-content">
-                  <a href="/leads">Agency Leads</a>
-                  <a href="/add_lead_buyer">Add Buyer</a>
-                  {% if current_user.is_admin == True %}
-                  <a href="/pre-leads">Pre-Leads</a>
+                  {% if current_user.abudhabi == True %}
+                  <a href="/leads">Leads (AD)</a>
+                  <a href="/add_lead_buyer">Add Buyer (AD)</a>
+                  {% if current_user.qa == True %}
+                  <a href="/pre-leads">Pre-Leads (AD)</a>
                   {% endif %}
-
+                  {% endif %}
+                  {% if current_user.dubai == True %}
+                  <a href="/leadsdxb">Leads (DXB)</a>
+                  <a href="/add_leaddxb_buyer">Add Buyer (DXB)</a>
+                  {% endif %}
                 </div>
               </div>
             </li>
             <div class="vl"></div>
+            {% if current_user.abudhabi == True %}
             <li class="nav-item">
               <div class="dropdown">
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/handshake.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Deals</small></button>
@@ -73,13 +81,20 @@
                 </div>
               </div>
             </li>
+            {% endif %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/man.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Contacts</small></button>
                 <div class="dropdown-content">
-                  <a href="/contacts">Agency Contacts</a>
-                  <a href="/add_contact">Add Contact</a>
+                  {% if current_user.abudhabi == True %}
+                  <a href="/contacts">Contacts (AD)</a>
+                  <a href="/add_contact">Add Contact (AD)</a>
+                  {% endif %}
+                  {% if current_user.dubai == True %}
+                  <a href="/contactsdxb">Contacts (DXB)</a>
+                  <a href="/add_contactdxb">Add Contact (DXB)</a>
+                  {% endif %}
                 </div>
               </div>
             </li>
@@ -98,6 +113,7 @@
               </div>
             </li>
             <div class="vl"></div>
+            {% if current_user.abudhabi == True %}
             <li class="nav-item">
               <div class="dropdown">
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Drafts</small></button>
@@ -110,7 +126,8 @@
                 </div>
               </div>
             </li>
-            {% if current_user.is_admin == True %}
+            {% endif %}
+            {% if current_user.is_admin == True or current_user.qa == True %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">

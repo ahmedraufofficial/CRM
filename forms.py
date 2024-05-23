@@ -312,6 +312,7 @@ class AddExitformentry(FlaskForm):
     hr_acknowledge = DateField('HR Acknowledge', format='%Y-%m-%d')
     hr_approval = SelectField(u'HR Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
     remarks = StringField('Remarks')
+    branch = SelectField(u'Select branch', [validators.DataRequired()], choices = [('',''),('Abu Dhabi','Abu Dhabi'),('Dubai','Dubai')])
 
 class AddLeaveformentry(FlaskForm):
     name = StringField('Name *', [validators.DataRequired()])
@@ -331,6 +332,7 @@ class AddLeaveformentry(FlaskForm):
     hr_approval = SelectField(u'HR Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
     remarks = StringField('Remarks')
     docs = FileField("Upload Document", render_kw={'class':'upload'})
+    branch = SelectField(u'Select branch', [validators.DataRequired()], choices = [('',''),('Abu Dhabi','Abu Dhabi'),('Dubai','Dubai')])
 
 class Addlistingdata(FlaskForm):
     status = SelectField(u'Status',choices = [('Pending', 'Pending'),('Available', 'Available'),('Not Interested', 'Not Interested'),('Call Later', 'Call Later')])
@@ -363,6 +365,7 @@ class Addadvanceform(FlaskForm):
     account_ack = DateField('Accounts Acknowledge', format='%Y-%m-%d')
     account_approval = SelectField(u'Accounts Approval',choices = [('Pending', 'Pending'),('Approve', 'Approve'),('Disapprove', 'Disapprove')])
     remarks = StringField('Remarks')
+    branch = SelectField(u'Select branch', [validators.DataRequired()], choices = [('',''),('Abu Dhabi','Abu Dhabi'),('Dubai','Dubai')])
 
 class Draftsusers(FlaskForm):
     name = StringField('Name')
@@ -372,3 +375,10 @@ class Draftsusers(FlaskForm):
     update_community = SelectField(u'Community',choices = [])
     update_type = SelectField(u'Type',choices = [('', ''),('Villa', 'Villa'), ('Apartment', 'Apartment'),('Loft Apartment', 'Loft Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
     comment = StringField('Comment')
+
+class BuyerLeadDubai(AddLeadForm):
+    lead_type = SelectField(u'Lead Type',choices = [('Buy','Buy'),('Rent','Rent')])
+    branch = SelectField(u'Select branch',choices = [('',''),('Abu Dhabi','Abu Dhabi'),('Dubai','Dubai')])
+
+class AddContactDubaiForm(AddContactForm):
+    branch = SelectField(u'Select branch',choices = [('',''),('Abu Dhabi','Abu Dhabi'),('Dubai','Dubai')])

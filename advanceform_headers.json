@@ -22,6 +22,10 @@
         "title": "Department"
     },
     {
+        "field": "branch",  
+        "title": "Branch"
+    },
+    {
         "field": "request_date",  
         "title": "Request Date"
     },

@@ -271,7 +271,8 @@ def add_exit_form():
         created_date = datetime.now()+timedelta(hours=4)
         updated_date = datetime.now()+timedelta(hours=4)
         created_by = current_user.username
-        newexitform = Exitform(name=name, designation=designation, department=department, reason=reason, viewing_lead=viewing_lead, remarks=remarks, date_from=date_from, date_to=date_to, time_from=time_from, time_to=time_to, hr_acknowledge=hr_acknowledge, created_date = created_date, updated_date = updated_date, created_by = created_by, manager_approval = manager_approval, hr_approval = hr_approval)
+        branch = form.branch.data
+        newexitform = Exitform(name=name, designation=designation, department=department, reason=reason, viewing_lead=viewing_lead, remarks=remarks, date_from=date_from, date_to=date_to, time_from=time_from, time_to=time_to, hr_acknowledge=hr_acknowledge, created_date = created_date, updated_date = updated_date, created_by = created_by, manager_approval = manager_approval, hr_approval = hr_approval, branch = branch)
 
         db.session.add(newexitform)
         db.session.commit()
@@ -372,6 +373,7 @@ def add_leave_form():
         date_to = form.date_to.data
         no_of_days = form.no_of_days.data
         leave_balance = form.leave_balance.data
+        branch = form.branch.data
 
         manager_ack_date = form.manager_ack_date.data
         if form.manager_approval.data != None:
@@ -387,7 +389,7 @@ def add_leave_form():
         created_date = datetime.now()+timedelta(hours=4)
         updated_date = datetime.now()+timedelta(hours=4)
         created_by = current_user.username
-        newleaveform = Leaveform(name=name, designation=designation, department=department, reason=reason, remarks=remarks, date_from=date_from, date_to=date_to, hr_ack_date=hr_ack_date, manager_ack_date=manager_ack_date, created_date = created_date, updated_date = updated_date, created_by = created_by, manager_approval = manager_approval, hr_approval = hr_approval, employee_no=employee_no, joining_date=joining_date, leave_type=leave_type, no_of_days=no_of_days, leave_balance=leave_balance)
+        newleaveform = Leaveform(name=name, designation=designation, department=department, reason=reason, remarks=remarks, date_from=date_from, date_to=date_to, hr_ack_date=hr_ack_date, manager_ack_date=manager_ack_date, created_date = created_date, updated_date = updated_date, created_by = created_by, manager_approval = manager_approval, hr_approval = hr_approval, employee_no=employee_no, joining_date=joining_date, leave_type=leave_type, no_of_days=no_of_days, leave_balance=leave_balance, branch = branch)
 
         db.session.add(newleaveform)
         db.session.commit()
@@ -532,6 +534,7 @@ def add_advance_form():
         amount_requested = form.amount_requested.data
         salary_month = form.salary_month.data
         reason = form.reason.data
+        branch = form.branch.data
 
         tl_ack = form.tl_ack.data
         if form.tl_approval.data != None:
@@ -561,7 +564,7 @@ def add_advance_form():
         created_date = datetime.now()+timedelta(hours=4)
         updated_date = datetime.now()+timedelta(hours=4)
         created_by = current_user.username
-        newadvanceform = Advanceform(name=name,designation=designation,department=department,request_date=request_date,amount_requested=amount_requested,salary_month=salary_month,reason=reason,remarks=remarks,created_date=created_date,updated_date=updated_date,created_by=created_by,manager_ack=manager_ack,manager_approval=manager_approval,employee_no=employee_no,tl_ack=tl_ack,tl_approval=tl_approval,ceo_ack=ceo_ack,ceo_approval=ceo_approval,account_ack=account_ack,account_approval=account_approval,com_from=com_from)
+        newadvanceform = Advanceform(name=name,designation=designation,department=department,request_date=request_date,amount_requested=amount_requested,salary_month=salary_month,reason=reason,remarks=remarks,created_date=created_date,updated_date=updated_date,created_by=created_by,manager_ack=manager_ack,manager_approval=manager_approval,employee_no=employee_no,tl_ack=tl_ack,tl_approval=tl_approval,ceo_ack=ceo_ack,ceo_approval=ceo_approval,account_ack=account_ack,account_approval=account_approval,com_from=com_from, branch = branch)
 
         db.session.add(newadvanceform)
         db.session.commit()
