@@ -52,7 +52,7 @@ def verify_token(token):
 @handlecontacts.route('/contacts',methods = ['GET','POST'])
 @login_required
 def display_contacts():
-    if current_user.contact == False:
+    if current_user.contact == False or current_user.abudhabi == False:
         return abort(404)
     data = []
     f = open('contacts_headers.json')
@@ -76,7 +76,7 @@ def fetch_contacts(user):
     agent = request.args.get('agent')
     total_records = 0
     data = []
-    query = db.session.query(Contacts).filter(or_(Contacts.created_by == voltage_user.username,Contacts.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True))
+    query = db.session.query(Contacts).filter(or_(Contacts.created_by == voltage_user.username,Contacts.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True, voltage_user.qa == True))
     if search:
         conditions = [column.ilike(f"%{search}%") for column in Contacts.__table__.columns]
         query = query.filter(or_(*conditions))
@@ -102,7 +102,7 @@ def fetch_contacts(user):
 @handlecontacts.route('/add_contact', methods = ['GET','POST'])
 @login_required
 def add_contact():
-    if current_user.contact == False:
+    if current_user.contact == False or current_user.abudhabi == False:
         return abort(404) 
     form = AddContactForm()
     if request.method == 'POST': 
@@ -167,7 +167,7 @@ def quick_add():
 @handlecontacts.route('/edit_contact/<variable>', methods = ['GET','POST'])
 @login_required
 def edit_contact(variable):
-    if current_user.contact == False or current_user.edit == False:
+    if current_user.contact == False or current_user.edit == False or current_user.abudhabi == False:
         return abort(404) 
     edit = db.session.query(Contacts).filter_by(id=variable).first()
     form = AddContactForm(obj = edit)
@@ -190,7 +190,7 @@ def reassign_contacts69(personA,personB,personC,personD,personE,personF,personG,
 @handlecontacts.route('/delete_contact/<variable>', methods = ['GET','POST'])
 @login_required
 def delete_contacts(variable):
-    if current_user.contact == False or current_user.edit == False:
+    if current_user.contact == False or current_user.edit == False or current_user.abudhabi == False:
         return abort(404) 
     delete = db.session.query(Contacts).filter_by(id=variable).first()
     db.session.delete(delete)
@@ -253,7 +253,7 @@ def import_contact():
 @handlecontacts.route('/contactsdxb',methods = ['GET','POST'])
 @login_required
 def display_contactsdxb():
-    if current_user.contact == False:
+    if current_user.contact == False or current_user.dubai == False:
         return abort(404)
     data = []
     f = open('contacts_headers.json')
@@ -275,7 +275,7 @@ def fetch_contactsdxb(user):
 
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()
-    query = session.query(Contactsdubai).filter(or_(Contactsdubai.created_by == voltage_user.username,Contactsdubai.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True))
+    query = session.query(Contactsdubai).filter(or_(Contactsdubai.created_by == voltage_user.username,Contactsdubai.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.qa == True))
 
     if search:
         conditions = [column.ilike(f"%{search}%") for column in Contactsdubai.__table__.columns]
@@ -303,7 +303,7 @@ def fetch_contactsdxb(user):
 @handlecontacts.route('/add_contactdxb', methods = ['GET','POST'])
 @login_required
 def add_contactdxb():
-    if current_user.contact == False:
+    if current_user.contact == False or current_user.dubai == False:
         return abort(404) 
     form = AddContactDubaiForm()
     if request.method == 'POST': 
@@ -343,7 +343,7 @@ def add_contactdxb():
 @handlecontacts.route('/edit_contactdxb/<variable>', methods = ['GET','POST'])
 @login_required
 def edit_contactdxb(variable):
-    if current_user.contact == False or current_user.edit == False:
+    if current_user.contact == False or current_user.edit == False or current_user.dubai == False:
         return abort(404) 
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()
@@ -361,7 +361,7 @@ def edit_contactdxb(variable):
 @handlecontacts.route('/delete_contactdxb/<variable>', methods = ['GET','POST'])
 @login_required
 def delete_contactsdxb(variable):
-    if current_user.contact == False or current_user.edit == False:
+    if current_user.contact == False or current_user.edit == False  or current_user.dubai == False:
         return abort(404) 
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()

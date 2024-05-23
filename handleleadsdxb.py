@@ -151,7 +151,7 @@ def fetch_leadsdxb(user):
 @handleleadsdxb.route('/leadsdxb',methods = ['GET','POST'])
 @login_required
 def display_leadsdxb():   
-    if current_user.sale == False:
+    if current_user.sale == False or current_user.dubai == False:
         return abort(404)
     data = []
     f = open('lead_headers.json')
@@ -164,7 +164,7 @@ def display_leadsdxb():
 @handleleadsdxb.route('/delete_leaddxb/<variable>', methods = ['GET','POST'])
 @login_required
 def delete_leaddxb(variable):
-    if current_user.sale == False or current_user.edit == False:
+    if current_user.sale == False or current_user.edit == False or current_user.dubai == False:
         return abort(404) 
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()
@@ -184,7 +184,7 @@ def delete_leaddxb(variable):
 @handleleadsdxb.route('/add_leaddxb_buyer/', methods = ['GET','POST'])
 @login_required
 def add_leaddxb_buyer():
-    if current_user.sale == False:
+    if current_user.sale == False or current_user.dubai == False:
         return abort(404)  
     form = BuyerLeadDubai()
     if request.method == 'POST':
@@ -266,7 +266,7 @@ def add_leaddxb_buyer():
 @handleleadsdxb.route('/edit_leaddxb/<var>', methods = ['GET','POST'])
 @login_required
 def edit_leaddxb(var):
-    if current_user.sale == False or current_user.edit == False:
+    if current_user.sale == False or current_user.edit == False or current_user.dubai == False:
         return abort(404) 
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()
@@ -434,7 +434,7 @@ def uploadleadsdxb():
 @handleleadsdxb.route('/reassign_leaddxb_straight/<x>/<y>/<z>')
 @login_required
 def reassign_straight_function_dxb(x, y, z):
-    if current_user.sale == False or current_user.edit == False:
+    if current_user.sale == False or current_user.edit == False or current_user.dubai == False:
         return abort(404) 
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()

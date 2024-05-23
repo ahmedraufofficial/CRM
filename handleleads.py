@@ -82,7 +82,7 @@ def fetch_leads(user):
                 conditions.append(getattr(Leads, key) == value)
         query = query.filter(and_(*conditions))
     
-    if voltage_user.is_admin == True:
+    if voltage_user.is_admin == True or voltage_user.qa == True:
         z = query.count()
         for r in query.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -166,7 +166,7 @@ def fetch_leads(user):
 @handleleads.route('/leads',methods = ['GET','POST'])
 @login_required
 def display_leads():   
-    if current_user.sale == False:
+    if current_user.sale == False or current_user.abudhabi == False:
         return abort(404)
     data = []
     f = open('lead_headers.json')
@@ -206,7 +206,7 @@ def delete_lead(variable):
 @handleleads.route('/add_lead_buyer/', methods = ['GET','POST'])
 @login_required
 def add_lead_buyer():
-    if current_user.sale == False:
+    if current_user.sale == False or current_user.abudhabi == False:
         return abort(404)  
     form = BuyerLead()
     all_sale_users = db.session.query(User).filter_by(sale = True).all()
@@ -273,7 +273,7 @@ def add_lead_buyer():
         lead_email(current_user.email, 'UNI-L-' + str(newlead.id))
 
         return redirect(url_for('handleleads.display_pre_leads'))
-    return render_template('add_lead_buyer.html', form=form, user = current_user.username, all_sale_users = all_sale_users)
+    return render_template('add_lead_buyer.html', form=form, user = current_user.username)
 
 @handleleads.route('/add_lead_developer/', methods = ['GET','POST'])
 @login_required
@@ -349,7 +349,7 @@ def add_lead_developer():
 @handleleads.route('/edit_lead/<markettype>/<var>', methods = ['GET','POST'])
 @login_required
 def edit_lead(markettype,var):
-    if current_user.sale == False or current_user.edit == False:
+    if current_user.sale == False or current_user.edit == False or current_user.abudhabi == False: 
         return abort(404) 
     edit = db.session.query(Leads).filter_by(refno = var).first()
     if markettype == "secondary":
@@ -566,10 +566,10 @@ def reassign_btn_response(x):
 @handleleads.route('/pre-leads',methods = ['GET','POST'])
 @login_required
 def display_pre_leads():   
-    if current_user.is_admin == False:
+    if current_user.qa == False or current_user.abudhabi == False:
         return abort(404)
     data = []
-    if current_user.viewall == True and current_user.is_admin == True:
+    if current_user.is_admin == True or current_user.qa == True:
         for r in db.session.query(Leads).filter(Leads.street == '0'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
