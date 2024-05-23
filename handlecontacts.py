@@ -2,8 +2,8 @@ from operator import ge
 from flask import Blueprint, render_template, request, redirect, url_for,jsonify,abort
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
-from models import Contacts, User
-from forms import AddContactForm
+from models import Contacts, User, Contactsdubai
+from forms import AddContactForm, AddContactDubaiForm
 import json
 from functions import logs
 import os 
@@ -11,6 +11,7 @@ import csv
 from sqlalchemy import or_, and_
 from datetime import datetime, timedelta
 from flask_httpauth import HTTPTokenAuth
+from sqlalchemy.orm import sessionmaker
 
 auth = HTTPTokenAuth(scheme='Bearer')
 tokens = {
@@ -54,18 +55,10 @@ def display_contacts():
     if current_user.contact == False:
         return abort(404)
     data = []
-    #for r in db.session.query(Contacts).filter(or_(Contacts.created_by == current_user.username,Contacts.assign_to == current_user.username, current_user.is_admin == True, current_user.listing == True)):
-    #    row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
-    #    new = row2dict(r)
-    #    for k in []: new.pop(k)
-    #    new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contact/'+str(new['id'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contact/'+str(new['id'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
-    #    data.append(new)
-    #with open('contacts.json', 'w') as fout:
-    #    json.dump(data , fout)
     f = open('contacts_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    return render_template('contacts.html', data = data , columns = columns)
+    return render_template('contacts.html', data = data , columns = columns, vibes = 'ad')
 
 @handlecontacts.route('/fetch_token',methods = ['GET','POST'])
 @login_required
@@ -143,7 +136,7 @@ def add_contact():
             os.mkdir(directory)
         logs(current_user.username,'UNI-O-'+str(newcontact.id),'Added')
         return redirect(url_for('handlecontacts.display_contacts'))
-    return render_template('add_contact.html', form=form,user = current_user.username)
+    return render_template('add_contact.html', form=form,user = current_user.username, vibes = 'ad')
 
 @handlecontacts.route('/add_contact/quick_add', methods = ['GET','POST'])
 @login_required
@@ -254,3 +247,126 @@ def import_contact():
 
         return jsonify(fs)
 '''
+
+# dubai - contacts
+
+@handlecontacts.route('/contactsdxb',methods = ['GET','POST'])
+@login_required
+def display_contactsdxb():
+    if current_user.contact == False:
+        return abort(404)
+    data = []
+    f = open('contacts_headers.json')
+    columns = json.load(f)
+    columns = columns["headers"]
+    return render_template('contacts.html', data = data , columns = columns, vibes = 'dxb')
+
+@handlecontacts.route('/fetch_contactsdxb/<user>',methods = ['GET','POST'])
+@auth.login_required
+def fetch_contactsdxb(user):
+    voltage_user = db.session.query(User).filter_by(username = user).first()
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    role = request.args.get('role')
+    agent = request.args.get('agent')
+    total_records = 0
+    data = []
+
+    Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+    session = Session()
+    query = session.query(Contactsdubai).filter(or_(Contactsdubai.created_by == voltage_user.username,Contactsdubai.assign_to == voltage_user.username, voltage_user.is_admin == True, voltage_user.listing == True))
+
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Contactsdubai.__table__.columns]
+        query = query.filter(or_(*conditions))
+    if role or agent:
+        filters = []
+        if role:
+            filters.append(Contactsdubai.role == role)
+        if agent:
+            filters.append(Contactsdubai.assign_to == agent)
+        query = query.filter(and_(*filters))
+    z = query.count()
+    for r in query.order_by(Contactsdubai.id.desc()).offset(offset).limit(limit):
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        for k in ['alternate_number','comment','contact_type','created_by','date_of_birth','language','gender','nationality','religion','source','title']: new.pop(k)
+        new["edit"] = "<div style='display:flex;'>"+'<a href="/edit_contactdxb/'+str(new['refno'])+'"><button  class="btn btn-primary si">Edit</button></a><a href="/delete_contactdxb/'+str(new['refno'])+'"><button class="btn btn-danger si">Delete</button></a>'+"</div>"
+        new["id"] = total_records
+        data.append(new)
+        total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+    session.close()
+    return(response_data)
+
+@handlecontacts.route('/add_contactdxb', methods = ['GET','POST'])
+@login_required
+def add_contactdxb():
+    if current_user.contact == False:
+        return abort(404) 
+    form = AddContactDubaiForm()
+    if request.method == 'POST': 
+        Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+        session = Session()
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        number = form.number.data
+        check = session.query(Contactsdubai).filter_by(number = number).first()
+        if check:
+            return("<body style='background-color: rgb(204, 8, 8);'><p style='font-family: Arial; text-align: center; margin-top: 50vh; color: white;'>Integrity Error: Number already exists under the User - "+check.assign_to+"<a style='display:block; margin-top: 10px' href='/add_contact'><button  style='background-color: rgb(5, 179, 231); color: white; border: none; padding: 5px;cursor: pointer;'>Back</button></a><a style='display:block; margin-top: 30px;' href='/contacts'><button  style='background-color: rgb(105, 103, 103); color: white; border: none; padding: 5px;cursor: pointer; '>All Contacts</button></a></p></body>")
+        alternate_number = form.alternate_number.data
+        contact_type = form.contact_type.data
+        role = form.role.data
+        nationality = form.nationality.data
+        source = form.source.data
+        assign_to = form.assign_to.data
+        email = form.email.data
+        title = form.title.data
+        gender = form.gender.data
+        date_of_birth = form.date_of_birth.data
+        religion = form.religion.data
+        language = form.language.data
+        comment = form.comment.data
+        branch = form.branch.data
+        newcontact = Contactsdubai(first_name=first_name, last_name=last_name ,number=number,alternate_number=alternate_number,contact_type=contact_type,role=role,nationality=nationality,source=source,assign_to=assign_to,email=email,title=title,gender=gender,religion=religion,date_of_birth=date_of_birth,language=language,comment=comment,branch=branch, created_by = current_user.username)
+        session.add(newcontact)
+        session.commit()
+        session.refresh(newcontact)
+        newcontact.refno = 'UNI-CD-'+str(newcontact.id)
+        session.commit()
+        logs(current_user.username,'UNI-CD-'+str(newcontact.id),'Added')
+        session.close()
+        return redirect(url_for('handlecontacts.display_contactsdxb'))
+    return render_template('add_contact.html', form=form,user = current_user.username, vibes = 'dxb')
+
+@handlecontacts.route('/edit_contactdxb/<variable>', methods = ['GET','POST'])
+@login_required
+def edit_contactdxb(variable):
+    if current_user.contact == False or current_user.edit == False:
+        return abort(404) 
+    Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+    session = Session()
+    edit = session.query(Contactsdubai).filter_by(refno=variable).first()
+    form = AddContactDubaiForm(obj = edit)
+    if request.method == 'POST': 
+        form.populate_obj(edit)
+        session.commit()
+        logs(current_user.username,edit.refno,'Edited')
+        session.close()
+        return redirect(url_for('handlecontacts.display_contactsdxb'))
+    session.close()
+    return render_template('add_contact.html', form=form, assign = current_user.username,user = current_user.username, vibes = 'dxb')
+
+@handlecontacts.route('/delete_contactdxb/<variable>', methods = ['GET','POST'])
+@login_required
+def delete_contactsdxb(variable):
+    if current_user.contact == False or current_user.edit == False:
+        return abort(404) 
+    Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+    session = Session()
+    delete = session.query(Contactsdubai).filter_by(refno=variable).first()
+    session.delete(delete)
+    session.commit()
+    session.close()
+    return redirect(url_for('handlecontacts.display_contactsdxb'))

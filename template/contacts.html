@@ -89,10 +89,6 @@
         data-page-list="[25, 50, 100, 200, 1000, All]">
       </table>
     </div>
-
-    <div class="container">
-      <a href="/add_contact" class="btn btn-primary">Add</a>
-      </div>
       <br>
       </div>
 </section>
@@ -123,7 +119,7 @@
 </script>
 
 <script type='text/javascript'>
-
+var vibes = '{{ vibes }}'
 function ajaxRequest(params) {
     fetch('/fetch_token').then(function(response){
       response.json().then(function(data){
@@ -141,7 +137,12 @@ function ajaxRequest(params) {
           params.data['agent'] = $("#listing_users").val()
         }
 
-        var url = 'https://crm.uhpae.com/fetch_contacts/'+user;
+        if (vibes == 'dxb'){
+          var url = 'https://crm.uhpae.com/fetch_contactsdxb/'+user;
+        }
+        else {
+          var url = 'https://crm.uhpae.com/fetch_contacts/'+user;
+        }
         $.ajax({
           url: url,
           method: 'GET',

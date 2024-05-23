@@ -28,6 +28,10 @@ padding-top: 10px;
   <dl>
     <div class="row">
       <div class="col column">
+        {% if vibes == 'dxb'%}
+        <h4>Branch</h4>
+        {{ wtf.form_field(form.branch) }}
+        {% endif %}
         <h4>Contact Details</h4>
         {{ wtf.form_field(form.title) }}
         {{ wtf.form_field(form.first_name) }}
