@@ -382,3 +382,12 @@ class BuyerLeadDubai(AddLeadForm):
 
 class AddContactDubaiForm(AddContactForm):
     branch = SelectField(u'Select branch',choices = [('',''),('Abu Dhabi','Abu Dhabi'),('Dubai','Dubai')])
+
+class Addtransactionad(FlaskForm):
+    user = SelectField(u'Agent',choices = [])
+    deal_ref = StringField('Deal Reference', default='UNI-D-')
+    transaction_date = DateField('Date', format='%Y-%m-%d')
+    type = SelectField(u'Type *', [validators.DataRequired()], choices = [('', ''),('To agent', 'To agent'),('To company', 'To company')])
+    mode = SelectField(u'Mode *', [validators.DataRequired()], choices = [('', ''),('Cash', 'Cash'),('Cheque', 'Cheque'),('Bank Transfer', 'Bank Transfer')])
+    amount = StringField('Amount')
+    description = StringField('Description')

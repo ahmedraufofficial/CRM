@@ -220,7 +220,6 @@ class Deals(db.Model):
     eid = db.Column(db.String(500))
     amount_received = db.Column(db.String(50))
     agent_pers_comm = db.Column(db.String(50))
-    #agent_commission = db.Column(db.String(50))
     amount_eligible = db.Column(db.String(50))
     agent_received = db.Column(db.String(50))
     agent_pending = db.Column(db.String(50))
@@ -236,6 +235,8 @@ class Deals(db.Model):
     kickback_percentage = db.Column(db.String(100))
     kickback_amount = db.Column(db.String(100))
     kickback_status = db.Column(db.String(100))
+    agent_commission = db.Column(db.String(50))
+    pending_eligible = db.Column(db.String(50))
 
 
 
@@ -487,3 +488,16 @@ class Contactsdubai(db.Model):
     language = db.Column(db.String(50))
     comment = db.Column(db.String(150))
     branch = db.Column(db.String(50))
+
+class Transactionad(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    refno = db.Column(db.String(50))
+    user = db.Column(db.String(50))
+    deal_ref = db.Column(db.String(50))
+    transaction_date = db.Column(db.DateTime)
+    type = db.Column(db.String(50))
+    mode = db.Column(db.String(50))
+    amount = db.Column(db.String(50))
+    description = db.Column(db.String(500))
+    created_by = db.Column(db.String(50))
+    created_date = db.Column(db.DateTime)

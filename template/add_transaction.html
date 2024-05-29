@@ -1,0 +1,123 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+<style type='text/css'>
+.column{
+        background-color: rgba(255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+        -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+        -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+        padding-top: 10px;
+        margin: 5px;
+        margin-top: 20px;
+        border-radius: 12px;
+}
+h4{
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #000000;
+        font-size: 14pt;
+        font-family: 'Oswald';
+}
+</style>
+
+
+<section>
+<div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1);">
+<div class="container">
+
+
+<form method="POST" enctype="multipart/form-data">
+    <dl>
+        <div class="row">
+            <div class="col column">
+                <h4>Transaction Details</h4>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            {{ wtf.form_field(form.user) }}
+                        </div>
+                        <div class="col">
+                            {{ wtf.form_field(form.deal_ref) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {{ wtf.form_field(form.type) }}
+                        </div>
+                        <div class="col" style="margin-top: 23px; text-align: right;">
+                            Transaction Date *
+                        </div>
+                        <div class="col" style="margin-top: 23px; text-align: left;">
+                            {{ form.transaction_date }}
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {{ wtf.form_field(form.mode) }}
+                        </div>
+                        <div class="col">
+                            {{ wtf.form_field(form.amount) }}
+                        </div>
+                    </div>
+                </div>
+                {{ wtf.form_field(form.description) }}
+            </div>
+        </div>
+    </dl>
+    <p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;" type="submit" value="Submit">
+</form>
+</div>
+<br></div>
+</section>
+
+<script>
+let assign_to = document.getElementById('user');
+    function get_user(){
+        fetch('/all_users').then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '<option value="'+''+'">'+''+'</option>';
+                
+                for (let users of data.all_users){
+                    if ( users.sale == true ){
+                        optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                    }
+                    else{ 
+                        continue
+                    }
+                }
+                assign_to.innerHTML = optionHTML;
+            })
+        })
+    };
+
+    window.onload = get_user();
+
+    const deal_price_coma = document.getElementById('amount');
+    const inputHandler05 = function(e) {
+    var deal_price_coma01 = document.getElementById('amount').value
+    if (e.target.id == 'amount')
+    {
+        if (deal_price_coma01.substring(deal_price_coma01.length - 1) == ".") {
+            document.getElementById('amount').value = deal_price_coma01;
+        }
+        else {
+            deal_price_coma02 = deal_price_coma01.replaceAll(",", "");
+            var parts = deal_price_coma02.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('amount').value = m;
+        }
+    }
+    }
+    deal_price_coma.addEventListener('input', inputHandler05);
+</script>
+ 
+{% endblock %}
+
+
+
+
+
+

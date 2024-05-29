@@ -1,0 +1,76 @@
+{"headers":
+  [ 
+    {
+        "field": "state",
+        "checkbox": "true"
+    },
+    {
+        "field": "agent_1",
+        "title": "Agent"
+    },
+    {
+        "field": "actual_deal_date",
+        "title": "Completion Date"
+    },
+    {
+        "field": "unit_location",
+        "title": "Location"
+    },
+    {
+        "field": "unit_sub_location",
+        "title": "Community"
+    },
+    {
+        "field": "unit_no",
+        "title": "Unit No."
+    },
+    {
+      "field": "refno",  
+      "title": "Ref. No"
+    },
+    {
+      "field": "deal_price",
+      "title": "Deal Price"
+    },
+    {
+      "field": "commission_agent_1",
+      "title": "Commission (%)"
+    },
+    {
+      "field": "gross_commission",
+      "title": "Commission (AED)"
+    },
+    {
+      "field": "amount_received",
+      "title": "Paid (AED)"
+    },
+    {
+        "field": "agent_pers_comm",
+        "title": "Agent (%)"
+    },
+    {
+      "field": "agent_commission",
+      "title": "Agent Commission"
+    },
+    {
+        "field": "amount_eligible",
+        "title": "Agent Eligible"
+    },
+    {
+        "field": "agent_received",
+        "title": "Agent Received"
+    },
+    {
+      "field": "pending_eligible",
+      "title": "Pending Eligible"
+    },
+    {
+        "field": "agent_pending",
+        "title": "Total Pending"
+    },
+    {
+      "field": "options",
+      "title": "View"
+    }
+  ]
+}

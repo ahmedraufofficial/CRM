@@ -78,6 +78,10 @@
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/handshake.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Deals</small></button>
                 <div class="dropdown-content">
                   <a href="/deals">Agency Deals</a>
+                  {% if current_user.is_admin == True %}
+                  <a href="/admin-profiles">Agent Profiles</a>
+                  <a href="/add_transaction_ad">Add transaction</a>
+                  {% endif %}
                 </div>
               </div>
             </li>

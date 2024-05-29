@@ -24,7 +24,7 @@ from handledeals import handledeals
 from handlestorage import handlestorage
 from handleemployees import handleemployees
 from handledrafts import handledrafts
-#from handleadmin import handleadmin
+from handleadmin import handleadmin
 from handlelogs import handlelogs, edit_lead_agent
 from portals import portals
 from models import *
@@ -132,7 +132,7 @@ app.register_blueprint(handleemployees)
 app.register_blueprint(handlestorage)
 app.register_blueprint(handledrafts)
 app.register_blueprint(handlelogs)
-#app.register_blueprint(handleadmin)
+app.register_blueprint(handleadmin)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'

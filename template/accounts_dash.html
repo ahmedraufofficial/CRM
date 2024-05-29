@@ -1,0 +1,374 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 12px;
+}
+th {
+  background-color: #293645;
+  color: white;
+  
+}
+tfoot td {
+  font-weight: bold;
+  font-size: 15px;
+}
+</style>
+<title>Lighthouse - Finance</title>
+<section>
+  <!-- View Transaction Model -->
+  <div class="modal fade" id="TxnModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+        <div id="toolbarC">
+        </div>
+          <table id="txntable"        
+          data-toggle="true"
+          data-toolbar="#toolbarC"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-field="refno">Ref No.</th>
+                <th data-field="transaction_date">Date</th>
+                <th data-field="type">Type</th>
+                <th data-field="mode">Mode</th>
+                <th data-field="amount">Amount</th>
+            </tr>
+            </thead>
+        </table>
+        </div>
+      </div>
+    </div>
+    </div>
+    <!-- Model End -->
+
+
+
+  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+    <div class="container-fluid" style="padding: 10px;">
+      <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
+        <div class="row">
+          <div class="child" style="width: auto; margin-left: 1%;">
+            <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Availablility</h6>
+        <select name="listing_users" id="listing_users" class="filter_add02" >
+        <option selected="selected" value="">Users</option>
+        {% for users in all_sale_users %}
+            <option value="{{users.username}}">{{users.username}}</option>
+        {% endfor %}
+        </select>
+          </div>
+            <div class="child" style="width: auto">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+            </div>
+          </div>
+    
+          <div class="row">
+            <div class="col">
+              <button id="filter_search" class="filter_add" onclick="ajaxRequest()" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+            </div>
+          </div>
+      </div>
+
+
+<button id="save-button" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px; margin-bottom: 10px;">Update</button> 
+<table id="data-table">
+  <thead>
+      <tr>
+          {% for col in columns %}
+              <th>{{ col.title }}</th>
+          {% endfor %}
+      </tr>
+  </thead>
+  <tbody>
+      {% for row in data %}
+      <tr>
+        {% for col in columns %}
+            {% if col.field == 'options' %}
+                <td data-field="{{ col.field }}">{{ row.get(col.field, '-') | safe }}</td>
+            {% elif col.field in editable_keys %}
+                <td data-field="{{ col.field }}" contenteditable="true" class="editable">{{ row.get(col.field, '-') }}</td>
+            {% else %}
+                <td data-field="{{ col.field }}">{{ row.get(col.field, '-') }}</td>
+            {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr id="totals-row">
+          {% for col in columns %}
+              <td>
+                  {% if col['field'] in sum_keys %}
+                      <span data-field="{{ col['field'] }}" style="color: #293645;">0</span>
+                  {% else %}
+                      -
+                  {% endif %}
+              </td>
+          {% endfor %}
+      </tr>
+  </tfoot>
+</table>
+</table>
+</div>
+</div>
+</section>
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+  
+  function view_txn(x){
+  fetch('/view_txns/'+x).then(function(response){
+    response.json().then(function(data){
+      var jsonData = data.txns
+      $(function () {
+                $('#txntable').bootstrapTable('destroy')
+                $('#txntable').bootstrapTable({data: jsonData});
+                });
+    })
+  })
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    let sumKeys = {{ sum_keys|tojson }};
+    let editableKeys = {{ editable_keys|tojson }};
+    let sums = {};
+
+    // Initialize sums object
+    sumKeys.forEach(key => sums[key] = 0);
+
+    function updateSumAndFooter(field) {
+        sums[field] = 0;
+        document.querySelectorAll(`#data-table tbody tr td[data-field="${field}"]`).forEach(cell => {
+            let value = parseFloat(cell.innerText.replace(/,/g, '')) || 0;
+            sums[field] += value;
+        });
+        document.querySelector(`#totals-row td span[data-field="${field}"]`).innerText = sums[field].toLocaleString();
+    }
+
+    function addEditableEventListeners() {
+        document.querySelectorAll('.editable').forEach(cell => {
+            cell.addEventListener('input', function() {
+                let row = cell.parentElement;
+                let field = cell.getAttribute('data-field');
+                let newValue = parseFloat(cell.innerText.replace(/,/g, '')) || 0;
+
+                // Example of recalculating dependent values
+                if (field === 'agent_pers_comm') {
+                    let agentCommissionCell = row.querySelector('td[data-field="agent_commission"]');
+                    let grossCommissionCell = row.querySelector('td[data-field="gross_commission"]');
+                    let agentPersCommCell = row.querySelector('td[data-field="agent_pers_comm"]');
+
+                    let agentPersCommVal = parseFloat(agentPersCommCell.innerText.replace(/,/g, '')) || 0;
+                    let grossCommissionVal = parseFloat(grossCommissionCell.innerText.replace(/,/g, '')) || 0;
+
+                    agentCommissionCell.innerText = (grossCommissionVal * (agentPersCommVal / 100)).toLocaleString();
+
+                    updateSumAndFooter('agent_commission');
+                }
+                if (field === 'amount_received') {
+                    let amount_receivedCell = row.querySelector('td[data-field="amount_received"]');
+                    let amount_eligibleCell = row.querySelector('td[data-field="amount_eligible"]');
+                    let agentPersCommCell = row.querySelector('td[data-field="agent_pers_comm"]');
+                    let agent_receivedCell = row.querySelector('td[data-field="agent_received"]');
+                    let pending_eligibleCell = row.querySelector('td[data-field="pending_eligible"]');
+
+                    let agentPersCommVal = parseFloat(agentPersCommCell.innerText.replace(/,/g, '')) || 0;
+                    let amount_receivedVal = parseFloat(amount_receivedCell.innerText.replace(/,/g, '')) || 0;
+                    let agent_receivedVal = parseFloat(agent_receivedCell.innerText.replace(/,/g, '')) || 0;
+
+                    amount_eligibleCell.innerText = (amount_receivedVal * (agentPersCommVal / 100)).toLocaleString();
+
+                    let amount_eligible = parseFloat(amount_eligibleCell.innerText.replace(/,/g, '')) || 0;
+                    pending_eligibleCell.innerText = (amount_eligible - agent_receivedVal).toLocaleString();
+
+                    updateSumAndFooter('amount_received');
+                    updateSumAndFooter('amount_eligible');
+                    updateSumAndFooter('pending_eligible');
+                }
+                if (field === 'agent_received') {
+                    let agent_receivedCell = row.querySelector('td[data-field="agent_received"]');
+                    let amount_eligibleCell = row.querySelector('td[data-field="amount_eligible"]');
+                    let pending_eligibleCell = row.querySelector('td[data-field="pending_eligible"]');
+                    let agent_commissionCell = row.querySelector('td[data-field="agent_commission"]');
+                    let agent_pendingCell = row.querySelector('td[data-field="agent_pending"]');
+
+                    let agent_commissionVal = parseFloat(agent_commissionCell.innerText.replace(/,/g, '')) || 0;
+                    let amount_eligibleVal = parseFloat(amount_eligibleCell.innerText.replace(/,/g, '')) || 0;
+                    let agent_receivedVal = parseFloat(agent_receivedCell.innerText.replace(/,/g, '')) || 0;
+
+                    pending_eligibleCell.innerText = (amount_eligibleVal - agent_receivedVal).toLocaleString();
+                    agent_pendingCell.innerText = (agent_commissionVal - agent_receivedVal).toLocaleString();
+
+                    updateSumAndFooter('agent_received');
+                    updateSumAndFooter('pending_eligible');
+                    updateSumAndFooter('agent_pending');
+                }
+            });
+            cell.addEventListener('blur', function() {
+                let value = cell.innerText.replace(/,/g, '');
+                if (!isNaN(value) && value !== '') {
+                    cell.innerText = parseFloat(value).toLocaleString();
+                }
+            });
+        });
+    }
+
+    window.ajaxRequest = function ajaxRequest() {
+        fetch('/fetch_txn_token').then(function(response) {
+            response.json().then(function(data) {
+                token = data;
+                var headers = {
+                    'Authorization': 'Bearer ' + token
+                };
+                var queryParams = {};
+
+                if ($("#listing_users").val() != '') {
+                    queryParams['agent_1'] = $("#listing_users").val();
+                }
+                if ($("#propdate").val() != '') {
+                    queryParams['propdate'] = $("#propdate").val();
+                }
+                if ($("#propdate2").val() != '') {
+                    queryParams['propdate2'] = $("#propdate2").val();
+                }
+
+                var url = 'https://crm.uhpae.com/fetch_transactions';
+                var queryString = Object.keys(queryParams).map(key => key + '=' + queryParams[key]).join('&');
+                url += '?' + queryString;
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    headers: headers,
+                    success: function(res) {
+                        // Destroy existing table body
+                        $('#data-table tbody').remove();
+                        // Create a new table body
+                        var newTbody = $('<tbody></tbody>');
+                        res.data.forEach(function(row) {
+                            var newRow = $('<tr></tr>');
+                            res.columns.forEach(function(col) {
+                                var newCell;
+                                if (col.field === 'options') {
+                                    newCell = $('<td></td>').attr('data-field', col.field).html(row[col.field] || '-');
+                                } else if (res.editable_keys.includes(col.field)) {
+                                    newCell = $('<td></td>').attr('data-field', col.field).attr('contenteditable', 'true').addClass('editable').text(row[col.field]);
+                                } else {
+                                    newCell = $('<td></td>').attr('data-field', col.field).text(row[col.field] || '-');
+                                }
+                                newRow.append(newCell);
+                            });
+                            newTbody.append(newRow);
+                        });
+                        // Append the new table body to the table
+                        $('#data-table').append(newTbody);
+
+                        // Reapply event listeners for the editable cells
+                        addEditableEventListeners();
+
+                        // Update the totals in the footer
+                        sumKeys.forEach(field => updateSumAndFooter(field));
+                    },
+                    error: function(error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+            });
+        });
+    }
+});
+
+
+document.getElementById('save-button').addEventListener('click', function() {
+  let editedData = [];
+  document.querySelectorAll('#data-table tbody tr').forEach(row => {
+    let rowData = {};
+    row.querySelectorAll('td').forEach(cell => {
+      let field = cell.getAttribute('data-field');
+      if (field) {
+        rowData[field] = cell.innerText;
+      }
+    });
+    editedData.push(rowData);
+  });
+  console.log(editedData)
+  // Send edited data to server using AJAX
+  fetch('/save_edited_deals', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ data: editedData })
+  })
+  .then(response => response.json()).then(data => {
+    if (data.status) {
+      location.reload();
+    } 
+    else {
+      alert('Error saving data');
+    }
+  });
+  });
+</script>
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}</style>
+{% endblock %}
