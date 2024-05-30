@@ -67,6 +67,9 @@
                   {% if current_user.dubai == True %}
                   <a href="/leadsdxb">Leads (DXB)</a>
                   <a href="/add_leaddxb_buyer">Add Buyer (DXB)</a>
+                  {% if current_user.qa == True %}
+                  <a href="/pre-leads-dxb">Pre-Leads (DXB)</a>
+                  {% endif %}
                   {% endif %}
                 </div>
               </div>

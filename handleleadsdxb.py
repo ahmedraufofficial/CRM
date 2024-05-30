@@ -60,7 +60,7 @@ def fetch_leadsdxb(user):
     data = []
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
     session = Session()
-    query = session.query(Leadsdubai)
+    query = session.query(Leadsdubai).filter_by(street=0)
     if search:
         conditions = [column.ilike(f"%{search}%") for column in Leadsdubai.__table__.columns]
         query = query.filter(or_(*conditions))
@@ -83,7 +83,7 @@ def fetch_leadsdxb(user):
                 conditions.append(getattr(Leadsdubai, key) == value)
         query = query.filter(and_(*conditions))
     
-    if voltage_user.is_admin == True:
+    if voltage_user.is_admin == True or voltage_user.qa == True:
         z = query.count()
         for r in query.order_by(Leadsdubai.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -332,9 +332,11 @@ def edit_leaddxb(var):
 def upload_leads():
     return render_template('upload_leads.html')
 
-@handleleadsdxb.route('/uploadleadsdxb',methods = ['GET','POST'])
+@handleleadsdxb.route('/uploadleadsdubai',methods = ['GET','POST'])
 @login_required
 def uploadleadsdxb():
+    Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+    session = Session()
     uploaded_file = request.files['file']
     filepath = os.path.join(FILE_UPLOADS, uploaded_file.filename)
     uploaded_file.save(filepath)
@@ -350,7 +352,7 @@ def uploadleadsdxb():
             elif row[0] != '' and row[0] != 'contact_name':
                 try:
                     num_check = row[1].replace(" ", "").replace("+","")[3:]
-                    i = db.session.query(Contacts).filter(Contacts.number.endswith(num_check)).first()
+                    i = session.query(Contactsdubai).filter(Contactsdubai.number.endswith(num_check)).first()
                     if (i):
                         results[row[0]] = 'DUPLICATE'
                     else: 
@@ -361,18 +363,18 @@ def uploadleadsdxb():
                             last_name = ''
                         number = row[1].replace(" ", "").replace("+","")
                         email = row[2]
-                        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10])
-                        db.session.add(newcontact)
-                        db.session.commit()
-                        db.session.refresh(newcontact)
-                        newcontact.refno = 'UNI-O-'+str(newcontact.id)
-                        db.session.commit()
-                        contact = 'UNI-O-'+str(newcontact.id)
+                        newcontact = Contactsdubai(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10])
+                        session.add(newcontact)
+                        session.commit()
+                        session.refresh(newcontact)
+                        newcontact.refno = 'UNI-CD-'+str(newcontact.id)
+                        session.commit()
+                        contact = 'UNI-CD-'+str(newcontact.id)
                         contact_name = row[0]
                         contact_number = row[1].replace(" ", "").replace("+","")
                         contact_email = row[2]
                         role = row[3]
-                        agent = row[4]
+                        #agent = row[4]
                         lead_type = row[5]
                         locationtext = row[6]
                         building = row[7]
@@ -381,43 +383,43 @@ def uploadleadsdxb():
                         source = row[10]
                         lastupdated = datetime.now()+timedelta(hours=4)
                         created_date = datetime.now()+timedelta(hours=4)
-                        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,agent = agent,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in')
-                        db.session.add(newlead)
-                        db.session.commit()
-                        db.session.refresh(newlead)
-                        newlead.refno = 'UNI-L-'+str(newlead.id)
-                        db.session.commit() 
-                        notesdxb('UNI-L-' + str(newlead.id))
-                        assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status) 
-                        if (row[11] == "Yes"):
-                            if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
-                                get_agent = db.session.query(User).filter_by(username = agent).first()
-                                try:
-                                    etisy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
-                                except:
-                                    pass
-                            else:
-                                pass
-                        else:
-                            pass
-                        message = "Lead assigned to "+agent
-                        if locationtext != '':
-                            message += ' in '+locationtext
-                        else:
-                            pass
-                        if building != '':
-                            message += ', '+building
-                        else:
-                            pass
-                        try:
-                            update_lead_notedxb('Admin', newlead.refno, message, 'Open', 'In progress')
-                        except:
-                            pass
+                        newlead = Leadsdubai(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in', branch = 'Dubai')
+                        session.add(newlead)
+                        session.commit()
+                        session.refresh(newlead)
+                        newlead.refno = 'UNI-LD-'+str(newlead.id)
+                        session.commit() 
+                        notesdxb('UNI-LD-' + str(newlead.id))
+                        assign_lead(current_user.username,'UNI-LD-'+str(newlead.id),newlead.sub_status) 
+                        #if (row[11] == "Yes"):
+                        #    if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
+                        #        get_agent = db.session.query(User).filter_by(username = agent).first()
+                        #        try:
+                        #            etisy_message(agent,contact_name,get_agent.number,contact_number, newlead.refno, locationtext, building, lead_type)
+                        #        except:
+                        #            pass
+                        #    else:
+                        #        pass
+                        #else:
+                        #    pass
+                        #message = "Lead assigned to "+agent
+                        #if locationtext != '':
+                        #    message += ' in '+locationtext
+                        #else:
+                        #    pass
+                        #if building != '':
+                        #    message += ', '+building
+                        #else:
+                        #    pass
+                        #try:
+                        #    update_lead_notedxb('Admin', newlead.refno, message, 'Open', 'In progress')
+                        #except:
+                        #    pass
                         results[row[0]] = 'Successfully Added'
-                        try:
-                            first_time = lead_update_log(user=agent, client_name=contact_name, client_number=contact_number, status='Assigned', source=source, details='via Bulk-Leads')
-                        except:
-                            pass
+                        #try:
+                        #    first_time = lead_update_log(user=agent, client_name=contact_name, client_number=contact_number, status='Assigned', source=source, details='via Bulk-Leads')
+                        #except:
+                        #    pass
                 except:
                     results[row[0]] = 'Error adding this Lead'
                 line_count += 1
@@ -427,6 +429,7 @@ def uploadleadsdxb():
         print(f'Processed {line_count} lines.')
         results['Batch'] = 'Completely Processed'
         response_data = json.dumps(results, default=lambda x: str(x), indent=2)
+        session.close()
     return response_data, 200, {'Content-Type': 'application/json'}
 
 # Directly re assign Leads LESSSGOOO!!! SUIIIIIII
@@ -579,5 +582,71 @@ def post_leaddxb_note(list_id,com,status,substatus):
         pass
     update_lead_notedxb(current_user.username,list_id,com,status,substatus)
     update_user_note(current_user.username,list_id,status,substatus)
+    session.close()
+    return jsonify(success=True)
+
+# Pre-leads module
+
+@handleleadsdxb.route('/pre-leads-dxb',methods = ['GET','POST'])
+@login_required
+def display_pre_leadsdxb():   
+    if current_user.dubai == False or current_user.qa == False:
+        return abort(404)
+    Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+    session = Session()
+    data = []
+    if current_user.viewall == True:
+        for r in session.query(Leadsdubai).filter(Leadsdubai.street == '1'):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            new['created_date'] = new['created_date'][:16]
+            new['lastupdated'] = new['lastupdated'][:16]
+            edit_btn =  '<a href="/edit_leaddxb/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            if new['sub_status'] == "Follow up":
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
+            else:
+                followupBG = ""
+            reassign_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="pre_assign_lead('+"'"+new['refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>'
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+reassign_btn+"</div>"
+            data.append(new)
+    else:
+        return abort(404)
+    f = open('pre_leads_headers.json')
+    columns = json.load(f)
+    columns = columns["headers"]
+    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    session.close()
+    return render_template('pre_leadsdubai.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
+
+@handleleadsdxb.route('/pre_assign_leadsdxb_execute/<x>/<y>') #For Duplicates from the main leads page
+@login_required
+def reassign_btn_execute(x, y):
+    Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+    session = Session()
+    if current_user.sale == False or current_user.edit == False:
+        return abort(404) 
+    edit =session.query(Leadsdubai).filter_by(refno=x).first()
+    edit.street = '0'
+    edit.agent = y
+    edit.lastupdated = datetime.now()+timedelta(hours=4)
+    session.commit()
+    if (edit.contact_name!= "" or edit.contact_name!= None):
+        get_agent = db.session.query(User).filter_by(username = edit.agent).first()
+        try:
+            etisy_message(edit.agent,edit.contact_name,get_agent.number,edit.contact_number, edit.refno, edit.locationtext, edit.building, edit.lead_type)
+        except:
+            pass
+    else:
+        pass
+    message = "Lead assigned to "+y
+    if edit.locationtext != '':
+        message += ' in '+edit.locationtext
+    else:
+        pass
+    if edit.building != '':
+        message += ', '+edit.building
+    else:
+        pass
+    update_lead_notedxb('Admin',x, message, edit.status, edit.sub_status)
     session.close()
     return jsonify(success=True)
