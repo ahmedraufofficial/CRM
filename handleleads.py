@@ -742,11 +742,14 @@ def reassign_straight_function(x, y, z):
     edit.source = z.replace("%20", " ")
     edit.lastupdated = datetime.now()+timedelta(hours=4)
     db.session.commit()
-    if (edit.contact_name!= "" or edit.contact_name!= None):
-        get_agent = db.session.query(User).filter_by(username = edit.agent).first()
-        try:
-            etisy_message(edit.agent,edit.contact_name,get_agent.number,edit.contact_number, edit.refno, edit.locationtext, edit.building, edit.lead_type)
-        except:
+    if z != 'Cold Call':
+        if (edit.contact_name!= "" or edit.contact_name!= None):
+            get_agent = db.session.query(User).filter_by(username = edit.agent).first()
+            try:
+                etisy_message(edit.agent,edit.contact_name,get_agent.number,edit.contact_number, edit.refno, edit.locationtext, edit.building, edit.lead_type)
+            except:
+                pass
+        else:
             pass
     else:
         pass
