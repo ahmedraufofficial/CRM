@@ -1199,6 +1199,48 @@
         }
     }
     window.onload = vengence2();
+
+    const kickback_coma = document.getElementById('kickback_amount');
+    const inputHandler09 = function(e) {
+    var kickback_coma01 = document.getElementById('kickback_amount').value
+    if (e.target.id == 'kickback_amount')
+    {
+        if (kickback_coma01.substring(kickback_coma01.length - 1) == ".") {
+            document.getElementById('kickback_amount').value = kickback_coma01;
+        }
+        else {
+            kickback_coma02 = kickback_coma01.replaceAll(",", "");
+            var parts = kickback_coma02.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('kickback_amount').value = m;
+        }
+    }
+    }
+    kickback_coma.addEventListener('input', inputHandler09);
+
+    const comm_agent_2 = document.getElementById('commission_agent_2');
+    const inputHandler11 = function(e) {
+    var comm_agent_2_01 = document.getElementById('commission_agent_2').value
+    if (e.target.id == 'commission_agent_2')
+    {
+        if (comm_agent_2_01.substring(comm_agent_2_01.length - 1) == ".") {
+            document.getElementById('commission_agent_2').value = comm_agent_2_01;
+        }
+        else {
+            comm_agent_2_02 = comm_agent_2_01.replaceAll(",", "");
+            var parts = comm_agent_2_02.toString().split(".");
+            const numberPart = parts[0];
+            const decimalPart = parts[1];
+            const thousands = /\B(?=(\d{3})+(?!\d))/g; 
+            m = numberPart.replace(thousands, ",") + (decimalPart ? "." + decimalPart : "")
+            document.getElementById('commission_agent_2').value = m;
+        }
+    }
+    }
+    comm_agent_2.addEventListener('input', inputHandler11);
     
     console.log("Wassup")
 

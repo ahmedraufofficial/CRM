@@ -41,6 +41,22 @@
       "title": "Commission (AED)"
     },
     {
+      "field": "ct_percentage",
+      "title": "CT (9%)"
+    },
+    {
+      "field": "ct_value",
+      "title": "CT (AED)"
+    },
+    {
+      "field": "kickback_amount",
+      "title": "Kickback (AED)"
+    },
+    {
+      "field": "commission_agent_2",
+      "title": "Listing (AED)"
+    },
+    {
       "field": "amount_received",
       "title": "Paid (AED)"
     },
@@ -70,7 +86,99 @@
     },
     {
       "field": "options",
-      "title": "View"
+      "title": "Options"
+    }
+  ],
+
+  "big_headers":
+  [ 
+    {
+        "field": "state",
+        "checkbox": "true"
+    },
+    {
+        "field": "actual_deal_date",
+        "title": "Completion Date"
+    },
+    {
+        "field": "unit_location",
+        "title": "Location"
+    },
+    {
+        "field": "unit_sub_location",
+        "title": "Community"
+    },
+    {
+        "field": "unit_no",
+        "title": "Unit No."
+    },
+    {
+      "field": "refno",  
+      "title": "Ref. No"
+    },
+    {
+      "field": "deal_price",
+      "title": "Deal Price"
+    },
+    {
+      "field": "ct_percentage",
+      "title": "CT (9%)"
+    },
+    {
+      "field": "ct_value",
+      "title": "CT (AED)"
+    },
+    {
+      "field": "gross_commission",
+      "title": "Commission (AED)"
+    },
+    {
+      "field": "ct_value",
+      "title": "CT (AED)"
+    },
+    {
+      "field": "amount_received",
+      "title": "Paid (AED)"
+    },
+    {
+      "field": "contact_buyer_name",
+      "title": "Buyer/Tenant"
+    },
+    {
+      "field": "agent_1",
+      "title": "Agent"
+    },
+    {
+      "field": "agent_2",
+      "title": " Listing Agent"
+    },
+    {
+      "field": "type",
+      "title": "Type"
+    },
+    {
+      "field": "transaction_type",
+      "title": "Market"
+    },
+    {
+      "field": "agent_pers_comm",
+      "title": "Agent (%)"
+    },
+    {
+      "field": "agent_commission",
+      "title": "Agent Commission"
+    },
+    {
+      "field": "commission_agent_2",
+      "title": "Listing Agent Commission"
+    },
+    {
+      "field": "kickback_amount",
+      "title": "Kickback (AED)"
+    },
+    {
+      "field": "gross_profit",
+      "title": "Gross Profit"
     }
   ]
 }

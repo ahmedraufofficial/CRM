@@ -34,15 +34,23 @@
   margin-right: 1px;
   border-radius: 12px;
 }
+
+.table-container {
+  overflow-x: auto; /* Add horizontal scroll if needed */
+  width: 100%; /* Container takes the full width */
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto !important; /* Columns adjust to content */
 }
 th, td {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
   font-size: 12px;
+  white-space: nowrap;
 }
 th {
   background-color: #293645;
@@ -89,6 +97,30 @@ tfoot td {
     </div>
     <!-- Model End -->
 
+     <!--CT Modal-->
+     <div class="modal" id="ctmodal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title oswald">Confirm CT?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container unselectable oswald" id="notes" style="font-family: 'Oswald';">
+                <a id="proceed">Proceed</a>
+              </div>
+    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!--Modal Ends-->
+
 
 
   <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
@@ -120,6 +152,7 @@ tfoot td {
 
 
 <button id="save-button" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px; margin-bottom: 10px;">Update</button> 
+<div class="table-container">
 <table id="data-table">
   <thead>
       <tr>
@@ -157,6 +190,7 @@ tfoot td {
       </tr>
   </tfoot>
 </table>
+</div>
 </table>
 </div>
 </div>
@@ -167,7 +201,7 @@ tfoot td {
 {% block scripts %}
 <script type='text/javascript'>
   
-  function view_txn(x){
+function view_txn(x){
   fetch('/view_txns/'+x).then(function(response){
     response.json().then(function(data){
       var jsonData = data.txns
@@ -179,6 +213,10 @@ tfoot td {
   })
 }
 
+
+function calculate_ct(x){
+        document.getElementById("proceed").href="/calculate_ct/"+x
+    };
 
 document.addEventListener("DOMContentLoaded", function() {
     let sumKeys = {{ sum_keys|tojson }};
@@ -209,11 +247,34 @@ document.addEventListener("DOMContentLoaded", function() {
                     let agentCommissionCell = row.querySelector('td[data-field="agent_commission"]');
                     let grossCommissionCell = row.querySelector('td[data-field="gross_commission"]');
                     let agentPersCommCell = row.querySelector('td[data-field="agent_pers_comm"]');
+                    let ct_valueCell = row.querySelector('td[data-field="ct_value"]');
+                    let kickback_amountCell = row.querySelector('td[data-field="kickback_amount"]');
+                    let listing_commCell = row.querySelector('td[data-field="commission_agent_2"]');
+
+                    if (ct_valueCell.innerText != 'None' && ct_valueCell.innerText !== '' && ct_valueCell.innerText !== '-') {
+                      var x = parseFloat(ct_valueCell.innerText.replace(/,/g, '')) || 0;
+                    } 
+                    else {
+                      var x = parseFloat(grossCommissionCell.innerText.replace(/,/g, '')) || 0;
+                    }
+
+                    if (listing_commCell.innerText != 'None' && listing_commCell.innerText !== '' && listing_commCell.innerText !== '-') {
+                      var listing_comm = parseFloat(listing_commCell.innerText.replace(/,/g, '')) || 0;
+                    } 
+                    else {
+                      var listing_comm = 0;
+                    }
+
+                    if (kickback_amountCell.innerText != 'None' && kickback_amountCell.innerText !== '' && kickback_amountCell.innerText !== '-') {
+                      var kickback = parseFloat(kickback_amountCell.innerText.replace(/,/g, '')) || 0;
+                    } 
+                    else {
+                      var kickback = 0;
+                    }
 
                     let agentPersCommVal = parseFloat(agentPersCommCell.innerText.replace(/,/g, '')) || 0;
-                    let grossCommissionVal = parseFloat(grossCommissionCell.innerText.replace(/,/g, '')) || 0;
 
-                    agentCommissionCell.innerText = (grossCommissionVal * (agentPersCommVal / 100)).toLocaleString();
+                    agentCommissionCell.innerText = ((x - listing_comm - kickback) * (agentPersCommVal / 100)).toLocaleString();
 
                     updateSumAndFooter('agent_commission');
                 }

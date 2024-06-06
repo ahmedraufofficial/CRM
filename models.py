@@ -237,6 +237,8 @@ class Deals(db.Model):
     kickback_status = db.Column(db.String(100))
     agent_commission = db.Column(db.String(50))
     pending_eligible = db.Column(db.String(50))
+    ct_percentage = db.Column(db.String(50))
+    ct_value = db.Column(db.String(50))
 
 
 

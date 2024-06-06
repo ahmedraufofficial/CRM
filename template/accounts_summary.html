@@ -1,0 +1,264 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+}
+
+.table-container {
+  overflow-x: auto; /* Add horizontal scroll if needed */
+  width: 100%; /* Container takes the full width */
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto !important; /* Columns adjust to content */
+}
+th, td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+th {
+  background-color: #293645;
+  color: white;
+  
+}
+tfoot td {
+  font-weight: bold;
+  font-size: 15px;
+}
+</style>
+<title>Lighthouse - Finance</title>
+<section>
+  <!-- View Transaction Model -->
+  <div class="modal fade" id="TxnModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+        <div id="toolbarC">
+        </div>
+          <table id="txntable"        
+          data-toggle="true"
+          data-toolbar="#toolbarC"
+          data-search="true"
+          data-show-columns="true"
+          data-pagination="true">
+            <thead>
+            <tr>
+                <th data-field="refno">Ref No.</th>
+                <th data-field="transaction_date">Date</th>
+                <th data-field="type">Type</th>
+                <th data-field="mode">Mode</th>
+                <th data-field="amount">Amount</th>
+            </tr>
+            </thead>
+        </table>
+        </div>
+      </div>
+    </div>
+    </div>
+    <!-- Model End -->
+
+
+
+  <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+    <div class="container-fluid" style="padding: 10px;">
+      <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
+        <div class="row">
+            <div class="child" style="width: auto; margin-left: 1%;">
+              <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/calendar.png"/><span><h6 style="text-align: left;">Duration</h6>
+              <input type="date" id="propdate" name="propdate" class="filter_add02" style="width: 130px;">
+              <input type="date" id="propdate2" name="propdate2" class="filter_add02" style="width: 130px;">
+            </div>
+          </div>
+    
+          <div class="row">
+            <div class="col">
+              <button id="filter_search" class="filter_add" onclick="ajaxRequest()" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+            </div>
+          </div>
+      </div>
+
+<div class="table-container">
+<table id="data-table">
+  <thead>
+      <tr>
+          {% for col in columns %}
+              <th>{{ col.title }}</th>
+          {% endfor %}
+      </tr>
+  </thead>
+  <tbody>
+      {% for row in data %}
+      <tr>
+        {% for col in columns %}
+            {% if col.field == 'options' %}
+                <td data-field="{{ col.field }}">{{ row.get(col.field, '-') | safe }}</td>
+            {% elif col.field in editable_keys %}
+                <td data-field="{{ col.field }}" contenteditable="true" class="editable">{{ row.get(col.field, '-') }}</td>
+            {% else %}
+                <td data-field="{{ col.field }}">{{ row.get(col.field, '-') }}</td>
+            {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr id="totals-row">
+          {% for col in columns %}
+              <td>
+                  {% if col['field'] in sum_keys %}
+                      <span data-field="{{ col['field'] }}" style="color: #293645;">0</span>
+                  {% else %}
+                      -
+                  {% endif %}
+              </td>
+          {% endfor %}
+      </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+</section>
+{% endblock %}
+
+
+{% block scripts %}
+<script type='text/javascript'>
+  
+function view_txn(x){
+  fetch('/view_txns/'+x).then(function(response){
+    response.json().then(function(data){
+      var jsonData = data.txns
+      $(function () {
+                $('#txntable').bootstrapTable('destroy')
+                $('#txntable').bootstrapTable({data: jsonData});
+                });
+    })
+  })
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    let sumKeys = {{ sum_keys|tojson }};
+    let sums = {};
+
+    // Initialize sums object
+    sumKeys.forEach(key => sums[key] = 0);
+
+    function updateSumAndFooter(field) {
+        sums[field] = 0;
+        document.querySelectorAll(`#data-table tbody tr td[data-field="${field}"]`).forEach(cell => {
+            let value = parseFloat(cell.innerText.replace(/,/g, '')) || 0;
+            sums[field] += value;
+        });
+        document.querySelector(`#totals-row td span[data-field="${field}"]`).innerText = sums[field].toLocaleString();
+    }
+
+    window.ajaxRequest = function ajaxRequest() {
+        fetch('/fetch_txn_token').then(function(response) {
+            response.json().then(function(data) {
+                token = data;
+                var headers = {
+                    'Authorization': 'Bearer ' + token
+                };
+                var queryParams = {};
+
+                if ($("#propdate").val() != '') {
+                    queryParams['propdate'] = $("#propdate").val();
+                }
+                if ($("#propdate2").val() != '') {
+                    queryParams['propdate2'] = $("#propdate2").val();
+                }
+
+                var url = 'https://crm.uhpae.com/fetch_summary';
+                var queryString = Object.keys(queryParams).map(key => key + '=' + queryParams[key]).join('&');
+                url += '?' + queryString;
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    headers: headers,
+                    success: function(res) {
+                        // Destroy existing table body
+                        $('#data-table tbody').remove();
+                        // Create a new table body
+                        var newTbody = $('<tbody></tbody>');
+                        res.data.forEach(function(row) {
+                            var newRow = $('<tr></tr>');
+                            res.columns.forEach(function(col) {
+                                var newCell;
+                                if (col.field === 'options') {
+                                    newCell = $('<td></td>').attr('data-field', col.field).html(row[col.field] || '-');
+                                } else {
+                                    newCell = $('<td></td>').attr('data-field', col.field).text(row[col.field] || '-');
+                                }
+                                newRow.append(newCell);
+                            });
+                            newTbody.append(newRow);
+                        });
+                        // Append the new table body to the table
+                        $('#data-table').append(newTbody);
+
+                        // Update the totals in the footer
+                        sumKeys.forEach(field => updateSumAndFooter(field));
+                    },
+                    error: function(error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+            });
+        });
+    }
+});
+</script>
+
+  <style type='text/css'>
+    .row-index {
+      width: 50px;
+      display: inline-block;
+    }
+    body {
+  overflow-x: hidden;
+}</style>
+{% endblock %}
