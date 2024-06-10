@@ -223,10 +223,11 @@ def add_leaddxb_buyer():
         street = form.street.data
         size = form.size.data
         lead_type = form.lead_type.data
+        city = form.city.data
         created_date = datetime.now()+timedelta(hours=4)
         lastupdated = datetime.now()+timedelta(hours=4)
         branch = form.branch.data
-        newlead = Leadsdubai(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type, branch=branch)
+        newlead = Leadsdubai(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type, branch=branch, city = city)
         session.add(newlead)
         session.commit()
         session.refresh(newlead)
@@ -308,7 +309,7 @@ def edit_leaddxb(var):
     if edit.propertyamenities  != None:
         form.propertyamenities.data = edit.propertyamenities.split(',')
     session.close()
-    return render_template(template, form=form,building = edit.building,assign=edit.agent, user = current_user.username, sub_status = edit.sub_status, vibes = 'dxb')
+    return render_template(template, form=form,building = edit.building,assign=edit.agent, user = current_user.username, sub_status = edit.sub_status, vibes = 'dxb', locationtext = edit.locationtext)
 
 
 #@handleleadsdxb.route('/status/<substatus>',methods = ['GET','POST'])
@@ -376,14 +377,15 @@ def uploadleadsdxb():
                         role = row[3]
                         #agent = row[4]
                         lead_type = row[5]
-                        locationtext = row[6]
-                        building = row[7]
-                        subtype = row[8]
-                        min_beds = row[9]
-                        source = row[10]
+                        city = row[6]
+                        locationtext = row[7]
+                        building = row[8]
+                        subtype = row[9]
+                        min_beds = row[10]
+                        source = row[11]
                         lastupdated = datetime.now()+timedelta(hours=4)
                         created_date = datetime.now()+timedelta(hours=4)
-                        newlead = Leadsdubai(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in', branch = 'Dubai')
+                        newlead = Leadsdubai(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in', branch = 'Dubai', city = city)
                         session.add(newlead)
                         session.commit()
                         session.refresh(newlead)
@@ -391,7 +393,7 @@ def uploadleadsdxb():
                         session.commit() 
                         notesdxb('UNI-LD-' + str(newlead.id))
                         assign_lead(current_user.username,'UNI-LD-'+str(newlead.id),newlead.sub_status) 
-                        #if (row[11] == "Yes"):
+                        #if (row[12] == "Yes"):
                         #    if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
                         #        get_agent = db.session.query(User).filter_by(username = agent).first()
                         #        try:

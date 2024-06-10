@@ -145,8 +145,9 @@ class AddLeadForm(FlaskForm):
     status = SelectField(u'Status *',[validators.DataRequired()],choices = [('Open', 'Open'), ('Closed', 'Closed')])
     sub_status = SelectField(u'Sub Status *',[validators.DataRequired()],choices = [])
     property_requirements = StringField('Property',render_kw={"style":"pointer-events: none;"})
-    locationtext = SelectField(u'Community',choices = communities)
-    building = SelectField(u'Location',choices = [])
+    city = SelectField(u'City *',[validators.DataRequired()],choices = [('9999', 'None') ,('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai')])
+    locationtext = SelectField(u'Location',choices = [])
+    building = SelectField(u'Community',choices = [])
     subtype = SelectField(u'Type',choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'),('Loft Apartment', 'Loft Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
     min_beds = SelectField(u'Beds',choices = [('ST', 'ST'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10'),('10+', '10+'),(0,'Other')])
     max_beds = SelectField(u'Max Beds',choices = [('', ''),('ST', 'ST'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8'), ('9', '9'), ('10', '10'),('10+', '10+'),(0,'Other')])
@@ -168,6 +169,7 @@ class DeveloperLead(AddLeadForm):
 
 
 class AddDealForm(FlaskForm):
+    branch = SelectField(u'Branch *',[validators.DataRequired()],choices = [('', '') ,('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai')])
     transaction_type = SelectField(u'Transaction Type',choices = [('', ''),('Sale', 'Sale'), ('Resale', 'Resale'), ('Leased', 'Leased'), ('Renew Leased', 'Renew Leased'),('Reserved','Reserved'),('Offplan','Off Plan')])
     created_by = StringField('Created By')
     listing_ref = StringField('Listing Ref',render_kw={"style":"pointer-events: none;"})
@@ -204,7 +206,8 @@ class AddDealForm(FlaskForm):
     unit_no = StringField('Unit No *',[validators.DataRequired()])
     unit_category = SelectField(u'Type *',[validators.DataRequired()],choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'),('Loft Apartment', 'Loft Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
     unit_beds = StringField('Unit Beds *',[validators.DataRequired()])
-    unit_location = SelectField(u'Location *',[validators.DataRequired()],choices = communities)
+    city = SelectField(u'City *',[validators.DataRequired()],choices = [('9999', 'None') ,('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai')])
+    unit_location = SelectField(u'Location *',[validators.DataRequired()],choices = [])
     unit_sub_location = SelectField(u'Community *',[validators.DataRequired()],choices = [])
     unit_floor = StringField('Unit Floor/Plot')
     unit_type = StringField('Unit Type')

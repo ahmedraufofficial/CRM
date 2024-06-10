@@ -152,6 +152,12 @@
             "032670": "Zayed City",
             "03598": "Zayed Military City",
             "07501": "Zayed Sports City"
+        },
+        {   "03657": "Damac Hills",
+            "03656": "Damac Hills 2",
+            "07502":"Dubailand",
+            "033415":"Majan",
+            "03654": "Motor City"
         }
     ],
     "Features": [

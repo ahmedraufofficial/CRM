@@ -244,9 +244,10 @@ def add_lead_buyer():
         street = '0'
         size = form.size.data
         lead_type = form.lead_type.data
+        city = form.city.data
         created_date = datetime.now()+timedelta(hours=4)
         lastupdated = datetime.now()+timedelta(hours=4)
-        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type)
+        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,nationality = nationality,time_to_contact = time_to_contact,agent = agent,enquiry_date = enquiry_date,purpose = purpose,propertyamenities = propertyamenities,created_by=current_user.username,status = status,sub_status = sub_status,property_requirements = property_requirements,locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,max_beds = max_beds,min_price = min_price,max_price = max_price,unit = unit,plot = plot,street = street,size = size,lead_type=lead_type, city=city)
         db.session.add(newlead)
         db.session.commit()
         db.session.refresh(newlead)
@@ -391,7 +392,7 @@ def edit_lead(markettype,var):
         return redirect(url_for('handleleads.display_leads'))
     if edit.propertyamenities  != None:
         form.propertyamenities.data = edit.propertyamenities.split(',')
-    return render_template(template, form=form,building = edit.building,assign=edit.agent, user = current_user.username, sub_status = edit.sub_status)
+    return render_template(template, form=form,building = edit.building,assign=edit.agent, user = current_user.username, sub_status = edit.sub_status, locationtext = edit.locationtext)
 
 
 @handleleads.route('/status/<substatus>',methods = ['GET','POST'])
@@ -673,14 +674,15 @@ def uploadleads():
                         role = row[3]
                         agent = row[4]
                         lead_type = row[5]
-                        locationtext = row[6]
-                        building = row[7]
-                        subtype = row[8]
-                        min_beds = row[9]
-                        source = row[10]
+                        city = row[6]
+                        locationtext = row[7]
+                        building = row[8]
+                        subtype = row[9]
+                        min_beds = row[10]
+                        source = row[11]
                         lastupdated = datetime.now()+timedelta(hours=4)
                         created_date = datetime.now()+timedelta(hours=4)
-                        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,agent = agent,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in')
+                        newlead = Leads(type="secondary",lastupdated=lastupdated,created_date=created_date,role=role,source=source,contact = contact,contact_name = contact_name,contact_number = contact_number,contact_email = contact_email,agent = agent,created_by='naira_amin',status = 'Open',sub_status = 'In progress',locationtext = locationtext,building = building,subtype = subtype,min_beds = min_beds,unit = '-',street = '1',lead_type=lead_type, purpose = 'Live in', city = city)
                         db.session.add(newlead)
                         db.session.commit()
                         db.session.refresh(newlead)
@@ -688,7 +690,7 @@ def uploadleads():
                         db.session.commit() 
                         notes('UNI-L-' + str(newlead.id))
                         assign_lead(current_user.username,'UNI-L-'+str(newlead.id),newlead.sub_status) 
-                        if (row[11] == "Yes"):
+                        if (row[12] == "Yes"):
                             if (agent!= "" or agent!= None or contact_name!= "" or contact_name!= None):
                                 get_agent = db.session.query(User).filter_by(username = agent).first()
                                 try:
@@ -814,3 +816,23 @@ def call_back_season():
             pass
     db.session.commit()
     return jsonify(success=True)
+
+# city included now SUIIIIIII
+
+@handleleads.route('/city_chosen/<location>',methods = ['GET','POST'])
+@login_required
+def city_location(location):
+    f = open('contacts.json')
+    columns = json.load(f)
+    if location == 'Dubai':
+        file_data = str(columns["ABD"][1]).replace('{','').replace('}','').replace(', ',',').replace(': ',':')
+    elif location == 'Abu Dhabi':
+        file_data = str(columns["ABD"][0]).replace('{','').replace('}','').replace(', ',',').replace(': ',':')
+    else:
+        locations = []
+        return jsonify({'locations':locations})
+    file_data = re.sub("'","",file_data).split(',')
+    locations = []
+    for i in file_data:
+        locations.append(tuple(i.split(':')))
+    return jsonify({'locations':locations})

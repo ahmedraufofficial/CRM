@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.elements import Null
 from sqlalchemy.util.langhelpers import NoneType
-from models import Deals, Leads, Properties, User
+from models import Deals, Leads, Properties, User, Leadsdubai
 from forms import AddDealForm
 import json
 import os 
@@ -13,6 +13,7 @@ import re
 from datetime import datetime, timedelta
 from functions import *
 from sqlalchemy import or_, and_
+from sqlalchemy.orm import sessionmaker
 
 path = os.getcwd()
 UPLOAD_FOLDER = os.path.join(path, 'static/uploads')
@@ -73,14 +74,14 @@ def update_listing(buyer_deets, property_deets):
         pass
     return redirect(url_for('handledeals.display_deals'))
 
-def update_lead(lead_ref,status,sub_status,user):
-    if lead_ref != "":
-        a = db.session.query(Leads).filter_by(refno = lead_ref).first()
-        a.sub_status = "Successful"
-        a.status = "Closed"
-        db.session.commit()
-        update_lead_note(user,lead_ref,"In lead pool",status,sub_status)
-        update_user_note(user,lead_ref,status,sub_status)
+#def update_lead(lead_ref,status,sub_status,user):
+#    if lead_ref != "":
+#        a = db.session.query(Leads).filter_by(refno = lead_ref).first()
+#        a.sub_status = "Successful"
+#        a.status = "Closed"
+#        db.session.commit()
+#        update_lead_note(user,lead_ref,"In lead pool",status,sub_status)
+#        update_user_note(user,lead_ref,status,sub_status)
 
 
 @handledeals.route('/deals',methods = ['GET','POST'])
@@ -550,12 +551,20 @@ def add_deal_developer():
 
 
 
-@handledeals.route('/add_deal/rent/<variable>', methods = ['GET','POST'])
+@handledeals.route('/add_deal/rent/<comp_branch>/<variable>', methods = ['GET','POST'])
 @login_required
-def add_closed_deal_rent(variable): 
+def add_closed_deal_rent(comp_branch, variable): 
     if current_user.deal == False:
         return abort(404)
-    lead = db.session.query(Leads).filter_by(refno=variable).first()
+    if comp_branch == 'ad':
+        lead = db.session.query(Leads).filter_by(refno=variable).first()
+        x = 'Abu Dhabi'
+    else:
+        Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+        session = Session()
+        lead = session.query(Leadsdubai).filter_by(refno=variable).first()
+        session.close()
+        x = 'Dubai'
     form = AddDealForm()
     form.lead_ref.data = variable
     form.contact_buyer.data = lead.contact
@@ -563,6 +572,7 @@ def add_closed_deal_rent(variable):
     form.contact_buyer_number.data = lead.contact_number
     form.contact_buyer_email.data = lead.contact_email
     form.source.data = lead.source
+    form.branch.data = x
     if request.method == 'POST': 
         files_filenames = []
         type = "Rent"
@@ -620,6 +630,8 @@ def add_closed_deal_rent(variable):
         kickback_status = form.kickback_status.data
         kickback_percentage = form.kickback_percentage.data
         kickback_amount = form.kickback_amount.data
+        city = form.city.data
+        branch = form.branch.data
 
         if form.sm_approval.data != None:
             sm_approval = form.sm_approval.data
@@ -640,7 +652,7 @@ def add_closed_deal_rent(variable):
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage, city = city, branch = branch)    
         #listing
         elif current_user.listing == True and current_user.sale == False:
             contact_seller = form.contact_seller.data
@@ -648,7 +660,7 @@ def add_closed_deal_rent(variable):
             contact_seller_number = form.contact_seller_number.data
             contact_seller_email = form.contact_seller_email.data
             commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,listing_ref=listing_ref,contact_seller=contact_seller,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,listing_ref=listing_ref,contact_seller=contact_seller,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, city = city, branch = branch)
         else:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
@@ -657,7 +669,7 @@ def add_closed_deal_rent(variable):
             contact_seller_number = form.contact_seller_number.data
             contact_seller_email = form.contact_seller_email.data
             commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,listing_ref=listing_ref,contact_seller=contact_seller,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,listing_ref=listing_ref,contact_seller=contact_seller,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,cheques=cheques,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,tenancy_start_date=tenancy_start_date,tenancy_renewal_date=tenancy_renewal_date,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,number_cheque_payment = number_cheque_payment,cheque_payment_type=cheque_payment_type,move_in_date = move_in_date, referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, city = city, branch = branch)
 
         db.session.add(newdeal)
         db.session.commit()
@@ -748,12 +760,20 @@ def add_closed_deal_rent(variable):
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "rent", building = "", loc = "" , radio_enable="disabled", mydiction = "", myhistory="", old_documents = "")
 
     
-@handledeals.route('/add_deal/sale/<variable>', methods = ['GET','POST'])
+@handledeals.route('/add_deal/sale/<comp_branch>/<variable>', methods = ['GET','POST'])
 @login_required
-def add_closed_deal_sale(variable): 
+def add_closed_deal_sale(comp_branch, variable): 
     if current_user.deal == False:
         return abort(404)
-    lead = db.session.query(Leads).filter_by(refno=variable).first()
+    if comp_branch == 'ad':
+        lead = db.session.query(Leads).filter_by(refno=variable).first()
+        x = 'Abu Dhabi'
+    else:
+        Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+        session = Session()
+        lead = session.query(Leadsdubai).filter_by(refno=variable).first()
+        session.close()
+        x = 'Dubai'
     form = AddDealForm()
     form.lead_ref.data = variable
     form.contact_buyer.data = lead.contact
@@ -761,6 +781,7 @@ def add_closed_deal_sale(variable):
     form.contact_buyer_number.data = lead.contact_number
     form.contact_buyer_email.data = lead.contact_email
     form.source.data = lead.source
+    form.branch.data = x
     w = open('abudhabi.json')
     mydict = json.load(w)
     newie = form.unit_location.data
@@ -814,6 +835,8 @@ def add_closed_deal_sale(variable):
         kickback_status = form.kickback_status.data
         kickback_percentage = form.kickback_percentage.data
         kickback_amount = form.kickback_amount.data
+        city = form.city.data
+        branch = form.branch.data
 
         if form.sm_approval.data != None:
             sm_approval = form.sm_approval.data
@@ -836,7 +859,7 @@ def add_closed_deal_sale(variable):
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage, city = city, branch = branch)    
         #listing
         elif current_user.listing == True and current_user.sale == False:
             contact_seller = form.contact_seller.data
@@ -844,7 +867,7 @@ def add_closed_deal_sale(variable):
             contact_seller_number = form.contact_seller_number.data
             contact_seller_email = form.contact_seller_email.data
             commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, city = city, branch = branch)
         else:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
@@ -853,7 +876,7 @@ def add_closed_deal_sale(variable):
             contact_seller_number = form.contact_seller_number.data
             contact_seller_email = form.contact_seller_email.data
             commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_seller=contact_seller,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,contact_seller_name=contact_seller_name,contact_seller_number=contact_seller_number,contact_seller_email=contact_seller_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,agent_2=agent_2,commission_agent_2=commission_agent_2,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,referral_date=referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, city = city, branch = branch)
 
         db.session.add(newdeal)
         db.session.commit()
@@ -942,12 +965,20 @@ def add_closed_deal_sale(variable):
     return render_template('add_deal.html', form=form, user = current_user.username, purpose = "sale", radio_enable="disabled", mydiction = "", myhistory="", old_documents = "" )
 
 
-@handledeals.route('/add_deal/developer/<variable>', methods = ['GET','POST'])
+@handledeals.route('/add_deal/developer/<comp_branch>/<variable>', methods = ['GET','POST'])
 @login_required
-def add_closed_deal_developer(variable): 
+def add_closed_deal_developer(comp_branch, variable): 
     if current_user.deal == False:
         return abort(404)
-    lead = db.session.query(Leads).filter_by(refno=variable).first()
+    if comp_branch == 'ad':
+        lead = db.session.query(Leads).filter_by(refno=variable).first()
+        x = 'Abu Dhabi'
+    else:
+        Session = sessionmaker(bind=db.get_engine(bind='fourth'))
+        session = Session()
+        lead = session.query(Leadsdubai).filter_by(refno=variable).first()
+        session.close()
+        x = 'Dubai'
     form = AddDealForm()
     form.lead_ref.data = variable
     form.contact_buyer.data = lead.contact
@@ -955,6 +986,7 @@ def add_closed_deal_developer(variable):
     form.contact_buyer_number.data = lead.contact_number
     form.contact_buyer_email.data = lead.contact_email
     form.source.data = lead.source
+    form.branch.data = x
     w = open('abudhabi.json')
     mydict = json.load(w)
     newie = form.unit_location.data
@@ -1018,6 +1050,8 @@ def add_closed_deal_developer(variable):
         kickback_status = form.kickback_status.data
         kickback_percentage = form.kickback_percentage.data
         kickback_amount = form.kickback_amount.data
+        city = form.city.data
+        branch = form.branch.data
 
         if form.sm_approval.data != None:
             sm_approval = form.sm_approval.data
@@ -1038,7 +1072,7 @@ def add_closed_deal_developer(variable):
         if current_user.sale == True and current_user.listing == False:
             agent_1 = form.agent_1.data
             commission_agent_1 = form.commission_agent_1.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage)    
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date, created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, post_status = post_status, kickback_status = kickback_status, kickback_amount = kickback_amount, kickback_percentage = kickback_percentage, city = city, branch = branch)    
         #listing
         #elif current_user.listing == True and current_user.sale == False:
             #contact_seller = form.contact_seller.data
@@ -1055,7 +1089,7 @@ def add_closed_deal_developer(variable):
             #contact_seller_number = form.contact_seller_number.data
             #contact_seller_email = form.contact_seller_email.data
             #commission_agent_2 = form.commission_agent_2.data
-            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date,created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval)
+            newdeal = Deals(type=type,deal_type=deal_type,transaction_type=transaction_type,created_by=created_by,listing_ref=listing_ref,lead_ref=lead_ref,contact_buyer=contact_buyer,contact_buyer_name=contact_buyer_name,contact_buyer_number=contact_buyer_number,contact_buyer_email=contact_buyer_email,source=source,status=status,sub_status=sub_status,priority=priority,deal_price=deal_price,gross_commission=gross_commission,include_vat=include_vat,total_commission=total_commission,agent_1=agent_1,commission_agent_1=commission_agent_1,actual_deal_date=actual_deal_date,unit_no=unit_no,unit_category=unit_category,unit_beds=unit_beds,unit_location=unit_location,unit_sub_location=unit_sub_location,unit_floor=unit_floor,unit_type=unit_type,finance_type=finance_type,down_payment_available = down_payment_available,down_payment = down_payment,client_referred_bank = client_referred_bank,bank_representative_name = bank_representative_name,bank_representative_mobile = bank_representative_mobile,project = project,unit_price = unit_price,percentage = percentage,amount = amount,pre_approval_loan = pre_approval_loan,loan_amount = loan_amount,referral_date = referral_date,created_date = created_date, updated_date = updated_date, sm_approval = sm_approval, lm_approval = lm_approval, admin_approval=admin_approval, city = city, branch = branch)
 
 
         
@@ -1312,7 +1346,7 @@ def edit_deal(variable):
         db.session.commit()
         logs(current_user.username,'deal no','Edited Deal')
         return redirect(url_for('handledeals.display_deals'))
-    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", mydiction = mydict02, purpose = purpose, type=type01, myhistory=myhistory2 , old_documents = old_documents)
+    return render_template('add_deal.html', form=form,assign=edit.agent_1,assign2=edit.agent_2, user = current_user.username,building = edit.unit_sub_location, radio_enable="enabled", mydiction = mydict02, purpose = purpose, type=type01, myhistory=myhistory2 , old_documents = old_documents, unit_location = edit.unit_location)
 
 @handledeals.route('/delete_deal/<variable>', methods = ['GET','POST'])
 @login_required

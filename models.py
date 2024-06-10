@@ -142,7 +142,7 @@ class Leads(db.Model):
     size = db.Column(db.Float)
     source = db.Column(db.String(50))
     lastupdated = db.Column(db.DateTime)
-    #branch = db.Column(db.String(50))
+    city = db.Column(db.String(50))
 
  
 class Deals(db.Model):
@@ -239,6 +239,8 @@ class Deals(db.Model):
     pending_eligible = db.Column(db.String(50))
     ct_percentage = db.Column(db.String(50))
     ct_value = db.Column(db.String(50))
+    city = db.Column(db.String(50))
+    branch = db.Column(db.String(50))
 
 
 
@@ -468,6 +470,7 @@ class Leadsdubai(db.Model):
     source = db.Column(db.String(50))
     lastupdated = db.Column(db.DateTime)
     branch = db.Column(db.String(50))
+    city = db.Column(db.String(50))
 
 class Contactsdubai(db.Model):
     id = db.Column(db.Integer, primary_key=True)

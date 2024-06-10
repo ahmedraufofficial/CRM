@@ -37,13 +37,16 @@
     <dl>
         <div class="row">
             <div class="col column">
+                {{ wtf.form_field(form.branch) }}
                 {% if purpose == "rent" %}
                 <h4>TENANT CONTACT DETAILS</h4>
                 {% endif %} 
                 {% if purpose == "sale" %}
                 <h4>BUYER CONTACT DETAILS</h4>
                 {% endif %} 
+                <!--
                 <a data-toggle="modal" href="#myContactModal1" class="btn btn-primary" style="margin-bottom: 5px;">Add Contact</a>
+                -->
                 {{ wtf.form_field(form.contact_buyer) }}
                 {{ wtf.form_field(form.contact_buyer_name) }}
                 {{ wtf.form_field(form.contact_buyer_number) }}
@@ -146,6 +149,7 @@
                 {{ wtf.form_field(form.unit_no)}}
                 {{ wtf.form_field(form.unit_category) }}
                 {{ wtf.form_field(form.unit_beds) }}
+                {{ wtf.form_field(form.city) }}
                 {{ wtf.form_field(form.unit_location) }}
                 {{ wtf.form_field(form.unit_sub_location) }}
                 {{ wtf.form_field(form.unit_floor) }}
@@ -543,9 +547,6 @@
     $('#unit_location').val(x[0].value)
         setTimeout(function(){ get_location(); }, 100);
     }
-
-
-
     function get_location(){
         var location = $("#unit_location").val();
         fetch('/community/' + location).then(function(response){
@@ -568,7 +569,36 @@
     }
 
 
-    window.onload = get_location()
+    let location_options = document.getElementById('unit_location');
+    $("#city").change(function(){
+    get_city();
+    });
+    var locationtext = '{{ unit_location }}'
+    function get_city(){
+        var city = $("#city").val();
+        fetch('/city_chosen/'+city).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value=""></option>'
+                for (let location of data.locations){
+                    if (location[1] == locationtext)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_options.innerHTML = optionHTML;
+                if (locationtext != '') {
+                    get_location();
+                } 
+            })
+        })   
+    }
+
+    window.onload = get_city()
 
 
 

@@ -89,16 +89,19 @@ padding-top: 10px;
         {{ wtf.form_field(form.property_requirements) }}
     <div class="row">
         <div class="col">
+            {{ wtf.form_field(form.city) }}
+        </div>
+        <div class="col">
             {{ wtf.form_field(form.locationtext) }}
         </div>    
         <div class="col">
             {{ wtf.form_field(form.building) }}
         </div>
+    </div>
+    <div class="row">
         <div class="col">
             {{ wtf.form_field(form.subtype) }}
         </div>
-    </div>
-    <div class="row">
         <div class="col">
             {{ wtf.form_field(form.min_beds) }}
         </div>
@@ -199,6 +202,36 @@ padding-top: 10px;
         })   
     }
 
+
+    let location_options = document.getElementById('locationtext');
+    $("#city").change(function(){
+    get_city();
+    });
+    var locationtext = '{{ locationtext }}'
+    function get_city(){
+        var city = $("#city").val();
+        fetch('/city_chosen/'+city).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value=""></option>'
+                for (let location of data.locations){
+                    if (location[1] == locationtext)
+                    {
+                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
+                    }
+                    else
+                    {
+                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                    }  
+                }
+                location_options.innerHTML = optionHTML;
+                if (locationtext != '') {
+                    get_location();
+                } 
+            })
+        })   
+    }
+
     let sub_status = document.getElementById('sub_status');
     $("#status").change(stat)
     var ss = '{{sub_status}}'
@@ -230,7 +263,10 @@ padding-top: 10px;
                 let optionHTML = '<option value="'+''+'">'+''+'</option>';
                 
                 for (let users of data.all_users){
-                    if ( users.sale == true ){
+                    if ( users.sale == true && users.abudhabi == true && vibes == '' ){
+                        optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
+                    }
+                    else if ( users.sale == true && users.dubai == true && vibes == 'dxb' ) {
                         optionHTML += '<option value="'+users.name+'">'+users.name+'</option>';
                     }
                     else{ 
@@ -273,7 +309,7 @@ padding-top: 10px;
 
     }
 
-    window.onload = get_location();
+    window.onload = get_city();
 
 
 
