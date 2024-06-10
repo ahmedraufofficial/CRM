@@ -503,3 +503,16 @@ class Transactionad(db.Model):
     description = db.Column(db.String(500))
     created_by = db.Column(db.String(50))
     created_date = db.Column(db.DateTime)
+
+class Leadslogsdubai(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    refno = db.Column(db.String(50))
+    user = db.Column(db.String(50))
+    type = db.Column(db.String(50))
+    client_name = db.Column(db.String(100))
+    client_number = db.Column(db.String(50))
+    status = db.Column(db.String(50))
+    source = db.Column(db.String(50))
+    details = db.Column(db.String(500))
+    created_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)    

@@ -1,23 +1,40 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %} 
+
+{% block content %}
     <head>
-        <title>Upload Leads</title>
+        <title>Lighthouse - Upload Leads</title>
     </head>
     <body>
-        <h1>For LEADS</h1>
-        <form method="POST" action="/uploadleads" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="Submit">
-        </form>
-        <h1>For BULK DRAFTS</h1>
-        <form method="POST" action="/upload_drafts" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="Submit">
-        </form>
-        <h1>Bulk Leads Dubai</h1>
-        <form method="POST" action="/uploadleadsdubai" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="Submit">
-        </form>
+        <div class="container" style="margin-top: 25px;">
+            <h2>Abu Dhabi</h2>
+            <div class="row">
+                <div class="col">
+                    <h3>Leads</h3>
+                    <form method="POST" action="/uploadleads" enctype="multipart/form-data">
+                        <input type="file" name="file">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+                <div class="col">
+                    <h3>Drafts</h3>
+                    <form method="POST" action="/upload_drafts" enctype="multipart/form-data">
+                        <input type="file" name="file">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin-top: 50px;">
+            <h2>Dubai</h2>
+            <div class="row">
+                <div class="col">
+                    <h3>Leads Dubai</h3>
+                    <form method="POST" action="/uploadleadsdubai" enctype="multipart/form-data">
+                        <input type="file" name="file">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
     </body>
-</html>
+{% endblock %}

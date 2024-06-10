@@ -19,7 +19,7 @@ from sqlalchemy import or_,and_
 import csv
 from datetime import datetime, timedelta
 from flask_httpauth import HTTPTokenAuth
-from handlelogs import lead_update_log, edit_lead_callback
+from handlelogs import lead_update_dubai_log, edit_lead_agent_dubai
 from sqlalchemy.orm import sessionmaker
 
 auth = HTTPTokenAuth(scheme='Bearer')
@@ -157,7 +157,7 @@ def display_leadsdxb():
     f = open('lead_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.dubai == True)).all()
     return render_template('leadsdxb.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
 
 
@@ -363,7 +363,7 @@ def uploadleadsdxb():
                             last_name = ''
                         number = row[1].replace(" ", "").replace("+","")
                         email = row[2]
-                        newcontact = Contactsdubai(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10])
+                        newcontact = Contactsdubai(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10], created_by='naira_amin', branch = 'Dubai')
                         session.add(newcontact)
                         session.commit()
                         session.refresh(newcontact)
@@ -471,8 +471,8 @@ def reassign_straight_function_dxb(x, y, z):
             z = 'Social Media'
         else:
             pass
-        #first = lead_update_log(previous_agent, edit.contact_name, edit.contact_number, 'Lead Lost', z.replace("%20", " "), edit.refno+' reassigned to '+y)
-        #second = lead_update_log(y, edit.contact_name, edit.contact_number, 'Assigned', z.replace("%20", " "), edit.refno+' reassigned from '+previous_agent)
+        first = lead_update_dubai_log(previous_agent, edit.contact_name, edit.contact_number, 'Lead Lost', z.replace("%20", " "), edit.refno+' reassigned to '+y)
+        second = lead_update_dubai_log(y, edit.contact_name, edit.contact_number, 'Assigned', z.replace("%20", " "), edit.refno+' reassigned from '+previous_agent)
     except:
         pass
     session.close()
@@ -577,7 +577,7 @@ def post_leaddxb_note(list_id,com,status,substatus):
     session.commit()
     try:
         pass
-        #x = edit_lead_agent(current_user.username, a.contact_number)
+        x = edit_lead_agent_dubai(current_user.username, a.contact_number)
     except:
         pass
     update_lead_notedxb(current_user.username,list_id,com,status,substatus)
@@ -614,11 +614,11 @@ def display_pre_leadsdxb():
     f = open('pre_leads_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.dubai == True)).all()
     session.close()
     return render_template('pre_leadsdubai.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
 
-@handleleadsdxb.route('/pre_assign_leadsdxb_execute/<x>/<y>') #For Duplicates from the main leads page
+@handleleadsdxb.route('/pre_assign_leadsdxb_execute/<x>/<y>') #From Pre-Leads
 @login_required
 def reassign_btn_execute(x, y):
     Session = sessionmaker(bind=db.get_engine(bind='fourth'))
@@ -646,6 +646,10 @@ def reassign_btn_execute(x, y):
     if edit.building != '':
         message += ', '+edit.building
     else:
+        pass
+    try:
+        lesgetit = lead_update_dubai_log(edit.agent, edit.contact_name, edit.contact_number, 'Assigned', edit.source, 'via Pre-Leads')
+    except:
         pass
     update_lead_notedxb('Admin',x, message, edit.status, edit.sub_status)
     session.close()

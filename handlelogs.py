@@ -6,7 +6,7 @@ from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
-from models import Leads, User, Agentlogs, Leadlogs
+from models import Leads, User, Agentlogs, Leadlogs, Leadslogsdubai
 import json
 import os 
 from werkzeug.utils import secure_filename
@@ -107,7 +107,7 @@ def display_all_drafts():
     f = open('agentlogs_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
     return render_template('agents_logs.html', data = data , columns = columns, all_sale_users = all_sale_users)
 
 @handlelogs.route('/fetch_logs',methods = ['GET','POST'])
@@ -176,7 +176,7 @@ def display_leads_logs():
     f = open('agentlogs_headers.json')
     columns = json.load(f)
     columns = columns["lead_headers"]
-    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
     return render_template('leads_logs.html', data = data , columns = columns, all_sale_users = all_sale_users)
 
 @handlelogs.route('/fetch_leads_logs',methods = ['GET','POST'])
@@ -243,6 +243,116 @@ def delete_lead_log(variable):
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
     delete = session.query(Leadlogs).filter_by(refno=variable).first()
+    session.delete(delete)
+    session.commit()
+    session.close()
+    return(jsonify('ok'))
+
+# Logs for Dubai Leads
+
+def lead_update_dubai_log(user, client_name, client_number, status, source, details):
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    newlog = Leadslogsdubai(user=user, client_name=client_name, client_number=client_number, type='Lead', status=status, details=details, source=source, created_date = datetime.now()+timedelta(hours=4))
+    session.add(newlog)
+    session.commit()
+    session.refresh(newlog)
+    newlog.refno = 'LOG-LD-'+str(newlog.id)
+    session.commit()
+    session.close()
+
+
+@handlelogs.route('/logs/leads-dubai',methods = ['GET','POST'])
+@login_required
+def display_leads_logsdubai():   
+    if current_user.is_admin == False:
+        return abort(404)
+    data = []
+    f = open('agentlogs_headers.json')
+    columns = json.load(f)
+    columns = columns["lead_headers"]
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.dubai == True)).all()
+    return render_template('leads_logsdubai.html', data = data , columns = columns, all_sale_users = all_sale_users)
+
+
+@handlelogs.route('/fetch_leads_logsdubai',methods = ['GET','POST'])
+@auth.login_required
+def fetch_leads_logsdubai():
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
+    data = []
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Leadslogsdubai)
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Leadlogs.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['user', 'source', 'status', 'propdate', 'propdate2'] if key in filters_01}
+        for key, value in filters.items():
+            if key == 'propdate':
+                conditions.append(Leadslogsdubai.created_date >= value)
+            elif key == 'propdate2':
+                value_as_datetime = datetime.strptime(value, '%Y-%m-%d')
+                value_as_datetime += timedelta(days=1)
+                value = value_as_datetime.strftime('%Y-%m-%d')
+                conditions.append(Leadslogsdubai.created_date <= value)
+            else:
+                conditions.append(getattr(Leadslogsdubai, key) == value)
+        query = query.filter(and_(*conditions))
+    
+    z = query.count()
+    assigned_leads = 0
+    no_action = 0
+    lead_lost = 0
+    for r in query:
+        if r.status == 'Assigned':
+            assigned_leads += 1
+        elif r.status == 'Lead Lost':
+            lead_lost += 1
+        else:
+            pass
+    for r in query.order_by(Leadslogsdubai.id.desc()).offset(offset).limit(limit):
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        new['created_date'] = new['created_date'][:16]
+        new['updated_date'] = new['updated_date'][:16]
+        new['edit'] = '<button class="btn-secondary si2" style="color:white; height: 10px" data-toggle="modal" data-target="#deleteModal" onclick="delete_initiate_leaddxb_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+        data.append(new)
+        total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data, "assigned_leads": assigned_leads, "lead_lost": lead_lost}
+    session.close()
+    return(response_data)
+
+
+
+def edit_lead_agent_dubai(user, client_number):
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Leadslogsdubai).filter(and_(Leadslogsdubai.client_number.endswith(client_number[-8:]), Leadslogsdubai.user == user, Leadslogsdubai.status == 'Assigned')).first()
+    if query:
+        query.status = 'Follow up'
+        query.updated_date = datetime.now()+timedelta(hours=4)
+        session.commit()
+        session.close()
+    else:
+        session.close()
+
+# delete dubai lead logs
+
+@handlelogs.route('/delete_leadsdxb_logs/<variable>', methods = ['GET','POST'])
+@login_required
+def delete_leaddxb_log(variable):
+    if current_user.is_admin == False:
+        return abort(404)
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    delete = session.query(Leadslogsdubai).filter_by(refno=variable).first()
     session.delete(delete)
     session.commit()
     session.close()
