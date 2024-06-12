@@ -489,7 +489,7 @@ function ajaxRequest(params) {
           params.data['source'] = $("#source").val()
         }
       }
-      var url = 'https://crm.uhpae.com/fetch_active_drafts';
+      var url = 'https://crm.uhpae.com/fetch_active_drafts/{{ branch }}';
       $.ajax({
         url: url,
         method: 'GET',
@@ -570,7 +570,7 @@ function assign_drafts() {
     }
   }
 
-  fetch('/assignment_initiated', {
+  fetch('/assignment_initiated/{{ branch }}', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -597,7 +597,7 @@ function assignment_execution() {
   let assignmentUserInput = document.getElementById('assignment_user').value;
   filters['assignment_number'] = assignmentNumberInput;
   filters['assignment_user'] = assignmentUserInput;
-  fetch('/assignment_execute', {
+  fetch('/assignment_execute/{{ branch }}', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -617,7 +617,7 @@ function draft_action_(x,y){
   var action ={}
   action['refno'] = y
   action['task'] = x
-  fetch('/new_draft_lead', {
+  fetch('/new_draft_lead/{{ branch }}', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

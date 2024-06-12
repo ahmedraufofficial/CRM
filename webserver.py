@@ -139,11 +139,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
 app.config['SQLALCHEMY_DATABASE_URI_SECOND'] = 'sqlite:///'+os.getcwd()+'/draft_db.db'
 app.config['SQLALCHEMY_DATABASE_URI_THIRD'] = 'sqlite:///'+os.getcwd()+'/agent_logs.db'
 app.config['SQLALCHEMY_DATABASE_URI_FOURTH'] = 'sqlite:///'+os.getcwd()+'/dxb_db.db'
+app.config['SQLALCHEMY_DATABASE_URI_FIFTH'] = 'sqlite:///'+os.getcwd()+'/draft-dxb_db.db'
 app.config['SQLALCHEMY_BINDS'] = {
     'primary': app.config['SQLALCHEMY_DATABASE_URI'],
     'second': app.config['SQLALCHEMY_DATABASE_URI_SECOND'],
     'third': app.config['SQLALCHEMY_DATABASE_URI_THIRD'],
     'fourth': app.config['SQLALCHEMY_DATABASE_URI_FOURTH'],
+    'fifth': app.config['SQLALCHEMY_DATABASE_URI_FIFTH'],
 }
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True

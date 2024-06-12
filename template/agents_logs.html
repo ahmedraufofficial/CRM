@@ -275,7 +275,7 @@ function ajaxRequest(params) {
           params.data['propdate2'] = $("#propdate2").val()
         }
       }
-      var url = 'https://crm.uhpae.com/fetch_logs';
+      var url = 'https://crm.uhpae.com/fetch_logs/{{ branch }}';
       $.ajax({
         url: url,
         method: 'GET',

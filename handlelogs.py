@@ -6,7 +6,7 @@ from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
-from models import Leads, User, Agentlogs, Leadlogs, Leadslogsdubai
+from models import Leads, User, Agentlogs, Leadlogs, Leadslogsdubai, Agentlogsdxb
 import json
 import os 
 from werkzeug.utils import secure_filename
@@ -38,10 +38,14 @@ def verify_token(token):
 def fetch_logs_token():
     return(jsonify(''))
 
-def assign_new_draft(user, client_name, client_number):
+def assign_new_draft(user, client_name, client_number, branch): # -> Start here
+    if branch == 'ad':
+        agent_logs = Agentlogs
+    elif branch == 'dxb':
+        agent_logs = Agentlogsdxb
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
-    newlog = Agentlogs(user=user, client_name=client_name, client_number=client_number, type='Drafts', status='Assigned', created_date = datetime.now()+timedelta(hours=4))
+    newlog = agent_logs(user=user, client_name=client_name, client_number=client_number, type='Drafts', status='Assigned', created_date = datetime.now()+timedelta(hours=4))
     session.add(newlog)
     session.commit()
     session.refresh(newlog)
@@ -49,10 +53,14 @@ def assign_new_draft(user, client_name, client_number):
     session.commit()
     session.close()
 
-def edit_draft_agent(user, client_number, status, details):
+def edit_draft_agent(user, client_number, status, details, branch):
+    if branch == 'ad':
+        agent_logs = Agentlogs
+    elif branch == 'dxb':
+        agent_logs = Agentlogsdxb
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
-    query = session.query(Agentlogs).filter(and_(Agentlogs.client_number.endswith(client_number[-8:]), Agentlogs.user == user, Agentlogs.status == 'Assigned')).first()
+    query = session.query(agent_logs).filter(and_(agent_logs.client_number.endswith(client_number[-8:]), agent_logs.user == user, agent_logs.status == 'Assigned')).first()
     query.status = status
     query.details = details
     query.updated_date = datetime.now()+timedelta(hours=4)
@@ -98,21 +106,30 @@ def edit_lead_callback(user, client_number, source):
 
 # logs drafts
 
-@handlelogs.route('/logs/agents',methods = ['GET','POST'])
+@handlelogs.route('/logs/agents/<branch>',methods = ['GET','POST'])
 @login_required
-def display_all_drafts():   
+def display_all_drafts(branch):   
     if current_user.is_admin == False:
         return abort(404)
     data = []
     f = open('agentlogs_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
-    return render_template('agents_logs.html', data = data , columns = columns, all_sale_users = all_sale_users)
+    if branch == 'ad':
+        all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
+    elif branch == 'dxb':
+        all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.dubai == True)).all()
+    else:
+        return abort(404)
+    return render_template('agents_logs.html', data = data , columns = columns, all_sale_users = all_sale_users, branch = branch)
 
-@handlelogs.route('/fetch_logs',methods = ['GET','POST'])
+@handlelogs.route('/fetch_logs/<branch>',methods = ['GET','POST'])
 @auth.login_required
-def fetch_drafts():
+def fetch_drafts(branch):
+    if branch == 'ad':
+        agent_logs = Agentlogs
+    elif branch == 'dxb':
+        agent_logs = Agentlogsdxb
     search = request.args.get('search')
     offset = int(request.args.get('offset'))
     limit = int(request.args.get('limit'))
@@ -120,9 +137,9 @@ def fetch_drafts():
     data = []
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
-    query = session.query(Agentlogs)
+    query = session.query(agent_logs)
     if search:
-        conditions = [column.ilike(f"%{search}%") for column in Agentlogs.__table__.columns]
+        conditions = [column.ilike(f"%{search}%") for column in agent_logs.__table__.columns]
         query = query.filter(or_(*conditions))
     
     if request.args.get('filter') == 'ON':
@@ -131,14 +148,14 @@ def fetch_drafts():
         filters = {key: filters_01[key] for key in ['user', 'type', 'status', 'propdate', 'propdate2'] if key in filters_01}
         for key, value in filters.items():
             if key == 'propdate':
-                conditions.append(Agentlogs.created_date >= value)
+                conditions.append(agent_logs.created_date >= value)
             elif key == 'propdate2':
                 value_as_datetime = datetime.strptime(value, '%Y-%m-%d')
                 value_as_datetime += timedelta(days=1)
                 value = value_as_datetime.strftime('%Y-%m-%d')
-                conditions.append(Agentlogs.created_date <= value)
+                conditions.append(agent_logs.created_date <= value)
             else:
-                conditions.append(getattr(Agentlogs, key) == value)
+                conditions.append(getattr(agent_logs, key) == value)
         query = query.filter(and_(*conditions))
     
     z = query.count()
@@ -154,7 +171,7 @@ def fetch_drafts():
             lead_lost += 1
         else:
             pass
-    for r in query.order_by(Agentlogs.id.desc()).offset(offset).limit(limit):
+    for r in query.order_by(agent_logs.id.desc()).offset(offset).limit(limit):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         new['created_date'] = new['created_date'][:16]

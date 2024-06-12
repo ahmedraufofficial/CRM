@@ -106,9 +106,31 @@ input[type="text"].number-input {
 <title>Lighthouse - Drafts</title>
 <section>
 
+  <!--Delete Modal-->
+  <div class="modal" id="deleteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title oswald">Confirm deletion!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container unselectable oswald" style="background-color:rgba(255, 255, 255, 0.2);font-family: 'Oswald';">
+              <a id="delete">Delete</a>
+            </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal End -->
 
 <!--Activate Modal-->
-
 <div class="modal" id="activateModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -138,7 +160,6 @@ input[type="text"].number-input {
     </div>
   </div>
 </div>
-
 <!-- Modal End -->
 
 
@@ -588,6 +609,13 @@ input[type="text"].number-input {
 
 
 {% block scripts %}
+<script>
+function delete_(x){
+  console.log('Wassup')
+  document.getElementById("delete").href="/delete_draft/{{ branch }}/"+x;
+  };
+
+</script>
 <script type='text/javascript'>
 $("#location_category").change(function(){
     get_location();
@@ -658,7 +686,7 @@ function ajaxRequest(params) {
           params.data['source'] = $("#source").val()
         }
       }
-      var url = 'https://crm.uhpae.com/fetch_drafts';
+      var url = 'https://crm.uhpae.com/fetch_drafts/{{ branch }}';
       $.ajax({
         url: url,
         method: 'GET',
@@ -753,7 +781,7 @@ function activate_drafts() {
     }
   }
 
-  fetch('/activation_initiated', {
+  fetch('/activation_initiated/{{ branch }}', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -778,7 +806,7 @@ function activate_drafts() {
 function activation_execution() {
   let activationNumberInput = document.getElementById('activation_number').value;
   filters['activation_number'] = activationNumberInput;
-  fetch('/activation_execute', {
+  fetch('/activation_execute/{{ branch }}', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

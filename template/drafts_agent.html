@@ -35,6 +35,7 @@ padding-top: 10px;
                 {{ wtf.form_field(form.name) }}
                 {{ wtf.form_field(form.number) }}
                 {{ wtf.form_field(form.status) }}
+                {{ wtf.form_field(form.city) }}
                 {{ wtf.form_field(form.update_location) }}
                 {{ wtf.form_field(form.update_community) }}
                 {{ wtf.form_field(form.update_type) }}
@@ -53,29 +54,37 @@ padding-top: 10px;
     $("#update_location").change(function(){
     get_location();
     });
-    var building = '{{ update_community }}'
     function get_location(){
         var location = $("#update_location").val();
         fetch('/community/' + location).then(function(response){
             response.json().then(function(data){
                 let optionHTML = '';
                 for (let location of data.locations){
-                    if (location[0] == building)
-                    {
-                        optionHTML += '<option selected = "" value="'+location[0]+'">'+location[1]+'</option>'; 
-                    }
-                    else
-                    {
-                        optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
-                    }  
+                    optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
                 }
                 location_select.innerHTML = optionHTML;
             })
         })
         
     }
-    let sub_status = document.getElementById('sub_status');
-    window.onload = get_location();
+
+    let location_options = document.getElementById('update_location');
+    $("#city").change(function(){
+    get_city();
+    });
+    function get_city(){
+        var city = $("#city").val();
+        fetch('/city_chosen/'+city).then(function(response){
+            response.json().then(function(data){
+                let optionHTML = '';
+                optionHTML += '<option value=""></option>'
+                for (let location of data.locations){
+                    optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
+                }
+                location_options.innerHTML = optionHTML;
+            })
+        })   
+    }
 
 
 

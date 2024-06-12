@@ -127,23 +127,41 @@
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Drafts</small></button>
                 <div class="dropdown-content">
                   {% if current_user.is_admin == True %}
-                  <a href="/drafts/admin">Admin</a>
-                  <a href="/drafts/call-center">Call Center</a>
+                  <a href="/drafts/admin/ad">Admin</a>
+                  <a href="/drafts/call-center/ad">Call Center</a>
                   {% endif %}
-                  <a href="/drafts/agent">Active Drafts</a>
+                  <a href="/drafts/agent/ad">Active Drafts</a>
                 </div>
               </div>
             </li>
             {% endif %}
-            {% if current_user.is_admin == True or current_user.qa == True %}
+            {% if current_user.dubai == True %}
+            <div class="vl"></div>
+            <li class="nav-item">
+              <div class="dropdown">
+                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Drafts DXB</small></button>
+                <div class="dropdown-content">
+                  {% if current_user.is_admin == True %}
+                  <a href="/drafts/admin/dxb">Admin</a>
+                  {% endif %}
+                  {% if current_user.qa == True %}
+                  <a href="/drafts/call-center/dxb">Call Center</a>
+                  {% endif %}
+                  <a href="/drafts/agent/dxb">Active Drafts</a>
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            {% if current_user.is_admin == True %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
                 <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%; filter: invert();" src="/static/images/magnifier.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logs</small></button>
                 <div class="dropdown-content">
                   <a href="/logs/leads">Logs Leads</a>
-                  <a href="/logs/agents">Logs Drafts</a>
+                  <a href="/logs/agents/ad">Logs Drafts</a>
                   <a href="/logs/leads-dubai">Logs Leads (DXB)</a>
+                  <a href="/logs/agents/dxb">Logs Drafts (DXB)</a>
                 </div>
               </div>
             </li>
