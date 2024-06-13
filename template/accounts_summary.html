@@ -279,13 +279,13 @@ tfoot td {
           <div class="child" style="width: auto;">
             <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Agents</h6>
               <select name="agents_sales" id="agents_sales" class="filter_add02" >
-                <option selected="selected" value="">Users</option>
+                <option selected="selected" value="">Sales</option>
                 {% for users in all_sale_users %}
                     <option value="{{users.username}}">{{users.username}}</option>
                 {% endfor %}
                 </select>
                 <select name="agents_listing" id="agents_listing" class="filter_add02" >
-                  <option selected="selected" value="">Users</option>
+                  <option selected="selected" value="">Listing</option>
                   {% for users in all_listing_users %}
                       <option value="{{users.username}}">{{users.username}}</option>
                   {% endfor %}
