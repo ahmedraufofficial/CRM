@@ -210,8 +210,9 @@ def display_exitforms():
             new['date_from'] = new['date_from'][:10]
             new['date_to'] = new['date_to'][:10]
             data.append(new)
-    elif current_user.job_title == "Manager":
-        for r in db.session.query(Exitform).all():
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
+    elif current_user.job_title == "Manager" and current_user.abudhabi == True:
+        for r in db.session.query(Exitform).filter(Exitform.branch == 'Abu Dhabi'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             for k in ['reason', 'extra01']: new.pop(k)
@@ -225,6 +226,23 @@ def display_exitforms():
             new['date_from'] = new['date_from'][:10]
             new['date_to'] = new['date_to'][:10]
             data.append(new)
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).filter(User.abudhabi == True).all()
+    elif current_user.job_title == "Manager" and current_user.dubai == True:
+        for r in db.session.query(Exitform).filter(Exitform.branch == 'Dubai'):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason', 'extra01']: new.pop(k)
+            if new['hr_approval'] == "Pending":
+                edit_btn = '<a href="/edit_exitform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = "Request Closed"
+                delete_btn = ''
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            new['date_from'] = new['date_from'][:10]
+            new['date_to'] = new['date_to'][:10]
+            data.append(new)
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).filter(User.dubai == True).all()
     elif current_user.sale == True or current_user.listing == True or current_user.department == "Marketing":
         for r in db.session.query(Exitform).filter(Exitform.created_by == current_user.username):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -238,10 +256,10 @@ def display_exitforms():
             new['date_from'] = new['date_from'][:10]
             new['date_to'] = new['date_to'][:10]
             data.append(new)
+        all_users = ''
     f = open('exitform_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
     return render_template('exit_forms.html', data = data , columns = columns, user = current_user.username, all_users = all_users)
 
 @handleemployees.route('/add_exitform', methods = ['GET','POST'])
@@ -323,8 +341,9 @@ def display_leaveforms():
             new['date_from'] = new['date_from'][:10]
             new['date_to'] = new['date_to'][:10]
             data.append(new)
-    elif current_user.job_title == "Manager":
-        for r in db.session.query(Leaveform).all():
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
+    elif current_user.job_title == "Manager" and current_user.abudhabi == True:
+        for r in db.session.query(Leaveform).filter(Leaveform.branch == 'Abu Dhabi'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             for k in ['reason']: new.pop(k)
@@ -338,6 +357,23 @@ def display_leaveforms():
             new['date_from'] = new['date_from'][:10]
             new['date_to'] = new['date_to'][:10]
             data.append(new)
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).filter(User.abudhabi == True).all()
+    elif current_user.job_title == "Manager" and current_user.dubai == True:
+        for r in db.session.query(Leaveform).filter(Leaveform.branch == 'Dubai'):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason']: new.pop(k)
+            if new['hr_approval'] == "Pending":
+                edit_btn = '<a href="/edit_leaveform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = "Request Closed"
+                delete_btn = ''
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            new['date_from'] = new['date_from'][:10]
+            new['date_to'] = new['date_to'][:10]
+            data.append(new)
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).filter(User.dubai == True).all()
     elif current_user.sale == True or current_user.listing == True or current_user.department == "Marketing":
         for r in db.session.query(Leaveform).filter(Leaveform.created_by == current_user.username):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -351,10 +387,10 @@ def display_leaveforms():
             new['date_from'] = new['date_from'][:10]
             new['date_to'] = new['date_to'][:10]
             data.append(new)
+        all_users = ''
     f = open('leaveform_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
     return render_template('leave_forms.html', data = data , columns = columns, user = current_user.username, all_users = all_users)
 
 @handleemployees.route('/add_leaveform', methods = ['GET','POST'])
@@ -460,8 +496,9 @@ def display_advanceforms():
             new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
             new['request_date'] = new['request_date'][:10]
             data.append(new)
-    elif current_user.job_title == "Manager":
-        for r in db.session.query(Advanceform).all():
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
+    elif current_user.job_title == "Manager" and current_user.abudhabi == True:
+        for r in db.session.query(Advanceform).filter(Advanceform.branch == 'Abu Dhabi'):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
             for k in ['reason']: new.pop(k)
@@ -474,6 +511,22 @@ def display_advanceforms():
             new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
             new['request_date'] = new['request_date'][:10]
             data.append(new)
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).filter(User.abudhabi == True).all()
+    elif current_user.job_title == "Manager" and current_user.dubai == True:
+        for r in db.session.query(Advanceform).filter(Advanceform.branch == 'Dubai'):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            for k in ['reason']: new.pop(k)
+            if new['ceo_approval'] == "Pending":
+                edit_btn = '<a href="/edit_advanceform/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+                delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = "Request Closed"
+                delete_btn = ''
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
+            new['request_date'] = new['request_date'][:10]
+            data.append(new)
+        all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).filter(User.dubai == True).all()
     elif current_user.team_lead == True:
         for r in db.session.query(Advanceform).filter(Advanceform.created_by == current_user.username):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -502,6 +555,7 @@ def display_advanceforms():
                 new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+"</div>"
                 new['request_date'] = new['request_date'][:10]
                 data.append(new)
+        all_users = db.session.query(User).filter(User.sale == True).filter(User.abudhabi == True).all()
     elif current_user.sale == True or current_user.listing == True or current_user.department == "Marketing":
         for r in db.session.query(Advanceform).filter(Advanceform.created_by == current_user.username):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -514,10 +568,10 @@ def display_advanceforms():
             new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
             new['request_date'] = new['request_date'][:10]
             data.append(new)
+        all_users = ''
     f = open('advanceform_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_users = db.session.query(User).filter(or_(User.listing == True, User.sale == True)).all()
     return render_template('advance_forms.html', data = data , columns = columns, user = current_user.username, all_users = all_users)
 
 @handleemployees.route('/add_advanceform', methods = ['GET','POST'])

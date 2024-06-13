@@ -90,8 +90,59 @@ def display_deals():
     if current_user.deal == False:
         return abort(404)
     data = []
-    if current_user.is_admin == True or current_user.job_title == "Manager" or current_user.job_title == "Accountant":
+    if current_user.is_admin == True or current_user.job_title == "Accountant":
         for r in db.session.query(Deals).all():
+            listing_sale = db.session.query(Properties).filter(and_(Properties.refno == r.listing_ref,Properties.owner == r.contact_buyer,r.type == "Sale")).first()
+            listing_rent = db.session.query(Properties).filter(and_(Properties.refno == r.listing_ref,r.type == "Rent")).first()
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            #if r.listing_ref == "" or r.listing_ref == None:
+            #    transfer = '<label class="btn btn-danger si" style="width:100% !important;">Missing Listing Info</label>'
+            #else:
+            #    transfer = '<a href="/update_listing/'+r.listing_ref+'/'+r.contact_buyer+'/'+r.contact_buyer_name+'/'+r.contact_buyer_number+'/'+r.contact_buyer_email+'/'+r.transaction_type+'"><button class="btn btn-warning si" style="width:100% !important;">Update Transfer/Tenant</button></a>'
+            if listing_rent:
+                if listing_rent.tenant:
+                    a = listing_rent.tenant.split(" | ")[0]
+                    if a == r.contact_buyer:
+                        transfer = '<label class="btn si3" style="width:70% !important; background-color: green !important; padding: 2% !important; margin-right: 3px !important;">Deal Successful</label>'
+                    else:
+                        transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 2% !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
+                else:
+                    transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 2% !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
+            elif listing_sale:
+                transfer = '<label class="btn si3" style="width:70% !important; background-color: green !important; padding: 7% !important; margin-right: 3px !important;">Deal Successful</label>'
+            else:
+                transfer = '<label class="btn si3" style="width:70% !important; background-color: #293645 !important; padding: 7% !important; margin-right: 3px !important;">Pending Approval</label>'
+            
+            if new['project'] == "":
+                pass
+            else:
+                new['contact_seller_name'] = new['project']
+                new['listing_ref'] = '-'
+
+            if current_user.is_admin == True:
+                delete_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal01" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                delete_btn = ''
+            
+            if new['agent_pending'] == '0':
+                comm_status = '<label class="btn si3" style="width:100% !important; background-color: green !important; padding: 7% !important">Commission Completed</label>'
+            else:
+                comm_status = '<label class="btn si3" style="width:100% !important; background-color: #293645 !important; padding: 7% !important">Commission Pending</label>'
+
+            for k in ['transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','total_commission','split_with_external_referral','agent_2','commission_agent_2','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques']: new.pop(k)
+            edit_btn = '<a href="/edit_deal/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+            new["edit"] = "<div style='display:flex;'>"+edit_btn+delete_btn+transfer+"</div>"
+            new["edit01"] = "<div style='display:flex;'>"+comm_status+"</div>"
+            new["actual_deal_date"] = new["actual_deal_date"][:10]
+            data.append(new)
+    
+    if current_user.job_title == "Manager":
+        if current_user.abudhabi == True:
+            da_sesh = db.session.query(Deals).filter(Deals.branch == 'Abu Dhabi')
+        if current_user.dubai == True:
+            da_sesh = db.session.query(Deals).filter(Deals.branch == 'Dubai')
+        for r in da_sesh:
             listing_sale = db.session.query(Properties).filter(and_(Properties.refno == r.listing_ref,Properties.owner == r.contact_buyer,r.type == "Sale")).first()
             listing_rent = db.session.query(Properties).filter(and_(Properties.refno == r.listing_ref,r.type == "Rent")).first()
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}

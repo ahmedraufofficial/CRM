@@ -272,7 +272,7 @@ def upload_drafts():
 @handledrafts.route('/drafts/call-center/<branch>',methods = ['GET','POST'])
 @login_required
 def display_active_drafts(branch):   
-    if current_user.is_admin == False:
+    if current_user.qa == False:
         return abort(404)
     data = []
     f = open('draft_headers.json')
@@ -341,7 +341,7 @@ def fetch_active_drafts(branch):
 @handledrafts.route('/assignment_initiated/<branch>',methods = ['GET','POST'])
 @login_required
 def assignment_initiated(branch):   
-    if current_user.is_admin == False:
+    if current_user.qa == False:
         return abort(404)
     if branch == 'ad':
         active_drafts = Activedraft
@@ -379,7 +379,7 @@ def assignment_initiated(branch):
 @handledrafts.route('/assignment_execute/<branch>',methods = ['GET','POST'])
 @login_required
 def assignment_execute(branch):   
-    if current_user.is_admin == False:
+    if current_user.qa == False:
         return abort(404)
     if branch == 'ad':
         active_drafts = Activedraft

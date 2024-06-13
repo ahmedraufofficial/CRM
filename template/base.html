@@ -33,13 +33,12 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="vl" style="margin-top: 0.5%;"></div>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             {% if current_user.abudhabi == True %}
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/apartment.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Properties</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 110px;"><img style="width:17%;" src="/static/images/apartment.png"/><span><small style="margin-left: 5px; font-size: 15px; color: rgb(255, 255, 255)">Properties</small></button>
                 <div class="dropdown-content">
                   <a href="/properties">Agency Properties</a>
                   <a href="/add_property/sale">Add Sale </a>
@@ -55,7 +54,7 @@
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Leads</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 90px;"><img style="width:22%;" src="/static/images/result.png"/><span><small style="margin-left: 5px; font-size: 15px; color: rgb(255, 255, 255)">Leads</small></button>
                 <div class="dropdown-content">
                   {% if current_user.abudhabi == True %}
                   <a href="/leads">Leads (AD)</a>
@@ -75,10 +74,9 @@
               </div>
             </li>
             <div class="vl"></div>
-            {% if current_user.abudhabi == True %}
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/handshake.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Deals</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 90px;"><img style="width:22%;" src="/static/images/handshake.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Deals</small></button>
                 <div class="dropdown-content">
                   <a href="/deals">Agency Deals</a>
                   {% if current_user.is_admin == True %}
@@ -89,11 +87,10 @@
                 </div>
               </div>
             </li>
-            {% endif %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/man.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Contacts</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 110px;"><img style="width:22%;" src="/static/images/man.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Contacts</small></button>
                 <div class="dropdown-content">
                   {% if current_user.abudhabi == True %}
                   <a href="/contacts">Contacts (AD)</a>
@@ -109,7 +106,7 @@
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/man.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">HR</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 80px;"><img style="width:31%;" src="/static/images/man.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">HR</small></button>
                 <div class="dropdown-content">
                   <a href="/human_resource/exit_forms">Exit Forms</a>
                   <a href="/human_resource/leave_forms">Leave Forms</a>
@@ -124,10 +121,12 @@
             {% if current_user.abudhabi == True %}
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Drafts</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 110px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Drafts</small></button>
                 <div class="dropdown-content">
                   {% if current_user.is_admin == True %}
                   <a href="/drafts/admin/ad">Admin</a>
+                  {% endif %}
+                  {% if current_user.qa == True %}
                   <a href="/drafts/call-center/ad">Call Center</a>
                   {% endif %}
                   <a href="/drafts/agent/ad">Active Drafts</a>
@@ -136,10 +135,9 @@
             </li>
             {% endif %}
             {% if current_user.dubai == True %}
-            <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Drafts DXB</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 120px;"><img style="width:17%;" src="/static/images/result.png"/><span></span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Drafts DXB</small></button>
                 <div class="dropdown-content">
                   {% if current_user.is_admin == True %}
                   <a href="/drafts/admin/dxb">Admin</a>
@@ -152,16 +150,20 @@
               </div>
             </li>
             {% endif %}
-            {% if current_user.is_admin == True %}
+            {% if current_user.qa == True %}
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <button class="dropbtn" style="margin-top: 5px;"><img style="width:17%; filter: invert();" src="/static/images/magnifier.png"/><span></span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logs</small></button>
+                <button class="dropbtn" style="margin-top: 7px; width: 100px;"><img style="width:17%; filter: invert();" src="/static/images/magnifier.png"/><span></span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Logs</small></button>
                 <div class="dropdown-content">
+                  {% if current_user.abudhabi == True %}
                   <a href="/logs/leads">Logs Leads</a>
                   <a href="/logs/agents/ad">Logs Drafts</a>
+                  {% endif %}
+                  {% if current_user.dubai == True %}
                   <a href="/logs/leads-dubai">Logs Leads (DXB)</a>
                   <a href="/logs/agents/dxb">Logs Drafts (DXB)</a>
+                  {% endif %}
                 </div>
               </div>
             </li>
@@ -169,7 +171,7 @@
             <div class="vl"></div>
             <li class="nav-item">
               <div class="dropdown">
-                <a href="{{url_for('logout')}}"><button class="dropbtn" style="margin-top: 5px;"><img style="width:17%;" src="/static/images/log-out.png"/><span><small style="margin-left: 10px; font-size: 15px; color: rgb(255, 255, 255)">Logout</small></button></a>
+                <a href="{{url_for('logout')}}"><button class="dropbtn" style="margin-top: 7px; width: 90px;"><img style="width:22%;" src="/static/images/log-out.png"/><span><small style="margin-left: 7px; font-size: 15px; color: rgb(255, 255, 255)">Logout</small></button></a>
               </div>
             </li>
           </ul>
