@@ -239,7 +239,8 @@ def accounts_summary():
     columns = json.load(f)
     col = columns["big_headers"]
     all_sale_users = db.session.query(User).filter_by(sale = True).all()
-    return render_template('accounts_summary.html', user = current_user.username, data = '', columns = col, sum_keys=sum_keys, all_sale_users = all_sale_users)
+    all_listing_users = db.session.query(User).filter_by(listing = True).all()
+    return render_template('accounts_summary.html', user = current_user.username, data = '', columns = col, sum_keys=sum_keys, all_sale_users = all_sale_users, all_listing_users = all_listing_users)
 
 @handleadmin.route('/fetch_summary')
 @auth.login_required
@@ -247,7 +248,7 @@ def fetch_summary():
     query = db.session.query(Deals)
     conditions = []
     filters_01 = {key: request.args.get(key) for key in request.args}
-    filters = {key: filters_01[key] for key in ['propdate', 'propdate2'] if key in filters_01}
+    filters = {key: filters_01[key] for key in ['propdate', 'propdate2', 'type', 'transaction_type', 'unit_location', 'unit_sub_location', 'agent_1', 'agent_2'] if key in filters_01}
     for key, value in filters.items():
         if key == 'propdate':
             conditions.append(Deals.actual_deal_date >= value)
@@ -257,7 +258,7 @@ def fetch_summary():
             value = value_as_datetime.strftime('%Y-%m-%d')
             conditions.append(Deals.actual_deal_date <= value)
         else:
-            pass
+            conditions.append(getattr(Deals, key) == value)
     query = query.filter(and_(*conditions))
 
     deals = []

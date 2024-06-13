@@ -18,7 +18,7 @@
     },
     {
         "field": "unit_sub_location",
-        "title": "Community"
+        "title": "Project"
     },
     {
         "field": "unit_no",
@@ -106,7 +106,7 @@
     },
     {
         "field": "unit_sub_location",
-        "title": "Community"
+        "title": "Project"
     },
     {
         "field": "unit_no",
@@ -119,6 +119,10 @@
     {
       "field": "deal_price",
       "title": "Deal Price"
+    },
+    {
+      "field": "commission_agent_1",
+      "title": "Commission (%)"
     },
     {
       "field": "ct_percentage",
