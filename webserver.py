@@ -25,6 +25,7 @@ from handlestorage import handlestorage
 from handleemployees import handleemployees
 from handledrafts import handledrafts
 from handleadmin import handleadmin
+from handlehr import handlehr
 from handlelogs import handlelogs, edit_lead_agent
 from portals import portals
 from models import *
@@ -133,6 +134,7 @@ app.register_blueprint(handlestorage)
 app.register_blueprint(handledrafts)
 app.register_blueprint(handlelogs)
 app.register_blueprint(handleadmin)
+app.register_blueprint(handlehr)
 app.register_blueprint(portals)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd()+'/test.db'
@@ -177,6 +179,7 @@ class User(UserMixin, db.Model):
     department = db.Column(db.String(50))
     team_members = db.Column(db.String(200))
     profile_picture = db.Column(db.String())
+    emp_code = db.Column(db.String(50))
     is_admin = db.Column(db.Boolean, default=False)
     listing = db.Column(db.Boolean, default=False)
     sale = db.Column(db.Boolean, default=False)

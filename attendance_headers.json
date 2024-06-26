@@ -1,0 +1,60 @@
+{"headers_exit":
+  [ 
+    {
+        "field": "refno",
+        "title": "Ref No."
+    },
+    {
+        "field": "date_from",
+        "title": "Date From"
+    },
+    {
+        "field": "date_to",
+        "title": "Date_to"
+    },
+    {
+        "field": "time_from",
+        "title": "Time From"
+    },
+    {
+        "field": "time_to",
+        "title": "Time To"
+    },
+    {
+      "field": "manager_approval",  
+      "title": "Manager"
+    },
+    {
+      "field": "hr_approval",
+      "title": "HR"
+    }
+  ],
+
+  "headers_leave":
+  [ 
+    {
+        "field": "refno",
+        "title": "Ref No."
+    },
+    {
+        "field": "leave_type",
+        "title": "Type"
+    },
+    {
+        "field": "date_from",
+        "title": "Date From"
+    },
+    {
+        "field": "date_to",
+        "title": "Date_to"
+    },
+    {
+      "field": "manager_approval",  
+      "title": "Manager"
+    },
+    {
+      "field": "hr_approval",
+      "title": "HR"
+    }
+  ]
+}

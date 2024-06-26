@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     job_title = db.Column(db.String(50))
     department = db.Column(db.String(50))
     profile_picture = db.Column(db.String())
+    emp_code = db.Column(db.String(50))
     is_admin = db.Column(db.Boolean, default=False)
     listing = db.Column(db.Boolean, default=False)
     sale = db.Column(db.Boolean, default=False)
