@@ -113,16 +113,16 @@
         "title": "Unit No."
     },
     {
-      "field": "refno",  
-      "title": "Ref. No"
-    },
-    {
       "field": "deal_price",
-      "title": "Deal Price"
+      "title": "NET Price"
     },
     {
       "field": "commission_agent_1",
       "title": "Commission (%)"
+    },
+    {
+      "field": "gross_commission",
+      "title": "Commission (AED)"
     },
     {
       "field": "ct_percentage",
@@ -133,12 +133,8 @@
       "title": "CT (AED)"
     },
     {
-      "field": "gross_commission",
-      "title": "Commission (AED)"
-    },
-    {
-      "field": "ct_value",
-      "title": "CT (AED)"
+      "field": "refno",  
+      "title": "Ref. No"
     },
     {
       "field": "amount_received",

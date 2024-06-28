@@ -262,7 +262,7 @@ def fetch_summary():
     query = query.filter(and_(*conditions))
 
     deals = []
-    for r in query:
+    for r in query.order_by(Deals.actual_deal_date.desc()):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
         for k in ['contact_buyer_number','contact_buyer','listing_ref','created_by','id','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','split_with_external_referral','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques', 'contact_buyer_email','contact_seller','contact_seller_name','contact_seller_number','contact_seller_email', 'status','sub_status','hot_lead','deal_type','bank_representative_name','bank_representative_mobile','referral_date','pre_approval_loan','down_payment_available','down_payment','number_cheque_payment','cheque_payment_type','move_in_date','client_referred_bank','loan_amount','project','floor_no','plot_size','unit_price','percentage','amount']: new.pop(k, None)
@@ -279,10 +279,7 @@ def fetch_summary():
         agent = safe_float(new['agent_commission'])
         listing = safe_float(new['commission_agent_2'])
 
-        if new['ct_value'] != '' and new['ct_value'] != 'None':
-            x = float(str(new['ct_value']).replace(',', '')) - kickback - agent - listing
-        else:
-            x = float(str(new['gross_commission']).replace(',', '')) - kickback - agent - listing
+        x = float(str(new['gross_commission']).replace(',', '')) - kickback - agent - listing
 
         new['gross_profit'] = f"{x:,.2f}"
         new['options'] = ("<button class='btn-warning si2' style='color:white;' data-toggle='modal' data-target='#TxnModal' ""onclick=\"view_txn('{}')\"><i class='bi bi-journal-text'></i></button>").format(new['refno'])
