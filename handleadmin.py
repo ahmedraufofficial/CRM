@@ -98,7 +98,7 @@ def fetch_txns():
                 pass
         except:
             pass
-        new['options'] = ("<button class='btn-warning si2' style='color:white; background-color: red !important;' data-toggle='modal' data-target='#ctmodal' ""onclick=\"calculate_ct('{}')\"><i class='bi bi-calculator'></i></button>"+"<button class='btn-warning si2' style='color:white;' data-toggle='modal' data-target='#TxnModal' ""onclick=\"view_txn('{}')\"><i class='bi bi-journal-text'></i></button>").format(new['refno'], new['refno'])
+        new['options'] = ("<button class='btn-warning si2' style='color:white; background-color: red !important;' data-toggle='modal' data-target='#ctmodal' ""onclick=\"calculate_ct('{}')\"><i class='bi bi-calculator'></i></button>"+"<button class='btn-warning si2' style='color:white;' data-toggle='modal' data-target='#TxnModal' ""onclick=\"view_txn('{}')\"><i class='bi bi-journal-text'></i></button>"+"<button class='btn-warning si2' style='color:white; background-color: green !important;' data-toggle='modal' data-target='#resetmodal' ""onclick=\"reset_value_confirm('{}')\"><i class='bi bi-x-circle-fill'></i></button>").format(new['refno'], new['refno'], new['refno'])
         deals.append(new)
     sum_keys = ['deal_price', 'gross_commission', 'amount_received', 'amount_eligible', 'agent_received', 'agent_pending', 'agent_commission', 'pending_eligible', 'ct_value', 'kickback_amount', 'commission_agent_2']
     editable_keys = ['agent_pers_comm']
@@ -227,6 +227,27 @@ def calculate_ct(refno):
     db.session.commit()
     return redirect(url_for('handleadmin.admins_dash'))
 
+@handleadmin.route('/reset_values_deal/<refno>', methods = ['GET','POST'])
+@login_required
+def reset_deal(refno):
+    print(refno)
+    query = db.session.query(Deals).filter(Deals.refno == refno).first()
+    query.ct_value = None
+    query.ct_percentage = None
+    query.pending_eligible = None
+    query.agent_commission = None
+    query.amount_received = None
+    query.agent_pers_comm = None
+    query.amount_eligible = None
+    query.agent_received = None
+    query.agent_pending = None
+    db.session.commit()
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    session.query(Transactionad).filter(Transactionad.deal_ref == refno).delete(synchronize_session='fetch')
+    session.commit()
+    session.close()
+    return redirect(url_for('handleadmin.admins_dash'))
 
 
 # Sales Report (BIG - TIME)
