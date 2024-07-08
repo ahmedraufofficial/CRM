@@ -70,11 +70,10 @@
 <section>
 <div style="height: 100%;width: 100%;">
 <div class="container" style="padding: 15px;">
-    <h1>Re-Assign</h1>
+    <h1>Property Access Manager</h1>
     <form method="POST">
         <label for="location">Location:</label>
-        <select id="location" name="location">
-            <option selected="selected" value=''>Location</option>
+        <select name="location" id="location" multiple>
               <option value='Abu Dhabi Gate City'>Abu Dhabi Gate City</option>
               <option value='Abu Dhabi Island'>Abu Dhabi Island</option>
               <option value='AbuDhabi-Al Ain (Highway)'>AbuDhabi-Al Ain (Highway)</option>
@@ -218,9 +217,6 @@
               <option value='Zayed Military City'>Zayed Military City</option>
               <option value='Zayed Sports City'>Zayed Sports City</option>
         </select><br><br>
-        <label for="community">Community:</label>
-        <select id="community" name="community" multiple>
-        </select><br><br>
         <label for="user">User:</label>
         <select id="user" name="user">
             <option selected="selected" value="None">Users</option>
@@ -235,25 +231,8 @@
 </section>
 
 <script>
-    $("#location").change(function(){
-    get_location();
-    });
-    function get_location(){
-        var comm = $("#location").val();
-        fetch('/property/' + comm).then(function(response){
-            response.json().then(function(data){
-                let optionHTML = '';
-                optionHTML += '<option value="">Community</option>';
-                for (let location of data.locations){
-                    optionHTML += '<option value="'+location[0]+'">'+location[1]+'</option>';
-                }
-                document.getElementById('community').innerHTML = optionHTML;
-            })
-        })
-        
-    }
-    $(document).ready(function() {
-    $('#community').select2({
+$(document).ready(function() {
+    $('#location').select2({
         closeOnSelect: false
     });
     });

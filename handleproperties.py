@@ -206,9 +206,12 @@ def fetch_listings(user):
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
     elif voltage_user.listing == True:
-        query = query.filter(Properties.assign_to == voltage_user.username)
-        z = query.count()
-        for r in query.order_by(sorting).offset(offset).limit(limit):
+        query_team = query.filter(Properties.assign_to == voltage_user.username)
+        for i in voltage_user.team_members.split(','):
+            query2 = query.filter(Properties.locationtext == i)
+            query_team = query_team.union(query2)
+        z = query_team.count()
+        for r in query_team.order_by(sorting).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)  
             for k in ['photos','title','description','plot','street','rentpriceterm','contactemail','contactnumber','furnished','privateamenities','commercialamenities','geopoint','permit_number','view360','video_url','completion_status','source','owner','tenant','parking','featured','offplan_status','tenure','expiry_date','deposit','commission','price_per_area','plot_size']: new.pop(k)  
@@ -1883,19 +1886,35 @@ def update_listing_magic(refno_listing, refno_prop):
 @handleproperties.route('/properties/management', methods = ['GET','POST'])
 @login_required
 def reassign_manager():
-    return_message = ''
     if request.method == 'POST':
         location = request.form['location']
-        community = request.form['community']
+        community = request.form.getlist('community')
         user = request.form['user']
         try:
-            props = db.session.query(Properties).filter(and_(Properties.locationtext == location, Properties.building == community, Properties.assign_to != user))
-            for i in props:
-                i.assign_to = user
-                i.lastupdated = datetime.now()+timedelta(hours=4)
+            for i in community:
+                props = db.session.query(Properties).filter(and_(Properties.locationtext == location, Properties.building == i, Properties.assign_to != user))
+                for j in props:
+                    j.assign_to = user
+                    j.lastupdated = datetime.now()+timedelta(hours=4)
             db.session.commit()
-            return_message = 'Successfully updated'
+            return('Successfully updated. Please close this window.')
         except Exception as e:
-            return_message = 'Could NOT update '+e
+            return('Could NOT update '+e)
     all_listing_users = db.session.query(User).filter_by(listing = True).all()
-    return render_template('reassign_manager.html', all_listing_users = all_listing_users, return_message = return_message)
+    return render_template('reassign_manager.html', all_listing_users = all_listing_users)
+
+@handleproperties.route('/propview/management', methods = ['GET','POST'])
+@login_required
+def propview_manager():
+    if request.method == 'POST':
+        location = request.form.getlist('location')
+        user = request.form['user']
+        try:
+            userdb = db.session.query(User).filter_by(username=user).first()
+            userdb.team_members = ','.join(location)
+            db.session.commit()
+            return('Successfully updated. Please close this window.')
+        except Exception as e:
+            return('Could NOT update '+e)
+    all_listing_users = db.session.query(User).filter_by(listing = True).all()
+    return render_template('propview_manager.html', all_listing_users = all_listing_users)
