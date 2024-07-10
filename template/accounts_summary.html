@@ -122,7 +122,36 @@ tfoot td {
                 <option value="Sale">Sale</option>
                 <option value="Resale">Resale</option>
                 <option value="Leased">Leased</option>
-            </select>
+              </select>
+              <select name="developer_category" id="developer_category" class="filter_add02">
+                <option selected="selected" value="">Developer</option>
+                <option value="ALDAR Properties PJSC">ALDAR Properties PJSC</option>
+                <option value="Reportage Real Estate LLC">Reportage Real Estate LLC</option>
+                <option value="Reem Hills LLC">Reem Hills LLC</option>
+                <option value="Eagle Hills">Eagle Hills</option>
+                <option value="Nine Yards">Nine Yards</option>
+                <option value="Bloom Properties">Bloom Properties</option>
+                <option value="Property Shop Investments">Property Shop Investments</option>
+                <option value="Radiant Enterprise Real Estate LLC">Radiant Enterprise Real Estate LLC</option>
+                <option value="Virtus Real Estate">Virtus Real Estate</option>
+                <option value="TIGER Properties">TIGER Properties</option>
+                <option value="Burtville Developments">Burtville Developments</option>
+                <option value="Modon Properties">Modon Properties</option>
+                <option value="Crompton Partners ">Crompton Partners </option>
+                <option value="Al Ain Holdings LLC">Al Ain Holdings LLC</option>
+                <option value="IMKAN Properties">IMKAN Properties</option>
+                <option value="The National Investment Corporation (NIC)">The National Investment Corporation (NIC)</option>
+                <option value="DAMAC Properties">DAMAC Properties</option>
+                <option value="SAAS Properties">SAAS Properties</option>
+                <option value="SIADAH Development">SIADAH Development</option>
+                <option value="Baraka Real Estate">Baraka Real Estate</option>
+                <option value="MIRAL">MIRAL</option>
+                <option value="Mismak Properties">Mismak Properties</option>
+                <option value="Hydra Properties">Hydra Properties</option>
+                <option value="Q Properties">Q Properties</option>
+                <option value="Buttinah Real Estate Management">Buttinah Real Estate Management</option>
+                <option value="Advanced Properties Limited">Advanced Properties Limited</option>
+              </select>
             </div>
             <div class="child" style="width: auto;">
               <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/location-pointer.png"/><span><h6 style="text-align: left;">Area</h6>
@@ -443,6 +472,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 if ($("#agents_listing").val() != '') {
                     queryParams['agent_2'] = $("#agents_listing").val();
+                }
+                if ($("#developer_category").val() != '') {
+                    queryParams['project'] = $("#developer_category").val();
                 }
 
                 var url = 'https://crm.uhpae.com/fetch_summary';

@@ -271,7 +271,7 @@ def fetch_summary():
     query = db.session.query(Deals)
     conditions = []
     filters_01 = {key: request.args.get(key) for key in request.args}
-    filters = {key: filters_01[key] for key in ['propdate', 'propdate2', 'type', 'transaction_type', 'unit_location', 'unit_sub_location', 'agent_1', 'agent_2'] if key in filters_01}
+    filters = {key: filters_01[key] for key in ['propdate', 'propdate2', 'type', 'transaction_type', 'unit_location', 'unit_sub_location', 'agent_1', 'agent_2', 'project'] if key in filters_01}
     for key, value in filters.items():
         if key == 'propdate':
             conditions.append(Deals.actual_deal_date >= value)
