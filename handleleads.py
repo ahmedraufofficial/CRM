@@ -661,7 +661,7 @@ def uploadleads():
                             last_name = ''
                         number = row[1].replace(" ", "").replace("+","")
                         email = row[2]
-                        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10])
+                        newcontact = Contacts(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[11], role = 'Buyer')
                         db.session.add(newcontact)
                         db.session.commit()
                         db.session.refresh(newcontact)
@@ -822,6 +822,7 @@ def call_back_season():
 @handleleads.route('/city_chosen/<location>',methods = ['GET','POST'])
 @login_required
 def city_location(location):
+    location = location.replace("%20", " ")
     f = open('contacts.json')
     columns = json.load(f)
     if location == 'Dubai':

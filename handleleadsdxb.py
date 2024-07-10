@@ -220,7 +220,7 @@ def add_leaddxb_buyer():
         max_price = form.max_price.data
         unit = form.unit.data
         plot = form.plot.data
-        street = form.street.data
+        street = "1"
         size = form.size.data
         lead_type = form.lead_type.data
         city = form.city.data
@@ -364,7 +364,7 @@ def uploadleadsdxb():
                             last_name = ''
                         number = row[1].replace(" ", "").replace("+","")
                         email = row[2]
-                        newcontact = Contactsdubai(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[10], created_by='naira_amin', branch = 'Dubai')
+                        newcontact = Contactsdubai(first_name=first_name, last_name=last_name ,number=number,email=email, assign_to='naira_amin', source = row[11], created_by='naira_amin', branch = 'Dubai', role = 'Buyer')
                         session.add(newcontact)
                         session.commit()
                         session.refresh(newcontact)

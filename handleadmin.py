@@ -89,8 +89,10 @@ def fetch_txns():
     for r in query.filter(Deals.agent_1 == filters_01['agent_1']):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
-        for k in ['contact_buyer_number','contact_buyer_name','contact_buyer','listing_ref','created_by','type','id','transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','split_with_external_referral','agent_2','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques', 'contact_buyer_email','contact_seller','contact_seller_name','contact_seller_number','contact_seller_email', 'status','sub_status','hot_lead','deal_type','bank_representative_name','bank_representative_mobile','referral_date','pre_approval_loan','down_payment_available','down_payment','number_cheque_payment','cheque_payment_type','move_in_date','client_referred_bank','loan_amount','project','floor_no','plot_size','unit_price','percentage','amount']: new.pop(k, None)
+        for k in ['contact_buyer_number','contact_buyer_name','contact_buyer','listing_ref','created_by','type','id','transaction_type','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','split_with_external_referral','agent_2','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques', 'contact_buyer_email','contact_seller','contact_seller_name','contact_seller_number','contact_seller_email', 'status','sub_status','hot_lead','deal_type','bank_representative_name','bank_representative_mobile','referral_date','pre_approval_loan','down_payment_available','down_payment','number_cheque_payment','cheque_payment_type','move_in_date','client_referred_bank','loan_amount','floor_no','plot_size','unit_price','percentage','amount']: new.pop(k, None)
         new['actual_deal_date'] = new['actual_deal_date'][:10]
+        if new['project'] == 'None' or new['project'] == '':
+            new['project'] = 'Secondary'
         try:
             if float(str(new['gross_commission'].replace(',', ''))) > float(str(new['total_commission'].replace(',', ''))):
                 new['gross_commission'] = new['total_commission']
@@ -286,8 +288,10 @@ def fetch_summary():
     for r in query.order_by(Deals.actual_deal_date.desc()):
         row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
         new = row2dict(r)
-        for k in ['contact_buyer_number','contact_buyer','listing_ref','created_by','id','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','split_with_external_referral','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques', 'contact_buyer_email','contact_seller','contact_seller_name','contact_seller_number','contact_seller_email', 'status','sub_status','hot_lead','deal_type','bank_representative_name','bank_representative_mobile','referral_date','pre_approval_loan','down_payment_available','down_payment','number_cheque_payment','cheque_payment_type','move_in_date','client_referred_bank','loan_amount','project','floor_no','plot_size','unit_price','percentage','amount']: new.pop(k, None)
+        for k in ['contact_buyer_number','contact_buyer','listing_ref','created_by','id','source','priority','deposit','agency_fee_seller','agency_fee_buyer','include_vat','split_with_external_referral','estimated_deal_date','unit_category','unit_beds','unit_floor','unit_type','buyer_type','finance_type','tenancy_start_date','tenancy_renewal_date','cheques', 'contact_buyer_email','contact_seller','contact_seller_name','contact_seller_number','contact_seller_email', 'status','sub_status','hot_lead','deal_type','bank_representative_name','bank_representative_mobile','referral_date','pre_approval_loan','down_payment_available','down_payment','number_cheque_payment','cheque_payment_type','move_in_date','client_referred_bank','loan_amount','floor_no','plot_size','unit_price','percentage','amount']: new.pop(k, None)
         new['actual_deal_date'] = new['actual_deal_date'][:10]
+        if new['project'] == 'None' or new['project'] == '':
+            new['project'] = 'Secondary'
         try:
             if float(str(new['gross_commission'].replace(',', ''))) > float(str(new['total_commission'].replace(',', ''))):
                 new['gross_commission'] = new['total_commission']
