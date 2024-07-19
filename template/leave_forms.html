@@ -35,9 +35,63 @@
   margin-right: 1px;
   border-radius: 12px;
 }
+.table-container {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.t-design {
+    border-collapse: separate;
+    width: 100%; /* Ensure the table takes the full width of the container */
+}
+
+.t-content {
+    padding: 10px;
+    text-align: center;
+    border: 0px solid #ddd;
+    font-size: 13px !important;
+}
+
+.t-th {
+    background-color: rgba(41, 54, 69, 1);
+    color: white;
+    width: 300px;
+}
+
+.t-tr {
+    background-color: rgb(185, 209, 235);
+    color: rgb(0, 0, 0);
+}
 </style>
 <title>Lighthouse - Leave Forms</title>
 <section>
+  <!--Summary Modal-->
+
+<div class="modal" id="activateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title oswald">Monthly Summary</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="align-items: center; margin-left: auto; margin-right: auto;">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <div id="tableContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal End -->
+
     <!--Delete Modal-->
     <div class="modal" id="deleteModal01" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
@@ -96,6 +150,7 @@
             <div class="col">
               <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 6px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
               <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 5px; margin-top: 7px; float: left;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+              <button onclick="smart_summary()" data-toggle="modal" data-target="#activateModal" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; margin-right: 5px; margin-top: 7px; float: right; width: 150px;">Monthly Summary</button>
             </div>
           </div>
       </div>
@@ -147,6 +202,38 @@
     function delete_(x){
         document.getElementById("delete").href="/delete_leaveform/"+x;
     };
+
+    function smart_summary(){
+      console.log('wassup')
+      var x = $("#propdate").val()
+      var y = $("#propdate2").val()
+      filters = {}
+      filters['from_date'] = x;
+      filters['to_date'] = y;
+      fetch('/recalculate_leaves', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(filters)
+      }).then(function(response) {
+        response.json().then(function(data) {
+      let tableHtml = '<div class="table-container"><table class="t-design" border="1"><tr><th class="t-content t-th">Employee Name</th><th class="t-content t-th">Employee Code</th><th class="t-content t-th">Total Days</th><th class="t-content t-th">Summary</th></tr>';
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          const employee = data[key];
+          tableHtml += `<tr><td class="t-content t-tr">${employee.name}</td><td class="t-content t-tr">${employee.emp_code}</td><td class="t-content t-tr">${employee.total_days}</td><td class="t-content t-tr">${employee.summary.join('<br>')}</td></tr>`;
+        }
+      }
+      tableHtml += '</table></div>';
+      document.getElementById('tableContainer').innerHTML = tableHtml;
+    });
+        }).catch(function(error) {
+          console.error('Error:', error);
+        });
+      };
+
+
     $(window).on('load',(function(){
       
     var columns = {{columns|tojson}};

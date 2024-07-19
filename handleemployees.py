@@ -649,3 +649,46 @@ def delete_advanceform(variable):
     db.session.delete(delete)
     db.session.commit()
     return redirect(url_for('handleemployees.display_advanceforms'))
+
+# Special options
+
+@handleemployees.route('/recalculate_leaves', methods=['GET', 'POST'])
+@login_required
+def recalculate_leaves():
+    data = request.json
+    to_date = datetime.strptime(data['to_date'], '%Y-%m-%d')
+    from_date = datetime.strptime(data['from_date'], '%Y-%m-%d')
+    result = []
+
+    leaves = db.session.query(Leaveform).all()
+    work = []
+
+    for leave in leaves:
+        leave_from = max(leave.date_from, from_date) if leave.date_from < from_date else leave.date_from
+        leave_to = min(leave.date_to, to_date) if leave.date_to > to_date else leave.date_to
+        
+        if leave_from <= leave_to:
+            number_of_days = (leave_to - leave_from).days + 1
+            work.append({
+                'User': leave.created_by,
+                'Days': number_of_days,
+                'Dates': f"{leave_from.strftime('%Y-%m-%d')} - {leave_to.strftime('%Y-%m-%d')}"
+            })
+
+    employees = db.session.query(User).all()
+
+    for employee in employees:
+        summary = [
+            f"{entry['Dates']} No. of Days: {entry['Days']}"
+            for entry in work if entry['User'] == employee.username
+        ]
+        total_days = sum(entry['Days'] for entry in work if entry['User'] == employee.username)
+        
+        if total_days:
+            result.append({
+                'emp_code': employee.emp_code,
+                'name': employee.username,
+                'total_days': total_days,
+                'summary': summary
+            })
+    return jsonify(result)
