@@ -326,6 +326,7 @@ tfoot td {
             <div class="col">
               <button id="filter_search" class="filter_add" onclick="ajaxRequest()" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
               <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+              <button id="exportButton" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: left; margin-right: 5px; margin-top: 7px;">Export</button>
             </div>
           </div>
       </div>
@@ -517,6 +518,41 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
+document.getElementById('exportButton').addEventListener('click', function() {
+            var tableData = [];
+            $('#data-table tbody tr').each(function(rowIndex, r) {
+                var row = {};
+                $(this).find('td').each(function(cellIndex, c) {
+                    row[$(c).attr('data-field')] = $(c).text();
+                });
+                tableData.push(row);
+            });
+
+            var footerData = {};
+            $('#totals-row td span').each(function(cellIndex, c) {
+              var field = $(c).attr('data-field');
+              if (field) {
+                footerData[field] = $(c).text();
+              }
+            });
+
+            fetch('/export/deals_summary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: tableData, footer: footerData })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "Deals_Summary.csv";
+                link.click();
+            })
+            .catch(error => console.error('Error exporting data:', error));
+            });
 </script>
 
   <style type='text/css'>

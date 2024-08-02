@@ -1,7 +1,7 @@
 from curses.ascii import NUL
 from operator import methodcaller
 from xml.dom.minicompat import EmptyNodeList
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for,abort, Response
 from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -19,6 +19,8 @@ import csv
 from datetime import datetime, timedelta
 from sqlalchemy.orm import sessionmaker
 from flask_httpauth import HTTPTokenAuth
+import io 
+import csv
 
 auth = HTTPTokenAuth(scheme='Bearer')
 tokens = {
@@ -319,3 +321,29 @@ def safe_float(value):
     if value == 'None' or value == '':
         return 0.0
     return float(str(value).replace(',', ''))
+
+@handleadmin.route('/export/deals_summary',methods = ['GET','POST'])
+@login_required
+def export_deals_csv():
+    if current_user.is_admin == False and current_user.job_title != "Accountant":
+        return abort(404)
+    
+    request_data = request.json
+    data = request_data.get('data', [])
+    footer = request_data.get('footer', {})
+    
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    if data:
+        headers = data[0].keys()
+        writer.writerow(headers)
+
+        for row in data:
+            writer.writerow(row.values())
+
+        footer_row = [footer.get(header, '') for header in headers]
+        writer.writerow(footer_row)
+    
+    output.seek(0)
+    return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=table_data.csv"})
