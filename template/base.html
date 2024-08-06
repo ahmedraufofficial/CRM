@@ -60,7 +60,7 @@
                   {% if current_user.abudhabi == True %}
                   <a href="/leads">Leads (AD)</a>
                   <a href="/add_lead_buyer">Add Buyer (AD)</a>
-                  {% if current_user.qa == True %}
+                  {% if current_user.qa == True or current_user.job_title == 'CC' %}
                   <a href="/pre-leads">Pre-Leads (AD)</a>
                   {% endif %}
                   {% endif %}

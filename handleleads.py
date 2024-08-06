@@ -567,7 +567,7 @@ def reassign_btn_response(x):
 @handleleads.route('/pre-leads',methods = ['GET','POST'])
 @login_required
 def display_pre_leads():   
-    if current_user.qa == False or current_user.abudhabi == False:
+    if current_user.qa == False and current_user.job_title != 'CC' or current_user.abudhabi == False:
         return abort(404)
     data = []
     if current_user.is_admin == True or current_user.qa == True:
@@ -583,6 +583,20 @@ def display_pre_leads():
                 followupBG = ""
             reassign_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="pre_assign_lead('+"'"+new['refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>'
             new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+reassign_btn+"</div>"
+            data.append(new)
+    elif current_user.job_title == 'CC' :
+        for r in db.session.query(Leads).filter(and_(Leads.street == '0', Leads.sub_status == 'Call Center')):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            new['created_date'] = new['created_date'][:16]
+            new['lastupdated'] = new['lastupdated'][:16]
+            edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+            if new['sub_status'] == "Follow up":
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
+            else:
+                followupBG = ""
+            reassign_btn = '<button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#reassignModal"  onclick="pre_assign_lead('+"'"+new['refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>'
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+"</div>"
             data.append(new)
     else:
         return abort(404)

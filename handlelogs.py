@@ -90,6 +90,17 @@ def edit_lead_agent(user, client_number):
     else:
         session.close()
 
+def log_call_center(user, client_name, client_number, status, source, details):
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    newlog = Leadlogs(user=user, client_name=client_name, client_number=client_number, type='Lead', status=status, details=details, source=source, created_date = datetime.now()+timedelta(hours=4))
+    session.add(newlog)
+    session.commit()
+    session.refresh(newlog)
+    newlog.refno = 'LOG-L-'+str(newlog.id)
+    session.commit()
+    session.close()
+
 def edit_lead_callback(user, client_number, source):
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()

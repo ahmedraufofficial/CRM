@@ -97,6 +97,7 @@
                 <option value='Not interested'>Not interested</option>
                 <option value='Needs time'>Needs time</option>
                 <option value='Client not reachable'>Client not reachable</option>
+                <option value='Call Center'>Call Center</option>
               </select>
               </div>    
             </div>
@@ -211,6 +212,12 @@
 -->
           <div class="child" style="margin-right: 5px;">
             <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/product-description.png"/><span><h6 style="text-align: left;">Description</h6>
+              <select name="status_category" id="status_category" class="filter_add02">
+                <option selected="selected" value="">Status</option>
+                <option value="Interested">Interested</option>
+                <option value="Not interested">Not Interested</option>
+                <option value="Call Center">Call Center</option>
+              </select>
           <select name="beds_category" id="beds_category" class="filter_add02">
             <option selected="selected" value="">Beds</option>
             <option value="ST">Studio</option>
@@ -636,7 +643,7 @@ $(window).on('load',(function(){
         var c = $("#community_category").val();
         var x = $("#propdate").val()
         var y = $("#propdate2").val()
-        //var z = $("#searchbar").val()
+        var z = $("#status_category").val()
         var grepFunc;
         var grepFunc2;
         var grepFunc3;
@@ -647,10 +654,7 @@ $(window).on('load',(function(){
         var grepFunc8;
         var grepFunc9;
         var grepFunc10;
-        //var grepFunc11;
-        var grepFunc12;
-        var grepFunc13;
-        var grepFunc14;
+        var grepFunc11;
 
         grepFunc = function(item){
               return item.min_beds == b;
@@ -676,9 +680,9 @@ $(window).on('load',(function(){
               return item.created_date.slice(0,10) <= y;
           }
 
-        //grepFunc11 = function(item){
-        //      return item.agent == z;
-        //  }
+        grepFunc11 = function(item){
+              return item.sub_status == z;
+          }
         
         if (b != "")
         {test = $.grep(test, grepFunc)}
@@ -698,8 +702,8 @@ $(window).on('load',(function(){
         if (y != "")
         {test = $.grep(test, grepFunc10)}
 
-        //if (z != "")
-        //{test = $.grep(test, grepFunc11)}
+        if (z != "")
+        {test = $.grep(test, grepFunc11)}
 
           $('#table').bootstrapTable('load', test);
         })
@@ -712,7 +716,7 @@ $(window).on('load',(function(){
         $("#community_category").val("");
         $("#propdate").val("");
         $("#propdate2").val("");
-        //$("#searchbar").val("");
+        $("#status_category").val("");
         })
 
         $('#user_data').click(function () { //For My Contacts option if required later on 

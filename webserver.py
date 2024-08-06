@@ -26,7 +26,7 @@ from handleemployees import handleemployees
 from handledrafts import handledrafts
 from handleadmin import handleadmin
 from handlehr import handlehr
-from handlelogs import handlelogs, edit_lead_agent
+from handlelogs import handlelogs, edit_lead_agent, log_call_center
 from portals import portals
 from models import *
 import json
@@ -689,6 +689,16 @@ def delete_detail(list_id,detail):
 @login_required
 def post_lead_note(list_id,com,status,substatus):
     a = db.session.query(Leads).filter_by(refno = list_id).first()
+
+    if a.sub_status == 'Call Center':
+        w = log_call_center(user=current_user.username, client_name=a.contact_name, client_number=a.contact_number, status=substatus.replace("%20"," "), source=a.source, details=com)
+    else:
+        pass
+
+    if substatus == 'Call Center':
+        a.street = '0'
+    else:
+        pass
     a.sub_status = substatus.replace("%20"," ")
     a.status = status
     
