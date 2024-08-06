@@ -207,9 +207,10 @@ def fetch_listings(user):
         return(response_data)
     elif voltage_user.listing == True:
         query_team = query.filter(Properties.assign_to == voltage_user.username)
-        for i in voltage_user.team_members.split(','):
-            query2 = query.filter(Properties.locationtext == i)
-            query_team = query_team.union(query2)
+        if voltage_user.team_members: 
+            for i in voltage_user.team_members.split(','):
+                query2 = query.filter(Properties.locationtext == i)
+                query_team = query_team.union(query2)
         z = query_team.count()
         for r in query_team.order_by(sorting).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -1887,7 +1888,10 @@ def update_listing_magic(refno_listing, refno_prop):
 @login_required
 def reassign_manager():
     if request.method == 'POST':
-        location = request.form['location']
+        location_code = request.form['location']
+        w = open('abudhabi.json')
+        file_data = json.load(w)
+        location = file_data[location_code]
         community = request.form.getlist('community')
         user = request.form['user']
         try:
