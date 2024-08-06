@@ -203,7 +203,7 @@ class AddDealForm(FlaskForm):
     commission_agent_2 = StringField('Commission (%)')
     estimated_deal_date = DateField('Estimated Deal Date')
     actual_deal_date = DateField('Expiry Date', format='%Y-%m-%d')
-    unit_no = StringField('Unit No *',[validators.DataRequired()])
+    unit_no = StringField('Tower/Building Name & Unit No. *',[validators.DataRequired()])
     unit_category = SelectField(u'Type *',[validators.DataRequired()],choices = [('Villa', 'Villa'), ('Apartment', 'Apartment'),('Loft Apartment', 'Loft Apartment'), ('Residential Floor', 'Residential Floor'), ('Residential Plot', 'Residential Plot'), ('Townhouse', 'Townhouse'), ('Residential Building', 'Residential Building'), ('Penthouse', 'Penthouse'), ('Villa Compound', 'Villa Compound'), ('Hotel Apartment', 'Hotel Apartment'), ('Office', 'Office'), ('Other', 'Other')])
     unit_beds = StringField('Unit Beds *',[validators.DataRequired()])
     city = SelectField(u'City *',[validators.DataRequired()],choices = [('9999', 'None') ,('Abu Dhabi', 'Abu Dhabi'), ('Dubai', 'Dubai')])
