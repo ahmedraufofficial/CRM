@@ -199,7 +199,7 @@ def display_exitforms():
     if current_user.listing == False and current_user.sale == False:
         return abort(404)
     data = []
-    if current_user.is_admin == True or current_user.job_title == "HR Manager":
+    if current_user.username == 'ahmed' or current_user.username == 'ramzi' or current_user.username == 'izazulhaq':
         for r in db.session.query(Exitform).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
@@ -330,7 +330,7 @@ def display_leaveforms():
     if current_user.listing == False and current_user.sale == False:
         return abort(404)
     data = []
-    if current_user.is_admin == True or current_user.job_title == "HR Manager":
+    if current_user.username == 'ahmed' or current_user.username == 'ramzi' or current_user.username == 'izazulhaq':
         for r in db.session.query(Leaveform).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
@@ -486,7 +486,7 @@ def display_advanceforms():
     if current_user.listing == False and current_user.sale == False:
         return abort(404)
     data = []
-    if current_user.is_admin == True or current_user.job_title == "Accountant":
+    if current_user.username == 'ahmed' or current_user.username == 'ramzi' or current_user.username == 'izazulhaq' or current_user.job_title == "Accountant":
         for r in db.session.query(Advanceform).all():
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
             new = row2dict(r)
