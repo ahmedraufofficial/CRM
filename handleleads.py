@@ -172,7 +172,7 @@ def display_leads():
     f = open('lead_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
     return render_template('leads.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
 
 @handleleads.route('/reassign_lead/<variable>/<user>', methods = ['GET','POST'])
@@ -603,7 +603,7 @@ def display_pre_leads():
     f = open('pre_leads_headers.json')
     columns = json.load(f)
     columns = columns["headers"]
-    all_sale_users = db.session.query(User).filter_by(sale = True).all()
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
     return render_template('pre_leads.html', data = data , columns = columns, user=current_user.username, all_sale_users = all_sale_users)
 
 @handleleads.route('/pre_assign_lead_execute/<x>/<y>') #For Duplicates from the main leads page
