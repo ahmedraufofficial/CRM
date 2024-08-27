@@ -692,9 +692,10 @@ def display_leads_hub():
     all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
     return render_template('leads_hub.html', data = data , columns = columns, all_sale_users = all_sale_users)
 
-@handledrafts.route('/fetch_hub',methods = ['GET','POST'])
+@handledrafts.route('/fetch_hub/<user>',methods = ['GET','POST'])
 @auth.login_required
-def fetch_leads_hub():
+def fetch_leads_hub(user):
+    current_user = db.session.query(User).filter_by(username = user).first()
     search = request.args.get('search')
     offset = int(request.args.get('offset'))
     limit = int(request.args.get('limit'))

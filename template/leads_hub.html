@@ -233,7 +233,7 @@ function ajaxRequest(params) {
           params.data['agent'] = $("#agent").val()
         }
       }
-      var url = 'https://crm.uhpae.com/fetch_hub';
+      var url = 'https://crm.uhpae.com/fetch_hub/'+user;
       $.ajax({
         url: url,
         method: 'GET',
