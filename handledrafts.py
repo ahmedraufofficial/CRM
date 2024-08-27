@@ -779,7 +779,7 @@ def hub_execute():
         filter_date > Leads.lastupdated
         )
 
-        thirty_days_ago = datetime.now() + timedelta(hours=4) - timedelta(days=30)
+        thirty_days_ago = datetime.now() + timedelta(hours=4) - timedelta(days=15)
 
         request_time_filter = or_(
         Leads.waqt_time.is_(None),   # Include NULL values
