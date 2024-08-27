@@ -67,5 +67,28 @@
         "field": "updated_date",  
         "title": "Updated Date"
     }
+  ],
+  "hub_headers":
+  [
+    {
+      "field": "user",  
+      "title": "User"
+    },
+    {
+        "field": "leads_quantity",  
+        "title": "No. of Leads"
+    },
+    {
+        "field": "interested_leads",  
+        "title": "Interested Leads"
+    },
+    {
+        "field": "expired_leads",  
+        "title": "Expired"
+    },
+    {
+        "field": "request_time",  
+        "title": "Request Time"
+    }
   ]
 }

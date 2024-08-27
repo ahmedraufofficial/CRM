@@ -6,7 +6,7 @@ from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
-from models import Leads, Maindraft, User, Activedraft, Maindraftdxb, Activedraftdxb, Leadsdubai
+from models import Leads, Maindraft, User, Activedraft, Maindraftdxb, Activedraftdxb, Leadsdubai, Leadshub, Hubrequestlogs
 from forms import Draftsusers
 import json
 import os 
@@ -15,12 +15,13 @@ from werkzeug.datastructures import FileStorage
 import re
 from datetime import date, datetime,time
 from functions import assign_lead, logs, notes, update_note,lead_email, etisy_message, update_lead_note
-from handlelogs import assign_new_draft, edit_draft_agent
+from handlelogs import assign_new_draft, edit_draft_agent, lead_update_log
 from sqlalchemy import or_,and_, bindparam
 import csv
 from datetime import datetime, timedelta
 from flask_httpauth import HTTPTokenAuth
 from sqlalchemy.orm import sessionmaker
+import random
 
 FILE_UPLOADS = os.getcwd() + "/static/imports/uploads"
 
@@ -605,7 +606,7 @@ def delete_draft(branch, variable):
     session.close()
     return redirect(url_for('handledrafts.display_all_drafts', branch = branch))
 
-# Uploading Data Abu Dhabi
+# Uploading Data Dubai
 
 @handledrafts.route('/upload_drafts_dxb',methods = ['GET','POST'])
 @login_required
@@ -676,3 +677,261 @@ def upload_drafts_dxb():
         session.close()
         session_leads.close()
     return response_data, 200, {'Content-Type': 'application/json'}
+
+# Leads Hub Module 
+
+@handledrafts.route('/leads_hub', methods = ['GET','POST'])
+@login_required
+def display_leads_hub():   
+    if current_user.sale == False or current_user.abudhabi == False:
+        return abort(404)
+    data = []
+    f = open('hub_headers.json')
+    columns = json.load(f)
+    columns = columns["headers_qa"]
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
+    return render_template('leads_hub.html', data = data , columns = columns, all_sale_users = all_sale_users)
+
+@handledrafts.route('/fetch_hub',methods = ['GET','POST'])
+@auth.login_required
+def fetch_leads_hub():
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
+    data = []
+    
+    Session = sessionmaker(bind=db.get_engine(bind='second'))
+    session = Session()
+    query = session.query(Leadshub)
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Leadshub.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['status', 'agent'] if key in filters_01}
+        print(filters)
+        for key, value in filters.items():
+            conditions.append(getattr(Leadshub, key) == value)
+        print(conditions)
+        query = query.filter(and_(*conditions))
+    
+    if current_user.is_admin == True or current_user.qa == True:
+        m = update_expired()
+        z = query.count()
+        for r in query.order_by(Leadshub.id.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            reassign_straight = '<button class="btn-secondary si2" style="color:white;" onclick="reassign_('+"'"+new['lead_refno']+"'"+')"><i class="bi bi-forward-fill"></i></button>'
+            no_action = '<button style="padding: 3px 5px 3px 5px !important;" class="btn btn-primary" onclick="clear_out_('+"'"+new['lead_refno']+"'"+')"><i style="font-size: 1.5em;" class="bi bi-x-circle-fill"></i></button>'
+            new["edit"] = "<div style='display:flex;"+"'>"+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['lead_refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+no_action+reassign_straight+"</div>"
+            data.append(new)
+            total_records += 1
+    else:
+        fortyfive_minutes_ago = datetime.now()+timedelta(hours=4) - timedelta(minutes=45)
+        query = query.filter(and_(Leadshub.agent == current_user.username, Leadshub.status == 'Pending', Leadshub.request_time > fortyfive_minutes_ago))
+        z = query.count()
+        for r in query.order_by(Leadshub.id.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            edit_btn =  '<div style="display:flex;"><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#updateModal" onclick="update_hub_('+"'"+new['lead_refno']+"'"+')"><i class="bi bi-pen"></i></button></div>'
+            new["edit"] = edit_btn
+            data.append(new)
+            total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+    session.close()
+    return(response_data)
+
+
+@handledrafts.route('/request_leads_hub',methods = ['GET','POST'])
+@login_required
+def hub_execute():   
+    if current_user.sale == False:
+        return abort(404)
+    
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+
+    twenty_four_hours_ago = datetime.now()+timedelta(hours=4) - timedelta(hours=24)
+    lastupdated_filter = Hubrequestlogs.request_time > twenty_four_hours_ago
+    agent = Hubrequestlogs.user == current_user.username
+
+    query = session.query(Hubrequestlogs).filter(agent, lastupdated_filter).order_by(Hubrequestlogs.request_time.desc()).first()
+    session.close()
+    if query:
+        response_data = 'No'
+        response_json = json.dumps(response_data, indent=4, sort_keys=False)
+        return response_json, 200, {'Content-Type': 'application/json'}
+    else:
+        Session_second = sessionmaker(bind=db.get_engine(bind='primary'))
+        session_leads = Session_second()
+        
+        status_filter = Leads.status == 'Open'
+
+        date_str = '2024-01-01'
+        filter_date = datetime.strptime(date_str, '%Y-%m-%d')
+
+        lastupdated_filter = or_(
+        Leads.lastupdated.is_(None),
+        Leads.lastupdated == NUL,
+        filter_date > Leads.lastupdated
+        )
+
+        thirty_days_ago = datetime.now() + timedelta(hours=4) - timedelta(days=30)
+
+        request_time_filter = or_(
+        Leads.waqt_time.is_(None),   # Include NULL values
+        Leads.waqt_time == 'NUL',    # Insclude 'NUL' values
+        thirty_days_ago > Leads.waqt_time
+        )
+
+        results = session_leads.query(Leads).filter(and_(status_filter, lastupdated_filter, request_time_filter)).all()
+
+        selected_records = random.sample(results, min(len(results), 5))
+        current_time = datetime.now()+timedelta(hours=4)
+        for record in results:
+            for seconds in selected_records:
+                if record.refno == seconds.refno:
+                    record.waqt_time = current_time
+                    break
+
+        session_leads.commit()    
+        
+        
+        Session_third = sessionmaker(bind=db.get_engine(bind='second'))
+        session_third = Session_third()
+        for record in selected_records:
+            newleadhub = Leadshub(agent = current_user.username, lead_refno = record.refno, client_name=record.contact_name, client_number=record.contact_number, request_time = datetime.now()+timedelta(hours=4), status = 'Pending')
+            session_third.add(newleadhub)
+            session_third.commit()
+        
+        session_third.close()
+        session_leads.close()
+        m = create_hub_log()
+        response_data = 'Yes'
+        response_json = json.dumps(response_data, indent=4, sort_keys=False)
+        return response_json, 200, {'Content-Type': 'application/json'}
+
+
+def create_hub_log():
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    newhublog = Hubrequestlogs(user = current_user.username, leads_quantity = '5', interested_leads = '0', expired_leads = '0', request_time = datetime.now()+timedelta(hours=4))
+    session.add(newhublog)
+    session.commit()
+    session.refresh(newhublog)
+    newhublog.refno = 'LOG-H-'+str(newhublog.id)
+    session.commit()
+    session.close()
+
+@handledrafts.route('/update_hublead',methods = ['GET','POST'])
+@login_required
+def hub_update():   
+    data = request.json
+    Session = sessionmaker(bind=db.get_engine(bind='second'))
+    session = Session()
+    query = session.query(Leadshub).filter(Leadshub.lead_refno == data['lead_refno']).first()
+    if data['status'] == 'Interested':
+        query.status = 'Interested'
+        query.remarks = data['remarks']
+        query.updated_time == datetime.now()+timedelta(hours=4)
+        m = update_hub_log()
+    else:
+        session.delete(query)
+    session.commit()
+    session.close()
+    response_data = 'Done'
+    response_json = json.dumps(response_data, indent=4, sort_keys=False)
+    return response_json, 200, {'Content-Type': 'application/json'}
+
+def update_hub_log():
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Hubrequestlogs).filter(Hubrequestlogs.user == current_user.username).order_by(Hubrequestlogs.id.desc()).first()
+    query.interested_leads = str(int(query.interested_leads)+1)
+    session.commit()
+    session.close()
+
+def update_expired():
+    Session = sessionmaker(bind=db.get_engine(bind='second'))
+    session = Session()
+    query = session.query(Leadshub).filter(Leadshub.status == 'Pending').all()
+    fortyfive_minutes_ago = datetime.now()+timedelta(hours=4) - timedelta(minutes=45)
+    for records in query:
+        if records.request_time < fortyfive_minutes_ago:
+            records.status = 'Expired'
+            m = update_expired_log(records.agent)     
+    session.commit()
+    session.close()
+
+def update_expired_log(agent):
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Hubrequestlogs).filter(Hubrequestlogs.user == agent).order_by(Hubrequestlogs.id.desc()).first()
+    query.expired_leads = str(int(query.expired_leads)+1)
+    session.commit()
+    session.close()
+
+@handledrafts.route('/reassign_hublead',methods = ['GET','POST'])
+@login_required
+def reassign_hub():   
+    data = request.json
+    Session = sessionmaker(bind=db.get_engine(bind='second'))
+    session = Session()
+    query = session.query(Leadshub).filter(Leadshub.lead_refno == data['lead_refno']).first()
+    
+    Session_second = sessionmaker(bind=db.get_engine(bind='primary'))
+    session_leads = Session_second()
+
+    query_leads = session_leads.query(Leads).filter(Leads.refno == data['lead_refno']).first()
+    previous_agent = query_leads.agent
+    query_leads.agent = query.agent
+    query_leads.lastupdated = datetime.now()+timedelta(hours=4)
+    query_leads.source = 'Leads Hub'
+    query_leads.sub_status = 'In progress'
+    session_leads.commit()
+
+    if query.remarks == None:
+        query.remarks = 'Reassigned'
+
+    update_lead_note('Admin', data['lead_refno'], "Lead re-assigned to "+query_leads.agent+" via Leads Hub.", query_leads.status, query_leads.sub_status)
+    update_lead_note(query_leads.agent, data['lead_refno'], query.remarks, query_leads.status, query_leads.sub_status)
+
+    try:
+        first = lead_update_log(previous_agent, query_leads.contact_name, query_leads.contact_number, 'Lead Lost', 'Leads Hub', data['lead_refno'] +' reassigned to '+query_leads.agent)
+        second = lead_update_log(query_leads.agent, query_leads.contact_name, query_leads.contact_number, 'Assigned', 'Leads Hub', data['lead_refno'] +' reassigned from '+previous_agent)
+    except:
+        pass
+
+    session.delete(query)
+    session.commit()
+    session_leads.close()
+    session.close()
+    response_data = 'Done'
+    response_json = json.dumps(response_data, indent=4, sort_keys=False)
+    return response_json, 200, {'Content-Type': 'application/json'}
+
+@handledrafts.route('/clearout_hublead',methods = ['GET','POST'])
+@login_required
+def clearout_hub():   
+    data = request.json
+    Session = sessionmaker(bind=db.get_engine(bind='second'))
+    session = Session()
+    query = session.query(Leadshub).filter(Leadshub.lead_refno == data['lead_refno']).first()
+    
+    Session_second = sessionmaker(bind=db.get_engine(bind='primary'))
+    session_leads = Session_second()
+
+    query_leads = session_leads.query(Leads).filter(Leads.refno == data['lead_refno']).first()
+    query_leads.waqt_time = None
+    session_leads.commit()
+
+    session.delete(query)
+    session.commit()
+    session_leads.close()
+    session.close()
+    response_data = 'Done'
+    response_json = json.dumps(response_data, indent=4, sort_keys=False)
+    return response_json, 200, {'Content-Type': 'application/json'}

@@ -1431,3 +1431,20 @@ def delete_exitform(variable):
     db.session.delete(delete)
     db.session.commit()
     return redirect(url_for('handledeals.display_deals'))
+
+@handledeals.route('/close_success_deals', methods = ['GET','POST'])
+@login_required
+def close_success_deals():
+    if current_user.is_admin == False or current_user.abudhabi == False:
+        return abort(404)
+    deals = db.session.query(Deals).all()
+    for record in deals:
+        if record.lead_ref != None:
+            lead = db.session.query(Leads).filter(and_(Leads.refno == record.lead_ref, Leads.status == 'Open')).first()
+            if lead:
+                lead.status = 'Closed'
+                lead.sub_status = 'Successful'
+        else:
+            pass
+    db.session.commit()
+    return 'ok'

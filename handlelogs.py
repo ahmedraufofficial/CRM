@@ -6,7 +6,7 @@ from flask.globals import session
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
-from models import Leads, User, Agentlogs, Leadlogs, Leadslogsdubai, Agentlogsdxb
+from models import Leads, User, Agentlogs, Leadlogs, Leadslogsdubai, Agentlogsdxb, Hubrequestlogs
 import json
 import os 
 from werkzeug.utils import secure_filename
@@ -385,3 +385,67 @@ def delete_leaddxb_log(variable):
     session.commit()
     session.close()
     return(jsonify('ok'))
+
+# HUB logs
+
+@handlelogs.route('/logs/hub-leads',methods = ['GET','POST'])
+@login_required
+def display_hub_logs():   
+    if current_user.qa == False:
+        return abort(404)
+    data = []
+    f = open('agentlogs_headers.json')
+    columns = json.load(f)
+    columns = columns["hub_headers"]
+    all_sale_users = db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all()
+    return render_template('hub_logs.html', data = data , columns = columns, all_sale_users = all_sale_users)
+
+
+@handlelogs.route('/fetch_hub_logs',methods = ['GET','POST'])
+@auth.login_required
+def fetch_hubleads_logs():
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
+    data = []
+    Session = sessionmaker(bind=db.get_engine(bind='third'))
+    session = Session()
+    query = session.query(Hubrequestlogs)
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in Hubrequestlogs.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['user', 'propdate', 'propdate2'] if key in filters_01}
+        for key, value in filters.items():
+            if key == 'propdate':
+                conditions.append(Hubrequestlogs.created_date >= value)
+            elif key == 'propdate2':
+                value_as_datetime = datetime.strptime(value, '%Y-%m-%d')
+                value_as_datetime += timedelta(days=1)
+                value = value_as_datetime.strftime('%Y-%m-%d')
+                conditions.append(Hubrequestlogs.created_date <= value)
+            else:
+                conditions.append(getattr(Hubrequestlogs, key) == value)
+        query = query.filter(and_(*conditions))
+    
+    z = query.count()
+    interested_leads = 0
+    expired = 0
+    for r in query:
+        if r.interested_leads != '0':
+            interested_leads = interested_leads + int(r.interested_leads)
+        if r.expired_leads != '0':
+            expired = expired + int(r.expired_leads)
+
+    for r in query.order_by(Hubrequestlogs.id.desc()).offset(offset).limit(limit):
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        data.append(new)
+        total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data, "interested_leads": interested_leads, "expired": expired}
+    session.close()
+    return(response_data)

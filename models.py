@@ -144,6 +144,7 @@ class Leads(db.Model):
     source = db.Column(db.String(50))
     lastupdated = db.Column(db.DateTime)
     city = db.Column(db.String(50))
+    waqt_time = db.Column(db.DateTime)
 
  
 class Deals(db.Model):
@@ -571,3 +572,26 @@ class Agentlogsdxb(db.Model):
     details = db.Column(db.String(500))
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)
+
+class Leadshub(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    agent = db.Column(db.String(50))
+    lead_refno = db.Column(db.String(50))
+    client_name = db.Column(db.String(100))
+    client_number = db.Column(db.String(50))
+    request_time = db.Column(db.DateTime)
+    updated_time = db.Column(db.DateTime)
+    status = db.Column(db.String(50))
+    remarks = db.Column(db.String(500))
+    switch = db.Column(db.String(50))
+    
+class Hubrequestlogs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    refno = db.Column(db.String(50))
+    user = db.Column(db.String(50))
+    leads_quantity = db.Column(db.String(50))
+    interested_leads = db.Column(db.String(50))
+    expired_leads = db.Column(db.String(50))
+    request_time = db.Column(db.DateTime)
+    details = db.Column(db.String(50))
+    

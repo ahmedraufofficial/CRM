@@ -1,0 +1,378 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+}
+  </style>
+<title>Lighthouse - Leads Hub</title>
+<section>
+    <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+        <!--note Modal-->
+        <div class="modal" id="notesModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title oswald">Notes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container oswald" id="notes" style="background-color:rgba(0, 0, 0, 0.2);font-family: 'Oswald';">
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <div id="notetoolbar">
+                                        <h5>NOTES</h5>
+                                    </div>
+                                    <table 
+                                    id="notetable"        
+                                    data-toggle="true"
+                                    data-toolbar="#notetoolbar"
+                                    class="oswald"
+                                    data-search="true"
+                                    data-show-columns="true"
+                                    data-pagination="true"
+                                    data-height="500"
+                                    style="font-size: 10pt;">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="date">DATE</th>
+                                            <th data-field="time">TIME</th>
+                                            <th data-field="user">USER</th>
+                                            <th data-field="comment">COMMENT</th>
+                                            <th data-field="status">STATUS</th>
+                                            <th data-field="substatus">SUB STATUS</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Modal end-->
+
+        <!--Request Modal-->
+        <div class="modal" id="requestModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title oswald">Request Status</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container oswald" id="notes" style="font-family: 'Oswald';">
+                            <div class="row justify-content-center">
+                                <h6 style="font-size: medium; float: left; font-weight:500; margin-top: 10px; color: black;" name="request_message" id="request_message"></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Modal end-->
+
+        <!--Update Modal-->
+        <div class="modal" id="updateModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title oswald">Update Lead</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body" style="align-items: center; margin-left: auto; margin-right: auto;">
+                <div class="container">
+                    <div class="row">
+                        <h6 id="lead_refno"></h6>
+                    <div class="col" style="margin-top: 7px;">
+                        <select name="update_status" id="update_status" class="filter_add" style="width: 150px;">
+                        <option selected="selected" value=''>Status</option>
+                        <option value="Interested">Interested</option>
+                        <option value="Not Interested">Not Interested</option>
+                        <option value="No Answer">No Answer</option>
+                        </select>
+                    </div>
+                    <div class="col" style="margin-top: 7px;">
+                        <input style="width: 300px; height: 30px; padding: 5px; border-radius: 12px !important;" type="text" id="remarks" placeholder="Update Remark" name="remarks">
+                    </div>
+                    <div class="col" style="padding: 0px;">
+                        <button type="button" class="btn-secondary si2" style="margin-top: -50px !important;  padding-top: 0px !important;" onclick="update_hublead()"><i class="bi bi-forward-fill"></i></button>
+                    </div>
+                    </div>
+                </div>     
+                </div>
+            </div>
+            </div>
+        </div>
+        <!--Modal End-->
+
+        <div class="container-fluid" style="padding: 10px;">
+            <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
+                <div class="row">
+                    <div class="child" style="width: auto; margin-left: 1%;">
+                        <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Availablility</h6>
+                            <select name="status" id="status" class="filter_add02">
+                            <option selected="selected" value="">Status</option>
+                            <option value="Interested">Interested</option>
+                            <option value="No Answer">No Answer</option>
+                            <option value="Expired">Expired</option>
+                        </select>
+                        <select name="agent" id="agent" class="filter_add02" >
+                            <option selected="selected" value="">Users</option>
+                            {% for users in all_sale_users %}
+                            <option value="{{users.username}}">{{users.username}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+                        <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+                        <button class="btn btn-primary" style="color:white; padding: 7px !important; float: left; margin: 10px;" data-toggle="modal" data-target="#requestModal" onclick="request_leads()">Request Leads</button>
+                        <input type="hidden" id="filter" name="filter" value="OFF">
+                    </div>
+                </div>
+            </div>
+            <table
+                id="table"
+                data-toggle="true"
+                class="unselectable oswald"
+                data-sort-name="updated_time"
+                data-sort-order="desc"
+                data-toolbar="#toolbar"
+                data-search="true"
+                data-pagination="true"
+                data-height="700"
+                data-page-size="20"
+                data-side-pagination="server"
+                data-ajax="ajaxRequest"
+                data-page-list="[25, 50, 100]">
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type='text/javascript'>
+
+function view_note(x){
+  fetch('/all_notes/'+x).then(function(response){
+    response.json().then(function(data){
+      $('#display').hide();
+      $('#list_id').val(x)
+      $('#notes').show()
+      $('#open_lead').hide();
+      var jsonData = data.notes
+      $(function () {
+                $('#notetable').bootstrapTable('destroy')
+                $('#notetable').bootstrapTable({data: jsonData});
+                document.getElementById('comment').value = ''
+                });
+    })
+  })
+}
+
+function ajaxRequest(params) {
+  fetch('/fetch_drafts_token').then(function(response){
+    response.json().then(function(data){
+      token = data
+      var headers = {
+        'Authorization': 'Bearer '+token
+      };
+      user = {{current_user.username|tojson}};
+      //filters are added in the query accordingly
+      if ($("#filter").val() == 'ON') {
+        params.data['filter'] = $("#filter").val()
+        if ($("#status").val() != '') {
+          params.data['status'] = $("#status").val()
+        }
+        if ($("#agent").val() != '') {
+          params.data['agent'] = $("#agent").val()
+        }
+      }
+      var url = 'https://crm.uhpae.com/fetch_hub';
+      $.ajax({
+        url: url,
+        method: 'GET',
+        headers: headers,
+        data: params.data,
+        success: function (res) {
+          params.success(res);
+        },
+        error: function (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    })
+  })
+}      
+
+
+$(window).on('load',(function(){
+  $('#display').hide();
+  $('#notes').hide();      
+  var columns = {{columns|tojson}};
+  var data = {{data|tojson}};
+
+      $(function() {
+        $('#table').bootstrapTable({                    
+          data: data,
+          columns: columns,
+        });  
+        
+        $('#filter_search').click(function () {
+          $("#filter").val("ON")
+          $('#table').bootstrapTable('refresh');
+        })
+        
+        $('#filter_reset').click(function () {
+          $("#filter").val("OFF")
+          $("#status").val("");
+          $("#agent").val("");
+          $('#table').bootstrapTable('refresh');
+        })  
+
+      });
+    }));
+
+
+
+function request_leads() {
+  fetch('/request_leads_hub', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify()
+  }).then(function(response) {
+    response.json().then(function(data) {
+      console.log(data)
+        if (data == 'No') {
+            document.getElementById('request_message').innerHTML = 'Please wait 24 hours before requesting for Leads again.';
+        }
+        if (data == 'Yes') {
+          location.reload();
+        }
+    });
+  }).catch(function(error) {
+    console.error('Error:', error);
+  });
+};
+
+function update_hub_(x){
+    document.getElementById("lead_refno").href=x;
+};
+
+function update_hublead(){
+  var data = {}
+  data['lead_refno'] = document.getElementById("lead_refno").href
+  data['status'] = $("#update_status").val()
+  data['remarks'] = $("#remarks").val()
+  
+  fetch('/update_hublead', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(function(response) {
+    response.json().then(function(data) {
+      location.reload(); 
+    });
+  }).catch(function(error) {
+    console.error('Error:', error);
+  });
+};
+
+function reassign_(lead_refno){
+  var data = {}
+  data['lead_refno'] = lead_refno
+
+  fetch('/reassign_hublead', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(function(response) {
+    response.json().then(function(data) {
+      location.reload(); 
+    });
+  }).catch(function(error) {
+    console.error('Error:', error);
+  });
+};
+
+function clear_out_(lead_refno){
+  var data = {}
+  data['lead_refno'] = lead_refno
+
+  fetch('/clearout_hublead', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(function(response) {
+    response.json().then(function(data) {
+      location.reload(); 
+    });
+  }).catch(function(error) {
+    console.error('Error:', error);
+  });
+};
+
+</script>
+<style type='text/css'>
+.row-index {
+    width: 50px;
+    display: inline-block;
+}
+body {
+    overflow-x: hidden;
+}
+</style>
+{% endblock %}

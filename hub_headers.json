@@ -1,0 +1,40 @@
+{"headers_qa":
+  [
+    {
+     "field": "edit",
+     "title": "Options"
+    },
+    {
+      "field": "agent",
+      "title": "Agent"
+    },
+    {
+      "field": "lead_refno",  
+      "title": "Ref No."
+    },
+    {
+      "field": "client_name",
+      "title": "Client Name"
+    },
+    {
+      "field": "client_number",
+      "title": "Client Number"
+    },
+    {
+      "field": "request_time",
+      "title": "Request Date"
+    },
+    {
+      "field": "updated_time",
+      "title": "Updated Time"
+    },
+    {
+      "field": "status",
+      "title": "Status"
+    },
+    {
+      "field": "remarks",
+      "title": "Remarks"
+    }
+  ]
+}
