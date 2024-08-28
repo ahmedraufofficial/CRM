@@ -584,6 +584,8 @@ class Leadshub(db.Model):
     status = db.Column(db.String(50))
     remarks = db.Column(db.String(500))
     switch = db.Column(db.String(50))
+    location = db.Column(db.String(50))
+    community = db.Column(db.String(50))
     
 class Hubrequestlogs(db.Model):
     id = db.Column(db.Integer, primary_key=True)

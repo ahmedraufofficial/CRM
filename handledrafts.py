@@ -804,7 +804,7 @@ def hub_execute():
         Session_third = sessionmaker(bind=db.get_engine(bind='second'))
         session_third = Session_third()
         for record in selected_records:
-            newleadhub = Leadshub(agent = current_user.username, lead_refno = record.refno, client_name=record.contact_name, client_number=record.contact_number, request_time = datetime.now()+timedelta(hours=4), status = 'Pending')
+            newleadhub = Leadshub(agent = current_user.username, lead_refno = record.refno, client_name=record.contact_name, client_number=record.contact_number, request_time = datetime.now()+timedelta(hours=4), status = 'Pending', location = record.locationtext , community = record.building)
             session_third.add(newleadhub)
             session_third.commit()
         

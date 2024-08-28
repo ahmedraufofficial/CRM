@@ -21,6 +21,14 @@
       "title": "Client Number"
     },
     {
+      "field": "location",
+      "title": "Location"
+    },
+    {
+      "field": "community",
+      "title": "Community"
+    },
+    {
       "field": "request_time",
       "title": "Request Date"
     },
