@@ -755,8 +755,8 @@ def hub_execute():
     Session = sessionmaker(bind=db.get_engine(bind='third'))
     session = Session()
 
-    twenty_four_hours_ago = datetime.now()+timedelta(hours=4) - timedelta(hours=24)
-    lastupdated_filter = Hubrequestlogs.request_time > twenty_four_hours_ago
+    start_of_today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(hours=4)
+    lastupdated_filter = Hubrequestlogs.request_time > start_of_today
     agent = Hubrequestlogs.user == current_user.username
 
     query = session.query(Hubrequestlogs).filter(agent, lastupdated_filter).order_by(Hubrequestlogs.request_time.desc()).first()
