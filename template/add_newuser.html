@@ -1,0 +1,125 @@
+{% extends "base.html" %} 
+{% import "bootstrap/wtf.html" as wtf %} 
+{% block content %}
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <title>Lighthouse - User Access</title>
+</head>
+
+<style type='text/css'>
+.column{
+    background-color: rgba(255, 255, 255, 0.4); box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+    -webkit-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+    -moz-box-shadow: 0px 0px 39px -11px rgba(0,0,0,0.75) inset;
+    padding-top: 10px;
+    margin: 5px;
+    margin-top: 20px;
+}
+h4{
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #000000;
+    font-size: 14pt;
+    font-family: 'Oswald';
+}
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    background-color: white;
+}
+textarea {
+    height: 100px;
+}
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: 0px solid transparent !important;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+.select2-container--default .select2-results__option {
+    color: black;
+    background-color: white;
+}
+.select2-container--default .select2-results__option--highlighted {
+    background-color: #eaeaea;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #293645;
+}
+</style>
+
+<section>
+  <div style="height: 100%;width: 100%;background-color: rgba(0, 0, 0, 0.1); padding-bottom: 12%;">
+<div class="container">
+
+<form method="POST">
+  <dl>
+    <div class="row">
+      <div class="col column">
+        <h4>User Details</h4>
+        {{ wtf.form_field(form.username) }}
+        {{ wtf.form_field(form.number) }}
+        {{ wtf.form_field(form.email) }}
+        {{ wtf.form_field(form.job_title) }}
+        {{ wtf.form_field(form.department) }}
+        {{ wtf.form_field(form.emp_code) }}
+        <div class="form-group">
+            <label class="control-label" for="team_members">Team Members</label>
+            <select class="form-control" id="team_members" name="team_members" multiple>
+          </select>
+        </div>
+    </div>
+</div>
+</dl>
+<p><input class="btn btn-primary" style="background-color: #7be0ff; border: hidden;"  value="Submit" type="submit">
+</form>
+</div>
+</div>
+</section>
+
+<script>
+$(document).ready(function() {
+    $('#team_members').select2({
+        closeOnSelect: false
+    });
+});
+
+let team_members = document.getElementById('team_members');
+var current_team = {{ current_team|tojson }};
+var all_sale = {{ all_sale_users|tojson }};
+
+function get_team_members(){
+    let optionHTML = '';
+    for (let users of all_sale){
+        if (current_team.includes(users)){
+            optionHTML += '<option value="'+users+'" selected>'+users+'</option>';
+        }
+        else{
+            optionHTML += '<option value="'+users+'">'+users+'</option>';
+        }
+    }
+    team_members.innerHTML = optionHTML;
+};
+window.onload = get_team_members();
+</script>
+{% endblock %}
+
+
+
+
+
+

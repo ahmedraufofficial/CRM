@@ -105,10 +105,42 @@ def fetch_leads(user):
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
-    elif voltage_user.team_lead == True:
-        query_team = query.filter(or_(Leads.created_by == voltage_user.username,Leads.agent == voltage_user.username))
+    elif voltage_user.job_title == 'Sales Manager':
+        query_team = query.filter(Leads.agent == voltage_user.username)
         for i in voltage_user.team_members.split(','):
-            query2 = query.filter(or_(Leads.created_by == i,Leads.agent == i))
+            query2 = query.filter(Leads.agent == i)
+            query_team = query_team.union(query2)
+            team_leader = db.session.query(User).filter_by(username = i).first()
+            for j in team_leader.team_members.split(','):
+                query3 = query.filter(Leads.agent == j)
+                query_team = query_team.union(query3)
+        z = query_team.count()
+        for r in query_team.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            if voltage_user.edit == True:
+                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = ''
+            if new['sub_status'] != "Flag":
+                flag = '<button onclick="flag_lead('+"'"+new['refno']+"'"+')" class="btn-danger si2" style="color:white;"><i class="bi bi-flag"></i></button>'
+            else:
+                flag = ''
+            if new['agent'] == voltage_user.username and new['sub_status'] == "In progress":
+                followup = '<button onclick="follow_up('+"'"+new['refno']+"'"+')" class="btn-info si2" style="color:white;"><i class="bi bi-plus-circle"></i></button>'
+                followupBG = 'background-color:rgba(19, 132, 150,0.7);border-radius:20px;box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-webkit-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);-moz-box-shadow: 0px 0px 17px 7px rgba(19,132,150,0.89);'
+            else:
+                followup = ""
+                followupBG = ""
+            new["edit"] = "<div style='display:flex;"+followupBG+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+flag+"</div>"
+            data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
+    elif voltage_user.team_lead == True:
+        query_team = query.filter(Leads.agent == voltage_user.username)
+        for i in voltage_user.team_members.split(','):
+            query2 = query.filter(Leads.agent == i)
             query_team = query_team.union(query2)
         z = query_team.count()
         for r in query_team.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
@@ -758,7 +790,7 @@ def reassign_straight_function(x, y, z):
     edit.source = z.replace("%20", " ")
     edit.lastupdated = datetime.now()+timedelta(hours=4)
     db.session.commit()
-    if z != 'Cold Call':
+    if z != 'Cold Call' and z != 'Leads Hub':
         if (edit.contact_name!= "" or edit.contact_name!= None):
             get_agent = db.session.query(User).filter_by(username = edit.agent).first()
             try:

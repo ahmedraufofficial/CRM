@@ -1,0 +1,28 @@
+{"headers":
+  [
+    {
+        "field": "edit",
+        "title": "OPTIONS"
+    },
+    {
+        "field": "emp_code",
+        "title": "Employee Code"
+    },
+    {
+        "field": "username",
+        "title": "Username"
+    },
+    {
+        "field": "number",
+        "title": "Mobile No."
+    },
+    {
+        "field": "job_title",
+        "title": "Position"
+    },
+    {
+        "field": "department",
+        "title": "Department"
+    }
+  ]
+}

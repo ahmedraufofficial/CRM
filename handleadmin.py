@@ -7,7 +7,7 @@ from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import except_all
 from models import Leads, Properties,Contacts, User, Deals, Transactionad
-from forms import Addtransactionad
+from forms import Addtransactionad, NewUserForm
 import json
 import os 
 from werkzeug.utils import secure_filename
@@ -347,3 +347,78 @@ def export_deals_csv():
     
     output.seek(0)
     return Response(output, mimetype="text/csv", headers={"Content-Disposition":"attachment;filename=table_data.csv"})
+
+# USER ACCESS (ADMIN)
+
+@handleadmin.route('/user_access',methods = ['GET','POST'])
+@login_required
+def display_users():   
+    if current_user.is_admin == False:
+        return abort(404)
+    data = []
+    f = open('users_headers.json')
+    columns = json.load(f)
+    columns = columns["headers"]
+    all_users = db.session.query(User).all()
+    return render_template('user_access.html', data = data , columns = columns, user = current_user.username, all_users = all_users)
+
+@handleadmin.route('/fetch_users',methods = ['GET','POST'])
+@auth.login_required
+def fetch_users():   
+    search = request.args.get('search')
+    offset = int(request.args.get('offset'))
+    limit = int(request.args.get('limit'))
+    total_records = 0
+    data = []
+    
+    Session = sessionmaker(bind=db.get_engine(bind='primary'))
+    session = Session()
+    query = session.query(User)
+    if search:
+        conditions = [column.ilike(f"%{search}%") for column in User.__table__.columns]
+        query = query.filter(or_(*conditions))
+    
+    if request.args.get('filter') == 'ON':
+        conditions = []
+        filters_01 = {key: request.args.get(key) for key in request.args}
+        filters = {key: filters_01[key] for key in ['username', 'department'] if key in filters_01}
+        for key, value in filters.items():
+            conditions.append(getattr(User, key) == value)
+        query = query.filter(and_(*conditions))
+    
+    z = query.count()
+    for r in query.order_by(User.id.desc()).offset(offset).limit(limit):
+        row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+        new = row2dict(r)
+        for k in ['profile_picture', 'is_admin', 'listing', 'sale', 'deal', 'hr', 'contact', 'edit', 'viewall', 'export', 'schedule', 'team_lead', 'abudhabi', 'dubai', 'team_members', 'qa']: new.pop(k)
+        edit_btn = '<a href="/edit_user/'+str(new['username'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a>'
+        new["edit"] = "<div style='display:flex;'>"+edit_btn+"</div>"
+        data.append(new)
+        total_records += 1
+    response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+    session.close()
+    return(response_data)
+
+@handleadmin.route('/edit_user/<username>', methods = ['GET','POST'])
+@login_required
+def edit_contact(username):
+    if current_user.is_admin == False:
+        return abort(404) 
+    edit = db.session.query(User).filter_by(username=username).first()
+    form = NewUserForm(obj = edit)
+    try:
+        current_team = edit.team_members.split(',')
+    except:
+        current_team = []
+    all_sale = []
+    for users in db.session.query(User).filter(and_(User.sale == True, User.abudhabi == True)).all():
+        all_sale.append(users.username)
+    if request.method == 'POST': 
+        form.populate_obj(edit)
+        if form.team_members.data:
+            edit.team_members = ','.join(form.team_members.data)
+        else:
+            edit.team_members = None
+        db.session.commit()
+        return redirect(url_for('handleadmin.display_users'))
+    return render_template('add_newuser.html', form=form, all_sale_users = all_sale, current_team = current_team)

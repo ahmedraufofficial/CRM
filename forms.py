@@ -395,3 +395,12 @@ class Addtransactionad(FlaskForm):
     mode = SelectField(u'Mode *', [validators.DataRequired()], choices = [('', ''),('Cash', 'Cash'),('Cheque', 'Cheque'),('Bank Transfer', 'Bank Transfer')])
     amount = StringField('Amount')
     description = StringField('Description')
+
+class NewUserForm(FlaskForm):
+    username = StringField('Username', render_kw={'disabled': True})
+    number = IntegerField('Contact Number', [validators.DataRequired()])
+    email = StringField('Email', [validators.Length(min=4, max=80),validators.DataRequired()])
+    job_title = StringField('Job Title', [validators.Length(min=4, max=25), validators.DataRequired()])
+    department = StringField('Department', [validators.Length(min=4, max=25), validators.DataRequired()])
+    emp_code = StringField('Employee Code', [validators.DataRequired()])
+    team_members = SelectMultipleField('Team Members')

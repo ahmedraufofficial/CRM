@@ -1,0 +1,163 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<style>.child {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgba(41, 54, 69, 1);
+  color: white;
+
+}
+
+.child01 {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+  background-color: rgb(255, 255, 255);
+  color: white;
+}
+
+.parrot {
+  display: inline-block;
+  border: 1px solid #293645;
+  padding: 5px;
+  vertical-align: middle;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-radius: 12px;
+}
+  </style>
+<title>Lighthouse - Users</title>
+<section>
+    <div style="min-height: 100vh; max-height: 100%;background-color: rgba(0, 0, 0, 0);">
+        <div class="container-fluid" style="padding: 10px;">
+            <div class="container-fluid parrot" style="text-align: center; margin: 5px;">
+                <div class="row">
+                    <div class="child" style="width: auto; margin-left: 1%;">
+                        <img style="width:12px; float: left; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 1%; margin-bottom: 0" src="/static/images/tick.png"/><span><h6 style="text-align: left;">Availablility</h6>
+                            <select name="department" id="department" class="filter_add02">
+                            <option selected="selected" value="">Department</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Listing">Listing</option>
+                            <option value="Management">Management</option>
+                            <option value="Unique Vertex">Unique Vertex</option>
+                        </select>
+                        <select name="user" id="user" class="filter_add02" >
+                            <option selected="selected" value="">User</option>
+                            {% for users in all_users %}
+                            <option value="{{users.username}}">{{users.username}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <button id="filter_search" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 6px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px; margin-top: 0;" src="/static/images/magnifier.png"/><span>Search</span></button>
+                        <button id="filter_reset" class="filter_add" style="background-color: #293645; color: white; margin-top: 3px; float: right; margin-right: 5px; margin-top: 7px;"><img style="width:13px; filter: invert(); margin-right: 5px; margin-left: 5px;" src="/static/images/reset.png"/><span>Reset</span></button>
+                        <input type="hidden" id="filter" name="filter" value="OFF">
+                    </div>
+                </div>
+            </div>
+            <table
+                id="table"
+                data-toggle="true"
+                class="selectable oswald"
+                data-sort-name="updated_time"
+                data-sort-order="desc"
+                data-toolbar="#toolbar"
+                data-search="true"
+                data-pagination="true"
+                data-height="700"
+                data-page-size="30"
+                data-side-pagination="server"
+                data-ajax="ajaxRequest"
+                data-page-list="[25, 50, 100]">
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script type='text/javascript'>
+
+function ajaxRequest(params) {
+  fetch('/fetch_txn_token').then(function(response){
+    response.json().then(function(data){
+      token = data
+      var headers = {
+        'Authorization': 'Bearer '+token
+      };
+      //filters are added in the query accordingly
+      if ($("#filter").val() == 'ON') {
+        params.data['filter'] = $("#filter").val()
+        if ($("#department").val() != '') {
+          params.data['department'] = $("#department").val()
+        }
+        if ($("#user").val() != '') {
+          params.data['username'] = $("#user").val()
+        }
+      }
+      var url = 'https://crm.uhpae.com/fetch_users';
+      $.ajax({
+        url: url,
+        method: 'GET',
+        headers: headers,
+        data: params.data,
+        success: function (res) {
+          params.success(res);
+        },
+        error: function (error) {
+          console.error('Error fetching data:', error);
+        }
+      });
+    })
+  })
+}      
+
+$(window).on('load',(function(){
+  $('#display').hide();
+  $('#notes').hide();      
+  var columns = {{columns|tojson}};
+  var data = {{data|tojson}};
+
+      $(function() {
+        $('#table').bootstrapTable({                    
+          data: data,
+          columns: columns,
+        });  
+        
+        $('#filter_search').click(function () {
+          $("#filter").val("ON")
+          $('#table').bootstrapTable('refresh');
+        })
+        
+        $('#filter_reset').click(function () {
+          $("#filter").val("OFF")
+          $("#department").val("");
+          $("#user").val("");
+          $('#table').bootstrapTable('refresh');
+        })  
+
+      });
+    }));
+</script>
+<style type='text/css'>
+.row-index {
+    width: 50px;
+    display: inline-block;
+}
+body {
+    overflow-x: hidden;
+}
+</style>
+{% endblock %}
