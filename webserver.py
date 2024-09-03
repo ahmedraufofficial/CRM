@@ -690,7 +690,7 @@ def delete_detail(list_id,detail):
 def post_lead_note(list_id,com,status,substatus):
     a = db.session.query(Leads).filter_by(refno = list_id).first()
 
-    if a.sub_status == 'Call Center':
+    if current_user.job_title == 'Call Center':
         w = log_call_center(user=current_user.username, client_name=a.contact_name, client_number=a.contact_number, status=substatus.replace("%20"," "), source=a.source, details=com)
     else:
         pass

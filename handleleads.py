@@ -105,15 +105,9 @@ def fetch_leads(user):
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
+    
     elif voltage_user.job_title == 'Sales Manager':
-        query_team = query.filter(Leads.agent == voltage_user.username)
-        for i in voltage_user.team_members.split(','):
-            query2 = query.filter(Leads.agent == i)
-            query_team = query_team.union(query2)
-            team_leader = db.session.query(User).filter_by(username = i).first()
-            for j in team_leader.team_members.split(','):
-                query3 = query.filter(Leads.agent == j)
-                query_team = query_team.union(query3)
+        query_team = filter_agents_and_query(voltage_user.username, query)
         z = query_team.count()
         for r in query_team.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
             row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
@@ -137,6 +131,7 @@ def fetch_leads(user):
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
+    
     elif voltage_user.team_lead == True:
         query_team = query.filter(Leads.agent == voltage_user.username)
         for i in voltage_user.team_members.split(','):
@@ -165,6 +160,36 @@ def fetch_leads(user):
             total_records += 1
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
+    
+    elif voltage_user.job_title == 'Call Center':
+        now = datetime.now()-timedelta(hours=4)
+        start_of_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        two_hours_before_now = now - timedelta(hours=2)
+        start_of_three_days_ago = start_of_today - timedelta(days=3)
+        end_of_three_days_ago = start_of_three_days_ago + timedelta(days=1)
+
+        leads_within_today_filter = Leads.lastupdated.between(start_of_today, two_hours_before_now)
+        leads_three_days_ago_filter = Leads.lastupdated.between(start_of_three_days_ago, end_of_three_days_ago)
+
+        query = query.filter(or_(leads_within_today_filter, leads_three_days_ago_filter))
+        query_team = query.filter(Leads.agent == voltage_user.username)
+
+        query_team = filter_agents_and_query(voltage_user.username, query)
+        z = query_team.count()
+        for r in query_team.order_by(Leads.lastupdated.desc()).offset(offset).limit(limit):
+            row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+            new = row2dict(r)
+            if voltage_user.edit == True:
+                edit_btn =  '<a href="/edit_lead/'+str(new['type'])+'/'+str(new['refno'])+'"><button  class="btn-primary si2"><i class="bi bi-pen"></i></button></a><button class="btn-secondary si2" style="color:white;" data-toggle="modal" data-target="#deleteModal" onclick="delete_('+"'"+new['refno']+"'"+')"><i class="bi bi-trash"></i></button>'
+            else:
+                edit_btn = ''
+            reassign_btn  = '<a href="/pre_assign_lead/'+str(new['refno'])+'"><button class="btn-secondary si2" style="color:white;"><i class="bi bi-arrow-down-left-square-fill"></i></button></a>' #sends lead to pre leads
+            new["edit"] = "<div style='display:flex;"+"'>"+edit_btn +'<button class="btn-danger si2" data-toggle="modal" data-target="#viewModal"  onclick="view_leads('+"'"+new['refno']+"'"+')"><i class="bi bi-arrows-fullscreen"></i></button>'+'<button class="btn-warning si2" style="color:white;" data-toggle="modal" data-target="#notesModal" onclick="view_note('+"'"+new['refno']+"'"+')"><i class="bi bi-journal-text"></i></button>'+reassign_btn+"</div>"
+            data.append(new)
+            total_records += 1
+        response_data = {"total": z, "totalNotFiltered": z, "rows": data}
+        return(response_data)
+    
     else:
         query = query.filter(Leads.agent == voltage_user.username)
         z = query.count()
@@ -195,6 +220,21 @@ def fetch_leads(user):
         response_data = {"total": z, "totalNotFiltered": z, "rows": data}
         return(response_data)
     
+def filter_agents_and_query(username, query):
+        agents = [username]
+
+        def collect_agents(username):
+            user = db.session.query(User).filter_by(username=username).first()
+            if user and user.team_members:
+                team_members = user.team_members.split(',')
+                for member in team_members:
+                    if member not in agents:
+                        agents.append(member)
+                        collect_agents(member)
+
+        collect_agents(username)
+        return query.filter(Leads.agent.in_(agents))
+
 @handleleads.route('/leads',methods = ['GET','POST'])
 @login_required
 def display_leads():   
