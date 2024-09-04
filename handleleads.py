@@ -162,7 +162,7 @@ def fetch_leads(user):
         return(response_data)
     
     elif voltage_user.job_title == 'Call Center':
-        now = datetime.now()-timedelta(hours=4)
+        now = datetime.now()+timedelta(hours=4)
         start_of_today = now.replace(hour=0, minute=0, second=0, microsecond=0)
         two_hours_before_now = now - timedelta(hours=2)
         start_of_three_days_ago = start_of_today - timedelta(days=3)
@@ -170,8 +170,9 @@ def fetch_leads(user):
 
         leads_within_today_filter = Leads.lastupdated.between(start_of_today, two_hours_before_now)
         leads_three_days_ago_filter = Leads.lastupdated.between(start_of_three_days_ago, end_of_three_days_ago)
+        leads_hub = Leads.source != 'Leads Hub'
 
-        query = query.filter(or_(leads_within_today_filter, leads_three_days_ago_filter))
+        query = query.filter(or_(and_(leads_hub, leads_within_today_filter), leads_three_days_ago_filter))
         query_team = query.filter(Leads.agent == voltage_user.username)
 
         query_team = filter_agents_and_query(voltage_user.username, query)
