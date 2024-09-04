@@ -631,7 +631,10 @@ def view_notes(variable):
             noteObj = {}
             noteObj['date'] = i['date']
             noteObj['time'] = i['time']
-            noteObj['user'] = i['user']
+            if i['user'] == 'tasneem_ali':
+                noteObj['user'] = 'Quality Assurance'
+            else:
+                noteObj['user'] = i['user']
             noteObj['comment'] = i['comment']
             noteObj['status'] = i['status']
             noteObj['substatus'] = i['substatus']
